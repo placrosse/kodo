@@ -19,6 +19,7 @@
 #include <kodo/has_shallow_symbol_storage.hpp>
 #include <kodo/has_deep_symbol_storage.hpp>
 #include <kodo/fake_symbol_storage.hpp>
+#include <kodo/segmented_symbol_storage.hpp>
 
 #include "basic_api_test_helper.hpp"
 
@@ -120,6 +121,29 @@ namespace kodo
                  finite_field_info<Field,
                  final_coder_factory_pool<
                  partial_shallow_stack_pool<Field>
+                     > > > > >
+    {};
+
+    // Segmented Symbol Storage
+    template<class Field>
+    class segmented_storage_stack
+        : public segmented_symbol_storage<
+                 storage_bytes_used<
+                 storage_block_info<
+                 finite_field_info<Field,
+                 final_coder_factory<
+                 segmented_storage_stack<Field>
+                     > > > > >
+    {};
+
+    template<class Field>
+    class segmented_storage_stack_pool
+        : public segmented_symbol_storage<
+                 storage_bytes_used<
+                 storage_block_info<
+                 finite_field_info<Field,
+                 final_coder_factory_pool<
+                 segmented_storage_stack_pool<Field>
                      > > > > >
     {};
 
