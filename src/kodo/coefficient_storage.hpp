@@ -91,7 +91,7 @@ namespace kodo
             sak::copy_storage(dest, storage);
         }
 
-    private:
+    protected:
 
         /// Stores the encoding vectors, we do a vector of vectors
         /// to maximize chances of proper alignment of individual
