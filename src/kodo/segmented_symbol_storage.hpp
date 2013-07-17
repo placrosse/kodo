@@ -89,38 +89,34 @@ namespace kodo
             return reinterpret_cast<const value_type*>(symbol(index));
         }
 
-        /// @copydoc layer::swap_symbols(std::vector<uint8_t>&)
-        void swap_symbols(std::vector<uint8_t>& symbols)
+        /// @copydoc layer::swap_symbols(std::vector<std::vector<uint8_t>>&)
+        void swap_symbols(std::vector< std::vector<uint8_t> >& symbols)
         {
-            assert(symbols.size() ==
-                    SuperCoder::symbols()*SuperCoder::symbols_size());
-
-            std::vector<uint8_t> temp_symbols(symbols);
+            assert(symbols.size() == m_data.size());
 
             uint32_t symbol_size = SuperCoder::symbol_size();
 
-            for (uint32_t i = 0; i < SuperCoder::symbols(); ++i)
+            for (uint32_t i = 0; i < m_data.size(); ++i)
             {
-                std::memcpy(
-                    &symbols[i*symbol_size], &m_data[i][0], symbol_size);
-
-                std::memcpy(
-                    &m_data[i][0], &temp_symbols[i*symbol_size], symbol_size);
+                assert(symbols[i].size() == symbol_size);
             }
 
-            // IS THIS CORRECT, OR IS IT DESIRED TO SWAP ONLY SOME
-            // SYMBOLS?
+            m_data.swap(symbols);
+
             m_symbols_count = SuperCoder::symbols();
+            std::fill(m_symbols.begin(), m_symbols.end(), true);
         }
 
         /// Swap two segments (symbols)
         void swap_segments(uint32_t first_index, uint32_t second_index)
         {
-            //assert(first_index != second_index);
+            assert(first_index != second_index);
             assert(first_index < SuperCoder::symbols());
             assert(second_index < SuperCoder::symbols());
 
             std::swap(m_data[first_index], m_data[second_index]);
+
+            std::swap(m_symbols[first_index], m_symbols[second_index]);
         }
 
         /// @copydoc layer::set_symbols()
@@ -210,7 +206,7 @@ namespace kodo
         /// @copydoc layer::symbols_available() const
         uint32_t symbols_available() const
         {
-            return m_symbols_count;
+            return SuperCoder::symbols();
         }
 
         /// @copydoc layer::symbols_initialized() const
@@ -222,7 +218,7 @@ namespace kodo
         /// @copydoc layer::is_symbols_available() const
         bool is_symbols_available() const
         {
-            return m_symbols_count == SuperCoder::symbols();
+            return true;
         }
 
         /// @copydoc layer::is_symbols_initialized() const
@@ -234,14 +230,13 @@ namespace kodo
         /// @copydoc layer::is_symbol_available(uint32_t) const
         bool is_symbol_available(uint32_t symbol_index) const
         {
-            //return (m_data[symbol_index] != 0);
             return !m_data[symbol_index].empty();
         }
 
         /// @copydoc layer::is_symbol_initialized(uint32_t) const
         bool is_symbol_initialized(uint32_t symbol_index) const
         {
-            return true;
+            return m_symbols[symbol_index];
         }
 
     protected:
