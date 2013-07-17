@@ -1819,6 +1819,65 @@ private:
 
 };
 
+/// Tests:
+///   - layer::swap_segments(uint32_t,uint32)
+template<class Coder>
+struct api_segmented_swap_segments
+{
+    typedef typename Coder::factory factory_type;
+    typedef typename Coder::pointer pointer_type;
+
+    api_segmented_swap_segments(uint32_t max_symbols, uint32_t max_symbol_size)
+        : m_factory(max_symbols, max_symbol_size)
+    { }
+
+    void run()
+    {
+        swap_segments();
+    }
+
+    /// Using:
+    ///   - layer::swap_segments(uint32_t,uint32_t)
+    void swap_segments()
+    {
+        pointer_type coder = m_factory.build();
+
+        auto vector1 = random_vector(coder->symbol_size());
+        auto vector2 = random_vector(coder->symbol_size());
+
+        sak::const_storage storage1 = sak::storage(vector1);
+        sak::const_storage storage2 = sak::storage(vector2);
+
+        coder->set_symbol(1, storage1);
+        coder->set_symbol(2, storage2);
+
+        EXPECT_TRUE(coder->is_symbol_initialized(1));
+        EXPECT_TRUE(coder->is_symbol_initialized(2));
+        EXPECT_FALSE(coder->is_symbol_initialized(3));
+
+        coder->swap_segments(2, 3);
+
+        EXPECT_FALSE(coder->is_symbol_initialized(2));
+        EXPECT_TRUE(coder->is_symbol_initialized(3));
+
+        coder->swap_segments(1, 3);
+        
+        EXPECT_TRUE(coder->is_symbol_initialized(1));
+        EXPECT_TRUE(coder->is_symbol_initialized(3));
+
+        coder->swap_segments(4, 5);
+
+        EXPECT_FALSE(coder->is_symbol_initialized(4));
+        EXPECT_FALSE(coder->is_symbol_initialized(5));
+
+    }
+
+private:
+
+    // The factory
+    factory_type m_factory;
+
+};
 
 
 /// Helper function for running all the API and related tests
@@ -2069,6 +2128,10 @@ void run_segmented_stack_tests()
     run_test<Stack, api_segmented_storage_status>(
         symbols, symbol_size);
     run_test<Stack, api_segmented_swap_storage_status>(
+        symbols, symbol_size);
+
+    // Other
+    run_test<Stack, api_segmented_swap_segments>(
         symbols, symbol_size);
 
 }

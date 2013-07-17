@@ -228,9 +228,9 @@ namespace kodo
         }
 
         /// @copydoc layer::is_symbol_available(uint32_t) const
-        bool is_symbol_available(uint32_t symbol_index) const
+        bool is_symbol_available(uint32_t /*symbol_index*/) const
         {
-            return !m_data[symbol_index].empty();
+            return true;
         }
 
         /// @copydoc layer::is_symbol_initialized(uint32_t) const
