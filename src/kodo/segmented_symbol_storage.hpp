@@ -7,6 +7,7 @@
 
 #include <cstdint>
 #include <vector>
+#include <algorithm>
 
 #include <sak/storage.hpp>
 
