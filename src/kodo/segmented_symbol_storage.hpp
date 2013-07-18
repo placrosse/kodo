@@ -88,11 +88,9 @@ namespace kodo
         {
             assert(symbols.size() == m_data.size());
 
-            uint32_t symbol_size = SuperCoder::symbol_size();
-
             for (uint32_t i = 0; i < m_data.size(); ++i)
             {
-                assert(symbols[i].size() == symbol_size);
+                assert(m_data[i].size() == symbols[i].size());
             }
 
             m_data.swap(symbols);
@@ -102,8 +100,8 @@ namespace kodo
         }
 
         /// Swap two segments (symbols)
-        /// @param first_index first index of segment (symbol) to swap
-        /// @param second_index second index of segment (symbol) to swap
+        /// @param first_index index of first segment (symbol) to swap
+        /// @param second_index index of second segment (symbol) to swap
         void swap_segments(uint32_t first_index, uint32_t second_index)
         {
             assert(first_index != second_index);
