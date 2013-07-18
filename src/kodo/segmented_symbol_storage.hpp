@@ -28,13 +28,11 @@ namespace kodo
         /// @copydoc layer::value_type
         typedef typename SuperCoder::value_type value_type;
 
-        /// @copydoc layer::factory
-        typedef typename SuperCoder::factory factory;
-
     public:
 
         /// @copydoc layer::construct(factory&)
-        void construct(factory& the_factory)
+        template<class Factory>
+        void construct(Factory& the_factory)
         {
             SuperCoder::construct(the_factory);
 
@@ -42,21 +40,17 @@ namespace kodo
 
             for (uint32_t i = 0; i < the_factory.max_symbols(); ++i)
             {
-                m_data[i].resize(the_factory.max_symbol_size(), 0);
+                m_data[i].resize(the_factory.max_symbol_size());
             }
 
             m_symbols.resize(the_factory.max_symbols(), false);
         }
 
         /// @copydoc layer::initialize(uint32_t,uint32_t)
-        void initialize(factory& the_factory)
+        template<class Factory>
+        void initialize(Factory& the_factory)
         {
             SuperCoder::initialize(the_factory);
-
-            for (uint32_t i = 0; i < SuperCoder::symbols(); ++i)
-            {
-                std::fill(m_data[i].begin(), m_data[i].end(), 0);
-            }
 
             std::fill(m_symbols.begin(), m_symbols.end(), false);
             m_symbols_count = 0;
@@ -69,18 +63,18 @@ namespace kodo
             return &m_data[index][0];
         }
 
-        /// @copydoc layer::symbol_value(uint32_t)
-        value_type* symbol_value(uint32_t index)
-        {
-            return reinterpret_cast<value_type*>(symbol(index));
-        }
-
         /// @copydoc layer::symbol(uint32_t) const
         const uint8_t* symbol(uint32_t index) const
         {
             assert(index < SuperCoder::symbols());
 
             return &m_data[index][0];
+        }
+
+        /// @copydoc layer::symbol_value(uint32_t)
+        value_type* symbol_value(uint32_t index)
+        {
+            return reinterpret_cast<value_type*>(symbol(index));
         }
 
         /// @copydoc layer::symbol_value(uint32_t) const
@@ -108,6 +102,8 @@ namespace kodo
         }
 
         /// Swap two segments (symbols)
+        /// @param first_index first index of segment (symbol) to swap
+        /// @param second_index second index of segment (symbol) to swap
         void swap_segments(uint32_t first_index, uint32_t second_index)
         {
             assert(first_index != second_index);
@@ -119,7 +115,7 @@ namespace kodo
             std::swap(m_symbols[first_index], m_symbols[second_index]);
         }
 
-        /// @copydoc layer::set_symbols()
+        /// @copydoc layer::set_symbols(const sak::const_storage&)
         void set_symbols(const sak::const_storage& symbol_storage)
         {
             auto symbol_sequence = sak::split_storage(
@@ -134,7 +130,7 @@ namespace kodo
             }
         }
 
-        /// @copydoc layer::set_symbol()
+        /// @copydoc layer::set_symbol(uint32_t, const sak::const_storage&)
         void set_symbol(uint32_t index, const sak::const_storage& symbol)
         {
             assert(symbol.m_data != 0);
@@ -241,7 +237,7 @@ namespace kodo
 
     protected:
 
-        /// Stores the symbol data 
+        /// Stores the symbol data
         std::vector< std::vector<uint8_t> > m_data;
 
         /// Symbols count
