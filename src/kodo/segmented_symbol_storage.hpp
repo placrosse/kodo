@@ -21,6 +21,8 @@ namespace kodo
     //
     /// This is useful in cases where no decoding buffer exist and
     /// swapping symbols (segments) inside the the buffer is required.
+    //  This is an advantage because symbols can be swapped simply by swapping
+    //  the symbol pointers 
     template<class SuperCoder>
     class segmented_symbol_storage : public SuperCoder
     {
@@ -31,7 +33,7 @@ namespace kodo
 
     public:
 
-        /// @copydoc layer::construct(factory&)
+        /// @copydoc layer::construct(Factory&)
         template<class Factory>
         void construct(Factory& the_factory)
         {
@@ -47,7 +49,7 @@ namespace kodo
             m_symbols.resize(the_factory.max_symbols(), false);
         }
 
-        /// @copydoc layer::initialize(uint32_t,uint32_t)
+        /// @copydoc layer::initialize(Factory&)
         template<class Factory>
         void initialize(Factory& the_factory)
         {
@@ -109,7 +111,7 @@ namespace kodo
             assert(first_index < SuperCoder::symbols());
             assert(second_index < SuperCoder::symbols());
 
-            std::swap(m_data[first_index], m_data[second_index]);
+            m_data[first_index].swap(m_data[second_index]);
 
             std::swap(m_symbols[first_index], m_symbols[second_index]);
         }
