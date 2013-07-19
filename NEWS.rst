@@ -12,6 +12,9 @@ Latest
   yet been sent from the encoder, it might happen that we can decode
   anyway. This kind of functionality is useful especially for applications
   which require low delay.
+* Minor: Added new segmented_symbol_storage layer, this layer splits the
+  symbol storage into segments of symbols so that symbols can be swapped by
+  swapping symbol pointers.
 
 11.1.0
 ------
