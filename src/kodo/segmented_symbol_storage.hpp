@@ -46,7 +46,7 @@ namespace kodo
                 m_data[i].resize(the_factory.max_symbol_size());
             }
 
-            m_symbols.resize(the_factory.max_symbols(), false);
+            m_symbols.resize(the_factory.max_symbols());
         }
 
         /// @copydoc layer::initialize(Factory&)
@@ -113,7 +113,8 @@ namespace kodo
 
             m_data[first_index].swap(m_data[second_index]);
 
-            std::vector<bool>::swap(m_symbols[first_index], m_symbols[second_index]);
+            std::iter_swap(m_symbols.begin()+first_index,
+                           m_symbols.begin()+second_index);
         }
 
         /// @copydoc layer::set_symbols(const sak::const_storage&)
