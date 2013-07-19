@@ -878,12 +878,10 @@ struct api_swap_symbols_vector_data
 
         sak::mutable_storage storage_out = sak::storage(vector_out);
 
-        // Make vector_swap a copy of vector in
-        //auto vector_swap = vector_in;
         std::vector<std::vector<uint8_t>>
             vector_swap(m_factory.max_symbols());
 
-        for (uint32_t i = 0; i < m_factory.max_symbols(); ++i)
+        for (uint32_t i = 0; i < coder->symbols(); ++i)
         {
             vector_swap[i].resize(coder->symbol_size());
             std::copy_n(&vector_in[i*coder->symbol_size()],
@@ -1395,137 +1393,6 @@ private:
 
 };
 
-
-/// Tests:
-///   - layer::is_symbols_available() const
-///   - layer::is_symbols_initialized() const
-///   - layer::symbols_available() const
-///   - layer::symbols_initialized() const
-///   - layer::is_symbol_available(uint32_t) const
-///   - layer::is_symbol_initialized(uint32_t) const
-template<class Coder>
-struct api_segmented_storage_status
-{
-    typedef typename Coder::factory factory_type;
-    typedef typename Coder::pointer pointer_type;
-
-    api_segmented_storage_status(uint32_t max_symbols, uint32_t max_symbol_size)
-        : m_factory(max_symbols, max_symbol_size),
-          m_factory_fixed(10, 100)
-    { }
-
-    void run()
-    {
-        set_symbol();
-        set_symbols();
-    }
-
-    /// Using:
-    ///   - layer::set_symbol(uint32_t, const sak::mutable_storage&)
-    void set_symbol()
-    {
-        // Build with the max_symbols and max_symbol_size
-        pointer_type coder = m_factory_fixed.build();
-
-        for(uint32_t i = 0; i < coder->symbols(); ++i)
-        {
-            EXPECT_TRUE(coder->is_symbol_available(i));
-            EXPECT_FALSE(coder->is_symbol_initialized(i));
-        }
-
-        EXPECT_EQ(coder->symbols_available(), coder->symbols());
-        EXPECT_EQ(coder->symbols_initialized(), 0U);
-
-        // Set some symbols
-        auto vector_in = random_vector(coder->symbol_size());
-
-        std::set<uint32_t> indexes;
-
-        sak::mutable_storage s = sak::storage(vector_in);
-
-        coder->set_symbol(2, s);
-        coder->set_symbol(7, s);
-        coder->set_symbol(1, s);
-        coder->set_symbol(8, s);
-
-        indexes.insert(2);
-        indexes.insert(7);
-        indexes.insert(1);
-        indexes.insert(8);
-
-        for(uint32_t i = 0; i < coder->symbols(); ++i)
-        {
-            auto it = indexes.find(i);
-            if(it != indexes.end())
-            {
-                EXPECT_TRUE(coder->is_symbol_available(i));
-                EXPECT_TRUE(coder->is_symbol_initialized(i));
-            }
-            else
-            {
-                EXPECT_TRUE(coder->is_symbol_available(i));
-                EXPECT_FALSE(coder->is_symbol_initialized(i));
-            }
-        }
-
-        EXPECT_EQ(coder->symbols_available(), coder->symbols());
-        EXPECT_EQ(coder->symbols_initialized(), indexes.size());
-
-    }
-
-    /// Using:
-    ///   - layer::set_symbols(const sak::mutable_storage&)
-    void set_symbols()
-    {
-        pointer_type coder = m_factory.build();
-
-        EXPECT_EQ(coder->symbols_available(), coder->symbols());
-        EXPECT_EQ(coder->symbols_initialized(), 0U);
-
-        EXPECT_TRUE(coder->is_symbols_available());
-        EXPECT_FALSE(coder->is_symbols_initialized());
-
-        std::vector<uint8_t> vector_data =
-            random_vector(coder->block_size());
-
-        sak::mutable_storage s = sak::storage(vector_data);
-
-        coder->set_symbols(s);
-
-        EXPECT_EQ(coder->symbols_available(), coder->symbols());
-        EXPECT_EQ(coder->symbols_initialized(), coder->symbols());
-
-        EXPECT_TRUE(coder->is_symbols_available());
-        EXPECT_TRUE(coder->is_symbols_initialized());
-
-        coder = m_factory.build();
-
-        EXPECT_EQ(coder->symbols_available(), coder->symbols());
-        EXPECT_EQ(coder->symbols_initialized(), 0U);
-
-        EXPECT_TRUE(coder->is_symbols_available());
-        EXPECT_FALSE(coder->is_symbols_initialized());
-
-        coder->set_symbols(s);
-
-        EXPECT_EQ(coder->symbols_available(), coder->symbols());
-        EXPECT_EQ(coder->symbols_initialized(), coder->symbols());
-
-        EXPECT_TRUE(coder->is_symbols_available());
-        EXPECT_TRUE(coder->is_symbols_initialized());
-    }
-
-private:
-
-    // The factory
-    factory_type m_factory;
-
-    // Factory with fixed max_symbol_size and max_symbols
-    factory_type m_factory_fixed;
-
-};
-
-
 /// Tests:
 ///   - layer::symbol_exists(uint32_t) const
 ///   - layer::symbol_count() const
@@ -1774,13 +1641,13 @@ struct api_segmented_swap_storage_status
         EXPECT_TRUE(coder->is_symbols_available());
         EXPECT_FALSE(coder->is_symbols_initialized());
 
-        std::vector<std::vector<uint8_t>> vector_data(m_factory.max_symbols());
+        std::vector<std::vector<uint8_t>>
+            vector_data(m_factory.max_symbols());
 
         for (uint32_t i = 0; i < m_factory.max_symbols(); ++i)
         {
             vector_data[i] = random_vector(coder->symbol_size());
         }
-
 
         coder->swap_symbols(vector_data);
 
@@ -2125,7 +1992,9 @@ void run_segmented_stack_tests()
         symbols, symbol_size);
     run_test<Stack, api_bytes_used>(
         symbols, symbol_size);
-    run_test<Stack, api_segmented_storage_status>(
+//    run_test<Stack, api_segmented_storage_status>(
+//        symbols, symbol_size);
+    run_test<Stack, api_deep_storage_status>(
         symbols, symbol_size);
     run_test<Stack, api_segmented_swap_storage_status>(
         symbols, symbol_size);

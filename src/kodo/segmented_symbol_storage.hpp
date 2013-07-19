@@ -91,7 +91,7 @@ namespace kodo
         {
             assert(symbols.size() == m_data.size());
 
-            for (uint32_t i = 0; i < m_data.size(); ++i)
+            for (uint32_t i = 0; i < SuperCoder::symbols(); ++i)
             {
                 assert(m_data[i].size() == symbols[i].size());
             }
