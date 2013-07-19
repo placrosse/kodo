@@ -113,7 +113,8 @@ namespace kodo
 
             m_data[first_index].swap(m_data[second_index]);
 
-            std::swap(m_symbols[first_index], m_symbols[second_index]);
+            std::vector<bool>::swap(m_symbols[first_index], m_symbols[second_index]);
+//            std::swap(m_symbols[first_index], m_symbols[second_index]);
         }
 
         /// @copydoc layer::set_symbols(const sak::const_storage&)
