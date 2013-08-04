@@ -12,7 +12,7 @@ namespace kodo
 
     /// @brief Special layer used to create parallel stacks with
     ///       some shared layers.
-    template<class FinalType, class MainStack>
+    template<class MainStack>
     class proxy_layer
     {
     public:
@@ -24,23 +24,30 @@ namespace kodo
         typedef typename MainStack::value_type value_type;
 
         /// Pointer type to the constructed coder
-        typedef boost::shared_ptr<FinalType> pointer;
+        // typedef boost::shared_ptr<FinalType> pointer;
 
     public:
 
         /// @ingroup factory_layers
         /// Forwarding factory for the parallel proxy stack
-        class factory
+        template<class FinalType>
+        class factory_impl
         {
         public:
+
+            /// Pointer type to the constructed coder
+            typedef boost::shared_ptr<FinalType> pointer;
 
             /// The factory type
             typedef typename FinalType::factory factory_type;
 
+            /// The main stack factory
+            typedef typename MainStack::template factory_impl
+
         public:
 
             /// @copydoc layer::factory::factory(uint32_t,uint32_t)
-            factory(uint32_t max_symbols, uint32_t max_symbol_size)
+            factory_impl(uint32_t max_symbols, uint32_t max_symbol_size)
                 : m_factory_proxy(0),
                   m_stack_proxy(0)
             {

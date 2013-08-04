@@ -341,25 +341,25 @@ TEST(TestProxyLayer, encoder)
 }
 
 /// Run the tests typical coefficients stack
-TEST(TestProxyLayer, decoder)
-{
-    // Should be at least 4, since we assume this in the
-    // run_decoder_api() function
-    uint32_t symbols = std::max(4U, rand_symbols());
-    uint32_t symbol_size = rand_symbol_size();
+// TEST(TestProxyLayer, decoder)
+// {
+//     // Should be at least 4, since we assume this in the
+//     // run_decoder_api() function
+//     uint32_t symbols = std::max(4U, rand_symbols());
+//     uint32_t symbol_size = rand_symbol_size();
 
-    // The codec stack
-    typedef kodo::full_rlnc_decoder<fifi::binary8> decoder;
-    typedef proxy_test<decoder> proxy;
+//     // The codec stack
+//     typedef kodo::full_rlnc_decoder<fifi::binary8> decoder;
+//     typedef proxy_test<decoder> proxy;
 
 
-    // API tests:
-    typedef api_coder<decoder,proxy> test;
+//     // API tests:
+//     typedef api_coder<decoder,proxy> test;
 
-    test t(symbols, symbol_size);
-    t.run_general_api();
-    t.run_decoder_api();
-    t.run_coefficients_api();
-}
+//     test t(symbols, symbol_size);
+//     t.run_general_api();
+//     t.run_decoder_api();
+//     t.run_coefficients_api();
+// }
 
 

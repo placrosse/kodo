@@ -16,21 +16,21 @@ namespace kodo
     /// @ingroup factory_layers
     /// Terminates the layered coder and contains the coder allocation
     /// policy
-    template<class FinalType>
+//    template<class FinalType>
     class final_coder_factory
     {
     public:
-
-        /// Pointer type to the constructed coder
-        typedef boost::shared_ptr<FinalType> pointer;
-
         //typedef typename FinalType::factory factory_type;
 
         /// @ingroup factory_layers
         /// The final factory
-        class factory
+        template<class FinalType>
+        class factory_impl
         {
         public:
+
+            /// Pointer type to the constructed coder
+            typedef boost::shared_ptr<FinalType> pointer;
 
             /// The factory type
             typedef typename FinalType::factory factory_type;
@@ -38,7 +38,7 @@ namespace kodo
         public:
 
             /// @copydoc layer::factory::factory(uint32_t,uint32_t)
-            factory(uint32_t max_symbols, uint32_t max_symbol_size)
+            factory_impl(uint32_t max_symbols, uint32_t max_symbol_size)
             {
                 (void) max_symbols;
                 (void) max_symbol_size;
@@ -61,10 +61,10 @@ namespace kodo
         private: // Make non-copyable
 
             /// Copy constructor
-            factory(const factory&);
+            factory_impl(const factory_impl&);
 
             /// Copy assignment
-            const factory& operator=(const factory&);
+            const factory_impl& operator=(const factory_impl&);
 
         };
 

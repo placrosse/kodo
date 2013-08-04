@@ -27,15 +27,22 @@ namespace kodo
         /// @ingroup factory_layers
         /// @brief Provides access to the maximum symbol and symbol size
         ///        information.
-        class factory : public SuperCoder::factory
+        template<class FinalType>
+        class factory_impl : public SuperCoder::template factory_impl<FinalType>
         {
+        public:
+
+            /// @copydoc layer::super_factory
+            typedef typename SuperCoder::template factory_impl<FinalType>
+                super_factory;
+
         public:
 
             /// Constructor
             /// @param max_symbols the maximum symbols this coder can expect
             /// @param max_symbol_size the maximum size of a symbol in bytes
-            factory(uint32_t max_symbols, uint32_t max_symbol_size)
-                : SuperCoder::factory(max_symbols, max_symbol_size),
+            factory_impl(uint32_t max_symbols, uint32_t max_symbol_size)
+                : super_factory(max_symbols, max_symbol_size),
                   m_max_symbols(max_symbols),
                   m_max_symbol_size(max_symbol_size),
                   m_symbols(max_symbols),

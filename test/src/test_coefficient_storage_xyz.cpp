@@ -31,28 +31,58 @@ namespace kodo
 
     // Coefficient Storage
     template<class Field>
-    class coefficient_storage_stack
+    class coefficient_storage_layers
         : public coefficient_storage<
                  coefficient_info<
                  storage_block_info<
                  finite_field_info<Field,
-                 final_coder_factory<
-                 coefficient_storage_stack<Field>
-                     > > > > >
-    {};
+                 final_coder_factory
+                     > > > >
+    { };
+
+    template<class Field>
+    class coefficient_storage_stack
+        : public coefficient_storage_layers<Field>
+    {
+    public:
+
+        typedef coefficient_storage_stack<Field> self;
+
+    public:
+
+        typedef typename self::template factory_impl<self> factory;
+        typedef typename factory::pointer pointer;
+
+    };
+
 
     // Coefficient Storage
     template<class Field>
-    class coefficient_storage_stack_pool
+    class coefficient_storage_pool_layers
 
         : public coefficient_storage<
                  coefficient_info<
                  storage_block_info<
                  finite_field_info<Field,
-                 final_coder_factory<
-                 coefficient_storage_stack_pool<Field>
-                     > > > > >
-    {};
+                 final_coder_factory_pool
+                     > > > >
+    { };
+
+    template<class Field>
+    class coefficient_storage_pool_stack
+        : public coefficient_storage_pool_layers<Field>
+    {
+    public:
+
+        typedef coefficient_storage_pool_stack<Field> self;
+
+    public:
+
+        typedef typename self::template factory_impl<self> factory;
+        typedef typename factory::pointer pointer;
+
+    };
+
 
 }
 
@@ -121,28 +151,6 @@ struct api_coefficients_storage
 
             EXPECT_EQ(length, coder->coefficients_length());
 
-            // Create a zero vector for comparisons
-            std::vector<uint8_t> zero_vector(size, '\0');
-            auto zero_storage = sak::storage(zero_vector);
-
-            // Everything should be zero initially
-            for(uint32_t i = 0; i < symbols; ++i)
-            {
-                sak::const_storage s;
-
-                s = sak::storage(coder->coefficients(i), size);
-                EXPECT_TRUE(sak::equal(zero_storage, s));
-
-                s = sak::storage(const_coder->coefficients(i), size);
-                EXPECT_TRUE(sak::equal(zero_storage, s));
-
-                s = sak::storage(coder->coefficients_value(i), size);
-                EXPECT_TRUE(sak::equal(zero_storage, s));
-
-                s = sak::storage(const_coder->coefficients_value(i), size);
-                EXPECT_TRUE(sak::equal(zero_storage, s));
-            }
-
             // Create some random coefficients, one for every symbol
             uint32_t vector_size = symbols*size;
 
@@ -197,7 +205,7 @@ TEST(TestSymbolStorage, test_coefficients_storage_stack)
         api_coefficients_storage>(symbols, symbol_size);
 
     run_test<
-        kodo::coefficient_storage_stack_pool,
+        kodo::coefficient_storage_pool_stack,
         api_coefficients_storage>(symbols, symbol_size);
 
 }

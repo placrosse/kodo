@@ -26,9 +26,6 @@ namespace kodo
         /// @copydoc layer::value_type
         typedef typename SuperCoder::value_type value_type;
 
-        /// @copydoc layer::factory
-        typedef typename SuperCoder::factory factory;
-
     public:
 
         /// @copydoc layer::initialize(Factory&)

@@ -40,13 +40,20 @@ namespace kodo
 
         /// @ingroup factory_layers
         /// The factory layer associated with this coder.
-        class factory : public SuperCoder::factory
+        template<class FinalType>
+        class factory_impl : public SuperCoder::template factory_impl<FinalType>
         {
         public:
 
+            /// @copydoc layer::super_factory
+            typedef typename SuperCoder::template factory_impl<FinalType>
+                super_factory;
+
+        public:
+
             /// @copydoc layer::factory::factory(uint32_t,uint32_t)
-            factory(uint32_t max_symbols, uint32_t max_symbol_size)
-                : SuperCoder::factory(max_symbols, max_symbol_size),
+            factory_impl(uint32_t max_symbols, uint32_t max_symbol_size)
+                : super_factory(max_symbols, max_symbol_size),
                   m_stack_factory(max_symbols, max_symbol_size)
             {
                 m_stack_factory.set_factory_proxy(this);
@@ -57,7 +64,7 @@ namespace kodo
             /// @copydoc layer::factory::max_payload_size() const
             uint32_t max_payload_size() const
             {
-                return std::max(SuperCoder::factory::max_payload_size(),
+                return std::max(super_factory::max_payload_size(),
                                 m_stack_factory.max_payload_size());
             }
 

@@ -26,19 +26,26 @@ namespace kodo
 
         /// @ingroup factory_layers
         /// The factory layer associated with this coder.
-        class factory : public SuperCoder::factory
+        template<class FinalType>
+        class factory_impl : public SuperCoder::template factory_impl<FinalType>
         {
         public:
 
+            /// @copydoc layer::super_factory
+            typedef typename SuperCoder::template factory_impl<FinalType>
+                super_factory;
+
+        public:
+
             /// @copydoc layer::factory::factory(uint32_t,uint32_t)
-            factory(uint32_t max_symbols, uint32_t max_symbol_size)
-                : SuperCoder::factory(max_symbols, max_symbol_size)
+            factory_impl(uint32_t max_symbols, uint32_t max_symbol_size)
+                : super_factory(max_symbols, max_symbol_size)
             { }
 
             /// @copydoc layer::factory::max_id_size() const
             uint32_t max_id_size() const
             {
-                return SuperCoder::factory::max_coefficients_size();
+                return super_factory::max_coefficients_size();
             }
         };
 

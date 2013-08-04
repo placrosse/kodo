@@ -19,26 +19,30 @@ namespace kodo
     /// Terminates the layered coder and contains the coder final
     /// factory. The pool factory uses a memory pool to recycle
     /// encoders/decoders, and thereby minimize memory consumption.
-    template<class FinalType>
+//    template<class FinalType>
     class final_coder_factory_pool
     {
     public:
 
         /// Pointer type to the constructed coder
-        typedef boost::shared_ptr<FinalType> pointer;
+        // typedef boost::shared_ptr<FinalType> pointer;
 
         /// @ingroup factory_layers
         /// The final factory
-        class factory
+        template<class FinalType>
+        class factory_impl
         {
         public:
+
+            /// Pointer type to the constructed coder
+            typedef boost::shared_ptr<FinalType> pointer;
 
             /// The factory type
             typedef typename FinalType::factory factory_type;
 
             /// @copydoc layer::factory::factory(uint32_t,uint32_t)
-            factory(uint32_t max_symbols, uint32_t max_symbol_size) :
-                m_pool(boost::bind(&factory::make_coder, this))
+            factory_impl(uint32_t max_symbols, uint32_t max_symbol_size) :
+                m_pool(boost::bind(&factory_impl::make_coder, this))
             {
                 (void) max_symbols;
                 (void) max_symbol_size;
@@ -72,10 +76,10 @@ namespace kodo
         private: // Make non-copyable
 
             /// Copy constructor
-            factory(const factory&);
+            factory_impl(const factory_impl&);
 
             /// Copy assignment
-            const factory& operator=(const factory&);
+            const factory_impl& operator=(const factory_impl&);
 
         private:
 
@@ -84,7 +88,7 @@ namespace kodo
             /// @param max_symbols The maximum symbols that are supported
             /// @param max_symbol_size The maximum size of a symbol in
             ///        bytes
-            static pointer make_coder(factory *f_ptr)
+            static pointer make_coder(factory_impl *f_ptr)
             {
                 factory_type *this_factory =
                     static_cast<factory_type*>(f_ptr);

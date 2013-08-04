@@ -39,19 +39,26 @@ namespace kodo
         /// The factory layer associated with this coder.
         /// In this case only needed to provide the max_payload_size()
         /// function.
-        class factory : public SuperCoder::factory
+        template<class FinalType>
+        class factory_impl : public SuperCoder::template factory_impl<FinalType>
         {
         public:
 
+            /// @copydoc layer::super_factory
+            typedef typename SuperCoder::template factory_impl<FinalType>
+                super_factory;
+
+        public:
+
             /// @copydoc layer::factory::factory(uint32_t,uint32_t)
-            factory(uint32_t max_symbols, uint32_t max_symbol_size)
-                : SuperCoder::factory(max_symbols, max_symbol_size)
+            factory_impl(uint32_t max_symbols, uint32_t max_symbol_size)
+                : super_factory(max_symbols, max_symbol_size)
             { }
 
             /// @copydoc layer::max_header_size() const
             uint32_t max_header_size() const
             {
-                return SuperCoder::factory::max_header_size() +
+                return super_factory::max_header_size() +
                     sizeof(flag_type) + sizeof(counter_type);
             }
         };

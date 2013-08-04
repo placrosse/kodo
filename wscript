@@ -96,21 +96,21 @@ def build(bld):
         # in a recurse call
 
         bld.recurse('test')
-        bld.recurse('examples/encode_decode_simple')
-        bld.recurse('examples/encode_decode_file')
-        bld.recurse('examples/encode_decode_storage')
-        bld.recurse('examples/encode_recode_decode_simple')
-        bld.recurse('examples/decode_simple')
-        bld.recurse('examples/encode_on_the_fly')
-        bld.recurse('examples/rank_callback')
-        bld.recurse('examples/use_cached_symbol_decoder')
-        bld.recurse('examples/use_debug_layers')
+        # bld.recurse('examples/encode_decode_simple')
+        # bld.recurse('examples/encode_decode_file')
+        # bld.recurse('examples/encode_decode_storage')
+        # bld.recurse('examples/encode_recode_decode_simple')
+        # bld.recurse('examples/decode_simple')
+        # bld.recurse('examples/encode_on_the_fly')
+        # bld.recurse('examples/rank_callback')
+        # bld.recurse('examples/use_cached_symbol_decoder')
+        # bld.recurse('examples/use_debug_layers')
 
 
-        bld.recurse('benchmark/throughput')
-        bld.recurse('benchmark/count_operations')
-        bld.recurse('benchmark/overhead')
-        bld.recurse('benchmark/decoding_probability')
+        # bld.recurse('benchmark/throughput')
+        # bld.recurse('benchmark/count_operations')
+        # bld.recurse('benchmark/overhead')
+        # bld.recurse('benchmark/decoding_probability')
 
 
     # Export own includes
