@@ -6,6 +6,7 @@
 #pragma once
 
 #include <cstdint>
+#include <memory>
 #include <map>
 
 namespace kodo
@@ -34,7 +35,7 @@ namespace kodo
         typedef typename SuperCoder::pointer pointer;
 
         /// Pointer the type of this layer
-        typedef boost::shared_ptr<
+        typedef std::shared_ptr<
             reed_solomon_symbol_id<SuperCoder> > this_pointer;
 
     public:
@@ -84,7 +85,7 @@ namespace kodo
         private:
 
             /// map for blocks
-            std::map<uint32_t, boost::shared_ptr<generator_matrix> > m_cache;
+            std::map<uint32_t, std::shared_ptr<generator_matrix> > m_cache;
 
         };
 
@@ -100,7 +101,7 @@ namespace kodo
     protected:
 
         /// The generator matrix
-        boost::shared_ptr<generator_matrix> m_matrix;
+        std::shared_ptr<generator_matrix> m_matrix;
 
     };
 

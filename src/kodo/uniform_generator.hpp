@@ -6,9 +6,7 @@
 #pragma once
 
 #include <cstdint>
-
-#include <boost/random/mersenne_twister.hpp>
-#include <boost/random/uniform_int_distribution.hpp>
+#include <random>
 
 namespace kodo
 {
@@ -28,7 +26,7 @@ namespace kodo
         typedef typename SuperCoder::value_type value_type;
 
         /// The random generator used
-        typedef boost::random::mt19937 generator_type;
+        typedef std::mt19937 generator_type;
 
         /// @copydoc layer::seed_type
         typedef generator_type::result_type seed_type;
@@ -91,21 +89,21 @@ namespace kodo
     private:
 
         /// The type of the uint8_t distribution
-        typedef boost::random::uniform_int_distribution<uint8_t>
+        typedef std::uniform_int_distribution<uint8_t>
         uint8_t_distribution;
 
         /// Distribution that generates random bytes
         uint8_t_distribution m_distribution;
 
         /// The type of the value_type distribution
-        typedef boost::random::uniform_int_distribution<value_type>
+        typedef std::uniform_int_distribution<value_type>
         value_type_distribution;
 
         /// Distribution that generates random values from a finite field
         value_type_distribution m_value_distribution;
 
         /// The random generator
-        boost::random::mt19937 m_random_generator;
+        std::mt19937 m_random_generator;
 
     };
 }

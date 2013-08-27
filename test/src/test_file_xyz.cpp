@@ -11,8 +11,6 @@
 #include <kodo/object_decoder.hpp>
 #include <kodo/rlnc/full_vector_codes.hpp>
 
-#include <boost/filesystem.hpp>
-
 // Tests that encoding and decoding a file withe the file encoder
 // works.
 TEST(TestFileEncoder, test_file_encoder)

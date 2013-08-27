@@ -7,7 +7,6 @@
 
 #include <cstdint>
 
-#include <boost/make_shared.hpp>
 #include <boost/noncopyable.hpp>
 
 #include "rfc5052_partitioning_scheme.hpp"

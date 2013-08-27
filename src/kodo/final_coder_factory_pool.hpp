@@ -6,9 +6,7 @@
 #pragma once
 
 #include <cstdint>
-
-#include <boost/shared_ptr.hpp>
-#include <boost/make_shared.hpp>
+#include <memory>
 
 #include <sak/resource_pool.hpp>
 
@@ -25,7 +23,7 @@ namespace kodo
     public:
 
         /// Pointer type to the constructed coder
-        typedef boost::shared_ptr<FinalType> pointer;
+        typedef std::shared_ptr<FinalType> pointer;
 
         /// @ingroup factory_layers
         /// The final factory
@@ -38,7 +36,7 @@ namespace kodo
 
             /// @copydoc layer::factory::factory(uint32_t,uint32_t)
             factory(uint32_t max_symbols, uint32_t max_symbol_size) :
-                m_pool(boost::bind(&factory::make_coder, this))
+                m_pool(std::bind(&factory::make_coder, this))
             {
                 (void) max_symbols;
                 (void) max_symbol_size;
@@ -89,7 +87,7 @@ namespace kodo
                 factory_type *this_factory =
                     static_cast<factory_type*>(f_ptr);
 
-                pointer coder = boost::make_shared<FinalType>();
+                pointer coder = std::make_shared<FinalType>();
                 coder->construct(*this_factory);
 
                 return coder;

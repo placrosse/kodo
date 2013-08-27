@@ -13,6 +13,7 @@
 /// used instead of the rank callback layer provided that they are added at the
 /// correct position in the stack.
 
+#include <memory>
 #include <functional>
 
 #include <kodo/rlnc/full_vector_codes.hpp>
@@ -69,10 +70,10 @@ void rank_changed_event(uint32_t rank)
 
 // Global function as callback handler with pointer to the calling decoder
 // as parameter
-void rank_changed_event2(boost::weak_ptr<rlnc_decoder> w_decoder, uint32_t rank)
+void rank_changed_event2(std::weak_ptr<rlnc_decoder> w_decoder, uint32_t rank)
 {
     /// Lock decoder pointer so that it cannot be freed until we are done
-    if ( boost::shared_ptr<rlnc_decoder> decoder = w_decoder.lock() )
+    if ( std::shared_ptr<rlnc_decoder> decoder = w_decoder.lock() )
     {
         std::cout << "Rank changed to " << rank << "/" <<
             decoder->symbols() << std::endl;
@@ -126,7 +127,7 @@ int main()
 
     // Gets a weak pointer to decoder to ensure that our callback
     // doesn't prevent kodo from freeing memory
-    boost::weak_ptr<rlnc_decoder> w_ptr(decoder);
+    std::weak_ptr<rlnc_decoder> w_ptr(decoder);
 
     // Set callback handler
     decoder->set_rank_changed_callback (

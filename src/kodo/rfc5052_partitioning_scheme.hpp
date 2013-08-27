@@ -7,6 +7,8 @@
 #define KODO_RFC5052_PARTITIONING_SCHEME_HPP
 
 #include <cstdint>
+#include <algorithm>
+#include <cassert>
 
 namespace kodo
 {

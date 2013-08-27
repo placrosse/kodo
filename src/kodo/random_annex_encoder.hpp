@@ -8,9 +8,6 @@
 
 #include <cstdint>
 
-#include <boost/make_shared.hpp>
-#include <boost/noncopyable.hpp>
-
 #include <sak/storage.hpp>
 
 #include "random_annex_base.hpp"

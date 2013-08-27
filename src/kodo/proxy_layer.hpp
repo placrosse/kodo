@@ -6,6 +6,7 @@
 #pragma once
 
 #include <cstdint>
+#include <memory>
 
 namespace kodo
 {
@@ -24,7 +25,7 @@ namespace kodo
         typedef typename MainStack::value_type value_type;
 
         /// Pointer type to the constructed coder
-        typedef boost::shared_ptr<FinalType> pointer;
+        typedef std::shared_ptr<FinalType> pointer;
 
     public:
 
@@ -70,7 +71,7 @@ namespace kodo
                 assert(m_factory_proxy != 0);
                 assert(m_stack_proxy != 0);
 
-                pointer coder = boost::make_shared<FinalType>();
+                pointer coder = std::make_shared<FinalType>();
 
                 coder->set_proxy(m_stack_proxy);
 

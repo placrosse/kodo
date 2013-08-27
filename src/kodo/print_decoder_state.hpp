@@ -6,6 +6,7 @@
 #pragma once
 
 #include <iostream>
+#include <memory>
 
 #include "debug_linear_block_decoder.hpp"
 #include "has_debug_linear_block_decoder.hpp"
@@ -27,7 +28,7 @@ namespace kodo
     /// @ingroup generic_api
     /// @copydoc print_decoder_state(const T&, std::ostream&)
     template<class T>
-    inline void print_decoder_state(const boost::shared_ptr<T>& t,
+    inline void print_decoder_state(const std::shared_ptr<T>& t,
                                     std::ostream& out)
     {
         print_decoder_state(*t, out);

@@ -6,10 +6,9 @@
 /// @file test_storage_reader.cpp Unit tests for the storage_reader object
 
 #include <cstdint>
+#include <memory>
 
 #include <gtest/gtest.h>
-
-#include <boost/make_shared.hpp>
 
 #include <kodo/storage_reader.hpp>
 
@@ -21,7 +20,7 @@ class dummy_encoder
 public:
 
     // Pointer to the dummy encoder
-    typedef boost::shared_ptr<dummy_encoder> pointer;
+    typedef std::shared_ptr<dummy_encoder> pointer;
 
 public:
 
@@ -61,7 +60,7 @@ TEST(TestStorageReader, test_storage_reader)
 
     EXPECT_EQ(reader.size(), data_size);
 
-    auto encoder = boost::make_shared<dummy_encoder>();
+    auto encoder = std::make_shared<dummy_encoder>();
 
     reader.read(encoder, 10U, 10U);
 

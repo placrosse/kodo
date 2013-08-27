@@ -6,6 +6,7 @@
 #pragma once
 
 #include <iostream>
+#include <memory>
 
 #include "has_print_cached_symbol_coefficients.hpp"
 
@@ -26,7 +27,7 @@ namespace kodo
     /// @ingroup generic_api
     /// @copydoc print_cached_symbol_coefficients(const T&, std::ostream&)
     template<class T>
-    inline void print_cached_symbol_coefficients(const boost::shared_ptr<T>& t,
+    inline void print_cached_symbol_coefficients(const std::shared_ptr<T>& t,
                                          std::ostream& out)
     {
         print_cached_symbol_coefficients(*t, out);

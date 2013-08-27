@@ -6,6 +6,8 @@
 #pragma once
 
 #include <iostream>
+#include <memory>
+
 
 #include "has_print_cached_symbol_data.hpp"
 
@@ -26,7 +28,7 @@ namespace kodo
     /// @ingroup generic_api
     /// @copydoc print_cached_symbol_data(const T&, std::ostream&)
     template<class T>
-    inline void print_cached_symbol_data(const boost::shared_ptr<T>& t,
+    inline void print_cached_symbol_data(const std::shared_ptr<T>& t,
                                          std::ostream& out)
     {
         print_cached_symbol_data(*t, out);

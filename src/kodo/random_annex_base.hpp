@@ -10,11 +10,9 @@
 
 #include <set>
 #include <vector>
+#include <random>
 
-#include <boost/make_shared.hpp>
 #include <boost/noncopyable.hpp>
-#include <boost/random/mersenne_twister.hpp>
-#include <boost/random/uniform_int_distribution.hpp>
 #include <boost/dynamic_bitset.hpp>
 
 namespace kodo
@@ -108,7 +106,7 @@ namespace kodo
         typedef std::pair<std::set<annex_info>::iterator,bool> annex_return;
 
         /// The uniform int distribution
-        typedef boost::random::uniform_int_distribution<uint32_t>
+        typedef std::uniform_int_distribution<uint32_t>
             uniform_int;
 
     public:
@@ -239,7 +237,7 @@ namespace kodo
         /// @return the selected block index
         uint32_t select_symbol(uint32_t block_symbols)
             {
-                // Looking at the boost::random::uniform_int_distribution
+                // Looking at the std::uniform_int_distribution
                 // constructor it seems quite cheap to construct. So
                 // for simplicity we create one here base on the
                 // block symbols parameter. If this can be shown to be
@@ -256,7 +254,7 @@ namespace kodo
         uniform_int m_block_distribution;
 
         /// The random generator
-        boost::random::mt19937 m_random_generator;
+        std::mt19937 m_random_generator;
 
         /// Stores the annex for every block
         std::vector< std::set<annex_info> > m_annex;

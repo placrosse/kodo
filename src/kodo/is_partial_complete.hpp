@@ -5,6 +5,9 @@
 
 #pragma once
 
+#include <memory>
+#include <cassert>
+
 #include "partial_decoding_tracker.hpp"
 #include "has_partial_decoding_tracker.hpp"
 
@@ -24,7 +27,7 @@ namespace kodo
     /// @ingroup generic_api
     /// @copydoc is_partial_complete(const T&)
     template<class T>
-    inline bool is_partial_complete(const boost::shared_ptr<T>& t)
+    inline bool is_partial_complete(const std::shared_ptr<T>& t)
     {
         return is_partial_complete(*t);
     }

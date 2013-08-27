@@ -5,6 +5,8 @@
 
 #pragma once
 
+#include <memory>
+
 #include <fifi/arithmetics.hpp>
 
 #include "vandermonde_matrix.hpp"
@@ -48,7 +50,7 @@ namespace kodo
             /// Constructs systematic Vandermonde matrix.
             /// @param symbols The number of source symbols to encode
             /// @return The Vandermonde matrix
-            boost::shared_ptr<generator_matrix> construct_matrix(
+            std::shared_ptr<generator_matrix> construct_matrix(
                 uint32_t symbols);
 
         };
@@ -69,12 +71,12 @@ namespace kodo
     template<class SuperCoder>
     inline auto
     systematic_vandermonde_matrix_base<SuperCoder>::factory::construct_matrix(
-        uint32_t symbols) -> boost::shared_ptr<generator_matrix>
+        uint32_t symbols) -> std::shared_ptr<generator_matrix>
     {
         assert(symbols > 0);
         assert(m_field);
 
-        boost::shared_ptr<generator_matrix> m =
+        std::shared_ptr<generator_matrix> m =
             SuperCoder::factory::construct_matrix(symbols);
 
         std::vector<value_type> temp_row(m->row_length());

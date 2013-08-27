@@ -7,6 +7,7 @@
 
 #include <fstream>
 #include <cassert>
+#include <memory>
 
 #include "has_deep_symbol_storage.hpp"
 
@@ -45,7 +46,7 @@ namespace kodo
         file_reader(const std::string &filename,
                     uint32_t data_size)
         {
-            m_file = boost::make_shared<std::ifstream>();
+            m_file = std::make_shared<std::ifstream>();
             m_file->open(filename, std::ios::binary);
 
             assert(m_file->is_open());
@@ -111,7 +112,7 @@ namespace kodo
     private:
 
         /// The actual file
-        boost::shared_ptr<std::ifstream> m_file;
+        std::shared_ptr<std::ifstream> m_file;
 
         /// The size of the file in bytes
         uint32_t m_file_size;

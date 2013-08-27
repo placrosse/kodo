@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 /// @file
 /// Sometimes it is useful to be able to write generic code
@@ -57,7 +57,7 @@ namespace kodo
     /// @return true if the encoder supports the systematic operations
     ///         otherwise false
     template<class Encoder>
-    inline bool is_systematic_encoder(const boost::shared_ptr<Encoder> &e)
+    inline bool is_systematic_encoder(const std::shared_ptr<Encoder> &e)
     {
         assert(e);
         return is_systematic_encoder(*e);
@@ -97,7 +97,7 @@ namespace kodo
     /// @param e the encoder
     /// @return true if the encoder is in the systematic state
     template<class Encoder>
-    inline bool is_systematic_on(boost::shared_ptr<Encoder> &e)
+    inline bool is_systematic_on(std::shared_ptr<Encoder> &e)
     {
         assert(e);
         return is_systematic_on(*e);
@@ -134,7 +134,7 @@ namespace kodo
     ///
     /// @param e the encoder
     template<class Encoder>
-    inline void set_systematic_off(boost::shared_ptr<Encoder> &e)
+    inline void set_systematic_off(std::shared_ptr<Encoder> &e)
     {
         assert(e);
         set_systematic_off(*e);
@@ -171,7 +171,7 @@ namespace kodo
     ///
     /// @param e the encoder
     template<class Encoder>
-    inline void set_systematic_on(boost::shared_ptr<Encoder> &e)
+    inline void set_systematic_on(std::shared_ptr<Encoder> &e)
     {
         assert(e);
         set_systematic_on(*e);

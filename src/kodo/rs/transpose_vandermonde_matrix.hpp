@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include <boost/make_shared.hpp>
+#include <memory>
 
 namespace kodo
 {
@@ -39,13 +39,13 @@ namespace kodo
             /// Transposes the constructed Vandermonde matrix
             /// @param symbols The number of source symbols to encode
             /// @return The Vandermonde matrix
-            boost::shared_ptr<generator_matrix> construct_matrix(
+            std::shared_ptr<generator_matrix> construct_matrix(
                 uint32_t symbols)
             {
                 auto matrix =
                     SuperCoder::factory::construct_matrix(symbols);
 
-                return boost::make_shared<generator_matrix>(
+                return std::make_shared<generator_matrix>(
                     matrix->transpose());
 
             }

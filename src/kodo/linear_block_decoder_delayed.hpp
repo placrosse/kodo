@@ -7,9 +7,6 @@
 
 #include <cstdint>
 
-#include <boost/shared_ptr.hpp>
-#include <boost/noncopyable.hpp>
-#include <boost/make_shared.hpp>
 #include <boost/optional.hpp>
 
 namespace kodo

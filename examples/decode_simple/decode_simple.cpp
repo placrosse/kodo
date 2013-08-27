@@ -66,7 +66,6 @@ namespace kodo
 int main()
 {
     typedef fifi::binary field_type;
-    typedef field_type::value_type value_type;
 
     // Set the number of symbols (i.e. the generation size in RLNC
     // terminology) and the number of elements in a symbol

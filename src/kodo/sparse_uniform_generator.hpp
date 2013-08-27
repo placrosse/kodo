@@ -7,10 +7,7 @@
 
 #include <cstdint>
 #include <cassert>
-
-#include <boost/random/mersenne_twister.hpp>
-#include <boost/random/uniform_int_distribution.hpp>
-#include <boost/random/bernoulli_distribution.hpp>
+#include <random>
 
 #include <fifi/is_binary.hpp>
 #include <fifi/fifi_utils.hpp>
@@ -32,7 +29,7 @@ namespace kodo
         typedef typename SuperCoder::value_type value_type;
 
         /// The random generator used
-        typedef boost::random::mt19937 generator_type;
+        typedef std::mt19937 generator_type;
 
         /// @copydoc layer::seed_type
         typedef generator_type::result_type seed_type;
@@ -128,7 +125,7 @@ namespace kodo
             // If binary, the density should be below 1
             assert(!fifi::is_binary<field_type>::value || density < 1);
 
-            m_bernoulli = boost::random::bernoulli_distribution<>(density);
+            m_bernoulli = std::bernoulli_distribution(density);
         }
 
         /// Set the number of nonzero symbols
@@ -160,17 +157,17 @@ namespace kodo
     private:
 
         /// The distribution controlling the density of the coefficients
-        boost::random::bernoulli_distribution<> m_bernoulli;
+        std::bernoulli_distribution m_bernoulli;
 
         /// The type of the value_type distribution
-        typedef boost::random::uniform_int_distribution<value_type>
+        typedef std::uniform_int_distribution<value_type>
             value_type_distribution;
 
         /// Distribution that generates random values from a finite field
         value_type_distribution m_value_distribution;
 
         /// The random generator
-        boost::random::mt19937 m_random_generator;
+        std::mt19937 m_random_generator;
 
     };
 }

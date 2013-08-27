@@ -6,6 +6,7 @@
 /// @file test_object_xyz.cpp Unit tests for object encoder and decoders
 
 #include <ctime>
+#include <memory>
 
 #include <gtest/gtest.h>
 
@@ -20,7 +21,7 @@ struct dummy_coder
 {
 public:
 
-    typedef boost::shared_ptr<dummy_coder> pointer;
+    typedef std::shared_ptr<dummy_coder> pointer;
 
     class factory
     {
@@ -37,7 +38,7 @@ public:
         /// @copydoc layer::factory::build()
         pointer build()
         {
-            return boost::make_shared<dummy_coder>(m_symbols, m_symbol_size);
+            return std::make_shared<dummy_coder>(m_symbols, m_symbol_size);
         }
 
         /// @copydoc layer::factory::max_symbols() const

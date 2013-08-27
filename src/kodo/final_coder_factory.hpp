@@ -6,9 +6,7 @@
 #pragma once
 
 #include <cstdint>
-
-#include <boost/shared_ptr.hpp>
-#include <boost/make_shared.hpp>
+#include <memory>
 
 namespace kodo
 {
@@ -22,7 +20,7 @@ namespace kodo
     public:
 
         /// Pointer type to the constructed coder
-        typedef boost::shared_ptr<FinalType> pointer;
+        typedef std::shared_ptr<FinalType> pointer;
 
         //typedef typename FinalType::factory factory_type;
 
@@ -50,7 +48,7 @@ namespace kodo
                 factory_type *this_factory =
                     static_cast<factory_type*>(this);
 
-                pointer coder = boost::make_shared<FinalType>();
+                pointer coder = std::make_shared<FinalType>();
 
                 coder->construct(*this_factory);
                 coder->initialize(*this_factory);

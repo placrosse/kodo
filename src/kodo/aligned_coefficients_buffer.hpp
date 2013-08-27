@@ -6,8 +6,7 @@
 #pragma once
 
 #include <cstdint>
-
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 #include <sak/aligned_allocator.hpp>
 #include <sak/is_aligned.hpp>
@@ -26,7 +25,7 @@ namespace kodo
         typedef typename SuperCoder::pointer pointer;
 
         /// Pointer to the type of this layer
-        typedef boost::shared_ptr<
+        typedef std::shared_ptr<
             aligned_coefficients_buffer<SuperCoder> > this_pointer;
 
     public:
