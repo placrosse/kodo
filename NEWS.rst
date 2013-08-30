@@ -4,6 +4,13 @@ News for Kodo
 This file lists the major changes between versions. For a more detailed list
 of every change, see the Git log.
 
+Latest
+------
+* Bug: Fixed assert in the payload_rank_decoder.hpp which incorrectly checked
+  for the received encoder rank to be less than the currently largest rank.
+  This is not the case for e.g. recoding or if packet reordering occurs.
+  Reported by Martin Hundebøll.
+
 13.0.0
 ------
 * Major: Replaced the linear_block_decoder with the

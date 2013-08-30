@@ -62,6 +62,12 @@ TEST(TestOnTheFlyCodes, test_recoders_api)
     test_recoders<kodo::on_the_fly_encoder, kodo::on_the_fly_decoder>();
 }
 
+/// Test the recoding functionality of the stack
+TEST(TestOnTheFlyCodes, test_recoding_relay)
+{
+    test_recoding_relay<kodo::on_the_fly_encoder, kodo::on_the_fly_decoder>();
+}
+
 /// Tests that we can progressively set on symbol at-a-time on
 /// encoder
 TEST(TestOnTheFlyCodes, test_on_the_fly_api)
@@ -140,6 +146,13 @@ TEST(TestDebugOnTheFlyCodes, mix_uncoded_api)
 TEST(TestDebugOnTheFlyCodes, test_recoders_api)
 {
     test_recoders<kodo::on_the_fly_encoder,
+        kodo::debug_on_the_fly_decoder>();
+}
+
+/// Test the recoding functionality of the stack
+TEST(TestDebugOnTheFlyCodes, test_recoding_relay)
+{
+    test_recoding_relay<kodo::on_the_fly_encoder,
         kodo::debug_on_the_fly_decoder>();
 }
 

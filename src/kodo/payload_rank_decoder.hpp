@@ -52,7 +52,7 @@ namespace kodo
         {
             SuperCoder::initialize(the_factory);
 
-            /// Reset the state
+            // Reset the state
             m_encoder_rank = 0;
         }
 
@@ -78,10 +78,11 @@ namespace kodo
             rank_type encoder_rank =
                 sak::big_endian::get<rank_type>(payload);
 
-            // We should never see an encoder which reduces
-            // its rank
-            assert(m_encoder_rank <= encoder_rank);
-            m_encoder_rank = encoder_rank;
+            // We set the maximum rank of the previously seen and the
+            // newly received. Re-ordering of packets might cause a
+            // the encoder rank to be lower than what has previously
+            // been seen
+            m_encoder_rank = std::max(encoder_rank, m_encoder_rank);
 
             return sizeof(rank_type);
         }
