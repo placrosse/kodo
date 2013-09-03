@@ -308,6 +308,8 @@ namespace kodo
             assert(symbol_id != 0);
             assert(symbol_data != 0);
 
+//            auto it = SuperCoder::coefficient_iterator(symbol_id);
+
             uint32_t start = direction_policy::min(0, SuperCoder::symbols()-1);
             uint32_t end = direction_policy::max(0, SuperCoder::symbols()-1);
 
@@ -390,8 +392,6 @@ namespace kodo
             // substitute the higher pivot values into the new packet
             uint32_t end = direction_policy::max(0, SuperCoder::symbols()-1);
 
-            // std::cout << "Pivot " << pivot_index << " to " << end << std::endl;
-
             direction_policy p(pivot_index, end);
 
             // Jump past the pivot_index position
@@ -404,7 +404,6 @@ namespace kodo
                 // Do we have a non-zero value here?
                 value_type value =
                     fifi::get_value<field_type>(symbol_id, i);
-
 
                 if( !value )
                 {
