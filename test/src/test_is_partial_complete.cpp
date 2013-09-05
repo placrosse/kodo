@@ -62,6 +62,7 @@ TEST(TestIsPartialComplete, check_true)
 
     auto encoder = encoder_factory.build();
     auto decoder = decoder_factory.build();
+    auto recoder = decoder_factory.build();
 
     // Check that this code compiles
 
@@ -90,6 +91,12 @@ TEST(TestIsPartialComplete, check_true)
         // Simulate some loss
         if((rand() % 2) == 0)
             continue;
+
+        // Use recoder in some cases
+        if((rand() % 2) == 0) {
+            recoder->decode( &payload[0] );
+            recoder->recode( &payload[0] );
+        }
 
         decoder->decode( &payload[0] );
 
