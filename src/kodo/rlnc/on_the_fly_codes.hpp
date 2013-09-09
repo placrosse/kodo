@@ -13,6 +13,7 @@
 #include "../rank_info.hpp"
 #include "../payload_rank_encoder.hpp"
 #include "../payload_rank_decoder.hpp"
+#include "../payload_rank_recoder.hpp"
 
 namespace kodo
 {
@@ -76,7 +77,7 @@ namespace kodo
     template<class MainStack>
     class on_the_fly_recoding_stack
         : public // Payload API
-                 payload_rank_encoder<
+                 payload_rank_recoder<
                  payload_encoder<
                  // Codec Header API
                  non_systematic_encoder<

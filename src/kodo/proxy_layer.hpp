@@ -455,6 +455,13 @@ namespace kodo
             return m_proxy->rank();
         }
 
+        /// @copydoc layer::encoder_rank() const
+        uint32_t encoder_rank() const
+        {
+            assert(m_proxy);
+            return m_proxy->encoder_rank();
+        }
+
         /// @copydoc layer::symbol_pivot(uint32_t) const
         bool symbol_pivot(uint32_t index) const
         {
