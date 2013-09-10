@@ -69,8 +69,7 @@ namespace kodo
                     continue;
                 }
 
-                const value_type *symbol_i =
-                    SuperCoder::symbol_value( i );
+                const value_type *symbol_i = SuperCoder::symbol_value( i );
 
                 // Did you forget to set the data on the encoder?
                 assert(symbol_i != 0);

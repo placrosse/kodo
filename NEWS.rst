@@ -10,6 +10,15 @@ Latest
   for the received encoder rank to be less than the currently largest rank.
   This is not the case for e.g. recoding or if packet reordering occurs.
   Reported by Martin Hundebøll.
+* Major: Fixed problem with is_partial_complete() and recoding. The problem was
+  that the recoder would forward its own rank instead of the rank of the
+  encoder. This could result in cases where a decoder would falsely report
+  an early decoding opportunity since it detected that it had reached the rank
+  of the encoder. This has been fixed by the payload_rank_recoder layer which
+  now forwards the largest seen encoder rank instead of the rank of the
+  recoder. We have also modified the API naming for reading the encoder rank,
+  from "encoder_rank()" to "seen_encoder_rank()". This problem was reported
+  by Martin Hundebøll.
 
 13.0.0
 ------

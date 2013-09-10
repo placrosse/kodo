@@ -23,7 +23,8 @@ namespace kodo
     /// @ingroup codec_layers
     /// @brief This layer can be added to a decoding stack to monitor the
     ///        coding coefficients passed to a decoder. This specific layer
-    ///        tracks the largest index where it have seen non-zero coefficients.
+    ///        tracks the largest index where it have seen non-zero
+    ///        coefficients.
     ///        One use-case of this is to monitor when partial decoding is
     ///        possible i.e. when symbols in decoder are fully decoded even
     ///        though the full data block has not been sent.
@@ -156,7 +157,7 @@ namespace kodo
 
         /// @return The rank of the encoder predicted by inspecting the
         ///         coding coefficients
-        rank_type encoder_rank() const
+        rank_type seen_encoder_rank() const
         {
             if(!m_nonzero_seen)
             {
