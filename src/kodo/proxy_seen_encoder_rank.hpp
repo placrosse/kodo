@@ -10,6 +10,9 @@
 namespace kodo
 {
 
+    /// @ingroup proxy_layers
+    /// @brief The proxy_seen_encoder_rank will forward calls to the
+    ///        seen_encoder_rank() function to a main stack
     template<class SuperCoder>
     class proxy_seen_encoder_rank : public SuperCoder
     {
