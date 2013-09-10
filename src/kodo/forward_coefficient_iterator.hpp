@@ -12,6 +12,7 @@
 namespace kodo
 {
 
+    /// @todo Update class documentation
     /// Policy object for determining the "direction" of the
     /// linear_block_decoder e.g. whether we will look for the
     /// first pivot from the beginning of the coefficients vector
@@ -43,16 +44,23 @@ namespace kodo
 
     public:
 
+        /// Nested iterator type which encapsulates the iteration
+        /// logic though the coding coefficients.
         class iterator
         {
+        public:
 
-            /// @param
+            /// @param coefficients The coding coefficients
+            /// @param elements The number of coefficients stored in the
+            ///        coefficients buffer.
+            /// @param start_index A starting index which allows us to
+            ///        offset the iterator to start at a specific index
             iterator(const uint8_t* coefficients,
                      uint32_t elements,
-                     uint32_t index)
+                     uint32_t start_index)
                 : m_coefficients(coefficients),
                   m_elements(elements),
-                  m_index(index)
+                  m_index(start_index)
             {
                 assert(m_coefficients != 0);
                 assert(m_elements > 0);
@@ -72,16 +80,19 @@ namespace kodo
                 ++m_index;
             }
 
-            /// @return the current index
+            /// @return The current index
             uint32_t index() const
             {
                 return m_index;
             }
 
+            /// @return The value of the coefficient at the current index
             value_type value() const
             {
                 return fifi::get_value<field_type>(m_coefficients, m_index);
             }
+
+        private:
 
             /// The coefficients buffer
             const uint8_t* m_coefficients;
@@ -96,15 +107,23 @@ namespace kodo
 
     public:
 
+        /// @param coefficients The buffer to iterate over
+        /// @return The iterator object
         iterator coefficient_iterator(const uint8_t* coefficients) const
         {
+            assert(coefficients != 0);
             return iterator(coefficients, SuperCoder::symbols(), 0);
         }
 
+        /// @param coefficients The buffer to iterate over
+        /// @param start_index The index from which iteration should start
+        /// @return The iterator object
         iterator coefficient_iterator(const uint8_t* coefficients,
-                                      uint32_t offset) const
+                                      uint32_t start_index) const
         {
-            return iterator(coefficients, SuperCoder::symbols(), offset);
+            assert(coefficients != 0);
+            assert(start_index < SuperCoder::symbols());
+            return iterator(coefficients, SuperCoder::symbols(), start_index);
         }
 
 
