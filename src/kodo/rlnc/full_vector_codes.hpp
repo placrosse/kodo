@@ -37,6 +37,7 @@
 #include "../cached_symbol_decoder.hpp"
 #include "../debug_cached_symbol_decoder.hpp"
 #include "../debug_linear_block_decoder.hpp"
+#include "../rank_info.hpp"
 
 #include "../linear_block_encoder.hpp"
 #include "../forward_linear_block_decoder.hpp"
@@ -175,6 +176,7 @@ namespace kodo
                  debug_cached_symbol_decoder< // <-- Debug layer
                  cached_symbol_decoder<       // <-- Access to decoding symbols
                  forward_linear_block_decoder<
+                 rank_info<
                  // Coefficient Storage API
                  coefficient_storage<
                  coefficient_info<
@@ -189,7 +191,7 @@ namespace kodo
                  final_coder_factory_pool<
                  // Final type
                  debug_full_rlnc_decoder<Field>
-                     > > > > > > > > > > > > > > > > > >
+                     > > > > > > > > > > > > > > > > > > >
     { };
 
 }

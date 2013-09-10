@@ -26,6 +26,9 @@ namespace kodo
         /// Pointer type to the constructed coder
         typedef boost::shared_ptr<FinalType> pointer;
 
+        /// The type of the main stack
+        typedef MainStack main_stack;
+
     public:
 
         /// @ingroup factory_layers
@@ -62,6 +65,20 @@ namespace kodo
             {
                 assert(stack_proxy != 0);
                 m_stack_proxy = stack_proxy;
+            }
+
+            /// @return a pointer to the main proxy stack
+            const MainStack* proxy_stack() const
+            {
+                assert(m_stack_proxy);
+                return m_stack_proxy;
+            }
+
+            /// @return a pointer to the main proxy stack
+            MainStack* proxy_stack()
+            {
+                assert(m_stack_proxy);
+                return m_stack_proxy;
             }
 
             /// @copydoc layer::factory::build()
@@ -162,7 +179,6 @@ namespace kodo
         proxy_layer()
             : m_proxy(0)
         { }
-
 
         /// Sets the pointer to the proxy stack
         /// @param proxy The stack where calls should be forwarded.
@@ -453,13 +469,6 @@ namespace kodo
         {
             assert(m_proxy);
             return m_proxy->rank();
-        }
-
-        /// @copydoc layer::encoder_rank() const
-        uint32_t encoder_rank() const
-        {
-            assert(m_proxy);
-            return m_proxy->encoder_rank();
         }
 
         /// @copydoc layer::symbol_pivot(uint32_t) const

@@ -25,13 +25,13 @@ namespace kodo
             return m_rank;
         }
 
-        uint32_t encoder_rank() const
+        uint32_t seen_encoder_rank() const
         {
-            return m_encoder_rank;
+            return m_seen_encoder_rank;
         }
 
         uint32_t m_rank;
-        uint32_t m_encoder_rank;
+        uint32_t m_seen_encoder_rank;
     };
 
     // Instantiate a stack containing the partial_decoding_tracker
@@ -56,11 +56,11 @@ TEST(TestPartialDecodingTracker, test_partial_decoding)
 {
     kodo::test_partial_stack stack;
     stack.m_rank = 0;
-    stack.m_encoder_rank = 0;
+    stack.m_seen_encoder_rank = 0;
 
     EXPECT_FALSE(stack.is_partial_complete());
 
-    stack.m_encoder_rank = 1;
+    stack.m_seen_encoder_rank = 1;
     EXPECT_FALSE(stack.is_partial_complete());
 
     stack.m_rank = 1;

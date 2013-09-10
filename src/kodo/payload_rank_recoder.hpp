@@ -82,7 +82,7 @@ namespace kodo
 
             // Write the encoder rank to the payload
             sak::big_endian::put<rank_type>(
-                SuperCoder::encoder_rank(), payload);
+                SuperCoder::seen_encoder_rank(), payload);
 
             return sizeof(rank_type);
         }

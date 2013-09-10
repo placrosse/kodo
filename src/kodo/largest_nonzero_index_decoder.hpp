@@ -157,7 +157,7 @@ namespace kodo
 
         /// @return The rank of the encoder predicted by inspecting the
         ///         coding coefficients
-        rank_type encoder_rank() const
+        rank_type seen_encoder_rank() const
         {
             if(!m_nonzero_seen)
             {

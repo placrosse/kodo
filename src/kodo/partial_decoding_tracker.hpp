@@ -47,9 +47,9 @@ namespace kodo
         bool is_partial_complete() const
         {
             rank_type decoder_rank = SuperCoder::rank();
-            rank_type encoder_rank = SuperCoder::encoder_rank();
+            rank_type seen_encoder_rank = SuperCoder::seen_encoder_rank();
 
-            assert(decoder_rank <= encoder_rank);
+            assert(decoder_rank <= seen_encoder_rank);
 
             if(decoder_rank == 0)
             {
@@ -57,7 +57,7 @@ namespace kodo
             }
             else
             {
-                return SuperCoder::rank() == SuperCoder::encoder_rank();
+                return decoder_rank == seen_encoder_rank;
             }
         }
 

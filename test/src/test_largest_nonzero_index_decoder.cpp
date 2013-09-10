@@ -58,7 +58,7 @@ TEST(TestLargestNonzeroIndexDecoder, test_index)
     auto d = f.build();
 
     EXPECT_EQ(d->coefficients_size(), 1U);
-    EXPECT_EQ(d->encoder_rank(), 0U);
+    EXPECT_EQ(d->seen_encoder_rank(), 0U);
     EXPECT_FALSE(d->nonzero_index_seen());
 
     uint8_t coefficients[1];
@@ -74,7 +74,7 @@ TEST(TestLargestNonzeroIndexDecoder, test_index)
     d->decode_symbol(&symbol[0], coefficients);
 
     EXPECT_EQ(d->rank(), 1U);
-    EXPECT_EQ(d->encoder_rank(), 3U);
+    EXPECT_EQ(d->seen_encoder_rank(), 3U);
     EXPECT_TRUE(d->nonzero_index_seen());
     EXPECT_EQ(d->largest_nonzero_index(), 2U);
 
@@ -86,7 +86,7 @@ TEST(TestLargestNonzeroIndexDecoder, test_index)
     d->decode_symbol(&symbol[0], coefficients);
 
     EXPECT_EQ(d->rank(), 2U);
-    EXPECT_EQ(d->encoder_rank(), 3U);
+    EXPECT_EQ(d->seen_encoder_rank(), 3U);
     EXPECT_TRUE(d->nonzero_index_seen());
     EXPECT_EQ(d->largest_nonzero_index(), 2U);
 
@@ -99,7 +99,7 @@ TEST(TestLargestNonzeroIndexDecoder, test_index)
     d->decode_symbol(&symbol[0], coefficients);
 
     EXPECT_EQ(d->rank(), 3U);
-    EXPECT_EQ(d->encoder_rank(), 3U);
+    EXPECT_EQ(d->seen_encoder_rank(), 3U);
     EXPECT_TRUE(d->nonzero_index_seen());
     EXPECT_EQ(d->largest_nonzero_index(), 2U);
 
@@ -113,7 +113,7 @@ TEST(TestLargestNonzeroIndexDecoder, test_index)
     d->decode_symbol(&symbol[0], coefficients);
 
     EXPECT_EQ(d->rank(), 4U);
-    EXPECT_EQ(d->encoder_rank(), 5U);
+    EXPECT_EQ(d->seen_encoder_rank(), 5U);
     EXPECT_TRUE(d->nonzero_index_seen());
     EXPECT_EQ(d->largest_nonzero_index(), 4U);
 
@@ -127,7 +127,7 @@ TEST(TestLargestNonzeroIndexDecoder, test_index)
     d->decode_symbol(&symbol[0], coefficients);
 
     EXPECT_EQ(d->rank(), 5U);
-    EXPECT_EQ(d->encoder_rank(), 5U);
+    EXPECT_EQ(d->seen_encoder_rank(), 5U);
     EXPECT_TRUE(d->nonzero_index_seen());
     EXPECT_EQ(d->largest_nonzero_index(), 4U);
 

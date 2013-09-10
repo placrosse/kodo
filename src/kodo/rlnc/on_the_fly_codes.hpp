@@ -14,6 +14,7 @@
 #include "../payload_rank_encoder.hpp"
 #include "../payload_rank_decoder.hpp"
 #include "../payload_rank_recoder.hpp"
+#include "../proxy_seen_encoder_rank.hpp"
 
 namespace kodo
 {
@@ -92,9 +93,10 @@ namespace kodo
                  linear_block_encoder<
                  rank_info<
                  // Proxy
+                 proxy_seen_encoder_rank<
                  proxy_layer<
                  on_the_fly_recoding_stack<MainStack>,
-                 MainStack> > > > > > > > > > >
+                 MainStack> > > > > > > > > > > >
     { };
 
     /// @ingroup fec_stacks

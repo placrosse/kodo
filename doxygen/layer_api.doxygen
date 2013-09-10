@@ -285,12 +285,6 @@ public:
     uint32_t rank() const;
 
     /// @ingroup codec_api
-    /// The rank of an encoder states how many symbols are available for
-    /// encoding.
-    /// @return the rank of the encoder
-    uint32_t encoder_rank() const;
-
-    /// @ingroup codec_api
     /// The symbol pivot indicates whether a symbol is available to either an
     /// encoder or decoder. A coefficient generator may use this information
     /// when generating coding coefficients.

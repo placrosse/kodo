@@ -53,7 +53,7 @@ namespace kodo
             SuperCoder::initialize(the_factory);
 
             // Reset the state
-            m_encoder_rank = 0;
+            m_seen_encoder_rank = 0;
         }
 
         /// Unpacks the symbol data and symbol header from the payload
@@ -82,7 +82,7 @@ namespace kodo
             // newly received. Re-ordering of packets might cause a
             // the encoder rank to be lower than what has previously
             // been seen
-            m_encoder_rank = std::max(encoder_rank, m_encoder_rank);
+            m_seen_encoder_rank = std::max(encoder_rank, m_seen_encoder_rank);
 
             return sizeof(rank_type);
         }
@@ -95,15 +95,15 @@ namespace kodo
         }
 
         /// @return The rank of the encoder as read from the packet
-        rank_type encoder_rank() const
+        rank_type seen_encoder_rank() const
         {
-            return m_encoder_rank;
+            return m_seen_encoder_rank;
         }
 
     private:
 
         /// Stores the read encoder rank
-        rank_type m_encoder_rank;
+        rank_type m_seen_encoder_rank;
 
     };
 
