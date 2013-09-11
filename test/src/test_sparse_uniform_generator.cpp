@@ -43,7 +43,7 @@ namespace kodo
 
 /// Tests:
 ///   - layer::set_density(double)
-///   - layer::get_density(double)
+///   - layer::density()
 template<class Coder>
 struct api_density
 {
@@ -100,31 +100,31 @@ struct api_density
 
         std::vector<uint8_t> vector_d =
             random_vector(coder->coefficients_size());
-        
+
         if (fifi::is_binary<field_type>::value)
         {
             if (symbols > 1)
             {
                 uint32_t nonzero_symbols = std::ceil(symbols/2.0);
                 coder->set_nonzero_symbols(nonzero_symbols);
-                EXPECT_EQ((double)nonzero_symbols/symbols, coder->get_density());
+                EXPECT_EQ((double)nonzero_symbols/symbols, coder->density());
             }
         }
         else
         {
             uint32_t nonzero_symbols = std::ceil(symbols/2.0);
             coder->set_nonzero_symbols(nonzero_symbols);
-            EXPECT_EQ((double)nonzero_symbols/symbols, coder->get_density());
+            EXPECT_EQ((double)nonzero_symbols/symbols, coder->density());
 
             coder->set_nonzero_symbols(symbols);
-            EXPECT_EQ(1.0, coder->get_density());
+            EXPECT_EQ(1.0, coder->density());
 
             coder->set_density(1.0);
-            EXPECT_EQ(1.0, coder->get_density());
-        } 
+            EXPECT_EQ(1.0, coder->density());
+        }
 
         coder->set_density(0.01);
-        EXPECT_EQ(0.01, coder->get_density());
+        EXPECT_EQ(0.01, coder->density());
 
         coder->seed(0);
         coder->generate(&vector_a[0]);

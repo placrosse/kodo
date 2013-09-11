@@ -152,7 +152,7 @@ namespace kodo
 
         /// Get the density of the coefficients generated
         /// @return the density of the generator
-        double get_density() const
+        double density() const
         {
             return m_bernoulli.p();
         }
