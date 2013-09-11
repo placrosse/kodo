@@ -14,6 +14,7 @@
 #include <kodo/storage_block_info.hpp>
 namespace kodo
 {
+
     /// Helper class to test the coefficient info API.
     template<class FieldType>
     class dummy_layer
@@ -21,7 +22,7 @@ namespace kodo
     public:
 
         typedef FieldType field_type;
-    
+
     public:
 
         class factory
@@ -47,7 +48,7 @@ namespace kodo
         {
             (void)the_factory;
         }
-          
+
     };
 
     template<class FieldType>

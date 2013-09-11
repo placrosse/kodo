@@ -133,6 +133,9 @@ namespace kodo
 
                 m_uncoded[ symbol_index ] = true;
 
+                // m_maximum_pivot = SuperCoder::coefficient_iterator_type::max_index(
+                //     symbol_index, m_maximum_pivot);
+
                 m_maximum_pivot =
                     direction_policy::max(symbol_index, m_maximum_pivot);
 
@@ -178,9 +181,8 @@ namespace kodo
             assert(symbol_coefficients != 0);
 
             // See if we can find a pivot
-            auto pivot_index
-                = forward_substitute_to_pivot(
-                    symbol_data, symbol_coefficients);
+            auto pivot_index = forward_substitute_to_pivot(
+                symbol_data, symbol_coefficients);
 
             if(!pivot_index)
                 return;
@@ -188,8 +190,7 @@ namespace kodo
             if(!fifi::is_binary<field_type>::value)
             {
                 // Normalize symbol and vector
-                normalize(
-                    symbol_data,symbol_coefficients,*pivot_index);
+                normalize(symbol_data,symbol_coefficients,*pivot_index);
             }
 
             // Reduce the symbol further
@@ -227,8 +228,7 @@ namespace kodo
 
             m_coded[pivot_index] = false;
 
-            value_type *symbol_i =
-                SuperCoder::symbol_value(pivot_index);
+            value_type *symbol_i = SuperCoder::symbol_value(pivot_index);
 
             value_type *vector_i =
                 SuperCoder::coefficients_value(pivot_index);
