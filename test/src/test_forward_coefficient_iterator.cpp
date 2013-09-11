@@ -43,8 +43,7 @@ namespace kodo
                dummy_layer<FieldType> >
     { };
 
-
-};
+}
 
 /// Run the tests typical coefficients stack
 TEST(TestForwardCoefficientIterator, binary)
@@ -105,8 +104,6 @@ TEST(TestForwardCoefficientIterator, binary)
     it.advance();
 
     EXPECT_TRUE(it.at_end());
-
-
 }
 
 
