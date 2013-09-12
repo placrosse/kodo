@@ -38,6 +38,7 @@
 
 #include "../linear_block_encoder.hpp"
 #include "../forward_linear_block_decoder.hpp"
+#include "../coefficient_value_access.hpp"
 
 namespace kodo
 {
@@ -70,6 +71,7 @@ namespace kodo
                  linear_block_encoder<
                  storage_aware_encoder<
                  // Coefficient Storage API
+                 coefficient_value_access<
                  coefficient_info<
                  // Symbol Storage API
                  deep_symbol_storage<
@@ -82,7 +84,7 @@ namespace kodo
                  final_coder_factory_pool<
                  // Final type
                  seed_rlnc_encoder<Field>
-                     > > > > > > > > > > > > > > > >
+                     > > > > > > > > > > > > > > > > >
     { };
 
     /// @ingroup fec_stacks
@@ -106,6 +108,7 @@ namespace kodo
                  aligned_coefficients_decoder<
                  forward_linear_block_decoder<
                  // Coefficient Storage API
+                 coefficient_value_access<
                  coefficient_storage<
                  coefficient_info<
                  // Storage API
@@ -119,7 +122,7 @@ namespace kodo
                  final_coder_factory_pool<
                  // Final type
                  seed_rlnc_decoder<Field>
-                     > > > > > > > > > > > > > > >
+                     > > > > > > > > > > > > > > > >
     { };
 
 }

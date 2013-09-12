@@ -42,6 +42,7 @@
 #include "../linear_block_encoder.hpp"
 #include "../forward_linear_block_decoder.hpp"
 #include "../linear_block_decoder_delayed.hpp"
+#include "../coefficient_value_access.hpp"
 
 namespace kodo
 {
@@ -74,6 +75,7 @@ namespace kodo
                linear_block_encoder<
                storage_aware_encoder<
                // Coefficient Storage API
+               coefficient_value_access<
                coefficient_info<
                // Symbol Storage API
                deep_symbol_storage<
@@ -86,7 +88,7 @@ namespace kodo
                final_coder_factory_pool<
                // Final type
                full_rlnc_encoder<Field
-                   > > > > > > > > > > > > > > > > >
+                   > > > > > > > > > > > > > > > > > >
     { };
 
     /// Intermediate stack implementing the recoding functionality of a
@@ -113,9 +115,12 @@ namespace kodo
                  encode_symbol_tracker<
                  zero_symbol_encoder<
                  linear_block_encoder<
+                 // Coefficient Storage API
+                 coefficient_value_access<
                  // Proxy
                  proxy_layer<
-                 recoding_stack<MainStack>, MainStack> > > > > > > > >
+                 recoding_stack<MainStack>, MainStack>
+                     > > > > > > > > >
     { };
 
     /// @ingroup fec_stacks
@@ -139,6 +144,7 @@ namespace kodo
                  aligned_coefficients_decoder<
                  forward_linear_block_decoder<
                  // Coefficient Storage API
+                 coefficient_value_access<
                  coefficient_storage<
                  coefficient_info<
                  // Storage API
@@ -152,7 +158,7 @@ namespace kodo
                  final_coder_factory_pool<
                  // Final type
                  full_rlnc_decoder<Field>
-                     > > > > > > > > > > > > > > >
+                     > > > > > > > > > > > > > > > >
     { };
 
     /// @ingroup fec_stacks
@@ -178,6 +184,7 @@ namespace kodo
                  forward_linear_block_decoder<
                  rank_info<
                  // Coefficient Storage API
+                 coefficient_value_access<
                  coefficient_storage<
                  coefficient_info<
                  // Storage API
@@ -191,7 +198,7 @@ namespace kodo
                  final_coder_factory_pool<
                  // Final type
                  debug_full_rlnc_decoder<Field>
-                     > > > > > > > > > > > > > > > > > > >
+                     > > > > > > > > > > > > > > > > > > > >
     { };
 
 }

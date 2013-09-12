@@ -37,6 +37,7 @@ namespace kodo
                  linear_block_encoder<
                  storage_aware_encoder<         // <--- New layer
                  // Coefficient Storage API
+                 coefficient_value_access<
                  coefficient_info<
                  // Symbol Storage API
                  deep_symbol_storage<
@@ -49,7 +50,7 @@ namespace kodo
                  final_coder_factory_pool<
                  // Final type
                  on_the_fly_encoder<Field>
-                     > > > > > > > > > > > > > > > > >
+                     > > > > > > > > > > > > > > > > > >
     { };
 }
 

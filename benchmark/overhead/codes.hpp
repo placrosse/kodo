@@ -28,6 +28,7 @@ namespace kodo
                  linear_block_decoder_delayed<
                  forward_linear_block_decoder<
                  // Coefficient Storage API
+                 coefficient_value_access<
                  coefficient_storage<
                  coefficient_info<
                  // Storage API
@@ -41,7 +42,7 @@ namespace kodo
                  final_coder_factory_pool<
                  // Final type
                  full_delayed_rlnc_decoder<Field>
-                     > > > > > > > > > > > > > > > >
+                     > > > > > > > > > > > > > > > > >
     { };
 
     template<class Field>
@@ -58,6 +59,7 @@ namespace kodo
             linear_block_decoder_delayed<
             forward_linear_block_decoder<
             // Coefficient Storage API
+            coefficient_value_access<
             coefficient_storage<
             coefficient_info<
             // Storage API
@@ -71,7 +73,7 @@ namespace kodo
             final_coder_factory_pool<
             // Final type
             full_rlnc_decoder_unsystematic<Field>
-            > > > > > > > > > > > > > > >
+                > > > > > > > > > > > > > > > >
     { };
 
     template<class Field>
@@ -90,6 +92,7 @@ namespace kodo
                linear_block_encoder<
                storage_aware_encoder<
                // Coefficient Storage API
+               coefficient_value_access<
                coefficient_info<
                // Symbol Storage API
                deep_symbol_storage<
@@ -102,7 +105,7 @@ namespace kodo
                final_coder_factory_pool<
                // Final type
                full_rlnc_encoder_unsystematic<Field
-                   > > > > > > > > > > > > > > > >
+                   > > > > > > > > > > > > > > > > >
     { };
 
 

@@ -33,6 +33,7 @@ namespace kodo
                  linear_block_decoder_delayed<
                  forward_linear_block_decoder<
                  // Coefficient Storage API
+                 coefficient_value_access<
                  coefficient_storage<
                  coefficient_info<
                  // Storage API
@@ -46,7 +47,7 @@ namespace kodo
                  final_coder_factory_pool<
                  // Final type
                  full_delayed_rlnc_decoder<Field>
-                     > > > > > > > > > > > > > > > >
+                     > > > > > > > > > > > > > > > > >
     { };
 
     /// RLNC encoder using a density based random generator, which can be
@@ -69,6 +70,7 @@ namespace kodo
                linear_block_encoder<
                storage_aware_encoder<
                // Coefficient Storage API
+               coefficient_value_access<
                coefficient_info<
                // Symbol Storage API
                deep_symbol_storage<
@@ -81,7 +83,7 @@ namespace kodo
                final_coder_factory_pool<
                // Final type
                sparse_full_rlnc_encoder<Field
-                   > > > > > > > > > > > > > > > > >
+                   > > > > > > > > > > > > > > > > > >
     { };
 
     /// RLNC decoder which uses the policy based linear block decoder
@@ -99,6 +101,7 @@ namespace kodo
                  aligned_coefficients_decoder<
                  backward_linear_block_decoder<
                  // Coefficient Storage API
+                 coefficient_value_access<
                  coefficient_storage<
                  coefficient_info<
                  // Storage API
@@ -112,7 +115,7 @@ namespace kodo
                  final_coder_factory_pool<
                  // Final type
                  backward_full_rlnc_decoder<Field>
-                     > > > > > > > > > > > > > > >
+                     > > > > > > > > > > > > > > > >
     { };
 
 

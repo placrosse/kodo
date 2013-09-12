@@ -24,6 +24,7 @@
 #include "../symbol_id_decoder.hpp"
 #include "../coefficient_storage.hpp"
 #include "../coefficient_info.hpp"
+#include "../coefficient_value_access.hpp"
 #include "../storage_aware_encoder.hpp"
 #include "../encode_symbol_tracker.hpp"
 #include "../linear_block_encoder.hpp"
@@ -60,6 +61,7 @@ namespace kodo
                  linear_block_encoder<
                  storage_aware_encoder<
                  // Coefficient Storage API
+                 coefficient_value_access<
                  coefficient_info<
                  // Symbol Storage API
                  deep_symbol_storage<
@@ -72,7 +74,7 @@ namespace kodo
                  final_coder_factory_pool<
                  // Final type
                  rs_encoder<Field>
-                     > > > > > > > > > > > > > > > >
+                     > > > > > > > > > > > > > > > > >
     { };
 
     /// @ingroup fec_stacks
@@ -94,6 +96,7 @@ namespace kodo
                  // Codec API
                  forward_linear_block_decoder<
                  // Coefficient Storage API
+                 coefficient_value_access<
                  coefficient_storage<
                  coefficient_info<
                  // Storage API
@@ -107,7 +110,7 @@ namespace kodo
                  final_coder_factory_pool<
                  // Final type
                  rs_decoder<Field>
-                     > > > > > > > > > > > > > >
+                     > > > > > > > > > > > > > > >
     { };
 
 }

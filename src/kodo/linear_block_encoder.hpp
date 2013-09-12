@@ -62,7 +62,7 @@ namespace kodo
 
             for(uint32_t i = 0; i < SuperCoder::symbols(); ++i)
             {
-                value_type value = fifi::get_value<field_type>(c, i);
+                value_type value = SuperCoder::coefficient_value(c, i);
 
                 if(!value)
                 {
@@ -82,8 +82,7 @@ namespace kodo
                 }
                 else
                 {
-                    SuperCoder::multiply_add(
-                        symbol, symbol_i, value,
+                    SuperCoder::multiply_add(symbol, symbol_i, value,
                         SuperCoder::symbol_length());
                 }
             }

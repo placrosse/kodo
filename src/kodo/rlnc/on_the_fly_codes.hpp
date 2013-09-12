@@ -15,6 +15,7 @@
 #include "../payload_rank_decoder.hpp"
 #include "../payload_rank_recoder.hpp"
 #include "../proxy_seen_encoder_rank.hpp"
+#include "../coefficient_value_access.hpp"
 
 namespace kodo
 {
@@ -22,15 +23,17 @@ namespace kodo
     /// @ingroup fec_stacks
     /// @brief Complete stack implementing a full RLNC on-the-fly encoder.
     ///
-    /// The on-the-fly encoder has the advantage that symbols can be specified
-    /// as they arrive at the encoder. This breaks with a traditional block
-    /// code where all the data has to be available before encoding can start.
+    /// The on-the-fly encoder has the advantage that symbols can be
+    /// specified as they arrive at the encoder. This breaks with a
+    /// traditional block code where all the data has to be available
+    /// before encoding can start.
     ///
-    /// Implementation of on the fly RLNC encoder uses a storage aware generator
-    /// and storage aware encoder. The storage aware generator makes sure that
-    /// we do not generate non-zero coefficients for the missing symbols, the
-    /// storage aware encoder provides the generator with information about how
-    /// many symbols have been specified.
+    /// Implementation of on the fly RLNC encoder uses a storage aware
+    /// generator and storage aware encoder.  The storage aware
+    /// generator makes sure that we do not generate non-zero
+    /// coefficients for the missing symbols, the storage aware
+    /// encoder provides the generator with information about how many
+    /// symbols have been specified.
     template<class Field>
     class on_the_fly_encoder :
         public // Payload Codec API
@@ -51,6 +54,7 @@ namespace kodo
                storage_aware_encoder<
                rank_info<
                // Coefficient Storage API
+               coefficient_value_access<
                coefficient_info<
                // Symbol Storage API
                deep_symbol_storage<
@@ -63,18 +67,19 @@ namespace kodo
                final_coder_factory_pool<
                // Final type
                on_the_fly_encoder<Field>
-               > > > > > > > > > > > > > > > > > > >
+                   > > > > > > > > > > > > > > > > > > > >
     { };
 
-    /// Intermediate stack implementing the recoding functionality of a
-    /// RLNC code. As can be seen we are able to reuse a great deal of
-    /// layers from the encode stack. It is important that the symbols
-    /// produced by the recoder are compatible with the decoder. This
-    /// means we have to use compatible Payload, Codec Header Symbol ID
-    /// layers, between the encoder, recoder and decoder.
-    /// The only layer specific to recoding is the recoding_symbol_id
-    /// layer. Finally the recoder uses a proxy_layer which forwards
-    /// any calls not implemented in the recoding stack to the MainStack.
+    /// Intermediate stack implementing the recoding functionality of
+    /// a RLNC code. As can be seen we are able to reuse a great deal
+    /// of layers from the encode stack. It is important that the
+    /// symbols produced by the recoder are compatible with the
+    /// decoder. This means we have to use compatible Payload, Codec
+    /// Header Symbol ID layers, between the encoder, recoder and
+    /// decoder.  The only layer specific to recoding is the
+    /// recoding_symbol_id layer. Finally the recoder uses a
+    /// proxy_layer which forwards any calls not implemented in the
+    /// recoding stack to the MainStack.
     template<class MainStack>
     class on_the_fly_recoding_stack
         : public // Payload API
@@ -92,11 +97,13 @@ namespace kodo
                  zero_symbol_encoder<
                  linear_block_encoder<
                  rank_info<
+                 // Coefficient Storage API
+                 coefficient_value_access<
                  // Proxy
                  proxy_seen_encoder_rank<
                  proxy_layer<
                  on_the_fly_recoding_stack<MainStack>,
-                 MainStack> > > > > > > > > > > >
+                 MainStack> > > > > > > > > > > > >
     { };
 
     /// @ingroup fec_stacks
@@ -123,6 +130,7 @@ namespace kodo
                forward_linear_block_decoder<
                rank_info<
                // Coefficient Storage API
+               coefficient_value_access<
                coefficient_storage<
                coefficient_info<
                // Storage API
@@ -136,7 +144,7 @@ namespace kodo
                final_coder_factory_pool<
                // Final type
                on_the_fly_decoder<Field>
-               > > > > > > > > > > > > > > > > > >
+                   > > > > > > > > > > > > > > > > > > >
     { };
 
     /// @ingroup fec_stacks
@@ -166,6 +174,7 @@ namespace kodo
                forward_linear_block_decoder<
                rank_info<
                // Coefficient Storage API
+               coefficient_value_access<
                coefficient_storage<
                coefficient_info<
                // Storage API
@@ -179,7 +188,7 @@ namespace kodo
                final_coder_factory_pool<
                // Final type
                debug_on_the_fly_decoder<Field>
-               > > > > > > > > > > > > > > > > > > > > >
+                   > > > > > > > > > > > > > > > > > > > > > >
     { };
 
 }
