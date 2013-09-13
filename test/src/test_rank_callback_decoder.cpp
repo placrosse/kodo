@@ -29,6 +29,7 @@
 #include <kodo/storage_bytes_used.hpp>
 #include <kodo/storage_block_info.hpp>
 #include <kodo/final_coder_factory_pool.hpp>
+#include <kodo/coefficient_value_access.hpp>
 
 /// Here we define the stacks which should be tested.
 namespace kodo
@@ -41,6 +42,7 @@ namespace kodo
                  rank_callback_decoder<
                  forward_linear_block_decoder<
                  // Coefficient Storage API
+                 coefficient_value_access<
                  coefficient_storage<
                  coefficient_info<
                  // Storage api
@@ -54,7 +56,7 @@ namespace kodo
                  final_coder_factory_pool<
                  // Final type
                  rank_callback_decoder_stack<Field>
-                     > > > > > > > > > >
+                     > > > > > > > > > > >
     {};
 
     // A dummi api to replace the real stack

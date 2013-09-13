@@ -30,6 +30,7 @@ namespace kodo
                  forward_linear_block_decoder<
                  rank_info<
                  // Coefficient Storage API
+                 coefficient_value_access<
                  coefficient_storage<
                  coefficient_info<
                  // Storage API
@@ -43,7 +44,7 @@ namespace kodo
                  final_coder_factory_pool<
                  // Final type
                  test_partial_stack<Field>
-                     > > > > > > > > > > >
+                     > > > > > > > > > > > >
     { };
 
 }

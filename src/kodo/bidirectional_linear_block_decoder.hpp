@@ -234,12 +234,12 @@ namespace kodo
                 SuperCoder::coefficients_value(pivot_index);
 
             value_type value =
-                fifi::get_value<field_type>(vector_i, pivot_index);
+                SuperCoder::coefficient_value(vector_i, pivot_index);
 
             assert(value == 1);
 
             // Subtract the new pivot symbol
-            fifi::set_value<field_type>(vector_i, pivot_index, 0);
+            SuperCoder::set_coefficient_value(vector_i, pivot_index, 0U);
 
             SuperCoder::subtract(symbol_i, symbol_data,
                                  SuperCoder::symbol_length());
@@ -280,7 +280,7 @@ namespace kodo
             assert(m_coded[pivot_index] == false);
 
             value_type coefficient =
-                fifi::get_value<field_type>(symbol_id, pivot_index);
+                SuperCoder::coefficient_value(symbol_id, pivot_index);
 
             assert(coefficient > 0);
 
@@ -319,8 +319,8 @@ namespace kodo
             {
                 uint32_t i = p.index();
 
-                value_type current_coefficient
-                    = fifi::get_value<field_type>(symbol_id, i);
+                value_type current_coefficient =
+                    SuperCoder::coefficient_value(symbol_id, i);
 
                 if( current_coefficient )
                 {
@@ -403,7 +403,7 @@ namespace kodo
 
                 // Do we have a non-zero value here?
                 value_type value =
-                    fifi::get_value<field_type>(symbol_id, i);
+                    SuperCoder::coefficient_value(symbol_id, i);
 
                 if( !value )
                 {
@@ -488,8 +488,7 @@ namespace kodo
                         SuperCoder::coefficients_value(i);
 
                     value_type value =
-                        fifi::get_value<field_type>(
-                            vector_i, pivot_index);
+                        SuperCoder::coefficient_value(vector_i, pivot_index);
 
                     if( value )
                     {
@@ -576,7 +575,7 @@ namespace kodo
             // Zero out the memory first
             std::fill_n(vector_dest, SuperCoder::coefficients_length(), 0);
 
-            fifi::set_value<field_type>(vector_dest, pivot_index, 1U);
+            SuperCoder::set_coefficient_value(vector_dest, pivot_index, 1U);
 
             // Copy it into the symbol storage
             sak::mutable_storage dest =

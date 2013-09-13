@@ -44,6 +44,7 @@ namespace kodo
                  forward_linear_block_decoder<
                  // Coefficient Storage API
                  debug_coefficient_storage<
+                 coefficient_value_access<
                  coefficient_storage<
                  coefficient_info<
                  // Storage API
@@ -58,7 +59,7 @@ namespace kodo
                  final_coder_factory_pool<
                  // Final type
                  rlnc_decoder<Field>
-                     > > > > > > > > > > > > > >
+                     > > > > > > > > > > > > > > >
     {};
 }
 

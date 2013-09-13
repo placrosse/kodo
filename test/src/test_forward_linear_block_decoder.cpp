@@ -27,6 +27,7 @@ namespace kodo
                  debug_linear_block_decoder<
                  forward_linear_block_decoder<
                  // Coefficient Storage API
+                 coefficient_value_access<
                  coefficient_storage<
                  coefficient_info<
                  // Storage API
@@ -40,7 +41,7 @@ namespace kodo
                  final_coder_factory_pool<
                  // Final type
                  test_forward_stack<Field>
-                     > > > > > > > > > >
+                     > > > > > > > > > > >
     { };
 
     template<class Field>
@@ -53,6 +54,7 @@ namespace kodo
                  linear_block_decoder_delayed<
                  forward_linear_block_decoder<
                  // Coefficient Storage API
+                 coefficient_value_access<
                  coefficient_storage<
                  coefficient_info<
                  // Storage API
@@ -66,7 +68,7 @@ namespace kodo
                  final_coder_factory_pool<
                  // Final type
                  test_forward_delayed_stack<Field>
-                     > > > > > > > > > > >
+                     > > > > > > > > > > > >
     { };
 
 }

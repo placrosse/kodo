@@ -40,6 +40,7 @@ namespace kodo
                  aligned_coefficients_decoder<
                  forward_linear_block_decoder<
                  // Coefficient Storage API
+                 coefficient_value_access<
                  coefficient_storage<
                  coefficient_info<
                  // Storage API
@@ -53,7 +54,7 @@ namespace kodo
                  final_coder_factory_pool<
                  // Final type
                  full_rlnc_callback_decoder<Field>
-                     > > > > > > > > > > > > > > >
+                     > > > > > > > > > > > > > > > >
     {};
 }
 
