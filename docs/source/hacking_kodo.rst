@@ -106,7 +106,7 @@ the individual coded symbols. Example of this could be:
 
 Codec Header API
 ~~~~~~~~~~~~~~~~
-The Codec Header API is typically invoke after the Payload Codec API has
+The Codec Header API is typically invoked after the Payload Codec API has
 split a payload buffer into the symbol data and the symbol header.
 Depending on whether we are implementing an encoder or decoder we
 typically use this layer to read or write information about the symbol
@@ -116,7 +116,7 @@ As a developer you may choose to implement a Codec Header layer if you
 for example:
 
 * You wish to write information to the symbol header which can be used
-  on by the decoder to optimize its performance.
+  by the decoder to optimize its performance.
 
 The symbol header may be used to store a variety of different information
 into a coded symbol. However the most important information stored at
@@ -211,13 +211,13 @@ a crucial component of an Erasure Correcting Code.
    field arithmetic operations. Originally fifi was a part of
    Kodo, however it was split into two libraries mainly due to
    the fact that the finite field implementations, may be useful
-   within other areas such a cryptograhy and signal processing.
+   within other areas such a cryptography and signal processing.
 
 As a developer you may choose to implement a Finite Field layer if you
 wish to:
 
 Implement new algorithms for computations in finite fields (however
-you should consider whether this would fit better into the fiif library).
+you should consider whether this would fit better into the fifi library).
 Implement statistics of the number of finite field operations.
 
 Factory API
