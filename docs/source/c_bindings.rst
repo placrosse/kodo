@@ -3,7 +3,7 @@
 Kodo C bindings
 ===============
 
-This repository C high-level bindings for the Kodo Network Coding library.
+This repository contains high-level C bindings for the Kodo Network Coding library.
 The bindings provide access to basic functionality provided by Kodo, such
 as encoding and decoding of data. The examples folder provides sample
 applications showing usage of the C API.
@@ -78,7 +78,7 @@ This will configure the project and download all the dependencies needed
 (the dependencies will be located in a folder called bundle_depencies) in
 the folder where you run the command.
 
-After configure run the following command to build the static library:
+After runnign ``waf configure``, run the following command to build the static library:
 ::
 
   python waf build

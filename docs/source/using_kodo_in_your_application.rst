@@ -38,7 +38,7 @@ only needed when/if you want to compile the Kodo unit-tests, examples or
 benchmarks.
 
 4. **Waf-tools**: This repository contains additional tools used by
-   out build system. These tools adds functionality to waf which are
+   our build system. These tools add functionality to waf which are
    used e.g. by our continuous-integration build system.
 
    * http://github.com/steinwurf/external-waf-tools

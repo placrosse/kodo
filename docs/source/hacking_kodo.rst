@@ -14,7 +14,7 @@ with variants of different codes, but without having to rewrite or duplicate
 a lot of code. To support this we went through a large number of design
 iterations e.g. using traditional polymorphic OO (Object Oriented) designs.
 We have finally settled for using a special C++ design technique known as
-mixin-layers or parametrized inheritance. Utilizing this technique has
+`mixin layers`_ or parametrized inheritance. Utilizing this technique has
 made it possible to create a component based library with a high level
 of code reuse.
 
@@ -75,6 +75,7 @@ specific functionality or where new functionality should be added.
 You may find the exact API specifications in our `Doxygen`_ documentation.
 
 .. _Doxygen: http://176.28.49.184:12344/doxygen/kodo
+.. _mixin layers: http://www.drdobbs.com/cpp/mixin-based-programming-in-c/184404445
 
 User API
 ~~~~~~~~
@@ -85,22 +86,22 @@ anywhere in the stack depending on the desired functionality.
 
 Payload Codec API
 ~~~~~~~~~~~~~~~~~
-The payload codec API is the “user” API it provides a simply ``encode()``
-and ``decode()`` API which either produces an encoded symbol into the
-provided payload buffer or attempts to decode the symbol stored in the
-payload buffer. Finally the payload layer is responsible for splitting
-the payload buffer into the symbol data and symbol header.
+The payload codec API provides a simply ``encode()`` and ``decode()``
+API which either produces an encoded symbol into the provided payload
+buffer or attempts to decode the symbol stored in the payload buffer.
+Finally the payload layer is responsible for splitting the payload
+buffer into the symbol data and symbol header.
 
 As a developer you may choose to implement a Payload Codec layer if you
 wish to implement functionality not requiring access to the memory of
 the individual coded symbols. Example of this could be:
 
 * Adding layer which overrides the ``decode()`` API to measure the time
-  elapsed between to consecutive ``decode()`` calls. This would allow a
+  elapsed between two consecutive ``decode()`` calls. This would allow a
   developer to measure the time since a packet arrived for a specific
   decoder.
 * The payload layer may also embed additional information into the payload
-  buffer by overriding the payload_size() function. This is however often
+  buffer by overriding the ``payload_size()`` function. This is however often
   better implemented Codec Header layers.
 
 
@@ -110,7 +111,7 @@ The Codec Header API is typically invoked after the Payload Codec API has
 split a payload buffer into the symbol data and the symbol header.
 Depending on whether we are implementing an encoder or decoder we
 typically use this layer to read or write information about the symbol
-data into the symbol header.
+data from or into the symbol header.
 
 As a developer you may choose to implement a Codec Header layer if you
 for example:
@@ -207,7 +208,7 @@ The finite field API layer provides a very important function in the
 codec stack. Namely, the support of finite field mathematics. This is
 a crucial component of an Erasure Correcting Code.
 
-.. note: In most cases we rely on the fifi library for finite
+.. note:: In most cases we rely on the fifi library for finite
    field arithmetic operations. Originally fifi was a part of
    Kodo, however it was split into two libraries mainly due to
    the fact that the finite field implementations, may be useful
@@ -216,9 +217,9 @@ a crucial component of an Erasure Correcting Code.
 As a developer you may choose to implement a Finite Field layer if you
 wish to:
 
-Implement new algorithms for computations in finite fields (however
+* Implement new algorithms for computations in finite fields (however
 you should consider whether this would fit better into the fifi library).
-Implement statistics of the number of finite field operations.
+* Implement statistics of the number of finite field operations.
 
 Factory API
 ~~~~~~~~~~~
@@ -233,6 +234,3 @@ You can use the factory API if you wish to:
 * Pre-allocate memory needed for different codecs and thereby
   minimize the amount of memory allocations needed during
   encoding or decoding.
-
-
-

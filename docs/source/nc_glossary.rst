@@ -1,7 +1,7 @@
 Network Coding Glossary
 -----------------------
 
-Here follows a list of terms that is often used in connection with Network Coding. These terms are used in Kodo and it is assumed in both the documentation and the sources that the reader is familiar with these terms.
+Here follows a list of terms that is often used in connection with Network Coding. These terms are used in Kodo and it is assumed in both the documentation and the source code that the reader is familiar with these.
 
 
 Finite Field
@@ -24,7 +24,7 @@ Network
 .......
 
 Node
- An unit on the network.
+ A unit on the network.
 
 Source
  A node that transmits data to other node(s).
