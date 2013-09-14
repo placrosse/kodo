@@ -7,7 +7,7 @@
 
 #include <cstdint>
 
-#include <fifi/fifi_utils.hpp>
+#include "forward_coefficient_iterator.hpp"
 
 namespace kodo
 {
@@ -28,66 +28,45 @@ namespace kodo
     ///   +----------------+  Last coefficient
     ///
     template<class SuperCoder>
-    class backward_coefficient_iterator : public SuperCoder
+    class backward_coefficient_iterator :
+        public forward_coefficient_iterator<SuperCoder>
     {
     public:
 
-        /// @copydoc layer::field_type
-        typedef typename SuperCoder::field_type field_type;
-
-        /// @copydoc layer::value_type
-        typedef typename field_type::value_type value_type;
+        /// The actual super type
+        typedef forward_coefficient_iterator<SuperCoder> Super;
 
     public:
 
         /// Nested iterator type which encapsulates the iteration
         /// logic though the coding coefficients. With indexes:
-        /// {0;elements-1}
-        class iterator_type
+        /// {0; elements-1}
+        class coefficient_iterator_type :
+            public Super::coefficient_iterator_type
         {
         public:
 
-            /// @param coefficients The coding coefficients
+            typedef Super::coefficient_iterator_type SuperIterator;
+
+        public:
+
             /// @param elements The number of coefficients stored in the
             ///        coefficients buffer.
             /// @param start_index A starting index which allows us to
             ///        offset the iterator to start at a specific index
-            iterator_type(const uint8_t* coefficients,
-                          uint32_t start_index,
-                          uint32_t stop_index)
-                : m_coefficients(coefficients),
-                  m_start_index(start_index),
-                  m_stop_index(stop_index),
-                  m_offset(0)
+            coefficient_iterator_type(uint32_t start_index, uint32_t stop_index)
+                : SuperIterator(start_index, stop_index)
             {
                 assert(m_coefficients != 0);
                 assert(m_start_index >= m_stop_index);
             }
 
-            /// @return true if the iterator is at the end
-            bool at_end() const
-            {
-                return m_stop_index + m_offset > m_start_index;
-
-            }
-
-            /// Advance the iterator to the next index
-            void advance()
-            {
-                assert(!at_end());
-                ++m_offset;
-            }
-
             /// @return the current index
             uint32_t index() const
             {
-                return m_start_index - m_offset;
-            }
 
-            /// @return The value of the coefficient at the current index
-            value_type value() const
-            {
-                return fifi::get_value<field_type>(m_coefficients, index());
+                return SuperIterator::stop_index() -
+                    (SuperIterator::start_index() - SuperIterator::index());
             }
 
             /// The maximum index depends on the direction of the iterator
@@ -111,9 +90,6 @@ namespace kodo
             }
 
         private:
-
-            /// The coefficients buffer
-            const uint8_t* m_coefficients;
 
             /// The number of elements stored in the coefficients buffer
             uint32_t m_start_index;

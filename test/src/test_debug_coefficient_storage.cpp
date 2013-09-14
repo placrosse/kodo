@@ -13,8 +13,10 @@
 #include <fifi/field_types.hpp>
 #include <kodo/coefficient_info.hpp>
 #include <kodo/coefficient_storage.hpp>
+#include <kodo/coefficient_value_access.hpp>
 #include <kodo/debug_coefficient_storage.hpp>
 #include <kodo/storage_block_info.hpp>
+
 namespace kodo
 {
     /// Helper class to test the coefficient info API.
@@ -25,7 +27,7 @@ namespace kodo
 
         typedef FieldType field_type;
         typedef uint8_t pointer;
-    
+
     public:
 
         class factory
@@ -56,11 +58,12 @@ namespace kodo
     template<class FieldType>
     class test_debug_coefficient_storage :
         public debug_coefficient_storage<
+               coefficient_value_access<
                coefficient_storage<
                coefficient_info<
                storage_block_info<
                dummy_layer<
-               FieldType> > > > >
+                   FieldType> > > > > >
     { };
 }
 

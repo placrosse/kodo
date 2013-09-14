@@ -86,7 +86,7 @@ namespace kodo
 
                 for(uint32_t j = 0; j < SuperCoder::symbols(); ++j)
                 {
-                    value_type value = fifi::get_value<field_type>(c, j);
+                    value_type value = SuperCoder::coefficient_value(c, j);
                     out << (uint32_t)value << " ";
                 }
 

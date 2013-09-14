@@ -68,7 +68,7 @@ namespace kodo
 
             for(uint32_t j = 0; j < symbol_elements; ++j)
             {
-                value_type value = fifi::get_value<field_type>(s, j);
+                value_type value = SuperCoder::coefficient_value(s, j);
 
                 static_assert(sizeof(uint32_t) >= sizeof(value_type),
                               "value_type will overflow in this print");
@@ -93,7 +93,7 @@ namespace kodo
 
                 for(uint32_t j = 0; j < SuperCoder::symbols(); ++j)
                 {
-                    value_type value = fifi::get_value<field_type>(c, j);
+                    value_type value = SuperCoder::coefficient_value(c, j);
 
                     static_assert(sizeof(uint32_t) >= sizeof(value_type),
                                   "value_type will overflow in this print");

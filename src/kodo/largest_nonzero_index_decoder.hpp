@@ -127,7 +127,7 @@ namespace kodo
                  i --> m_largest_nonzero_index;)
             {
                 value_type current_coefficient
-                    = fifi::get_value<field_type>(coefficients, i);
+                    = SuperCoder::coefficient_value(coefficients, i);
 
                 if (current_coefficient)
                 {

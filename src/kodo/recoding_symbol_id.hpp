@@ -121,8 +121,8 @@ namespace kodo
 
             for(uint32_t i = 0; i < SuperCoder::symbols(); ++i)
             {
-                value_type c =
-                    fifi::get_value<field_type>(recode_coefficients, i);
+                value_type c = SuperCoder::coefficient_value(
+                    recode_coefficients, i);
 
                 if(!c)
                 {

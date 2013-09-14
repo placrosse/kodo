@@ -53,53 +53,39 @@ TEST(TestForwardCoefficientIterator, binary)
     kodo::dummy_stack<field_type> stack;
     stack.m_symbols = 4U;
 
-    std::vector<uint8_t> buffer(1);
-
-    fifi::set_value<field_type>(&buffer[0], 0, 1U);
-    fifi::set_value<field_type>(&buffer[0], 1, 0U);
-    fifi::set_value<field_type>(&buffer[0], 2, 1U);
-    fifi::set_value<field_type>(&buffer[0], 3, 0U);
-
-    auto it = stack.coefficient_iterator(&buffer[0]);
+    auto it = stack.coefficient_iterator();
 
     EXPECT_FALSE(it.at_end());
     EXPECT_EQ(it.index(), 0U);
-    EXPECT_EQ(it.value(), 1U);
 
     it.advance();
 
     EXPECT_FALSE(it.at_end());
     EXPECT_EQ(it.index(), 1U);
-    EXPECT_EQ(it.value(), 0U);
 
     it.advance();
 
     EXPECT_FALSE(it.at_end());
     EXPECT_EQ(it.index(), 2U);
-    EXPECT_EQ(it.value(), 1U);
 
     it.advance();
 
     EXPECT_FALSE(it.at_end());
     EXPECT_EQ(it.index(), 3U);
-    EXPECT_EQ(it.value(), 0U);
 
     it.advance();
 
     EXPECT_TRUE(it.at_end());
 
-
-    it = stack.coefficient_iterator(&buffer[0], 2);
+    it = stack.coefficient_iterator(2);
 
     EXPECT_FALSE(it.at_end());
     EXPECT_EQ(it.index(), 2U);
-    EXPECT_EQ(it.value(), 1U);
 
     it.advance();
 
     EXPECT_FALSE(it.at_end());
     EXPECT_EQ(it.index(), 3U);
-    EXPECT_EQ(it.value(), 0U);
 
     it.advance();
 

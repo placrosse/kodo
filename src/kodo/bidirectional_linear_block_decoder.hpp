@@ -308,12 +308,8 @@ namespace kodo
             assert(symbol_id != 0);
             assert(symbol_data != 0);
 
-//            auto it = SuperCoder::coefficient_iterator(symbol_id);
-
             uint32_t start = direction_policy::min(0, SuperCoder::symbols()-1);
             uint32_t end = direction_policy::max(0, SuperCoder::symbols()-1);
-
-            // std::cout << start << " " << end << std::endl;
 
             for(direction_policy p(start, end); !p.at_end(); p.advance())
             {
@@ -460,8 +456,6 @@ namespace kodo
             uint32_t from = direction_policy::min(0, SuperCoder::symbols()-1);
             uint32_t to = m_maximum_pivot;
 
-            // std::cout << from << " " << to << std::endl;
-
             // We found a "1" that nobody else had as pivot, we now
             // substract this packet from other coded packets
             // - if they have a "1" on our pivot place
@@ -493,8 +487,7 @@ namespace kodo
                     if( value )
                     {
 
-                        value_type *symbol_i =
-                            SuperCoder::symbol_value(i);
+                        value_type *symbol_i = SuperCoder::symbol_value(i);
 
                         if(fifi::is_binary<field_type>::value)
                         {
