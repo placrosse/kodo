@@ -19,6 +19,8 @@ Latest
   recoder. We have also modified the API naming for reading the encoder rank,
   from "encoder_rank()" to "seen_encoder_rank()". This problem was reported
   by Martin Hundebøll.
+* Major: Changed the get_density() function in sparse_uniform_generator to
+  density().
 
 13.0.0
 ------
