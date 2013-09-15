@@ -90,8 +90,3 @@ TEST(TestCoefficientValueAccess, api)
 }
 
 
-TEST(TestCoefficientValueAccess, nonsquaredecoding)
-{
-
-}
-
