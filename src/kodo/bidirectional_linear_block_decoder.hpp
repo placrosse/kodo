@@ -43,6 +43,8 @@ namespace kodo
         /// @copydoc layer::factory
         typedef typename SuperCoder::factory factory;
 
+        /// The direction policy determining the direction we iterate through
+        /// the coding coefficients
         typedef DirectionPolicy direction_policy;
 
     public:
@@ -108,8 +110,8 @@ namespace kodo
                 return;
             }
 
-            const value_type *symbol
-                = reinterpret_cast<value_type*>( symbol_data );
+            const value_type *symbol =
+                reinterpret_cast<value_type*>( symbol_data );
 
             if(m_coded[symbol_index])
             {

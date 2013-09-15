@@ -12,6 +12,7 @@
 #include <fifi/field_types.hpp>
 #include <kodo/coefficient_value_access.hpp>
 #include <kodo/storage_block_info.hpp>
+
 namespace kodo
 {
 
@@ -87,3 +88,10 @@ TEST(TestCoefficientValueAccess, api)
     }
 
 }
+
+
+TEST(TestCoefficientValueAccess, nonsquaredecoding)
+{
+
+}
+
