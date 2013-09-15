@@ -135,9 +135,6 @@ namespace kodo
 
                 m_uncoded[ symbol_index ] = true;
 
-                // m_maximum_pivot = SuperCoder::coefficient_iterator_type::max_index(
-                //     symbol_index, m_maximum_pivot);
-
                 m_maximum_pivot =
                     direction_policy::max(symbol_index, m_maximum_pivot);
 
