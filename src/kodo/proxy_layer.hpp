@@ -202,6 +202,20 @@ namespace kodo
             (void) the_factory;
         }
 
+        /// @return a pointer to the main proxy stack
+        const MainStack* proxy_stack() const
+        {
+            assert(m_proxy);
+            return m_proxy;
+        }
+
+        /// @return a pointer to the main proxy stack
+        MainStack* proxy_stack()
+        {
+            assert(m_proxy);
+            return m_proxy;
+        }
+
         //------------------------------------------------------------------
         // SYMBOL STORAGE API
         //------------------------------------------------------------------

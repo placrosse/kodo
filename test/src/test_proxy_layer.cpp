@@ -97,6 +97,10 @@ struct api_coder
                   m_proxy_factory.symbol_size());
 
         auto proxy = m_proxy_factory.build();
+        const auto& proxy_const = proxy;
+
+        EXPECT_EQ(proxy->proxy_stack(), m_proxy_factory.proxy_stack());
+        EXPECT_EQ(proxy_const->proxy_stack(), m_proxy_factory.proxy_stack());
 
         //------------------------------------------------------------------
         // SYMBOL STORAGE API
