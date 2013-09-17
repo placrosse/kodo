@@ -4,7 +4,7 @@
    contain the root `toctree` directive.
 
 ==================
-Kodo documentation
+Kodo Documentation
 ==================
 
 Welcome to the Kodo Network Coding library documentation.

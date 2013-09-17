@@ -1,13 +1,13 @@
 .. _including-kodo-in-your-application:
 
-Including Kodo in your application
+Including Kodo in Your Application
 ==============================
 In the following we will describe what you need to do to include Kodo in your
 application / project.
 
 .. _kodo-dependencies:
 
-Kodo dependencies
+Kodo Dependencies
 -----------------
 In Kodo we rely on a number of external libraries, these must be available
 in order to successfully compile an application including Kodo.
@@ -55,7 +55,7 @@ benchmarks.
 
 .. _selecting-the-correct-versions:
 
-Selecting the correct versions
+Selecting the Correct Versions
 ------------------------------
 If you use the automatic approach by letting the build scripts download the
 dependencies, they will select the latest compatible version. If you download
@@ -118,7 +118,7 @@ If that is your goal you can skip to the `Example application using
 makefile`_ section after downloading the three required libraries..
 
 
-Download using Git
+Download Using Git
 ..................
 
 1. Create a suitable directory for the projects (optional)
@@ -208,7 +208,7 @@ versions`_):
    https://github.com/steinwurf/cxx-gauge/releases
 
 
-Configuring Kodo with manually downloaded dependencies
+Configuring Kodo With Manually Downloaded Dependencies
 ------------------------------------------------------
 
 After downloading all the dependencies manually we have to inform the
@@ -243,7 +243,7 @@ The bundle options can be seen by running:
   python waf --help
 
 
-Example application using makefile
+Example Application Using Makefile
 -------------------------------------
 
 If you would like to see an example of building an application with
@@ -258,7 +258,7 @@ In this case it only requires that you have Fifi, Sak and Boost downloaded.
 
 
 ..
-   Example using Waf (extended)
+   Example Using Waf (extended)
    ----------------------------
 
    .. warning:: This example still need to be added to the sources
@@ -276,7 +276,7 @@ In this case it only requires that you have Fifi, Sak and Boost downloaded.
    use a plain Waf build-script see next section.
 
 
-   Example using Waf (unmodified)
+   Example Using Waf (unmodified)
    ------------------------------
 
    .. warning:: This example still need to be added to the sources
