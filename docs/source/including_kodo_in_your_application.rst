@@ -1,8 +1,8 @@
-.. _using-kodo-in-your-application:
+.. _including-kodo-in-your-application:
 
-Using Kodo in your application
+Including Kodo in your application
 ==============================
-In the following we will describe what you need to do to use Kodo in your
+In the following we will describe what you need to do to include Kodo in your
 application / project.
 
 .. _kodo-dependencies:
@@ -10,7 +10,7 @@ application / project.
 Kodo dependencies
 -----------------
 In Kodo we rely on a number of external libraries, these must be available
-in order to successfully compile an application using Kodo.
+in order to successfully compile an application including Kodo.
 
 The functionality used from these libraries are **header-only** which
 means that you only have to specify the correct includes paths to use
