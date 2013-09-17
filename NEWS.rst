@@ -4,7 +4,7 @@ News for Kodo
 This file lists the major changes between versions. For a more detailed list
 of every change, see the Git log.
 
-Latest
+14.0.0
 ------
 * Bug: Fixed assert in the payload_rank_decoder.hpp which incorrectly checked
   for the received encoder rank to be less than the currently largest rank.
