@@ -58,13 +58,14 @@ namespace kodo
 
 /// Tests:
 ///   - layer::factory::max_coefficients_size() const
+///   - layer::coefficients() const
 ///   - layer::coefficients_size() const
 ///   - layer::coefficients_length() const
 ///   - layer::coefficients_value(uint32_t)
 ///   - layer::coefficients_value(uint32_t) const
-///   - layer::coefficients(uint32_t)
-///   - layer::coefficients(uint32_t) const
-///   - layer::set_coefficients(uint32_t, const sak::const_storage&)
+///   - layer::coefficients_data(uint32_t)
+///   - layer::coefficients_data(uint32_t) const
+///   - layer::set_coefficients_data(uint32_t, const sak::const_storage&)
 template<class Coder>
 struct api_coefficients_storage
 {
@@ -106,6 +107,8 @@ struct api_coefficients_storage
             // Make sure we call the const version of the function
             const pointer_type &const_coder = coder;
 
+            EXPECT_EQ(coder->coefficients(), coder->symbols());
+
             uint32_t max_coefficients_size =
                 fifi::elements_to_size<field_type>(m_factory.max_symbols());
 
@@ -130,10 +133,13 @@ struct api_coefficients_storage
             {
                 sak::const_storage s;
 
-                s = sak::storage(coder->coefficients(i), size);
+                s = sak::storage(coder->coefficients_data(i), size);
+
                 EXPECT_TRUE(sak::equal(zero_storage, s));
 
-                s = sak::storage(const_coder->coefficients(i), size);
+                s = sak::storage(
+                    const_coder->coefficients_data(i), size);
+
                 EXPECT_TRUE(sak::equal(zero_storage, s));
 
                 s = sak::storage(coder->coefficients_value(i), size);
@@ -154,7 +160,7 @@ struct api_coefficients_storage
             // Set all the coefficients
             for(uint32_t i = 0; i < symbols; ++i)
             {
-                coder->set_coefficients(i, coefficient_storage[i]);
+                coder->set_coefficients_data(i, coefficient_storage[i]);
             }
 
             // Everything should be initialized
@@ -163,10 +169,10 @@ struct api_coefficients_storage
                 sak::const_storage s1;
                 sak::const_storage s2 = coefficient_storage[i];
 
-                s1 = sak::storage(coder->coefficients(i), size);
+                s1 = sak::storage(coder->coefficients_data(i), size);
                 EXPECT_TRUE(sak::equal(s1, s2));
 
-                s1 = sak::storage(const_coder->coefficients(i), size);
+                s1 = sak::storage(const_coder->coefficients_data(i), size);
                 EXPECT_TRUE(sak::equal(s1, s2));
 
                 s1 = sak::storage(coder->coefficients_value(i), size);

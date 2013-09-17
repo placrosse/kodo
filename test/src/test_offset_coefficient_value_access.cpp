@@ -27,6 +27,21 @@ namespace kodo
         /// The value type
         typedef typename field_type::value_type value_type;
 
+    public:
+
+        test_layer()
+            : m_coeffcients_elements(0)
+        { }
+
+        uint32_t coefficients_elements() const
+        {
+            return m_coeffcients_elements;
+        }
+
+    public:
+
+        uint32_t m_coeffcients_elements;
+
     };
 
     /// Helper stack for testing the coefficient access layer
@@ -45,10 +60,10 @@ TEST(TestOffsetCoefficientValueAccess, api)
     typedef kodo::test_stack<field_type> stack_type;
 
     stack_type stack;
-    uint32_t symbols = 6;
+    stack.m_coeffcients_elements = 6;
 
     std::vector<value_type> coefficients(
-        fifi::elements_to_length<field_type>(symbols));
+        fifi::elements_to_length<field_type>(stack.m_coeffcients_elements));
 
     EXPECT_EQ(stack.coefficient_offset(), 0U);
 
@@ -89,10 +104,10 @@ TEST(TestOffsetCoefficientValueAccess, api)
     typedef kodo::test_stack<field_type> stack_type;
 
     stack_type stack;
-    uint32_t symbols = 6;
+    stack.m_coeffcients_elements = 6;
 
     std::vector<value_type> coefficients(
-        fifi::elements_to_length<field_type>(symbols));
+        fifi::elements_to_length<field_type>(stack.m_coeffcients_elements));
 
     EXPECT_EQ(stack.coefficient_offset(), 0U);
 

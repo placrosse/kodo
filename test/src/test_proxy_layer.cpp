@@ -310,8 +310,8 @@ struct api_coder
         EXPECT_EQ(coder->coefficients_value(index),
                   proxy->coefficients_value(index));
 
-        EXPECT_EQ(coder->coefficients(index),
-                  proxy->coefficients(index));
+        EXPECT_EQ(coder->coefficients_data(index),
+                  proxy->coefficients_data(index));
     }
 
 private:

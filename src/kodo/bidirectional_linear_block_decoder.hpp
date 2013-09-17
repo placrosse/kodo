@@ -535,7 +535,7 @@ namespace kodo
                 sak::storage(symbol_coefficients,
                              SuperCoder::coefficients_size());
 
-            SuperCoder::set_coefficients(
+            SuperCoder::set_coefficients_data(
                 pivot_index, coefficient_storage);
 
             // Copy it into the symbol storage

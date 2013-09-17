@@ -35,13 +35,7 @@ namespace kodo
         /// @param out The output stream to print to
         void print_coefficients_value(std::ostream& out)
         {
-            out << "\t";
-            for(uint32_t i = 0; i < SuperCoder::symbols(); ++i)
-            {
-                out << i << "\t";
-            }
-            out << "\n";
-            for(uint32_t i = 0; i < SuperCoder::symbols(); ++i)
+            for(uint32_t i = 0; i < SuperCoder::coefficients(); ++i)
             {
                 print_coefficients_value(out, i);
             }
@@ -58,7 +52,7 @@ namespace kodo
 
             for(uint32_t j = 0; j < SuperCoder::coefficients_elements(); ++j)
             {
-                value_type value = SuperCoder::coefficient_value(c, j);
+                value_type value = fifi::get_value<field_type>(c, j);
 
                 static_assert(sizeof(uint32_t) >= sizeof(value_type),
                               "value_type will overflow in this print");

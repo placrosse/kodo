@@ -90,7 +90,7 @@ TEST(TestDebugCoefficientStorage, api)
         std::stringstream output;
         debug.print_coefficients_value(output);
         EXPECT_EQ(
-            "\t0\t1\t2\t\n0:\t1\t0\t0\t\n1:\t0\t1\t0\t\n2:\t0\t0\t1\t\n",
+            "0:\t1\t0\t0\t\n1:\t0\t1\t0\t\n2:\t0\t0\t1\t\n",
             output.str());
     }
 
@@ -113,7 +113,7 @@ TEST(TestDebugCoefficientStorage, api)
         std::stringstream output;
         debug.print_coefficients_value(output);
         EXPECT_EQ(
-            "\t0\t1\t2\t\n0:\t255\t0\t0\t\n1:\t0\t255\t0\t\n2:\t0\t0\t255\t\n",
+            "0:\t255\t0\t0\t\n1:\t0\t255\t0\t\n2:\t0\t0\t255\t\n",
             output.str());
     }
 
@@ -136,7 +136,7 @@ TEST(TestDebugCoefficientStorage, api)
         std::stringstream output;
         debug.print_coefficients_value(output);
         EXPECT_EQ(
-            "\t0\t1\t2\t\n0:\t13371337\t0\t0\t\n1:\t0\t13371337\t0\t\n2:\t0\t0\t13371337\t\n",
+            "0:\t13371337\t0\t0\t\n1:\t0\t13371337\t0\t\n2:\t0\t0\t13371337\t\n",
             output.str());
     }
 }

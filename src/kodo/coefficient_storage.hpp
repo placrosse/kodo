@@ -44,14 +44,14 @@ namespace kodo
         }
 
         /// @copydoc layer::coefficients(uint32_t)
-        uint8_t* coefficients(uint32_t index)
+        uint8_t* coefficients_data(uint32_t index)
         {
             assert(index < SuperCoder::symbols());
             return &(m_coefficients_storage[index])[0];
         }
 
         /// @copydoc layer::coefficients(uint32_t) const
-        const uint8_t* coefficients(uint32_t index) const
+        const uint8_t* coefficients_data(uint32_t index) const
         {
             assert(index < SuperCoder::symbols());
             return &(m_coefficients_storage[index])[0];
@@ -61,26 +61,26 @@ namespace kodo
         value_type* coefficients_value(uint32_t index)
         {
             return reinterpret_cast<value_type*>(
-                coefficients(index));
+                coefficients_data(index));
         }
 
         /// @copydoc layer::coefficients_value(uint32_t) const
         const value_type* coefficients_value(uint32_t index) const
         {
             return reinterpret_cast<const value_type*>(
-                coefficients(index));
+                coefficients_data(index));
         }
 
-        /// @copydoc layer::set_coefficients(
+        /// @copydoc layer::set_coefficients_data(
         ///              uint32_t,const sak::const_storage&)
-        void set_coefficients(uint32_t index,
-                              const sak::const_storage &storage)
+        void set_coefficients_data(uint32_t index,
+                                   const sak::const_storage &storage)
         {
             assert(storage.m_size == SuperCoder::coefficients_size());
             assert(storage.m_data != 0);
 
             auto dest = sak::storage(
-                coefficients(index), SuperCoder::coefficients_size());
+                coefficients_data(index), SuperCoder::coefficients_size());
 
             sak::copy_storage(dest, storage);
         }

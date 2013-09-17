@@ -311,6 +311,12 @@ public:
     //------------------------------------------------------------------
 
     /// @ingroup coefficient_storage_api
+    /// @return The number of coefficient vectors stored. When accessing the
+    ///         coefficients data the index used should be between 0 and the
+    ///         number returned by this function.
+    uint32_t coefficients() const;
+
+    /// @ingroup coefficient_storage_api
     ///
     /// @note If you implement this function you most likely also have
     ///       to implement the layer::factory::max_coefficients_size()
@@ -329,7 +335,7 @@ public:
     ///         count will say how many finite field elements will be stored
     ///         within a coefficient vector, whereas the size and length refers
     ///         to the space (in terms of memory) occupied by those coefficients.
-    uint32_t coefficients_count() const;
+    uint32_t coefficients_elements() const;
 
     /// @ingroup coefficient_storage_api
     /// @param index the index in the vector
@@ -344,19 +350,19 @@ public:
     /// @ingroup coefficient_storage_api
     /// @param index the index in the vector
     /// @return the specified vector
-    uint8_t* coefficients(uint32_t index);
+    uint8_t* coefficients_data(uint32_t index);
 
     /// @ingroup coefficient_storage_api
     /// @param index the index in the vector
     /// @return the specified vector
-    const uint8_t* coefficients(uint32_t index) const;
+    const uint8_t* coefficients_data(uint32_t index) const;
 
     /// @ingroup coefficient_storage_api
     /// Sets a coefficient buffer - by copying it into the right location in
     /// the buffer.
     /// @param index the index of the coefficients into the coding block
     /// @param storage The actual data of the coefficients
-    void set_coefficients(uint32_t index, const sak::const_storage &storage);
+    void set_coefficients_data(uint32_t index, const sak::const_storage &storage);
 
     //------------------------------------------------------------------
     // FINITE FIELD API

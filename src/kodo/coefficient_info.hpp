@@ -70,16 +70,21 @@ namespace kodo
             m_coefficients_size =
                 fifi::elements_to_size<field_type>(the_factory.symbols());
 
+            assert(m_coeffcients_elements > 0);
             assert(m_coefficients_length > 0);
             assert(m_coefficients_size > 0);
+        }
+
+        /// @copydoc layer::coefficients() const
+        uint32_t coefficients() const
+        {
+            return SuperCoder::symbols();
         }
 
         /// @copydoc layer::coefficients_elements() const
         uint32_t coefficients_elements() const
         {
-            // We will typically have a single coefficient per coding symbol
-            // however in some cases this is not the case. In those cases
-            // we this value may be updated.
+            assert(m_coeffcients_elements > 0);
             return m_coeffcients_elements;
         }
 

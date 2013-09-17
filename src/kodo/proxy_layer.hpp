@@ -366,18 +366,18 @@ namespace kodo
             return m_proxy->coefficients_value(index);
         }
 
-        /// @copydoc layer::coefficients(uint32_t)
-        uint8_t* coefficients(uint32_t index)
+        /// @copydoc layer::coefficients_data(uint32_t)
+        uint8_t* coefficients_data(uint32_t index)
         {
             assert(m_proxy);
-            return m_proxy->coefficients(index);
+            return m_proxy->coefficients_data(index);
         }
 
-        /// @copydoc layer::coefficients(uint32_t) const
-        const uint8_t* coefficients(uint32_t index) const
+        /// @copydoc layer::coefficients_data(uint32_t) const
+        const uint8_t* coefficients_data(uint32_t index) const
         {
             assert(m_proxy);
-            return m_proxy->coefficients(index);
+            return m_proxy->coefficients_data(index);
         }
 
         //------------------------------------------------------------------

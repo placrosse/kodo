@@ -71,7 +71,10 @@ namespace kodo
         value_type coefficient_value(const value_type* coefficients,
                                      uint32_t index) const
         {
-            return Super::coefficient_value(coefficients, index + m_offset);
+            index += m_offset;
+            assert(index < SuperCoder::coefficients_elements());
+
+            return Super::coefficient_value(coefficients, index);
         }
 
         /// @copydoc coefficient_value_access::coefficient_value(
@@ -79,7 +82,10 @@ namespace kodo
         void set_coefficient_value(value_type* coefficients, uint32_t index,
                                    value_type value) const
         {
-            Super::set_coefficient_value(coefficients, index + m_offset, value);
+            index += m_offset;
+            assert(index < SuperCoder::coefficients_elements());
+
+            Super::set_coefficient_value(coefficients, index, value);
         }
 
         /// Sets the coefficient offset which will be added when accessing
@@ -87,6 +93,7 @@ namespace kodo
         /// @param offset The offset to add
         void set_coefficient_offset(uint32_t offset)
         {
+            assert(offset < SuperCoder::coefficients_elements());
             m_offset = offset;
         }
 
