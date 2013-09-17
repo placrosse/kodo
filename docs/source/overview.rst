@@ -33,7 +33,7 @@ application data. Here some of the variants supported are:
 * Variants where the coding vector is included (for recoding)
 * Variants where a seed is included
 
-Other codes and approaches
+Other Codes and Approaches
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 We also support some other coding types:
 

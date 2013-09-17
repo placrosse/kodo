@@ -28,7 +28,7 @@ that you also install the following:
 In the following we will provide the links for installing the tools on
 a number of different platforms.
 
-Download tools (Ubuntu or other Debian-based distributions)
+Download Tools (Ubuntu or Other Debian-based Distributions)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Get the dependencies using the following command:
 
@@ -36,7 +36,7 @@ Get the dependencies using the following command:
 
   sudo apt-get install g++ python git-core
 
-Download tools (Windows)
+Download Tools (Windows)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 1. **C++11 compliant compiler:** You need a working C++ compiler. We have
@@ -74,7 +74,7 @@ Download tools (Windows)
 .. _`TortoiseGit`:
    https://code.google.com/p/tortoisegit/
 
-Download tools (Mac OSX)
+Download Tools (Mac OSX)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 **C++11 compliant compiler:** You need a working C++ compiler. We have
@@ -97,7 +97,7 @@ Option B:
 
 
 
-Download the Kodo source code
+Download the Kodo Source Code
 -----------------------------
 
 We recommend downloading the library using git, this will allow you to
@@ -121,7 +121,7 @@ Recommended: Clone the git repository using the terminal (Linux and Mac OSX)
 
      git clone git://github.com/steinwurf/kodo.git
 
-Recommended: Clone the git repository using TortoiseGit (Windows)
+Recommended: Clone the Git Repository Using TortoiseGit (Windows)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Open the directory where you want to clone the project, right-click on empty space and select
@@ -135,7 +135,7 @@ You can also customize the target directory if you wish. By default, a new folde
 when the progress bar reaches the end.
 
 
-Alternative: Download a release of the source code as an archive
+Alternative: Download a Release of the Source Code as an Archive
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Download the zip or tar.gz archive from the following location and
@@ -144,7 +144,7 @@ extract it to a desired location.
 * https://github.com/steinwurf/kodo/tags
 
 
-Waf (build system)
+Waf (Build System)
 ------------------
 
 We use the Waf build system to build all Kodo examples and
@@ -167,7 +167,7 @@ A Waf project typically contains two types of files:
 In the following we will look at how you can build Kodo's examples, benchmarks
 and unit tests using the Waf build system.
 
-Quick Start (building Kodo examples and unit tests)
+Quick Start (Building Kodo Examples and Unit Tests)
 ---------------------------------------------------
 
 .. _quick-start:
@@ -253,7 +253,7 @@ Provided that you have the `Tools Needed`_ installed.
    c. **Windows**: Run unit-tests from the Kodo directory by running
       ``build/win32/test/kodo_tests.exe`` in your command prompt.
 
-Customize the build
+Customize the Build
 -------------------
 
 You may customize the build process. The list below describes the most
