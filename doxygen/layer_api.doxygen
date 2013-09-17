@@ -362,7 +362,22 @@ public:
     /// the buffer.
     /// @param index the index of the coefficients into the coding block
     /// @param storage The actual data of the coefficients
-    void set_coefficients_data(uint32_t index, const sak::const_storage &storage);
+    void set_coefficients_data(uint32_t index,
+                               const sak::const_storage &storage);
+
+    /// Access the value of in an array of coefficients
+    /// @param coefficients The coefficients array
+    /// @param index The index of the value we are interested in
+    /// @return The value at the specified index
+    value_type coefficient_value(const value_type* coefficients,
+                                 uint32_t index) const;
+
+    /// Set a value in an array of coefficients
+    /// @param coefficients The coefficients array
+    /// @param index The index in the array where the value should be set
+    /// @param value The value to set in the array
+    void set_coefficient_value(value_type* coefficients, uint32_t index,
+                               value_type value) const
 
     //------------------------------------------------------------------
     // FINITE FIELD API

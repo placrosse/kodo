@@ -19,18 +19,15 @@ namespace kodo
     {
     public:
 
-        /// The field type used
+        /// @copydoc layer::field_type
         typedef typename SuperCoder::field_type field_type;
 
-        /// The value type
+        /// @copydoc layer::value_type
         typedef typename SuperCoder::value_type value_type;
 
     public:
 
-        /// Access the value of in an array of coefficients
-        /// @param coefficients The coefficients array
-        /// @param index The index of the value we are interested in
-        /// @return The value at the specified index
+        /// @copydoc layer::coefficient_value(const value_type*, uint32_t) const
         value_type coefficient_value(const value_type* coefficients,
                                      uint32_t index) const
         {
@@ -38,10 +35,8 @@ namespace kodo
             return fifi::get_value<field_type>(coefficients, index);
         }
 
-        /// Set a value in an array of coefficients
-        /// @param coefficients The coefficients array
-        /// @param index The index in the array where the value should be set
-        /// @param value The value to set in the array
+        /// @copydoc layer::set_coefficient_value(value_type*,
+        ///              uint32_t, value_type) const
         void set_coefficient_value(value_type* coefficients, uint32_t index,
                                    value_type value) const
         {
