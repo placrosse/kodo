@@ -1,22 +1,22 @@
 Network Coding Glossary
 -----------------------
 
-Here follows a list of terms that is often used in connection with Network Coding. These terms are used in Kodo and it is assumed in both the documentation and the sources that the reader is familiar with these terms.
+Here follows a list of terms that is often used in connection with Network Coding. These terms are used in Kodo and it is assumed in both the documentation and the source code that the reader is familiar with these.
 
 
 Finite Field
 ............
 
-A finite field is a mathmatical construct and entails to much explenations to be included here. It is not necessary to have a deep understanding of finite fields, however, you must be familiar with a couple of related terms. Finite fields can be used to implement linear codes on computers with fixed precision, which is what they are used for in Kodo. Several finite fields are implemented in Fifi, which you can find alongside Kodo on GitHub.
+A finite field is a mathematical construct and entails to much explanations to be included here. It is not necessary to have a deep understanding of finite fields, however, you must be familiar with a couple of related terms. Finite fields can be used to implement linear codes on computers with fixed precision, which is what they are used for in Kodo. Several finite fields are implemented in Fifi, which you can find alongside Kodo on GitHub.
 
 Finite Field Element
  Is an element in the finite field over which coding operations are performed.
 
 Field Size / Order
- A finite field element can take a number of values which is specified by the field size. Typically these values are the range from 0 to the size minus 1, which is also the case througout Kodo.
+ A finite field element can take a number of values which is specified by the field size. Typically these values are the range from 0 to the size minus 1, which is also the case throughout Kodo.
 
 .. Extension field
-   
+
 .. Field Degree
 
 
@@ -24,11 +24,11 @@ Network
 .......
 
 Node
- An unit on the network.
+ A unit on the network.
 
 Source
  A node that transmits data to other node(s).
- 
+
 Sink
  A node that receives data from other node(s).
 
@@ -49,12 +49,12 @@ Symbol Size
  The size of a symbol, *m*, is defined by the number of elements it contains and those field elements size.
 
 Generation
- The original data is divided into generations, of size :math:`g \cdot m`. Each generation constitutes *g* symbols, each of size *m*. The data from each generation is encoded, decode and recoded seperately.
+ The original data is divided into generations, of size :math:`g \cdot m`. Each generation constitutes *g* symbols, each of size *m*. The data from each generation is encoded, decode and recoded separately.
 
  ====  ====  =====  ====
  Generation
  -----------------------
- *S1*  *S2*   ...   *Sg* 
+ *S1*  *S2*   ...   *Sg*
  ====  ====  =====  ====
 
  A generation is sometimes also referred to as a *source block* or a *batch*.
@@ -63,7 +63,7 @@ Generation Size
  Is the number of symbols in each generation, and denoted *g*.
 
 Data Matrix
- The data in a generation can be arranged as a matrix, where each column correponds to a symbol.
+ The data in a generation can be arranged as a matrix, where each column corresponds to a symbol.
 
 Coding Vector
  A coding vector is a vector of *g* field elements, where each element defines the coding operations performed on the corresponding element in the generation.
@@ -99,16 +99,16 @@ Coded Packet
  Contains a vector-data pair.
 
  ===============  ===============
-              Packet            
+              Packet
  --------------------------------
-   Vector          Coded Symbol 
+   Vector          Coded Symbol
  ===============  ===============
-   
+
 Coded Packet Size
  Is the total size of the coding vector and coded symbol.
 
 Bulk Data
- When bulk data is coded the file is split into one or more parts of a resonable size, each of these parts is denoted a generation.
+ When bulk data is coded the file is split into one or more parts of a reasonable size, each of these parts is denoted a generation.
 
 Streaming Data
  When streaming data is coded some amount of data is accumulated and this data is denoted a generation.

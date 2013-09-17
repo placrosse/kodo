@@ -4,7 +4,7 @@
    contain the root `toctree` directive.
 
 ==================
-Kodo documentation
+Kodo Documentation
 ==================
 
 Welcome to the Kodo Network Coding library documentation.
@@ -15,13 +15,13 @@ protocols and systems and for research on implementation of Network Codes.
 
 **Additional Links**
 
-* `Kodo source code`_
-* `Build and test status`_
-* `API specification`_
+* `Kodo Source Code`_
+* `Build and Test Status`_
+* `API Specification`_
 
-.. _Kodo source code: https://github.com/steinwurf/kodo
-.. _Build and test status: http://176.28.49.184:12344
-.. _API specification: http://176.28.49.184:12344/doxygen/kodo/
+.. _Kodo Source Code: https://github.com/steinwurf/kodo
+.. _Build and Test Status: http://176.28.49.184:12344
+.. _API Specification: http://176.28.49.184:12344/doxygen/kodo/
 
 .. The library enable researchers to implement, new codes and algorithms, perform simulations,
 .. and benchmark the coding operations on any platform where a C++ compiler is
@@ -39,7 +39,7 @@ Documentation
 
    overview
    getting_started
-   using_kodo_in_your_application
+   including_kodo_in_your_application
    hacking_kodo
    howto
    misc

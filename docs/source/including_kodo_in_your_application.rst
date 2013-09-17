@@ -1,16 +1,16 @@
-.. _using-kodo-in-your-application:
+.. _including-kodo-in-your-application:
 
-Using Kodo in your application
+Including Kodo in Your Application
 ==============================
-In the following we will describe what you need to do to use Kodo in your
+In the following we will describe what you need to do to include Kodo in your
 application / project.
 
 .. _kodo-dependencies:
 
-Kodo dependencies
+Kodo Dependencies
 -----------------
 In Kodo we rely on a number of external libraries, these must be available
-in order to successfully compile an application using Kodo.
+in order to successfully compile an application including Kodo.
 
 The functionality used from these libraries are **header-only** which
 means that you only have to specify the correct includes paths to use
@@ -38,7 +38,7 @@ only needed when/if you want to compile the Kodo unit-tests, examples or
 benchmarks.
 
 4. **Waf-tools**: This repository contains additional tools used by
-   out build system. These tools adds functionality to waf which are
+   our build system. These tools add functionality to waf which are
    used e.g. by our continuous-integration build system.
 
    * http://github.com/steinwurf/external-waf-tools
@@ -55,7 +55,7 @@ benchmarks.
 
 .. _selecting-the-correct-versions:
 
-Selecting the correct versions
+Selecting the Correct Versions
 ------------------------------
 If you use the automatic approach by letting the build scripts download the
 dependencies, they will select the latest compatible version. If you download
@@ -118,7 +118,7 @@ If that is your goal you can skip to the `Example application using
 makefile`_ section after downloading the three required libraries..
 
 
-Download using Git
+Download Using Git
 ..................
 
 1. Create a suitable directory for the projects (optional)
@@ -208,7 +208,7 @@ versions`_):
    https://github.com/steinwurf/cxx-gauge/releases
 
 
-Configuring Kodo with manually downloaded dependencies
+Configuring Kodo With Manually Downloaded Dependencies
 ------------------------------------------------------
 
 After downloading all the dependencies manually we have to inform the
@@ -243,7 +243,7 @@ The bundle options can be seen by running:
   python waf --help
 
 
-Example application using makefile
+Example Application Using Makefile
 -------------------------------------
 
 If you would like to see an example of building an application with
@@ -258,7 +258,7 @@ In this case it only requires that you have Fifi, Sak and Boost downloaded.
 
 
 ..
-   Example using Waf (extended)
+   Example Using Waf (extended)
    ----------------------------
 
    .. warning:: This example still need to be added to the sources
@@ -276,7 +276,7 @@ In this case it only requires that you have Fifi, Sak and Boost downloaded.
    use a plain Waf build-script see next section.
 
 
-   Example using Waf (unmodified)
+   Example Using Waf (unmodified)
    ------------------------------
 
    .. warning:: This example still need to be added to the sources
