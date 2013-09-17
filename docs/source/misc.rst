@@ -4,7 +4,7 @@ Misc.
 =====
 On this page we collect miscellaneous information about the Kodo project.
 
-Using Kodo for your research
+Using Kodo for Your Research
 ----------------------------
 One of initial reasons for building Kodo was to make a tool for doing
 research into erasure correcting codes, with a specific focus on network

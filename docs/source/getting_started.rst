@@ -167,7 +167,7 @@ A Waf project typically contains two types of files:
 In the following we will look at how you can build Kodo's examples, benchmarks
 and unit tests using the Waf build system.
 
-Quick Start (building Kodo examples and unit tests)
+Quick Start (Building Kodo Examples and Unit Tests)
 ---------------------------------------------------
 
 .. _quick-start:
