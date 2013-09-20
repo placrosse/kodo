@@ -102,6 +102,14 @@ public:
         /// @return The maximum required coefficients buffer size in bytes
         uint32_t max_coefficients_size() const;
 
+        /// @ingroup coefficient_storage_api
+        ///
+        /// @note If you implement this function you most likely also have
+        ///       to implement the layer::coefficient_vectors() function.
+        ///
+        /// @return The maximum required coefficient vectors
+        uint32_t max_coefficient_vectors() const;
+
     };
 
     //------------------------------------------------------------------
@@ -311,59 +319,64 @@ public:
     //------------------------------------------------------------------
 
     /// @ingroup coefficient_storage_api
+    ///
+    /// @note If you implement this function you most likely also have
+    ///       to implement the layer::factory::max_coefficient_vectors()
+    ///       function.
+    ///
     /// @return The number of coefficient vectors stored. When accessing the
     ///         coefficients data the index used should be between 0 and the
     ///         number returned by this function.
-    uint32_t coefficients() const;
+    uint32_t coefficient_vectors() const;
 
     /// @ingroup coefficient_storage_api
     ///
     /// @note If you implement this function you most likely also have
-    ///       to implement the layer::factory::max_coefficients_size()
+    ///       to implement the layer::factory::max_coefficient_vector_size()
     ///       function.
     ///
     /// @return The number of bytes needed to store the symbol coefficients.
-    uint32_t coefficients_size() const;
+    uint32_t coefficient_vector_size() const;
 
     /// @ingroup coefficient_storage_api
     /// @return The number of layer::value_type elements needed to store
     ///         the symbol coefficients.
-    uint32_t coefficients_length() const;
+    uint32_t coefficient_vector_length() const;
 
     /// @ingroup coefficient_storage_api
     /// @return The number of coefficients stored in a coefficient vector. The
     ///         count will say how many finite field elements will be stored
     ///         within a coefficient vector, whereas the size and length refers
     ///         to the space (in terms of memory) occupied by those coefficients.
-    uint32_t coefficients_elements() const;
+    uint32_t coefficient_vector_elements() const;
 
     /// @ingroup coefficient_storage_api
     /// @param index the index in the vector
     /// @return the specified vector
-    value_type* coefficients_value(uint32_t index);
+    value_type* coefficient_vector_values(uint32_t index);
 
     /// @ingroup coefficient_storage_api
     /// @param index the index in the vector
     /// @return the specified vector
-    const value_type* coefficients_value(uint32_t index) const;
+    const value_type* coefficient_vector_values(uint32_t index) const;
 
     /// @ingroup coefficient_storage_api
     /// @param index the index in the vector
     /// @return the specified vector
-    uint8_t* coefficients_data(uint32_t index);
+    uint8_t* coefficient_vector_data(uint32_t index);
 
     /// @ingroup coefficient_storage_api
     /// @param index the index in the vector
     /// @return the specified vector
-    const uint8_t* coefficients_data(uint32_t index) const;
+    const uint8_t* coefficient_vector_data(uint32_t index) const;
 
     /// @ingroup coefficient_storage_api
     /// Sets a coefficient buffer - by copying it into the right location in
     /// the buffer.
     /// @param index the index of the coefficients into the coding block
     /// @param storage The actual data of the coefficients
-    void set_coefficients_data(uint32_t index,
-                               const sak::const_storage &storage);
+    void set_coefficient_vector_data(uint32_t index,
+                                     const sak::const_storage &storage);
 
     /// Access the value of in an array of coefficients
     /// @param coefficients The coefficients array

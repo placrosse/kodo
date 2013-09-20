@@ -34,47 +34,48 @@ namespace kodo
         {
             SuperCoder::construct(the_factory);
 
-            m_coefficients_storage.resize(the_factory.max_symbols());
-            for(uint32_t i = 0; i < the_factory.max_symbols(); ++i)
+            m_coefficients_storage.resize(
+                the_factory.max_coefficient_vectors());
+
+            for(auto& storage : m_coefficients_storage)
             {
-                m_coefficients_storage[i].resize(
-                    the_factory.max_coefficients_size());
+                storage.resize(the_factory.max_coefficient_vector_size());
             }
 
         }
 
-        /// @copydoc layer::coefficients(uint32_t)
-        uint8_t* coefficients_data(uint32_t index)
+        /// @copydoc layer::coefficient_vector_data(uint32_t)
+        uint8_t* coefficient_vector_data(uint32_t index)
         {
             assert(index < SuperCoder::symbols());
             return &(m_coefficients_storage[index])[0];
         }
 
-        /// @copydoc layer::coefficients(uint32_t) const
-        const uint8_t* coefficients_data(uint32_t index) const
+        /// @copydoc layer::coefficient_vector_data(uint32_t) const
+        const uint8_t* coefficient_vector_data(uint32_t index) const
         {
             assert(index < SuperCoder::symbols());
             return &(m_coefficients_storage[index])[0];
         }
 
-        /// @copydoc layer::coefficients_value(uint32_t)
-        value_type* coefficients_value(uint32_t index)
+        /// @copydoc layer::coefficient_vector_value(uint32_t)
+        value_type* coefficient_vector_values(uint32_t index)
         {
             return reinterpret_cast<value_type*>(
                 coefficients_data(index));
         }
 
-        /// @copydoc layer::coefficients_value(uint32_t) const
-        const value_type* coefficients_value(uint32_t index) const
+        /// @copydoc layer::coefficient_vector_value(uint32_t) const
+        const value_type* coefficient_vector_values(uint32_t index) const
         {
             return reinterpret_cast<const value_type*>(
                 coefficients_data(index));
         }
 
-        /// @copydoc layer::set_coefficients_data(
+        /// @copydoc layer::set_coefficient_vector_data(
         ///              uint32_t,const sak::const_storage&)
-        void set_coefficients_data(uint32_t index,
-                                   const sak::const_storage &storage)
+        void set_coefficient_vector_data(uint32_t index,
+                                         const sak::const_storage &storage)
         {
             assert(storage.m_size == SuperCoder::coefficients_size());
             assert(storage.m_data != 0);
