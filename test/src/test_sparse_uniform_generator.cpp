@@ -104,12 +104,9 @@ struct api_density
 
         if (fifi::is_binary<field_type>::value)
         {
-            if (symbols > 1)
-            {
-                double average_nonzero_symbols = std::ceil(symbols/2.0);
-                coder->set_average_nonzero_symbols(average_nonzero_symbols);
-                EXPECT_EQ(average_nonzero_symbols/symbols, coder->density());
-            }
+            double average_nonzero_symbols = symbols/2.0;
+            coder->set_average_nonzero_symbols(average_nonzero_symbols);
+            EXPECT_EQ(average_nonzero_symbols/symbols, coder->density());
         }
         else
         {
