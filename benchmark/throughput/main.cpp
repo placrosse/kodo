@@ -373,6 +373,9 @@ public:
                         cs.set_value<std::string>("type", t);
                         cs.set_value<double>("average_nonzero_symbols", n);
 
+                        // Add the calculated density easier output usage
+                        cs.set_value<double>("density", n/s);
+
                         Super::add_configuration(cs);
                     }
                 }
@@ -385,7 +388,6 @@ public:
         Super::setup();
 
         gauge::config_set cs = Super::get_current_configuration();
-
         double symbols = cs.get_value<double>("average_nonzero_symbols");
         m_encoder->set_average_nonzero_symbols(symbols);
     }
@@ -443,18 +445,18 @@ BENCHMARK_OPTION(throughput_average_nonzero_symbols_options)
     gauge::po::options_description options;
 
     std::vector<double> average_nonzero_symbols;
-    average_nonzero_symbols.push_back(1);
-    average_nonzero_symbols.push_back(2);
-    average_nonzero_symbols.push_back(3);
-    average_nonzero_symbols.push_back(4);
-    average_nonzero_symbols.push_back(5);
+    average_nonzero_symbols.push_back(1.0);
+    average_nonzero_symbols.push_back(2.0);
+    average_nonzero_symbols.push_back(3.0);
+    average_nonzero_symbols.push_back(4.0);
+    average_nonzero_symbols.push_back(5.0);
 
     auto default_average_nonzero_symbols =
         gauge::po::value<std::vector<double> >()->default_value(
             average_nonzero_symbols, "")->multitoken();
 
     options.add_options()
-        ("average nonzero_symbols",
+        ("average_nonzero_symbols",
          default_average_nonzero_symbols,
          "Set the average number of nonzero symbols of the sparse codes");
 
