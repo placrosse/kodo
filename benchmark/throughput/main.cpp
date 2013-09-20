@@ -340,7 +340,7 @@ public:
     /// The type of the base benchmark
     typedef throughput_benchmark<Encoder,Decoder> Super;
 
-    /// We need access to the encoder built to adjust the number of
+    /// We need access to the encoder built to adjust the average number of
     /// nonzero symbols
     using Super::m_encoder;
 
@@ -351,13 +351,13 @@ public:
         auto symbols = options["symbols"].as<std::vector<uint32_t> >();
         auto symbol_size = options["symbol_size"].as<std::vector<uint32_t> >();
         auto types = options["type"].as<std::vector<std::string> >();
-        auto nonzero_symbols = 
-            options["nonzero_symbols"].as<std::vector<uint32_t> >();
+        auto average_nonzero_symbols =
+            options["average_nonzero_symbols"].as<std::vector<double> >();
 
         assert(symbols.size() > 0);
         assert(symbol_size.size() > 0);
         assert(types.size() > 0);
-        assert(nonzero_symbols.size() > 0);
+        assert(average_nonzero_symbols.size() > 0);
 
         for(const auto& s : symbols)
         {
@@ -365,13 +365,13 @@ public:
             {
                 for(const auto& t : types)
                 {
-                    for(const auto& n: nonzero_symbols)
+                    for(const auto& n: average_nonzero_symbols)
                     {
                         gauge::config_set cs;
                         cs.set_value<uint32_t>("symbols", s);
                         cs.set_value<uint32_t>("symbol_size", p);
                         cs.set_value<std::string>("type", t);
-                        cs.set_value<uint32_t>("nonzero_symbols", n);
+                        cs.set_value<double>("average_nonzero_symbols", n);
 
                         Super::add_configuration(cs);
                     }
@@ -386,8 +386,8 @@ public:
 
         gauge::config_set cs = Super::get_current_configuration();
 
-        uint32_t symbols = cs.get_value<uint32_t>("nonzero_symbols");
-        m_encoder->set_nonzero_symbols(symbols);
+        double symbols = cs.get_value<double>("average_nonzero_symbols");
+        m_encoder->set_average_nonzero_symbols(symbols);
     }
 
 };
@@ -438,25 +438,25 @@ BENCHMARK_OPTION(throughput_options)
     gauge::runner::instance().register_options(options);
 }
 
-BENCHMARK_OPTION(throughput_nonzero_symbols_options)
+BENCHMARK_OPTION(throughput_average_nonzero_symbols_options)
 {
     gauge::po::options_description options;
 
-    std::vector<uint32_t> nonzero_symbols;
-    nonzero_symbols.push_back(1);
-    nonzero_symbols.push_back(2);
-    nonzero_symbols.push_back(3);
-    nonzero_symbols.push_back(4);
-    nonzero_symbols.push_back(5);
+    std::vector<double> average_nonzero_symbols;
+    average_nonzero_symbols.push_back(1);
+    average_nonzero_symbols.push_back(2);
+    average_nonzero_symbols.push_back(3);
+    average_nonzero_symbols.push_back(4);
+    average_nonzero_symbols.push_back(5);
 
-    auto default_nonzero_symbols =
-        gauge::po::value<std::vector<uint32_t> >()->default_value(
-            nonzero_symbols, "")->multitoken();
+    auto default_average_nonzero_symbols =
+        gauge::po::value<std::vector<double> >()->default_value(
+            average_nonzero_symbols, "")->multitoken();
 
     options.add_options()
-        ("nonzero_symbols",
-         default_nonzero_symbols,
-         "Set the number of nonzero symbols of the sparse codes");
+        ("average nonzero_symbols",
+         default_average_nonzero_symbols,
+         "Set the average number of nonzero symbols of the sparse codes");
 
     gauge::runner::instance().register_options(options);
 }
