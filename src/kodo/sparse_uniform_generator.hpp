@@ -131,9 +131,9 @@ namespace kodo
             m_bernoulli = boost::random::bernoulli_distribution<>(density);
         }
 
-        /// Set the number of nonzero symbols
-        /// @param symbols the number of nonzero symbols
-        void set_nonzero_symbols(uint32_t symbols)
+        /// Set the average number of nonzero symbols
+        /// @param symbols the average number of nonzero symbols
+        void set_average_nonzero_symbols(double symbols)
         {
             // If binary, check that symbols are less than
             // the total number of symbols
@@ -145,9 +145,8 @@ namespace kodo
             assert(fifi::is_binary<field_type>::value ||
                 symbols <= SuperCoder::symbols());
 
-            assert(symbols > 0);
-            double new_density = (double)symbols/SuperCoder::symbols();
-            set_density(new_density);
+            assert(symbols > 0.0);
+            set_density(symbols/SuperCoder::symbols());
         }
 
         /// Get the density of the coefficients generated

@@ -43,6 +43,7 @@ namespace kodo
 
 /// Tests:
 ///   - layer::set_density(double)
+///   - layer::set_average_nonzero_symbols(double)
 ///   - layer::density()
 template<class Coder>
 struct api_density
@@ -103,20 +104,17 @@ struct api_density
 
         if (fifi::is_binary<field_type>::value)
         {
-            if (symbols > 1)
-            {
-                uint32_t nonzero_symbols = std::ceil(symbols/2.0);
-                coder->set_nonzero_symbols(nonzero_symbols);
-                EXPECT_EQ((double)nonzero_symbols/symbols, coder->density());
-            }
+            double average_nonzero_symbols = symbols/2.0;
+            coder->set_average_nonzero_symbols(average_nonzero_symbols);
+            EXPECT_EQ(average_nonzero_symbols/symbols, coder->density());
         }
         else
         {
-            uint32_t nonzero_symbols = std::ceil(symbols/2.0);
-            coder->set_nonzero_symbols(nonzero_symbols);
-            EXPECT_EQ((double)nonzero_symbols/symbols, coder->density());
+            double average_nonzero_symbols = std::ceil(symbols/2.0);
+            coder->set_average_nonzero_symbols(average_nonzero_symbols);
+            EXPECT_EQ(average_nonzero_symbols/symbols, coder->density());
 
-            coder->set_nonzero_symbols(symbols);
+            coder->set_average_nonzero_symbols(symbols);
             EXPECT_EQ(1.0, coder->density());
 
             coder->set_density(1.0);
@@ -182,6 +180,3 @@ TEST(TestCoefficientGenerator, density_sparse_uniform_generator_stack)
         kodo::sparse_uniform_generator_stack_pool,
         api_density>(symbols, symbol_size);
 }
-
-
-
