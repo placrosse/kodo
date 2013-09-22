@@ -58,7 +58,7 @@ TEST(TestLargestNonzeroIndexDecoder, test_index)
 
     auto d = f.build();
 
-    EXPECT_EQ(d->coefficients_size(), 1U);
+    EXPECT_EQ(d->coefficient_vector_size(), 1U);
     EXPECT_EQ(d->seen_encoder_rank(), 0U);
     EXPECT_FALSE(d->nonzero_index_seen());
 

@@ -41,8 +41,11 @@ void test_cached_symbol_decoder(uint32_t symbols, uint32_t symbol_size)
     EXPECT_EQ(factory.symbol_size(), symbol_size);
     EXPECT_EQ(stack->symbol_size(), symbol_size);
 
-    std::vector<uint8_t> data_in = random_vector(symbol_size);
-    std::vector<uint8_t> coeff_in = random_vector(stack->coefficients_size());
+    std::vector<uint8_t> data_in =
+        random_vector(symbol_size);
+
+    std::vector<uint8_t> coeff_in =
+        random_vector(stack->coefficient_vector_size());
 
     stack->decode_symbol(&data_in[0], &coeff_in[0]);
 
@@ -55,7 +58,7 @@ void test_cached_symbol_decoder(uint32_t symbols, uint32_t symbol_size)
                                          stack->symbol_size());
 
     auto coeff_storage_out = sak::storage(stack->cached_symbol_coefficients(),
-                                          stack->coefficients_size());
+                                          stack->coefficient_vector_size());
 
     EXPECT_TRUE(sak::equal(data_storage_in, data_storage_out));
     EXPECT_TRUE(sak::equal(coeff_storage_in, coeff_storage_out));

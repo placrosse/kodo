@@ -33,26 +33,27 @@ namespace kodo
 
         /// Prints the decoding matrix to the output stream
         /// @param out The output stream to print to
-        void print_coefficients_value(std::ostream& out)
+        void print_coefficient_vector_values(std::ostream& out)
         {
-            for(uint32_t i = 0; i < SuperCoder::coefficients(); ++i)
+            for(uint32_t i = 0; i < SuperCoder::coefficient_vectors(); ++i)
             {
-                print_coefficients_value(out, i);
+                print_coefficient_vector_value(out, i);
             }
         }
 
         /// Prints a vector of coefficients
         /// @param out The output stream to print to
         /// @param index The index of the coefficients vector to print
-        void print_coefficients_value(std::ostream& out, uint32_t index)
+        void print_coefficient_vector_value(std::ostream& out, uint32_t index)
         {
             out << index << ":\t";
 
-            const value_type* c = SuperCoder::coefficients_value(index);
+            const value_type* c = SuperCoder::coefficient_vector_values(index);
 
-            for(uint32_t j = 0; j < SuperCoder::coefficients_elements(); ++j)
+            uint32_t elements = SuperCoder::coefficient_vector_elements();
+            for(uint32_t j = 0; j < elements; ++j)
             {
-                value_type value = fifi::get_value<field_type>(c, j);
+                value_type value = SuperCoder::coefficient_value(c, j);
 
                 static_assert(sizeof(uint32_t) >= sizeof(value_type),
                               "value_type will overflow in this print");

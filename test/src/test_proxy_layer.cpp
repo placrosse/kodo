@@ -87,8 +87,8 @@ struct api_coder
         EXPECT_EQ(m_coder_factory.max_payload_size(),
                   m_proxy_factory.max_payload_size());
 
-        EXPECT_EQ(m_coder_factory.max_coefficients_size(),
-                  m_proxy_factory.max_coefficients_size());
+        EXPECT_EQ(m_coder_factory.max_coefficient_vector_size(),
+                  m_proxy_factory.max_coefficient_vector_size());
 
         EXPECT_EQ(m_coder_factory.symbols(),
                   m_proxy_factory.symbols());
@@ -223,7 +223,7 @@ struct api_coder
         std::vector<uint8_t> data(coder->block_size());
         coder->set_symbols(sak::storage(data));
 
-        std::vector<uint8_t> coefficients(coder->coefficients_size(), '3');
+        std::vector<uint8_t> coefficients(coder->coefficient_vector_size(), '3');
 
         std::vector<uint8_t> coder_symbol(coder->symbol_size(), 'z');
         std::vector<uint8_t> proxy_symbol(proxy->symbol_size(), 'z');
@@ -261,8 +261,8 @@ struct api_coder
         std::vector<uint8_t> data(coder->block_size());
         coder->set_symbols(sak::storage(data));
 
-        std::vector<uint8_t> coefficients_coder(coder->coefficients_size(), '3');
-        std::vector<uint8_t> coefficients_proxy(coder->coefficients_size(), '3');
+        std::vector<uint8_t> coefficients_coder(coder->coefficient_vector_size(), '3');
+        std::vector<uint8_t> coefficients_proxy(coder->coefficient_vector_size(), '3');
 
         coefficients_coder[0] = 1;
         coefficients_proxy[0] = 0;
@@ -299,19 +299,19 @@ struct api_coder
 
         auto proxy = m_proxy_factory.build();
 
-        EXPECT_EQ(coder->coefficients_size(),
-                  proxy->coefficients_size());
+        EXPECT_EQ(coder->coefficient_vector_size(),
+                  proxy->coefficient_vector_size());
 
-        EXPECT_EQ(coder->coefficients_length(),
-                  proxy->coefficients_length());
+        EXPECT_EQ(coder->coefficient_vector_length(),
+                  proxy->coefficient_vector_length());
 
         uint32_t index = rand() % coder->symbols();
 
-        EXPECT_EQ(coder->coefficients_value(index),
-                  proxy->coefficients_value(index));
+        EXPECT_EQ(coder->coefficient_vector_values(index),
+                  proxy->coefficient_vector_values(index));
 
-        EXPECT_EQ(coder->coefficients_data(index),
-                  proxy->coefficients_data(index));
+        EXPECT_EQ(coder->coefficient_vector_data(index),
+                  proxy->coefficient_vector_data(index));
     }
 
 private:

@@ -90,16 +90,16 @@ struct api_density
         pointer_type coder = m_factory.build();
 
         std::vector<uint8_t> vector_a =
-            random_vector(coder->coefficients_size());
+            random_vector(coder->coefficient_vector_size());
 
         std::vector<uint8_t> vector_b =
-            random_vector(coder->coefficients_size());
+            random_vector(coder->coefficient_vector_size());
 
         std::vector<uint8_t> vector_c =
-            random_vector(coder->coefficients_size());
+            random_vector(coder->coefficient_vector_size());
 
         std::vector<uint8_t> vector_d =
-            random_vector(coder->coefficients_size());
+            random_vector(coder->coefficient_vector_size());
 
         if (fifi::is_binary<field_type>::value)
         {

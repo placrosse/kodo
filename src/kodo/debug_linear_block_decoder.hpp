@@ -82,10 +82,14 @@ namespace kodo
                     out << std::setfill(' ') << std::setw(3) << i << " U:  ";
                 }
 
-                const value_type* c = SuperCoder::coefficients_value(i);
+                const value_type* c = SuperCoder::coefficient_vector_values(i);
 
-                for(uint32_t j = 0; j < SuperCoder::symbols(); ++j)
+                for(uint32_t j = 0; j < SuperCoder::coefficient_vectors(); ++j)
                 {
+
+                    static_assert(sizeof(uint32_t) >= sizeof(value_type),
+                                  "value_type will overflow in this print");
+
                     value_type value = SuperCoder::coefficient_value(c, j);
                     out << (uint32_t)value << " ";
                 }

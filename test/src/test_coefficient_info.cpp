@@ -31,8 +31,8 @@ namespace kodo
 
             factory(uint32_t max_symbols, uint32_t max_symbol_size)
             {
-                (void)max_symbols;
-                (void)max_symbol_size;
+                (void) max_symbols;
+                (void) max_symbol_size;
             }
 
         };
@@ -40,13 +40,13 @@ namespace kodo
         template<class Factory>
         void initialize(Factory& the_factory)
         {
-            (void)the_factory;
+            (void) the_factory;
         }
 
         template<class Factory>
         void construct(Factory& the_factory)
         {
-            (void)the_factory;
+            (void) the_factory;
         }
 
     };
@@ -73,9 +73,9 @@ TEST(TestCoefficientInfo, api)
         info.construct(f);
         info.initialize(f);
 
-        EXPECT_EQ(info.coefficients_elements(), symbols);
-        EXPECT_EQ(info.coefficients_length(), 2U);
-        EXPECT_EQ(info.coefficients_size(), 2U);
+        EXPECT_EQ(info.coefficient_vector_elements(), symbols);
+        EXPECT_EQ(info.coefficient_vector_length(), 2U);
+        EXPECT_EQ(info.coefficient_vector_size(), 2U);
     }
 
     {
@@ -87,9 +87,9 @@ TEST(TestCoefficientInfo, api)
         info.construct(f);
         info.initialize(f);
 
-        EXPECT_EQ(info.coefficients_elements(), symbols);
-        EXPECT_EQ(info.coefficients_length(), 16U);
-        EXPECT_EQ(info.coefficients_size(), 16U);
+        EXPECT_EQ(info.coefficient_vector_elements(), symbols);
+        EXPECT_EQ(info.coefficient_vector_length(), 16U);
+        EXPECT_EQ(info.coefficient_vector_size(), 16U);
     }
 
     {
@@ -101,8 +101,8 @@ TEST(TestCoefficientInfo, api)
         info.construct(f);
         info.initialize(f);
 
-        EXPECT_EQ(info.coefficients_elements(), symbols);
-        EXPECT_EQ(info.coefficients_length(), 16U);
-        EXPECT_EQ(info.coefficients_size(), 64U);
+        EXPECT_EQ(info.coefficient_vector_elements(), symbols);
+        EXPECT_EQ(info.coefficient_vector_length(), 16U);
+        EXPECT_EQ(info.coefficient_vector_size(), 64U);
     }
 }

@@ -130,10 +130,10 @@ struct api_symbol_id
             EXPECT_TRUE(coefficients_in != 0);
 
             auto storage_out =
-                sak::storage(coefficients_out, coder->coefficients_size());
+                sak::storage(coefficients_out, coder->coefficient_vector_size());
 
             auto storage_in =
-                sak::storage(coefficients_in, coder->coefficients_size());
+                sak::storage(coefficients_in, coder->coefficient_vector_size());
 
             EXPECT_TRUE(sak::equal(storage_out, storage_in));
         }

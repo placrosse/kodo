@@ -82,7 +82,7 @@ void test_forward_stack()
 
     auto d = f.build();
 
-    EXPECT_EQ(d->coefficients_size(), 1U);
+    EXPECT_EQ(d->coefficient_vector_size(), 1U);
 
     uint8_t coefficients[1];
 

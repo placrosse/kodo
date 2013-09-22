@@ -36,8 +36,8 @@ namespace kodo
 
             factory(uint32_t max_symbols, uint32_t max_symbol_size)
             {
-                (void)max_symbols;
-                (void)max_symbol_size;
+                (void) max_symbols;
+                (void) max_symbol_size;
             }
 
         };
@@ -45,13 +45,13 @@ namespace kodo
         template<class Factory>
         void initialize(Factory& the_factory)
         {
-            (void)the_factory;
+            (void) the_factory;
         }
 
         template<class Factory>
         void construct(Factory& the_factory)
         {
-            (void)the_factory;
+            (void) the_factory;
         }
     };
 
@@ -80,15 +80,15 @@ TEST(TestDebugCoefficientStorage, api)
         debug.construct(f);
         debug.initialize(f);
 
-        stack::value_type* c = debug.coefficients_value(0);
+        stack::value_type* c = debug.coefficient_vector_values(0);
         fifi::set_value<stack::field_type>(c, 0, 1);
-        c = debug.coefficients_value(1);
+        c = debug.coefficient_vector_values(1);
         fifi::set_value<stack::field_type>(c, 1, 1);
-        c = debug.coefficients_value(2);
+        c = debug.coefficient_vector_values(2);
         fifi::set_value<stack::field_type>(c, 2, 1);
 
         std::stringstream output;
-        debug.print_coefficients_value(output);
+        debug.print_coefficient_vector_values(output);
         EXPECT_EQ(
             "0:\t1\t0\t0\t\n1:\t0\t1\t0\t\n2:\t0\t0\t1\t\n",
             output.str());
@@ -103,15 +103,15 @@ TEST(TestDebugCoefficientStorage, api)
         debug.construct(f);
         debug.initialize(f);
 
-        stack::value_type* c = debug.coefficients_value(0);
+        stack::value_type* c = debug.coefficient_vector_values(0);
         fifi::set_value<stack::field_type>(c, 0, 255);
-        c = debug.coefficients_value(1);
+        c = debug.coefficient_vector_values(1);
         fifi::set_value<stack::field_type>(c, 1, 255);
-        c = debug.coefficients_value(2);
+        c = debug.coefficient_vector_values(2);
         fifi::set_value<stack::field_type>(c, 2, 255);
 
         std::stringstream output;
-        debug.print_coefficients_value(output);
+        debug.print_coefficient_vector_values(output);
         EXPECT_EQ(
             "0:\t255\t0\t0\t\n1:\t0\t255\t0\t\n2:\t0\t0\t255\t\n",
             output.str());
@@ -126,15 +126,15 @@ TEST(TestDebugCoefficientStorage, api)
         debug.construct(f);
         debug.initialize(f);
 
-        stack::value_type* c = debug.coefficients_value(0);
+        stack::value_type* c = debug.coefficient_vector_values(0);
         fifi::set_value<stack::field_type>(c, 0, 13371337);
-        c = debug.coefficients_value(1);
+        c = debug.coefficient_vector_values(1);
         fifi::set_value<stack::field_type>(c, 1, 13371337);
-        c = debug.coefficients_value(2);
+        c = debug.coefficient_vector_values(2);
         fifi::set_value<stack::field_type>(c, 2, 13371337);
 
         std::stringstream output;
-        debug.print_coefficients_value(output);
+        debug.print_coefficient_vector_values(output);
         EXPECT_EQ(
             "0:\t13371337\t0\t0\t\n1:\t0\t13371337\t0\t\n2:\t0\t0\t13371337\t\n",
             output.str());

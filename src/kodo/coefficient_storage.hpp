@@ -62,14 +62,14 @@ namespace kodo
         value_type* coefficient_vector_values(uint32_t index)
         {
             return reinterpret_cast<value_type*>(
-                coefficients_data(index));
+                coefficient_vector_data(index));
         }
 
         /// @copydoc layer::coefficient_vector_value(uint32_t) const
         const value_type* coefficient_vector_values(uint32_t index) const
         {
             return reinterpret_cast<const value_type*>(
-                coefficients_data(index));
+                coefficient_vector_data(index));
         }
 
         /// @copydoc layer::set_coefficient_vector_data(
@@ -77,11 +77,11 @@ namespace kodo
         void set_coefficient_vector_data(uint32_t index,
                                          const sak::const_storage &storage)
         {
-            assert(storage.m_size == SuperCoder::coefficients_size());
+            assert(storage.m_size == SuperCoder::coefficient_vector_size());
             assert(storage.m_data != 0);
 
             auto dest = sak::storage(
-                coefficients_data(index), SuperCoder::coefficients_size());
+                coefficient_vector_data(index), SuperCoder::coefficient_vector_size());
 
             sak::copy_storage(dest, storage);
         }

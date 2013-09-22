@@ -129,16 +129,16 @@ struct api_generate
         pointer_type coder = m_factory.build();
 
         std::vector<uint8_t> vector_a =
-            random_vector(coder->coefficients_size());
+            random_vector(coder->coefficient_vector_size());
 
         std::vector<uint8_t> vector_b =
-            random_vector(coder->coefficients_size());
+            random_vector(coder->coefficient_vector_size());
 
         std::vector<uint8_t> vector_c =
-            random_vector(coder->coefficients_size());
+            random_vector(coder->coefficient_vector_size());
 
         std::vector<uint8_t> vector_d =
-            random_vector(coder->coefficients_size());
+            random_vector(coder->coefficient_vector_size());
 
         coder->seed(0);
         coder->generate(&vector_a[0]);
@@ -162,16 +162,16 @@ struct api_generate
         pointer_type coder = m_factory.build();
 
         std::vector<uint8_t> vector_a =
-            random_vector(coder->coefficients_size());
+            random_vector(coder->coefficient_vector_size());
 
         std::vector<uint8_t> vector_b =
-            random_vector(coder->coefficients_size());
+            random_vector(coder->coefficient_vector_size());
 
         std::vector<uint8_t> vector_c =
-            random_vector(coder->coefficients_size());
+            random_vector(coder->coefficient_vector_size());
 
         std::vector<uint8_t> vector_d =
-            random_vector(coder->coefficients_size());
+            random_vector(coder->coefficient_vector_size());
 
         coder->seed(0);
         coder->generate_partial(&vector_a[0]);

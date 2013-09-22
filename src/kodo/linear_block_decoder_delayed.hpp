@@ -114,8 +114,8 @@ namespace kodo
             assert(coefficients != 0);
 
             // See if we can find a pivot
-            boost::optional<uint32_t> pivot_index
-                = SuperCoder::forward_substitute_to_pivot(
+            boost::optional<uint32_t> pivot_index =
+                SuperCoder::forward_substitute_to_pivot(
                     symbol_data, coefficients);
 
             if(!pivot_index)
@@ -162,14 +162,10 @@ namespace kodo
             {
                 uint32_t i = p.index();
 
-                value_type *symbol_i =
-                    SuperCoder::symbol_value(i);
+                value_type *symbol_i = SuperCoder::symbol_value(i);
+                value_type *vector_i = SuperCoder::coefficient_vector_values(i);
 
-                value_type *vector_i =
-                    SuperCoder::coefficients_value(i);
-
-                SuperCoder::backward_substitute(
-                    symbol_i, vector_i, i);
+                SuperCoder::backward_substitute(symbol_i, vector_i, i);
             }
         }
     };

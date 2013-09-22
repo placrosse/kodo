@@ -41,7 +41,7 @@ TEST(TestPrintCachedSymbolCoefficients, print)
 
     // Create a empty symbol and put it in
     std::vector<uint8_t> coefficients(
-        decoder->coefficients_size(), '\0');
+        decoder->coefficient_vector_size(), '\0');
 
     std::vector<uint8_t> symbol(
         decoder->symbol_size(), '\0');

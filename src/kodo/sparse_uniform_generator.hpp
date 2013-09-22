@@ -52,7 +52,7 @@ namespace kodo
 
             // Since we will not set all coefficients we should ensure
             // that the non specified ones are zero
-            std::fill_n( coefficients, SuperCoder::coefficients_size(), 0);
+            std::fill_n( coefficients, SuperCoder::coefficient_vector_size(), 0);
 
             value_type* c = reinterpret_cast<value_type*>(coefficients);
 
@@ -83,7 +83,7 @@ namespace kodo
 
             // Since we will not set all coefficients we should ensure
             // that the non specified ones are zero
-            std::fill_n( coefficients, SuperCoder::coefficients_size(), 0);
+            std::fill_n( coefficients, SuperCoder::coefficient_vector_size(), 0);
 
             value_type* c = reinterpret_cast<value_type*>(coefficients);
 
