@@ -4,6 +4,11 @@ News for Kodo
 This file lists the major changes between versions. For a more detailed list
 of every change, see the Git log.
 
+Latest
+------
+* Major: renamed method for specifying the average number of nonzero symbols
+  in the sparse codes from set_nonzero_symbols to set_average_nonzero_symbols.
+
 14.0.0
 ------
 * Bug: Fixed assert in the payload_rank_decoder.hpp which incorrectly checked
