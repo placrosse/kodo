@@ -236,10 +236,10 @@ public:
     void seed(seed_type seed_value);
 
     //------------------------------------------------------------------
-    // CODEC API
+    // ENCODER API
     //------------------------------------------------------------------
 
-    /// @ingroup codec_api
+    /// @ingroup encoder_api
     /// Encodes a symbol according to the symbol coefficients
     ///
     /// @param symbol_data The destination buffer for the encoded symbol
@@ -247,7 +247,7 @@ public:
     ///        initialized with the desired coding coefficients.
     void encode_symbol(uint8_t *symbol_data, uint8_t *coefficients);
 
-    /// @ingroup codec_api
+    /// @ingroup encoder_api
     /// The encode function for systematic packets i.e. specific uncoded
     /// symbols.
     /// @param symbol_data The destination of the uncoded source symbol.
@@ -255,7 +255,11 @@ public:
     ///                     block.
     void encode_symbol(uint8_t *symbol_data, uint32_t symbol_index);
 
-    /// @ingroup codec_api
+    //------------------------------------------------------------------
+    // DECODER API
+    //------------------------------------------------------------------
+
+    /// @ingroup decoder_api
     /// Decodes an encoded symbol according to the coding coefficients
     /// stored in the corresponding symbol_id.
     ///
@@ -264,7 +268,7 @@ public:
     ///        create the encoded symbol
     void decode_symbol(uint8_t *symbol_data, uint8_t *coefficients);
 
-    /// @ingroup codec_api
+    /// @ingroup decoder_api
     /// The decode function for systematic packets i.e. specific uncoded
     /// symbols.
     /// @param symbol_data The uncoded source symbol.
@@ -272,10 +276,62 @@ public:
     ///                     block.
     void decode_symbol(uint8_t *symbol_data, uint32_t symbol_index);
 
-    /// @ingroup codec_api
+    /// @ingroup decoder_api
     /// Check whether decoding is complete.
     /// @return true if the decoding is complete
     bool is_complete() const;
+
+    /// @ingroup decoder_api
+    /// Specifies that the decoder has no knowledge about a specific symbol
+    /// @param index Index of the symbol whose state should be changed.
+    void set_symbol_missing(uint32_t index);
+
+    /// @ingroup decoder_api
+    ///
+    /// Specifies that the decoder has "seen" a specific symbol. When
+    /// a symbol is "seen" by a decoder it means that the decoder has
+    /// knowledge about a specific symbol. If the decoder uses
+    /// Gaussian Elimination it means that the symbol has been
+    /// selected as pivot in the decoding matrix.
+    ///
+    /// @param index Index of the symbol whose state should be changed.
+    void set_symbol_seen(uint32_t index);
+
+    /// @ingroup decoder_api
+    /// Specifies that the decoder has fully decoded a specific symbol.
+    /// @param index Index of the symbol whose state should be changed.
+    void set_symbol_decoded(uint32_t index);
+
+    /// @ingroup decoder_api
+    /// @param index Index of the symbol whose state should be checked
+    /// @return True if the symbol is missing otherwise false
+    bool is_symbol_missing(uint32_t index) const;
+
+    /// @ingroup decoder_api
+    /// @param index Index of the symbol whose state should be checked
+    /// @return True if the symbol is "seen" otherwise false
+    bool is_symbol_seen(uint32_t index) const;
+
+    /// @ingroup decoder_api
+    /// @param index Index of the symbol whose state should be checked
+    /// @return True if the symbol is decoded otherwise false
+    bool is_symbol_decoded(uint32_t index) const;
+
+    /// @ingroup decoder_api
+    /// @return The number of missing symbols at the decoder
+    uint32_t symbols_missing() const;
+
+    /// @ingroup decoder_api
+    /// @return The number of "seen" symbols at the decoder
+    uint32_t symbols_seen() const;
+
+    /// @ingroup decoder_api
+    /// @return The number of decoded symbols at the decoder
+    uint32_t symbols_decoded() const;
+
+    //------------------------------------------------------------------
+    // CODEC API
+    //------------------------------------------------------------------
 
     /// @ingroup codec_api
     /// The rank of a decoder states how many symbols have been decoded
@@ -290,21 +346,6 @@ public:
     /// when generating coding coefficients.
     /// @return True if the symbol is available.
     bool symbol_pivot(uint32_t index) const;
-
-    /// @ingroup codec_api
-    /// Inspect the state of a stored symbol, namely whether it is coded or
-    /// uncoded (i.e. representing an original source symbol). It is important
-    /// to note that for efficiency reasons the decoding algorithms are not
-    /// required to keep track of which previously coded symbols have
-    /// during the decoding become uncoded. This means we have two cases:
-    /// 1) Coded symbols - these symbols may or may not have been fully decoded
-    /// 2) Uncoded symbols - these are guaranteed to have been fully decoded.
-    ///
-    /// @param index The index of the symbol which state we wish to know
-    /// @return This function returns true if the symbol with the specified
-    ///         index is coded. If the symbol is known to be uncoded the
-    ///         the function will return false.
-    bool symbol_coded(uint32_t index) const;
 
     //------------------------------------------------------------------
     // COEFFICIENT STORAGE API
@@ -328,7 +369,8 @@ public:
     /// @return The number of coefficients stored in a coefficient vector. The
     ///         count will say how many finite field elements will be stored
     ///         within a coefficient vector, whereas the size and length refers
-    ///         to the space (in terms of memory) occupied by those coefficients.
+    ///         to the space (in terms of memory) occupied by those
+    ///         coefficients.
     uint32_t coefficients_count() const;
 
     /// @ingroup coefficient_storage_api
@@ -441,7 +483,7 @@ public:
     /// @param dest The destination buffer where the symbols should be
     ///        copied. The function will copy block_size() bytes or until
     ///        the dest buffer is full.
-    void copy_symbols(const sak::mutable_storage &dest) const;
+    void copy_from_symbols(const sak::mutable_storage &dest) const;
 
     /// @ingroup storage_api
     /// Copies an encoded / decoded symbols to the dest buffer.
@@ -449,8 +491,24 @@ public:
     /// @param dest The destination buffer where the symbols should be
     ///        copied. The function will copy symbol_size() bytes or until
     ///        the dest buffer is full.
-    void copy_symbol(uint32_t index,
-                     const sak::mutable_storage &dest) const;
+    void copy_from_symbol(uint32_t index,
+                          const sak::mutable_storage &dest) const;
+
+    /// @ingroup storage_api
+    /// Copies the encoded / decoded symbols to the dest buffer.
+    /// @param dest The destination buffer where the symbols should be
+    ///        copied. The function will copy block_size() bytes or until
+    ///        the dest buffer is full.
+    void copy_into_symbols(const sak::const_storage &src) const;
+
+    /// @ingroup storage_api
+    /// Copies an encoded / decoded symbols to the dest buffer.
+    /// @param index The index of the symbol to be copied
+    /// @param dest The destination buffer where the symbols should be
+    ///        copied. The function will copy symbol_size() bytes or until
+    ///        the dest buffer is full.
+    void copy_into_symbol(uint32_t index,
+                          const sak::const_storage &src) const;
 
     /// @ingroup storage_api
     /// @param index the index number of the symbol

@@ -10,7 +10,7 @@
 namespace kodo
 {
 
-    /// @ingroup codec_layers
+    /// @ingroup encoder_layers
     /// @brief Zeros the symbol data buffer
     template<class SuperCoder>
     class zero_symbol_encoder : public SuperCoder

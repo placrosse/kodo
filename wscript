@@ -105,7 +105,7 @@ def build(bld):
         bld.recurse('examples/rank_callback')
         bld.recurse('examples/use_cached_symbol_decoder')
         bld.recurse('examples/use_debug_layers')
-
+        bld.recurse('examples/switch_systematic_on_off')
 
         bld.recurse('benchmark/throughput')
         bld.recurse('benchmark/count_operations')

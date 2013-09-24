@@ -15,7 +15,7 @@
 namespace kodo
 {
 
-    /// @ingroup codec_layers
+    /// @ingroup decoder_layers
     /// @brief Aligns the symbol coefficient buffer if necessary
     template<class SuperCoder>
     class aligned_coefficients_decoder

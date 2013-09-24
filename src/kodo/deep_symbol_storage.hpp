@@ -132,9 +132,10 @@ namespace kodo
 
             assert(index < SuperCoder::symbols());
 
+            /// @todo: consider this
             // Symbols should always be added in order e.g. 0,1,2,3 ..
             // so the index specified must equal the current count
-            assert(index == m_symbols_count);
+            // assert(index == m_symbols_count);
 
             sak::mutable_storage dest_data = sak::storage(m_data);
 
@@ -155,7 +156,7 @@ namespace kodo
         }
 
         /// @copydoc layer::copy_symbols(const sak::mutable_storage&)
-        void copy_symbols(const sak::mutable_storage &dest_storage)
+        void copy_symbols(const sak::mutable_storage &dest_storage) const
         {
             assert(dest_storage.m_size > 0);
             assert(dest_storage.m_data != 0);
@@ -186,6 +187,24 @@ namespace kodo
                 sak::storage(symbol(index), data_to_copy);
 
             sak::copy_storage(dest, src);
+        }
+
+        /// @copydoc layer::copy_into_symbols(const sak::const_storage&)
+        void copy_into_symbols(const sak::const_storage &src)
+        {
+            // For deep symbol storage this is the same as using
+            // layer::set_symbols(const sak::mutable_storage&)
+            set_symbols(src);
+        }
+
+        /// @copydoc layer::copy_into_symbol(uint32_t,
+        ///              const sak::const_storage&)
+        void copy_into_symbol(uint32_t index,
+                              const sak::const_storage &src)
+        {
+            // For deep symbol storage this is the same as using
+            // layer::set_symbol(uint32_t, const sak::mutable_storage&)
+            set_symbol(index, src);
         }
 
         /// @copydoc layer::symbols_available() const

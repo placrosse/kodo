@@ -15,7 +15,7 @@
 namespace kodo
 {
 
-    /// @ingroup codec_layers
+    /// @ingroup decoder_layers
     /// @brief Linear block decoder with delayer backwards substitution.
     ///
     /// The delayed backwards substitution can reduce the fill-in
@@ -33,7 +33,7 @@ namespace kodo
         /// The value_type used to store the field elements
         typedef typename field_type::value_type value_type;
 
-        ///
+        /// @todo: Document this
         typedef typename SuperCoder::direction_policy direction_policy;
 
     public:

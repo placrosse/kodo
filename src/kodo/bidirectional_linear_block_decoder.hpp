@@ -22,6 +22,8 @@
 
 namespace kodo
 {
+
+    /// @ingroup decoder_layers
     /// @ingroup codec_layers
     /// @brief Implements basic linear block decoder.
     ///
@@ -539,14 +541,16 @@ namespace kodo
                 pivot_index, coefficient_storage);
 
             // Copy it into the symbol storage
-            sak::mutable_storage dest =
-                sak::storage(SuperCoder::symbol(pivot_index),
-                             SuperCoder::symbol_size());
+            // sak::mutable_storage dest =
+            //     sak::storage(SuperCoder::symbol(pivot_index),
+            //                  SuperCoder::symbol_size());
 
             sak::const_storage src =
                 sak::storage(symbol_data, SuperCoder::symbol_size());
 
-            sak::copy_storage(dest, src);
+            SuperCoder::copy_into_symbol(pivot_index, src);
+
+            // sak::copy_storage(dest, src);
         }
 
         /// Stores an uncoded or fully decoded symbol
@@ -570,14 +574,16 @@ namespace kodo
             SuperCoder::set_coefficient_value(vector_dest, pivot_index, 1U);
 
             // Copy it into the symbol storage
-            sak::mutable_storage dest =
-                sak::storage(SuperCoder::symbol(pivot_index),
-                             SuperCoder::symbol_size());
+            // sak::mutable_storage dest =
+            //     sak::storage(SuperCoder::symbol(pivot_index),
+            //                  SuperCoder::symbol_size());
 
             sak::const_storage src =
                 sak::storage(symbol_data, SuperCoder::symbol_size());
 
-            sak::copy_storage(dest, src);
+            SuperCoder::copy_into_symbol(pivot_index, src);
+
+            // sak::copy_storage(dest, src);
 
         }
 

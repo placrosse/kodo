@@ -15,7 +15,7 @@
 namespace kodo
 {
 
-    /// @ingroup codec_layers
+    /// @ingroup encoder_layers
     /// @brief A linear block encoder.
     ///
     /// This type of encoder iterates
@@ -73,7 +73,8 @@ namespace kodo
 
                 // Did you forget to set the data on the encoder?
                 assert(symbol_i != 0);
-                assert(SuperCoder::symbol_pivot(i));
+                //assert(SuperCoder::symbol_pivot(i));
+                assert(SuperCoder::is_symbol_initialized(i));
 
                 if(fifi::is_binary<field_type>::value)
                 {
