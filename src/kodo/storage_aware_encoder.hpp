@@ -10,7 +10,7 @@
 namespace kodo
 {
 
-    /// @ingroup codec_layers
+    /// @ingroup encoder_layers
     /// @brief Implements the layer::rank() and layer::symbol_pivot()
     ///        functions based on the storage status.
     ///

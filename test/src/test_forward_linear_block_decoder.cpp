@@ -23,9 +23,11 @@ namespace kodo
         : public // Payload API
                  // Codec Header API
                  // Symbol ID API
-                 // Codec API
+                 // Decoder API
                  debug_linear_block_decoder<
                  forward_linear_block_decoder<
+                 symbol_decoding_status_counter<
+                 symbol_decoding_status_tracker<
                  // Coefficient Storage API
                  coefficient_value_access<
                  coefficient_storage<
@@ -41,7 +43,7 @@ namespace kodo
                  final_coder_factory_pool<
                  // Final type
                  test_forward_stack<Field>
-                     > > > > > > > > > > >
+                     > > > > > > > > > > > > >
     { };
 
     template<class Field>
@@ -49,10 +51,12 @@ namespace kodo
         : public // Payload API
                  // Codec Header API
                  // Symbol ID API
-                 // Codec API
+                 // Decoder API
                  debug_linear_block_decoder<
                  linear_block_decoder_delayed<
                  forward_linear_block_decoder<
+                 symbol_decoding_status_counter<
+                 symbol_decoding_status_tracker<
                  // Coefficient Storage API
                  coefficient_value_access<
                  coefficient_storage<
@@ -68,7 +72,7 @@ namespace kodo
                  final_coder_factory_pool<
                  // Final type
                  test_forward_delayed_stack<Field>
-                     > > > > > > > > > > > >
+                     > > > > > > > > > > > > > >
     { };
 
 }
@@ -101,7 +105,7 @@ void test_forward_stack()
 
     EXPECT_TRUE(d->symbol_pivot(1U));
 
-    EXPECT_TRUE(d->symbol_coded(1U));
+    EXPECT_TRUE(d->is_symbol_seen(1U));
 
     EXPECT_FALSE(d->is_complete());
 
@@ -118,8 +122,8 @@ void test_forward_stack()
     EXPECT_TRUE(d->symbol_pivot(0));
     EXPECT_TRUE(d->symbol_pivot(1));
 
-    EXPECT_TRUE(d->symbol_coded(0));
-    EXPECT_TRUE(d->symbol_coded(1));
+    EXPECT_TRUE(d->is_symbol_seen(0));
+    EXPECT_TRUE(d->is_symbol_seen(1));
 
     EXPECT_FALSE(d->is_complete());
 
@@ -133,9 +137,9 @@ void test_forward_stack()
     EXPECT_TRUE(d->symbol_pivot(1));
     EXPECT_TRUE(d->symbol_pivot(2));
 
-    EXPECT_TRUE(d->symbol_coded(0));
-    EXPECT_TRUE(d->symbol_coded(1));
-    EXPECT_FALSE(d->symbol_coded(2));
+    EXPECT_TRUE(d->is_symbol_seen(0));
+    EXPECT_TRUE(d->is_symbol_seen(1));
+    EXPECT_TRUE(d->is_symbol_decoded(2));
 
     EXPECT_FALSE(d->is_complete());
 
@@ -155,10 +159,10 @@ void test_forward_stack()
     EXPECT_TRUE(d->symbol_pivot(2));
     EXPECT_TRUE(d->symbol_pivot(4));
 
-    EXPECT_TRUE(d->symbol_coded(0));
-    EXPECT_TRUE(d->symbol_coded(1));
-    EXPECT_FALSE(d->symbol_coded(2));
-    EXPECT_TRUE(d->symbol_coded(4));
+    EXPECT_TRUE(d->symbol_seen(0));
+    EXPECT_TRUE(d->symbol_seen(1));
+    EXPECT_TRUE(d->symbol_decoded(2));
+    EXPECT_TRUE(d->symbol_seen(4));
 
     EXPECT_FALSE(d->is_complete());
 
@@ -179,10 +183,10 @@ void test_forward_stack()
     EXPECT_TRUE(d->symbol_pivot(2));
     EXPECT_TRUE(d->symbol_pivot(4));
 
-    EXPECT_TRUE(d->symbol_coded(0));
-    EXPECT_TRUE(d->symbol_coded(1));
-    EXPECT_FALSE(d->symbol_coded(2));
-    EXPECT_TRUE(d->symbol_coded(4));
+    EXPECT_TRUE(d->symbol_seen(0));
+    EXPECT_TRUE(d->symbol_seen(1));
+    EXPECT_TRUE(d->symbol_decoded(2));
+    EXPECT_TRUE(d->symbol_seen(4));
 
     EXPECT_FALSE(d->is_complete());
 
@@ -209,6 +213,8 @@ void test_forward_stack()
     EXPECT_FALSE(d->symbol_coded(2));
     EXPECT_TRUE(d->symbol_coded(3));
     EXPECT_TRUE(d->symbol_coded(4));
+
+
 
     EXPECT_TRUE(d->is_complete());
 

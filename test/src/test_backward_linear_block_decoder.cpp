@@ -24,9 +24,11 @@ namespace kodo
         : public // Payload API
                  // Codec Header API
                  // Symbol ID API
-                 // Codec API
+                 // Decoder API
                  debug_linear_block_decoder<
                  backward_linear_block_decoder<
+                 symbol_decoding_status_counter<
+                 symbol_decoding_status_tracker<
                  // Coefficient Storage API
                  coefficient_value_access<
                  coefficient_storage<
@@ -42,7 +44,7 @@ namespace kodo
                  final_coder_factory_pool<
                  // Final type
                  test_backward_stack<Field>
-                     > > > > > > > > > > >
+                     > > > > > > > > > > > > >
     { };
 
     template<class Field>
@@ -54,6 +56,8 @@ namespace kodo
                  debug_linear_block_decoder<
                  linear_block_decoder_delayed<
                  backward_linear_block_decoder<
+                 symbol_decoding_status_counter<
+                 symbol_decoding_status_tracker<
                  // Coefficient Storage API
                  coefficient_value_access<
                  coefficient_storage<
@@ -69,7 +73,7 @@ namespace kodo
                  final_coder_factory_pool<
                  // Final type
                  test_backward_stack<Field>
-                     > > > > > > > > > > > >
+                     > > > > > > > > > > > > > >
     { };
 
 }

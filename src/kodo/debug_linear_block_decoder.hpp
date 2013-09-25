@@ -69,16 +69,17 @@ namespace kodo
         {
             for(uint32_t i = 0; i < SuperCoder::symbols(); ++i)
             {
-                if (!SuperCoder::symbol_pivot(i))
+                if (SuperCoder::is_symbol_missing(i))
                 {
                     out << std::setfill(' ') << std::setw(3) << i << " ?:  ";
                 }
-                else if (SuperCoder::symbol_coded(i))
+                else if (SuperCoder::is_symbol_seen(i))
                 {
                     out << std::setfill(' ') << std::setw(3) << i << " C:  ";
                 }
                 else
                 {
+                    assert(SuperCoder::is_symbol_decoded(i));
                     out << std::setfill(' ') << std::setw(3) << i << " U:  ";
                 }
 

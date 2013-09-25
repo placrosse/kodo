@@ -152,22 +152,15 @@ namespace kodo
         /// @copydoc layer::rank() const
         uint32_t rank() const
         {
-            return m_rank;
+            return SuperCoder::symbols_seen() + SuperCoder::symbols_decoded();
         }
 
         /// @copydoc layer::symbol_pivot(uint32_t) const
         bool symbol_pivot(uint32_t index) const
         {
             assert(index < SuperCoder::symbols());
-            return m_coded[index] || m_uncoded[index];
-        }
-
-        /// @todo Add unit test
-        /// @copydoc layer::symbol_pivot(uint32_t) const
-        bool symbol_coded(uint32_t index) const
-        {
-            assert(symbol_pivot(index));
-            return m_coded[index];
+            return SuperCoder::is_symbol_seen(index) ||
+                SuperCoder::is_symbol_decoded(index);
         }
 
     protected:
@@ -404,37 +397,38 @@ namespace kodo
 
                 if( !value )
                 {
+                    // The coefficient is zero
                     continue;
                 }
 
-                if( symbol_pivot(i) )
+                if( !symbol_pivot(i) )
                 {
-                    value_type *vector_i =
-                        SuperCoder::coefficients_value(i);
+                    // We do not have a pivot here
+                    continue;
+                }
 
-                    value_type *symbol_i =
-                        SuperCoder::symbol_value(i);
+                value_type *vector_i = SuperCoder::coefficients_value(i);
+                value_type *symbol_i = SuperCoder::symbol_value(i);
 
-                    if(fifi::is_binary<field_type>::value)
-                    {
-                        SuperCoder::subtract(
-                            symbol_id, vector_i,
-                            SuperCoder::coefficients_length());
+                if(fifi::is_binary<field_type>::value)
+                {
+                    SuperCoder::subtract(
+                        symbol_id, vector_i,
+                        SuperCoder::coefficients_length());
 
-                        SuperCoder::subtract(
-                            symbol_data, symbol_i,
-                            SuperCoder::symbol_length());
-                    }
-                    else
-                    {
-                        SuperCoder::multiply_subtract(
-                            symbol_id, vector_i, value,
-                            SuperCoder::coefficients_length());
+                    SuperCoder::subtract(
+                        symbol_data, symbol_i,
+                        SuperCoder::symbol_length());
+                }
+                else
+                {
+                    SuperCoder::multiply_subtract(
+                        symbol_id, vector_i, value,
+                        SuperCoder::coefficients_length());
 
-                        SuperCoder::multiply_subtract(
-                            symbol_data, symbol_i, value,
-                            SuperCoder::symbol_length());
-                    }
+                    SuperCoder::multiply_subtract(
+                        symbol_data, symbol_i, value,
+                        SuperCoder::symbol_length());
                 }
             }
         }
@@ -464,6 +458,12 @@ namespace kodo
             {
                 uint32_t i = p.index();
 
+                if(i == pivot_index)
+                {
+                    // We cannot backward substitute into ourself
+                    continue;
+                }
+
                 if( m_uncoded[i] )
                 {
                     // We know that we have no non-zero elements
@@ -471,48 +471,42 @@ namespace kodo
                     continue;
                 }
 
-                if(i == pivot_index)
+                if( !m_coded[i] )
                 {
-                    // We cannot backward substitute into ourself
+                    // We do not have a symbol yet here
                     continue;
                 }
 
-                if( m_coded[i] )
+                value_type *vector_i = SuperCoder::coefficients_value(i);
+
+                value_type value =
+                    SuperCoder::coefficient_value(vector_i, pivot_index);
+
+                if( !value )
                 {
-                    value_type *vector_i =
-                        SuperCoder::coefficients_value(i);
+                    // The coefficient is zero
+                    continue;
+                }
 
-                    value_type value =
-                        SuperCoder::coefficient_value(vector_i, pivot_index);
+                value_type *symbol_i = SuperCoder::symbol_value(i);
 
-                    if( value )
-                    {
+                if(fifi::is_binary<field_type>::value)
+                {
+                    SuperCoder::subtract(vector_i, symbol_id,
+                        SuperCoder::coefficients_length());
 
-                        value_type *symbol_i = SuperCoder::symbol_value(i);
+                    SuperCoder::subtract(symbol_i, symbol_data,
+                        SuperCoder::symbol_length());
+                }
+                else
+                {
 
-                        if(fifi::is_binary<field_type>::value)
-                        {
-                            SuperCoder::subtract(
-                                vector_i, symbol_id,
-                                SuperCoder::coefficients_length());
+                    // Update symbol and corresponding vector
+                    SuperCoder::multiply_subtract(vector_i, symbol_id, value,
+                        SuperCoder::coefficients_length());
 
-                            SuperCoder::subtract(
-                                symbol_i, symbol_data,
-                                SuperCoder::symbol_length());
-                        }
-                        else
-                        {
-
-                            // Update symbol and corresponding vector
-                            SuperCoder::multiply_subtract(
-                                vector_i, symbol_id, value,
-                                SuperCoder::coefficients_length());
-
-                            SuperCoder::multiply_subtract(
-                                symbol_i, symbol_data, value,
-                                SuperCoder::symbol_length());
-                        }
-                    }
+                    SuperCoder::multiply_subtract(symbol_i, symbol_data, value,
+                        SuperCoder::symbol_length());
                 }
             }
         }
@@ -540,17 +534,14 @@ namespace kodo
             SuperCoder::set_coefficients(
                 pivot_index, coefficient_storage);
 
-            // Copy it into the symbol storage
-            // sak::mutable_storage dest =
-            //     sak::storage(SuperCoder::symbol(pivot_index),
-            //                  SuperCoder::symbol_size());
+            // Mark this symbol seen
+            SuperCoder::set_symbol_seen(pivot_index);
 
+            // Copy it into the symbol storage
             sak::const_storage src =
                 sak::storage(symbol_data, SuperCoder::symbol_size());
 
             SuperCoder::copy_into_symbol(pivot_index, src);
-
-            // sak::copy_storage(dest, src);
         }
 
         /// Stores an uncoded or fully decoded symbol
@@ -573,18 +564,14 @@ namespace kodo
 
             SuperCoder::set_coefficient_value(vector_dest, pivot_index, 1U);
 
-            // Copy it into the symbol storage
-            // sak::mutable_storage dest =
-            //     sak::storage(SuperCoder::symbol(pivot_index),
-            //                  SuperCoder::symbol_size());
+            // Mark this symbol decoded
+            SuperCoder::set_symbol_decoded(pivot_index);
 
+            // Copy it into the symbol storage
             sak::const_storage src =
                 sak::storage(symbol_data, SuperCoder::symbol_size());
 
             SuperCoder::copy_into_symbol(pivot_index, src);
-
-            // sak::copy_storage(dest, src);
-
         }
 
     protected:

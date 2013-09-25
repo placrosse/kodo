@@ -30,6 +30,9 @@
 #include <kodo/storage_block_info.hpp>
 #include <kodo/final_coder_factory_pool.hpp>
 #include <kodo/coefficient_value_access.hpp>
+#include <kodo/symbol_decoding_status_tracker.hpp>
+#include <kodo/symbol_decoding_status_counter.hpp>
+
 
 /// Here we define the stacks which should be tested.
 namespace kodo
@@ -41,6 +44,8 @@ namespace kodo
         : public // Codec API
                  rank_callback_decoder<
                  forward_linear_block_decoder<
+                 symbol_decoding_status_counter<
+                 symbol_decoding_status_tracker<
                  // Coefficient Storage API
                  coefficient_value_access<
                  coefficient_storage<
@@ -56,7 +61,7 @@ namespace kodo
                  final_coder_factory_pool<
                  // Final type
                  rank_callback_decoder_stack<Field>
-                     > > > > > > > > > > >
+                     > > > > > > > > > > > > >
     {};
 
     // A dummi api to replace the real stack

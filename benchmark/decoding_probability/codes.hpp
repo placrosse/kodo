@@ -23,10 +23,12 @@ namespace kodo
                  symbol_id_decoder<
                  // Symbol ID API
                  plain_symbol_id_reader<
-                 // Codec API
+                 // Decoder API
                  aligned_coefficients_decoder<
                  linear_block_decoder_delayed<
                  forward_linear_block_decoder<
+                 symbol_decoding_status_counter<
+                 symbol_decoding_status_tracker<
                  // Coefficient Storage API
                  coefficient_value_access<
                  coefficient_storage<
@@ -42,7 +44,7 @@ namespace kodo
                  final_coder_factory_pool<
                  // Final type
                  full_delayed_rlnc_decoder<Field>
-                     > > > > > > > > > > > > > > > > >
+                     > > > > > > > > > > > > > > > > > > >
     { };
 
     template<class Field>
@@ -54,10 +56,12 @@ namespace kodo
             symbol_id_decoder<
             // Symbol ID API
             plain_symbol_id_reader<
-            // Codec API
+            // Decoder API
             aligned_coefficients_decoder<
             linear_block_decoder_delayed<
             forward_linear_block_decoder<
+            symbol_decoding_status_counter<
+            symbol_decoding_status_tracker<
             // Coefficient Storage API
             coefficient_value_access<
             coefficient_storage<
@@ -73,7 +77,7 @@ namespace kodo
             final_coder_factory_pool<
             // Final type
             full_rlnc_decoder_unsystematic<Field>
-                > > > > > > > > > > > > > > > >
+                > > > > > > > > > > > > > > > > > >
     { };
 
     template<class Field>
@@ -86,7 +90,7 @@ namespace kodo
                plain_symbol_id_writer<
                // Coefficient Generator API
                uniform_generator<
-               // Codec API
+               // Encoder API
                encode_symbol_tracker<
                zero_symbol_encoder<
                linear_block_encoder<
@@ -122,7 +126,7 @@ namespace kodo
                plain_symbol_id_writer<
                // Coefficient Generator API
                sparse_uniform_generator<
-               // Codec API
+               // Encoder API
                encode_symbol_tracker<
                zero_symbol_encoder<
                linear_block_encoder<

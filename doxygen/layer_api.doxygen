@@ -330,17 +330,20 @@ public:
     uint32_t symbols_decoded() const;
 
     //------------------------------------------------------------------
-    // CODEC API
-    //------------------------------------------------------------------
+    // DECODER & ENCODER API
+    //
+    // There are a few functions which are shared between the decoder
+    // and encoder API these are documented here.
+    // ------------------------------------------------------------------
 
-    /// @ingroup codec_api
+    /// @ingroup decoder_api encoder_api
     /// The rank of a decoder states how many symbols have been decoded
     /// or partially decoded. The rank of an encoder states how many symbols
     /// are available for encoding.
     /// @return the rank of the decoder or encoder
     uint32_t rank() const;
 
-    /// @ingroup codec_api
+    /// @ingroup decoder_api encoder_api
     /// The symbol pivot indicates whether a symbol is available to either an
     /// encoder or decoder. A coefficient generator may use this information
     /// when generating coding coefficients.
@@ -495,7 +498,8 @@ public:
                           const sak::mutable_storage &dest) const;
 
     /// @ingroup storage_api
-    /// Copies the encoded / decoded symbols to the dest buffer.
+    /// Copies the storage data provided into the internal storage. This
+    /// function will assume that the data storage is available
     /// @param dest The destination buffer where the symbols should be
     ///        copied. The function will copy block_size() bytes or until
     ///        the dest buffer is full.

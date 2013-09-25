@@ -35,6 +35,9 @@
 #include "../proxy_layer.hpp"
 #include "../storage_aware_encoder.hpp"
 #include "../encode_symbol_tracker.hpp"
+#include "../symbol_decoding_status_tracker.hpp"
+#include "../symbol_decoding_status_counter.hpp"
+
 
 #include "../linear_block_encoder.hpp"
 #include "../forward_linear_block_decoder.hpp"
@@ -65,7 +68,7 @@ namespace kodo
                  seed_symbol_id_writer<
                  // Coefficient Generator API
                  uniform_generator<
-                 // Codec API
+                 // Encoder API
                  encode_symbol_tracker<
                  zero_symbol_encoder<
                  linear_block_encoder<
@@ -104,9 +107,11 @@ namespace kodo
                  seed_symbol_id_reader<
                  // Coefficient Generator API
                  uniform_generator<
-                 // Codec API
+                 // Decoder API
                  aligned_coefficients_decoder<
                  forward_linear_block_decoder<
+                 symbol_decoding_status_counter<
+                 symbol_decoding_status_tracker<
                  // Coefficient Storage API
                  coefficient_value_access<
                  coefficient_storage<
@@ -122,7 +127,7 @@ namespace kodo
                  final_coder_factory_pool<
                  // Final type
                  seed_rlnc_decoder<Field>
-                     > > > > > > > > > > > > > > > >
+                     > > > > > > > > > > > > > > > > > >
     { };
 
 }

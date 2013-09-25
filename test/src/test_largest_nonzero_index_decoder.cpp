@@ -29,6 +29,8 @@ namespace kodo
                  largest_nonzero_index_decoder<
                  forward_linear_block_decoder<
                  rank_info<
+                 symbol_decoding_status_counter<
+                 symbol_decoding_status_tracker<
                  // Coefficient Storage API
                  coefficient_value_access<
                  coefficient_storage<
@@ -44,7 +46,7 @@ namespace kodo
                  final_coder_factory_pool<
                  // Final type
                  test_partial_stack<Field>
-                     > > > > > > > > > > > >
+                     > > > > > > > > > > > > > >
     { };
 
 }

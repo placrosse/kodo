@@ -33,9 +33,11 @@ namespace kodo
                symbol_id_decoder<
                // Symbol ID API
                plain_symbol_id_reader<
-               // Codec API
+               // Decoder API
                aligned_coefficients_decoder<
                forward_linear_block_decoder<
+               symbol_decoding_status_counter<
+               symbol_decoding_status_tracker<
                // Coefficient Storage API
                coefficient_value_access<
                coefficient_storage<
@@ -51,7 +53,7 @@ namespace kodo
                final_coder_factory_pool<
                // Final type
                shallow_rlnc_decoder<Field>
-                   > > > > > > > > > > > > > > > >
+                   > > > > > > > > > > > > > > > > > >
     { };
 }
 
