@@ -246,7 +246,7 @@ struct api_coder
 
         for(uint32_t i = 0; i < coder->symbols(); ++i)
         {
-            EXPECT_EQ(coder->symbol_pivot(i), proxy->symbol_pivot(i));
+            EXPECT_EQ(coder->is_symbol_pivot(i), proxy->is_symbol_pivot(i));
         }
 
     }
@@ -287,7 +287,7 @@ struct api_coder
 
         for(uint32_t i = 0; i < coder->symbols(); ++i)
         {
-            EXPECT_EQ(coder->symbol_pivot(i), proxy->symbol_pivot(i));
+            EXPECT_EQ(coder->is_symbol_pivot(i), proxy->is_symbol_pivot(i));
         }
     }
 

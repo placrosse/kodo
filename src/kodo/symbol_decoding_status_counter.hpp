@@ -13,6 +13,8 @@
 namespace kodo
 {
 
+    /// @todo add to gropu
+    /// @ingroup
     /// @brief The symbol decoding status counter maintains
     /// information about how many symbols are in which state.
     ///

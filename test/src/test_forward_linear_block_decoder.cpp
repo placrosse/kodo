@@ -103,7 +103,7 @@ void test_forward_stack()
 
     EXPECT_EQ(d->rank(), 1U);
 
-    EXPECT_TRUE(d->symbol_pivot(1U));
+    EXPECT_TRUE(d->is_symbol_pivot(1U));
 
     EXPECT_TRUE(d->is_symbol_seen(1U));
 
@@ -119,8 +119,8 @@ void test_forward_stack()
 
     EXPECT_EQ(d->rank(), 2U);
 
-    EXPECT_TRUE(d->symbol_pivot(0));
-    EXPECT_TRUE(d->symbol_pivot(1));
+    EXPECT_TRUE(d->is_symbol_pivot(0));
+    EXPECT_TRUE(d->is_symbol_pivot(1));
 
     EXPECT_TRUE(d->is_symbol_seen(0));
     EXPECT_TRUE(d->is_symbol_seen(1));
@@ -133,9 +133,9 @@ void test_forward_stack()
 
     EXPECT_EQ(d->rank(), 3U);
 
-    EXPECT_TRUE(d->symbol_pivot(0));
-    EXPECT_TRUE(d->symbol_pivot(1));
-    EXPECT_TRUE(d->symbol_pivot(2));
+    EXPECT_TRUE(d->is_symbol_pivot(0));
+    EXPECT_TRUE(d->is_symbol_pivot(1));
+    EXPECT_TRUE(d->is_symbol_pivot(2));
 
     EXPECT_TRUE(d->is_symbol_seen(0));
     EXPECT_TRUE(d->is_symbol_seen(1));
@@ -154,15 +154,15 @@ void test_forward_stack()
     // d->print_decoder_state(std::cout);
 
     EXPECT_EQ(d->rank(), 4U);
-    EXPECT_TRUE(d->symbol_pivot(0));
-    EXPECT_TRUE(d->symbol_pivot(1));
-    EXPECT_TRUE(d->symbol_pivot(2));
-    EXPECT_TRUE(d->symbol_pivot(4));
+    EXPECT_TRUE(d->is_symbol_pivot(0));
+    EXPECT_TRUE(d->is_symbol_pivot(1));
+    EXPECT_TRUE(d->is_symbol_pivot(2));
+    EXPECT_TRUE(d->is_symbol_pivot(4));
 
-    EXPECT_TRUE(d->symbol_seen(0));
-    EXPECT_TRUE(d->symbol_seen(1));
-    EXPECT_TRUE(d->symbol_decoded(2));
-    EXPECT_TRUE(d->symbol_seen(4));
+    EXPECT_TRUE(d->is_symbol_seen(0));
+    EXPECT_TRUE(d->is_symbol_seen(1));
+    EXPECT_TRUE(d->is_symbol_decoded(2));
+    EXPECT_TRUE(d->is_symbol_seen(4));
 
     EXPECT_FALSE(d->is_complete());
 
@@ -178,15 +178,15 @@ void test_forward_stack()
 
     EXPECT_EQ(d->rank(), 4U);
 
-    EXPECT_TRUE(d->symbol_pivot(0));
-    EXPECT_TRUE(d->symbol_pivot(1));
-    EXPECT_TRUE(d->symbol_pivot(2));
-    EXPECT_TRUE(d->symbol_pivot(4));
+    EXPECT_TRUE(d->is_symbol_pivot(0));
+    EXPECT_TRUE(d->is_symbol_pivot(1));
+    EXPECT_TRUE(d->is_symbol_pivot(2));
+    EXPECT_TRUE(d->is_symbol_pivot(4));
 
-    EXPECT_TRUE(d->symbol_seen(0));
-    EXPECT_TRUE(d->symbol_seen(1));
-    EXPECT_TRUE(d->symbol_decoded(2));
-    EXPECT_TRUE(d->symbol_seen(4));
+    EXPECT_TRUE(d->is_symbol_seen(0));
+    EXPECT_TRUE(d->is_symbol_seen(1));
+    EXPECT_TRUE(d->is_symbol_decoded(2));
+    EXPECT_TRUE(d->is_symbol_seen(4));
 
     EXPECT_FALSE(d->is_complete());
 
@@ -202,19 +202,17 @@ void test_forward_stack()
 
     EXPECT_EQ(d->rank(), 5U);
 
-    EXPECT_TRUE(d->symbol_pivot(0));
-    EXPECT_TRUE(d->symbol_pivot(1));
-    EXPECT_TRUE(d->symbol_pivot(2));
-    EXPECT_TRUE(d->symbol_pivot(3));
-    EXPECT_TRUE(d->symbol_pivot(4));
+    EXPECT_TRUE(d->is_symbol_pivot(0));
+    EXPECT_TRUE(d->is_symbol_pivot(1));
+    EXPECT_TRUE(d->is_symbol_pivot(2));
+    EXPECT_TRUE(d->is_symbol_pivot(3));
+    EXPECT_TRUE(d->is_symbol_pivot(4));
 
-    EXPECT_TRUE(d->symbol_coded(0));
-    EXPECT_TRUE(d->symbol_coded(1));
-    EXPECT_FALSE(d->symbol_coded(2));
-    EXPECT_TRUE(d->symbol_coded(3));
-    EXPECT_TRUE(d->symbol_coded(4));
-
-
+    EXPECT_TRUE(d->is_symbol_seen(0));
+    EXPECT_TRUE(d->is_symbol_seen(1));
+    EXPECT_TRUE(d->is_symbol_decoded(2));
+    EXPECT_TRUE(d->is_symbol_seen(3));
+    EXPECT_TRUE(d->is_symbol_seen(4));
 
     EXPECT_TRUE(d->is_complete());
 

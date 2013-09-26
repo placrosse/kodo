@@ -11,7 +11,7 @@ namespace kodo
 {
 
     /// @ingroup encoder_layers
-    /// @brief Implements the layer::rank() and layer::symbol_pivot()
+    /// @brief Implements the layer::rank() and layer::is_symbol_pivot()
     ///        functions based on the storage status.
     ///
     /// This kind of functionality is needed when an encoder should be
@@ -29,8 +29,8 @@ namespace kodo
             return SuperCoder::symbols_initialized();
         }
 
-        /// @copydoc layer::symbol_pivot(uint32_t) const
-        bool symbol_pivot(uint32_t index) const
+        /// @copydoc layer::is_symbol_pivot(uint32_t) const
+        bool is_symbol_pivot(uint32_t index) const
         {
             assert(index < SuperCoder::symbols());
             return SuperCoder::is_symbol_initialized(index);

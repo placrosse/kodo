@@ -485,11 +485,11 @@ namespace kodo
             return m_proxy->rank();
         }
 
-        /// @copydoc layer::symbol_pivot(uint32_t) const
-        bool symbol_pivot(uint32_t index) const
+        /// @copydoc layer::is_symbol_pivot(uint32_t) const
+        bool is_symbol_pivot(uint32_t index) const
         {
             assert(m_proxy);
-            return m_proxy->symbol_pivot(index);
+            return m_proxy->is_symbol_pivot(index);
         }
 
     protected:

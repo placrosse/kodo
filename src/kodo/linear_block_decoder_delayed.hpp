@@ -59,13 +59,13 @@ namespace kodo
             assert(symbol_index < SuperCoder::symbols());
             assert(symbol_data != 0);
 
-            if(m_uncoded[symbol_index])
+            if(SuperCoder::is_symbol_decoded(symbol_index))
                 return;
 
-            const value_type *symbol
-                = reinterpret_cast<const value_type*>( symbol_data );
+            const value_type *symbol =
+                reinterpret_cast<const value_type*>( symbol_data );
 
-            if(m_coded[symbol_index])
+            if(SuperCoder::is_symbol_seen(symbol_index))
             {
                 SuperCoder::swap_decode(symbol, symbol_index);
             }
@@ -74,11 +74,6 @@ namespace kodo
                 // Stores the symbol and updates the corresponding
                 // encoding vector
                 SuperCoder::store_uncoded_symbol(symbol, symbol_index);
-
-                // We have increased the rank
-                ++m_rank;
-
-                m_uncoded[ symbol_index ] = true;
 
                 m_maximum_pivot =
                     direction_policy::max(symbol_index, m_maximum_pivot);
@@ -95,10 +90,7 @@ namespace kodo
     protected:
 
         // Fetch the variables needed
-        using SuperCoder::m_rank;
         using SuperCoder::m_maximum_pivot;
-        using SuperCoder::m_coded;
-        using SuperCoder::m_uncoded;
 
     protected:
 
@@ -132,10 +124,6 @@ namespace kodo
             SuperCoder::store_coded_symbol(
                 symbol_data, coefficients,*pivot_index);
 
-            // We have increased the rank
-            ++m_rank;
-
-            m_coded[ *pivot_index ] = true;
 
             m_maximum_pivot =
                 direction_policy::max(*pivot_index, m_maximum_pivot);

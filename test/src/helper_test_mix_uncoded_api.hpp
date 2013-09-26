@@ -44,7 +44,7 @@ inline void test_mix_uncoded(uint32_t symbols, uint32_t symbol_size)
         {
             uint32_t symbol_id = rand() % encoder->symbols();
 
-            if(decoder->symbol_pivot(symbol_id))
+            if(decoder->is_symbol_pivot(symbol_id))
             {
                 continue;
             }

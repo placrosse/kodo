@@ -118,7 +118,7 @@ TEST(TestIsPartialComplete, check_true)
             uint32_t pivot_count = 0;
             for(uint32_t i = 0; i < decoder->symbols(); ++i)
             {
-                if(!decoder->symbol_pivot(i))
+                if(!decoder->is_symbol_pivot(i))
                     continue;
 
                 ++pivot_count;
@@ -210,7 +210,7 @@ TEST(TestIsPartialComplete, check_two_encoders)
             uint32_t pivot_count = 0;
             for(uint32_t i = 0; i < decoder->symbols(); ++i)
             {
-                if(!decoder->symbol_pivot(i))
+                if(!decoder->is_symbol_pivot(i))
                     continue;
 
                 ++pivot_count;

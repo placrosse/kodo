@@ -132,11 +132,6 @@ namespace kodo
 
             assert(index < SuperCoder::symbols());
 
-            /// @todo: consider this
-            // Symbols should always be added in order e.g. 0,1,2,3 ..
-            // so the index specified must equal the current count
-            // assert(index == m_symbols_count);
-
             sak::mutable_storage dest_data = sak::storage(m_data);
 
             uint32_t offset = index * SuperCoder::symbol_size();
@@ -172,6 +167,7 @@ namespace kodo
             sak::copy_storage(dest_storage, src_storage);
         }
 
+        /// @todo Change to copy_from_symbol
         /// @copydoc layer::copy_symbol(uint32_t,
         ///                             const sak::mutable_storage&)
         void copy_symbol(uint32_t index,

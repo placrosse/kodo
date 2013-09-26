@@ -23,14 +23,10 @@
 namespace kodo
 {
 
-    /// @todo document this
-    /// @ingroup codec_layers
-    /// @brief Implements basic linear block decoder.
-    ///
-    /// The linear block decoder
-    /// expects that an encoded symbol is described by a vector of
-    /// coefficients. Using these coefficients the block decoder subtracts
-    /// incoming symbols until the original data has been recreated.
+    /// @ingroup decoder_layers
+    /// @brief Implements basic linear block
+    /// decoder using the forward direction policy. This is equivalent
+    /// to the standard approach to Gaussian Elimination.
     template<class SuperCoder>
     class forward_linear_block_decoder :
         public bidirectional_linear_block_decoder<

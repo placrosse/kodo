@@ -61,7 +61,7 @@ inline void test_on_the_fly(uint32_t symbols, uint32_t symbol_size)
             uint32_t pivot_count = 0;
             for(uint32_t i = 0; i < decoder->symbols(); ++i)
             {
-                if(!decoder->symbol_pivot(i))
+                if(!decoder->is_symbol_pivot(i))
                     continue;
 
                 ++pivot_count;
@@ -178,7 +178,7 @@ inline void test_on_the_fly_systematic(uint32_t symbols, uint32_t symbol_size)
             uint32_t pivot_count = 0;
             for(uint32_t i = 0; i < decoder->symbols(); ++i)
             {
-                if(!decoder->symbol_pivot(i))
+                if(!decoder->is_symbol_pivot(i))
                     continue;
 
                 ++pivot_count;
@@ -298,7 +298,7 @@ inline void test_on_the_fly_systematic_no_errors(uint32_t symbols,
             uint32_t pivot_count = 0;
             for(uint32_t i = 0; i < decoder->symbols(); ++i)
             {
-                if(!decoder->symbol_pivot(i))
+                if(!decoder->is_symbol_pivot(i))
                     continue;
 
                 ++pivot_count;

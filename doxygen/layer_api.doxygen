@@ -348,7 +348,7 @@ public:
     /// encoder or decoder. A coefficient generator may use this information
     /// when generating coding coefficients.
     /// @return True if the symbol is available.
-    bool symbol_pivot(uint32_t index) const;
+    bool is_symbol_pivot(uint32_t index) const;
 
     //------------------------------------------------------------------
     // COEFFICIENT STORAGE API

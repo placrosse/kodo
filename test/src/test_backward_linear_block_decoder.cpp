@@ -103,7 +103,7 @@ void test_backward_stack()
     // d->print_decoder_state(std::cout);
 
     EXPECT_EQ(d->rank(), 1U);
-    EXPECT_TRUE(d->symbol_pivot(6));
+    EXPECT_TRUE(d->is_symbol_pivot(6));
 
     // Create an encoding vector looking like this: 10000010
     coefficients[0] = 0;
@@ -114,8 +114,8 @@ void test_backward_stack()
     // d->print_decoder_state(std::cout);
 
     EXPECT_EQ(d->rank(), 2U);
-    EXPECT_TRUE(d->symbol_pivot(6));
-    EXPECT_TRUE(d->symbol_pivot(1));
+    EXPECT_TRUE(d->is_symbol_pivot(6));
+    EXPECT_TRUE(d->is_symbol_pivot(1));
 
     // Create an encoding vector looking like this: 11100010
     coefficients[0] = 0;
@@ -128,9 +128,9 @@ void test_backward_stack()
     // d->print_decoder_state(std::cout);
 
     EXPECT_EQ(d->rank(), 3U);
-    EXPECT_TRUE(d->symbol_pivot(6));
-    EXPECT_TRUE(d->symbol_pivot(1));
-    EXPECT_TRUE(d->symbol_pivot(2));
+    EXPECT_TRUE(d->is_symbol_pivot(6));
+    EXPECT_TRUE(d->is_symbol_pivot(1));
+    EXPECT_TRUE(d->is_symbol_pivot(2));
 
     // Create an encoding vector looking like this: 11100010 (linear dept.)
     coefficients[0] = 0;
@@ -143,9 +143,9 @@ void test_backward_stack()
     // d->print_decoder_state(std::cout);
 
     EXPECT_EQ(d->rank(), 3U);
-    EXPECT_TRUE(d->symbol_pivot(6));
-    EXPECT_TRUE(d->symbol_pivot(1));
-    EXPECT_TRUE(d->symbol_pivot(2));
+    EXPECT_TRUE(d->is_symbol_pivot(6));
+    EXPECT_TRUE(d->is_symbol_pivot(1));
+    EXPECT_TRUE(d->is_symbol_pivot(2));
 
 
     // Create an encoding vector looking like this: 10111100
@@ -160,10 +160,10 @@ void test_backward_stack()
     // d->print_decoder_state(std::cout);
 
     EXPECT_EQ(d->rank(), 4U);
-    EXPECT_TRUE(d->symbol_pivot(6));
-    EXPECT_TRUE(d->symbol_pivot(5));
-    EXPECT_TRUE(d->symbol_pivot(1));
-    EXPECT_TRUE(d->symbol_pivot(2));
+    EXPECT_TRUE(d->is_symbol_pivot(6));
+    EXPECT_TRUE(d->is_symbol_pivot(5));
+    EXPECT_TRUE(d->is_symbol_pivot(1));
+    EXPECT_TRUE(d->is_symbol_pivot(2));
 
 
     // Create an encoding vector looking like this: 10000100
@@ -175,11 +175,11 @@ void test_backward_stack()
     // d->print_decoder_state(std::cout);
 
     EXPECT_EQ(d->rank(), 5U);
-    EXPECT_TRUE(d->symbol_pivot(6));
-    EXPECT_TRUE(d->symbol_pivot(5));
-    EXPECT_TRUE(d->symbol_pivot(4));
-    EXPECT_TRUE(d->symbol_pivot(2));
-    EXPECT_TRUE(d->symbol_pivot(1));
+    EXPECT_TRUE(d->is_symbol_pivot(6));
+    EXPECT_TRUE(d->is_symbol_pivot(5));
+    EXPECT_TRUE(d->is_symbol_pivot(4));
+    EXPECT_TRUE(d->is_symbol_pivot(2));
+    EXPECT_TRUE(d->is_symbol_pivot(1));
 
     // Create an encoding vector looking like this: 10010000
     coefficients[0] = 0;
@@ -190,12 +190,12 @@ void test_backward_stack()
     // d->print_decoder_state(std::cout);
 
     EXPECT_EQ(d->rank(), 6U);
-    EXPECT_TRUE(d->symbol_pivot(6));
-    EXPECT_TRUE(d->symbol_pivot(5));
-    EXPECT_TRUE(d->symbol_pivot(4));
-    EXPECT_TRUE(d->symbol_pivot(3));
-    EXPECT_TRUE(d->symbol_pivot(2));
-    EXPECT_TRUE(d->symbol_pivot(1));
+    EXPECT_TRUE(d->is_symbol_pivot(6));
+    EXPECT_TRUE(d->is_symbol_pivot(5));
+    EXPECT_TRUE(d->is_symbol_pivot(4));
+    EXPECT_TRUE(d->is_symbol_pivot(3));
+    EXPECT_TRUE(d->is_symbol_pivot(2));
+    EXPECT_TRUE(d->is_symbol_pivot(1));
 
     // Create an encoding vector looking like this: 00011001
     coefficients[0] = 0;
@@ -207,13 +207,13 @@ void test_backward_stack()
     // d->print_decoder_state(std::cout);
 
     EXPECT_EQ(d->rank(), 7U);
-    EXPECT_TRUE(d->symbol_pivot(7));
-    EXPECT_TRUE(d->symbol_pivot(6));
-    EXPECT_TRUE(d->symbol_pivot(5));
-    EXPECT_TRUE(d->symbol_pivot(4));
-    EXPECT_TRUE(d->symbol_pivot(3));
-    EXPECT_TRUE(d->symbol_pivot(2));
-    EXPECT_TRUE(d->symbol_pivot(1));
+    EXPECT_TRUE(d->is_symbol_pivot(7));
+    EXPECT_TRUE(d->is_symbol_pivot(6));
+    EXPECT_TRUE(d->is_symbol_pivot(5));
+    EXPECT_TRUE(d->is_symbol_pivot(4));
+    EXPECT_TRUE(d->is_symbol_pivot(3));
+    EXPECT_TRUE(d->is_symbol_pivot(2));
+    EXPECT_TRUE(d->is_symbol_pivot(1));
 
     // Create an encoding vector looking like this: 00011001
     coefficients[0] = 0;
@@ -223,14 +223,14 @@ void test_backward_stack()
     // d->print_decoder_state(std::cout);
 
     EXPECT_EQ(d->rank(), 8U);
-    EXPECT_TRUE(d->symbol_pivot(7));
-    EXPECT_TRUE(d->symbol_pivot(6));
-    EXPECT_TRUE(d->symbol_pivot(5));
-    EXPECT_TRUE(d->symbol_pivot(4));
-    EXPECT_TRUE(d->symbol_pivot(3));
-    EXPECT_TRUE(d->symbol_pivot(2));
-    EXPECT_TRUE(d->symbol_pivot(1));
-    EXPECT_TRUE(d->symbol_pivot(0));
+    EXPECT_TRUE(d->is_symbol_pivot(7));
+    EXPECT_TRUE(d->is_symbol_pivot(6));
+    EXPECT_TRUE(d->is_symbol_pivot(5));
+    EXPECT_TRUE(d->is_symbol_pivot(4));
+    EXPECT_TRUE(d->is_symbol_pivot(3));
+    EXPECT_TRUE(d->is_symbol_pivot(2));
+    EXPECT_TRUE(d->is_symbol_pivot(1));
+    EXPECT_TRUE(d->is_symbol_pivot(0));
 
 }
 

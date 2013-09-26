@@ -32,7 +32,7 @@ namespace kodo
     /// on the incoming symbols.
     ///
     /// To figure out which symbols have been partially decoded the decoder's
-    /// layer::symbol_pivot(uint32_t) const function can be used.
+    /// layer::is_symbol_pivot(uint32_t) const function can be used.
     template<class SuperCoder>
     class partial_decoding_tracker : public SuperCoder
     {
