@@ -17,6 +17,8 @@
 #include <fifi/is_binary.hpp>
 #include <fifi/fifi_utils.hpp>
 
+#include <kodo/has_linear_block_decoder_delayed.hpp>
+
 namespace kodo
 {
 
@@ -43,23 +45,73 @@ namespace kodo
 
     public:
 
-        /// @return True if the decoding matrix should be partially decoded.
-        bool is_partial_complete() const
+        static_assert(!has_linear_block_decoder_delayed<SuperCoder>::value,
+                      "In order for the ... split this into two layers"
+                      "one which just check the symbols_decoded() and"
+                      "one which sets the symbol_decoded()");
+
+    public:
+
+        /// Constructor
+        partial_decoding_tracker()
+            : m_partial_complete(false)
+        { }
+
+        /// @copydoc layer::initialize(Factory&)
+        template<class Factory>
+        void inititalize(Factory& the_factory)
         {
+            SuperCoder::initialize(the_factory);
+
+            m_partial_complete = false;
+        }
+
+        /// @copydoc layer::decode(uint8_t*)
+        void decode(uint8_t *payload)
+        {
+            assert(payload != 0);
+
+            uint32_t symbols_decoded = SuperCoder::symbols_decoded();
+
+            SuperCoder::decode(payload);
+
             rank_type decoder_rank = SuperCoder::rank();
             rank_type seen_encoder_rank = SuperCoder::seen_encoder_rank();
 
-            assert(decoder_rank <= seen_encoder_rank);
+            // If the decoder and encoder rank matches we know that when
+            // using Gaussian Elimination with backward substitution that
+            //
+            if(decoder_rank == seen_encoder_rank)
+            {
+                for(uint32_t i = 0; i < SuperCoder::symbols(); ++i)
+                {
+                    if(SuperCoder::is_symbol_seen(i))
+                    {
+                        SuperCoder::set_symbol_decoded(i);
+                    }
+                }
+            }
 
-            if(decoder_rank == 0)
-            {
-                return false;
-            }
-            else
-            {
-                return decoder_rank == seen_encoder_rank;
-            }
+            // We cannot have less decoded symbols after calling decode
+            assert(SuperCoder::symbols_decoded() >= symbols_decoded);
+
+            m_partial_complete =
+                SuperCoder::symbols_decoded() > symbols_decoded;
         }
+
+
+        /// @return True if the decoding matrix should be partially decoded.
+        bool is_partial_complete() const
+        {
+            return m_partial_complete;
+        }
+
+    private:
+
+        /// Boolean tracking whether the decoder had any new decoded
+        /// symbols since last time the layer::decode(uint8_t*)
+        /// function was invoked
+        bool m_partial_complete;
 
     };
 

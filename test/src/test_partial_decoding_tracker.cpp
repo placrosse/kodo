@@ -10,6 +10,8 @@
 #include <gtest/gtest.h>
 
 #include <kodo/partial_decoding_tracker.hpp>
+#include <kodo/symbol_decoding_status_tracker.hpp>
+#include <kodo/symbol_decoding_status_counter.hpp>
 
 namespace kodo
 {
@@ -19,6 +21,23 @@ namespace kodo
     struct dummy_rank
     {
         typedef uint32_t rank_type;
+
+        template<class Factory>
+        void inititalize(Factory& the_factory)
+        {
+            (void) the_factory;
+        }
+
+        void decode(uint8_t *payload)
+        {
+            (void) payload;
+        }
+
+        template<class Factory>
+        void construct(Factory& the_factory)
+        {
+            (void) the_factory;
+        }
 
         uint32_t rank() const
         {
@@ -30,8 +49,16 @@ namespace kodo
             return m_seen_encoder_rank;
         }
 
+        uint32_t symbols() const
+        {
+            return m_symbols;
+        }
+
+
         uint32_t m_rank;
         uint32_t m_seen_encoder_rank;
+        uint32_t m_symbols;
+        uint32_t m_symbol_size;
     };
 
     // Instantiate a stack containing the partial_decoding_tracker
@@ -39,18 +66,21 @@ namespace kodo
         : public // Payload API
                  // Codec Header API
                  // Symbol ID API
-                 // Codec API
+                 // Decoder API
                  partial_decoding_tracker<
+                 symbol_decoding_status_counter<
+                 symbol_decoding_status_tracker<
                  // Coefficient Storage API
                  // Storage API
                  // Finite Field API
                  // Factory API
                  // Final type
-                 dummy_rank>
+                 dummy_rank> > >
     { };
 
 }
 
+/// @todo: Finalize unit test
 /// Run the tests typical coefficients stack
 TEST(TestPartialDecodingTracker, test_partial_decoding)
 {
