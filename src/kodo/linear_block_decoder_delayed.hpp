@@ -83,6 +83,7 @@ namespace kodo
             if(SuperCoder::is_complete())
             {
                 final_backward_substitute();
+                SuperCoder::update_symbol_status();
             }
 
         }
@@ -131,6 +132,7 @@ namespace kodo
             if(SuperCoder::is_complete())
             {
                 final_backward_substitute();
+                SuperCoder::update_symbol_status();
             }
         }
 

@@ -198,7 +198,7 @@ void test_forward_stack()
     fifi::set_value<field_type>(coefficients, 3, 1U);
 
     d->decode_symbol(&symbol[0], coefficients);
-    // d->print_decoder_state(std::cout);
+    d->print_decoder_state(std::cout);
 
     EXPECT_EQ(d->rank(), 5U);
 
@@ -208,11 +208,11 @@ void test_forward_stack()
     EXPECT_TRUE(d->is_symbol_pivot(3));
     EXPECT_TRUE(d->is_symbol_pivot(4));
 
-    EXPECT_TRUE(d->is_symbol_seen(0));
-    EXPECT_TRUE(d->is_symbol_seen(1));
+    EXPECT_TRUE(d->is_symbol_decoded(0));
+    EXPECT_TRUE(d->is_symbol_decoded(1));
     EXPECT_TRUE(d->is_symbol_decoded(2));
-    EXPECT_TRUE(d->is_symbol_seen(3));
-    EXPECT_TRUE(d->is_symbol_seen(4));
+    EXPECT_TRUE(d->is_symbol_decoded(3));
+    EXPECT_TRUE(d->is_symbol_decoded(4));
 
     EXPECT_TRUE(d->is_complete());
 
