@@ -13,6 +13,7 @@
 namespace kodo
 {
 
+    /// @ingroup decoder_api
     /// @brief The symbol decoding status tracker stores information about
     ///        the status of the different symbols contained within a decoder.
     template<class SuperCoder>

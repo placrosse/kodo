@@ -33,7 +33,7 @@ namespace kodo
         /// The value_type used to store the field elements
         typedef typename field_type::value_type value_type;
 
-        /// @todo: Document this
+        /// Access the direction policy used by the underlying decoder
         typedef typename SuperCoder::direction_policy direction_policy;
 
     public:

@@ -87,6 +87,11 @@ int main()
 
         std::cout << "Rank of decoder " << decoder->rank() << std::endl;
 
+        // Symbols that were received in the systematic phase correspond
+        // to the original source symbols and are therefore marked as
+        // decoded
+        std::cout << "Symbols decoded "
+                  << decoder->symbols_decoded() << std::endl;
     }
 
     // The decoder is complete, now copy the symbols from the decoder

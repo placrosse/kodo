@@ -8,6 +8,18 @@ Latest
 ------
 * Major: renamed method for specifying the average number of nonzero symbols
   in the sparse codes from set_nonzero_symbols to set_average_nonzero_symbols.
+* Major: Added a new decoding symbol status API which allows the state
+  of the decoding symbols to be tracked. A decoding symbol may be in
+  three states "missing", "seen" and "decoded" checkout the
+  symbol_decoding_status_tracker and symbol_decoding_status_counter
+  layers. The bidirectional_linear_block_decoder now directly uses
+  these layers instead of internally maintaining the information. So
+  if you use the bidirectional_linear_block_decoder layer you need to
+  specify at least the symbol_decoding_status_tracker layer in your
+  stacks.
+* Minor: Added new example which shows how to switch between
+  systematic and unsystematic encoding. The example can be found in
+  the examples/switch_systematic_on_off folder.
 
 14.0.0
 ------

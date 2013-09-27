@@ -89,6 +89,8 @@ namespace kodo
                 = reinterpret_cast<value_type*>(symbol_coefficients);
 
             decode_coefficients(symbol, coefficients);
+
+            update_symbol_status();
         }
 
         /// @copydoc layer::decode_symbol(uint8_t*, uint32_t)
@@ -126,6 +128,8 @@ namespace kodo
                     direction_policy::max(symbol_index, m_maximum_pivot);
 
             }
+
+            update_symbol_status();
         }
 
         /// @copydoc layer::is_complete() const
@@ -149,6 +153,18 @@ namespace kodo
         }
 
     protected:
+
+        /// Updates the symbol status to decoded if the decoder reaches full
+        /// rank
+        void update_symbol_status()
+        {
+            if(!is_complete())
+                return;
+
+            // We have finished decoding mark all symbols decoded
+            for(uint32_t i = 0; i < SuperCoder::symbols(); ++i)
+                SuperCoder::set_symbol_decoded(i);
+        }
 
         /// Decodes a symbol based on the coefficients
         /// @param symbol_data buffer containing the encoding symbol
