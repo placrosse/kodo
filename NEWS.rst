@@ -20,6 +20,11 @@ Latest
 * Minor: Added new example which shows how to switch between
   systematic and unsystematic encoding. The example can be found in
   the examples/switch_systematic_on_off folder.
+* Major: Users of the partial_decoding_tracker layer for on-the-fly
+  decoding should now use the rank_symbol_decoding_status_updater
+  layer to ensure that proper detection of early decoding happens
+  correctly. The existing on-the-fly codes in the
+  src/kodo/rlnc/on_the_fly_codes.hpp have been updated.
 
 14.0.0
 ------
