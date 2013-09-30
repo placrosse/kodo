@@ -10,91 +10,94 @@
 #include <gtest/gtest.h>
 
 #include <kodo/partial_decoding_tracker.hpp>
-#include <kodo/symbol_decoding_status_tracker.hpp>
-#include <kodo/symbol_decoding_status_counter.hpp>
 
 namespace kodo
 {
 
     // Small helper struct which provides the API needed by the
     // partial_decoding_tracker layer.
-    struct dummy_rank
+    struct dummy_layer
     {
-        typedef uint32_t rank_type;
 
         template<class Factory>
-        void inititalize(Factory& the_factory)
+        void initialize(Factory& the_factory)
         {
             (void) the_factory;
         }
 
         void decode(uint8_t *payload)
         {
-            (void) payload;
+            m_payload = payload;
+            m_symbols_decoded = m_symbols_decoded_new;
         }
 
-        template<class Factory>
-        void construct(Factory& the_factory)
+        uint32_t symbols_decoded() const
         {
-            (void) the_factory;
+            return m_symbols_decoded;
         }
 
-        uint32_t rank() const
-        {
-            return m_rank;
-        }
-
-        uint32_t seen_encoder_rank() const
-        {
-            return m_seen_encoder_rank;
-        }
-
-        uint32_t symbols() const
-        {
-            return m_symbols;
-        }
-
-
-        uint32_t m_rank;
-        uint32_t m_seen_encoder_rank;
-        uint32_t m_symbols;
-        uint32_t m_symbol_size;
+        uint8_t* m_payload;
+        uint32_t m_symbols_decoded;
+        uint32_t m_symbols_decoded_new;
     };
 
     // Instantiate a stack containing the partial_decoding_tracker
-    class test_partial_stack
+    class dummy_stack
         : public // Payload API
+                 partial_decoding_tracker<
                  // Codec Header API
                  // Symbol ID API
                  // Decoder API
-                 partial_decoding_tracker<
-                 symbol_decoding_status_counter<
-                 symbol_decoding_status_tracker<
                  // Coefficient Storage API
                  // Storage API
                  // Finite Field API
                  // Factory API
                  // Final type
-                 dummy_rank> > >
+                 dummy_layer>
+    { };
+
+    struct dummy_factory
     { };
 
 }
 
-/// @todo: Finalize unit test
+
 /// Run the tests typical coefficients stack
 TEST(TestPartialDecodingTracker, test_partial_decoding)
 {
-    kodo::test_partial_stack stack;
-    stack.m_rank = 0;
-    stack.m_seen_encoder_rank = 0;
+    kodo::dummy_factory factory;
+    kodo::dummy_stack stack;
+
+    EXPECT_FALSE(stack.is_partial_complete());
+    stack.initialize(factory);
+    EXPECT_FALSE(stack.is_partial_complete());
+
+    std::vector<uint8_t> payload(10);
+
+    stack.m_symbols_decoded = 0;
+    stack.m_symbols_decoded_new = 0;
+    stack.decode(&payload[0]);
 
     EXPECT_FALSE(stack.is_partial_complete());
 
-    stack.m_seen_encoder_rank = 1;
-    EXPECT_FALSE(stack.is_partial_complete());
+    stack.m_symbols_decoded_new = 1;
+    stack.decode(&payload[0]);
 
-    stack.m_rank = 1;
     EXPECT_TRUE(stack.is_partial_complete());
+
+    stack.m_symbols_decoded_new = 1;
+    stack.decode(&payload[0]);
+
+    EXPECT_FALSE(stack.is_partial_complete());
+
+    stack.m_symbols_decoded_new = 10;
+    stack.decode(&payload[0]);
+
+    EXPECT_TRUE(stack.is_partial_complete());
+
+    stack.initialize(factory);
+    EXPECT_FALSE(stack.is_partial_complete());
+
 }
 
 

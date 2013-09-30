@@ -198,7 +198,7 @@ void test_forward_stack()
     fifi::set_value<field_type>(coefficients, 3, 1U);
 
     d->decode_symbol(&symbol[0], coefficients);
-    d->print_decoder_state(std::cout);
+    // d->print_decoder_state(std::cout);
 
     EXPECT_EQ(d->rank(), 5U);
 
@@ -219,12 +219,12 @@ void test_forward_stack()
 }
 
 /// Run the tests typical coefficients stack
-TEST(TestLinearBlockDecoder, test_decoder)
+TEST(TestForwardLinearBlockDecoder, test_decoder)
 {
     test_forward_stack<kodo::test_forward_stack>();
 }
 
-TEST(TestLinearBlockDecoder, test_decoder_delayed)
+TEST(TestForwardLinearBlockDecoder, test_decoder_delayed)
 {
     test_forward_stack<kodo::test_forward_delayed_stack>();
 }

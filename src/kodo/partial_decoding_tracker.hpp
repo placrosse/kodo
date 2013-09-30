@@ -23,33 +23,22 @@ namespace kodo
 {
 
     /// @ingroup payload_codec
+    ///
     /// @brief This layer can be added to a decoding stack to track
     ///        when partial decoding is possible i.e. when symbols in
     ///        decoder are fully decoded even though the full data
     ///        block has not been sent.
     ///
-    /// Detecting whether data has been partially decoded can be done by
-    /// tracking whether encoder and decoder has the same rank. This of course
-    /// means that we depend on the decoder performs full Gaussian elimination
-    /// on the incoming symbols.
+    /// Detecting whether data has been partially decoded is done by
+    /// using the decoders' symbol status API in particiular by
+    /// comparing the layer::symbols_decoded() counters before and
+    /// after calling layer::decode(uint8_t*)
     ///
     /// To figure out which symbols have been partially decoded the decoder's
-    /// layer::is_symbol_pivot(uint32_t) const function can be used.
+    /// layer::is_symbol_decoded(uint32_t) const function can be used.
     template<class SuperCoder>
     class partial_decoding_tracker : public SuperCoder
     {
-    public:
-
-        /// @copydoc layer::rank_type
-        typedef typename SuperCoder::rank_type rank_type;
-
-    public:
-
-        static_assert(!has_linear_block_decoder_delayed<SuperCoder>::value,
-                      "In order for the ... split this into two layers"
-                      "one which just check the symbols_decoded() and"
-                      "one which sets the symbol_decoded()");
-
     public:
 
         /// Constructor
@@ -59,7 +48,7 @@ namespace kodo
 
         /// @copydoc layer::initialize(Factory&)
         template<class Factory>
-        void inititalize(Factory& the_factory)
+        void initialize(Factory& the_factory)
         {
             SuperCoder::initialize(the_factory);
 
@@ -75,26 +64,10 @@ namespace kodo
 
             SuperCoder::decode(payload);
 
-            rank_type decoder_rank = SuperCoder::rank();
-            rank_type seen_encoder_rank = SuperCoder::seen_encoder_rank();
-
-            // If the decoder and encoder rank matches we know that when
-            // using Gaussian Elimination with backward substitution that
-            //
-            if(decoder_rank == seen_encoder_rank)
-            {
-                for(uint32_t i = 0; i < SuperCoder::symbols(); ++i)
-                {
-                    if(SuperCoder::is_symbol_seen(i))
-                    {
-                        SuperCoder::set_symbol_decoded(i);
-                    }
-                }
-            }
-
             // We cannot have less decoded symbols after calling decode
             assert(SuperCoder::symbols_decoded() >= symbols_decoded);
 
+            // If new symbols have been decoded toggle the bool
             m_partial_complete =
                 SuperCoder::symbols_decoded() > symbols_decoded;
         }

@@ -16,6 +16,7 @@
 #include "../payload_rank_recoder.hpp"
 #include "../proxy_seen_encoder_rank.hpp"
 #include "../coefficient_value_access.hpp"
+#include "../rank_symbol_decoding_status_updater.hpp"
 
 namespace kodo
 {
@@ -117,6 +118,7 @@ namespace kodo
     class on_the_fly_decoder :
         public // Payload API
                partial_decoding_tracker<
+               rank_symbol_decoding_status_updater<
                payload_recoder<on_the_fly_recoding_stack,
                payload_rank_decoder<
                payload_decoder<
@@ -146,7 +148,7 @@ namespace kodo
                final_coder_factory_pool<
                // Final type
                on_the_fly_decoder<Field>
-                   > > > > > > > > > > > > > > > > > > > > >
+                   > > > > > > > > > > > > > > > > > > > > > >
     { };
 
     /// @ingroup fec_stacks
@@ -160,6 +162,7 @@ namespace kodo
     class debug_on_the_fly_decoder :
         public // Payload API
                partial_decoding_tracker<
+               rank_symbol_decoding_status_updater<
                payload_recoder<on_the_fly_recoding_stack,
                payload_rank_decoder<
                payload_decoder<
@@ -192,7 +195,7 @@ namespace kodo
                final_coder_factory_pool<
                // Final type
                debug_on_the_fly_decoder<Field>
-                   > > > > > > > > > > > > > > > > > > > > > > > >
+                   > > > > > > > > > > > > > > > > > > > > > > > > >
     { };
 
 }
