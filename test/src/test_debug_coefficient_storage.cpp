@@ -19,52 +19,59 @@
 
 namespace kodo
 {
-    /// Helper class to test the coefficient info API.
-    template<class FieldType>
-    class dummy_layer
+    // Put dummy layers and tests classes in an anonymous namespace
+    // to avoid violations of ODF (one-definition-rule) in other
+    // translation units
+    namespace
     {
-    public:
 
-        typedef FieldType field_type;
-        typedef uint8_t pointer;
-
-    public:
-
-        class factory
+/// Helper class to test the coefficient info API.
+        template<class FieldType>
+        class dummy_layer
         {
         public:
 
-            factory(uint32_t max_symbols, uint32_t max_symbol_size)
+            typedef FieldType field_type;
+            typedef uint8_t pointer;
+
+        public:
+
+            class factory
             {
-                (void)max_symbols;
-                (void)max_symbol_size;
+            public:
+
+                factory(uint32_t max_symbols, uint32_t max_symbol_size)
+                {
+                    (void)max_symbols;
+                    (void)max_symbol_size;
+                }
+
+            };
+
+            template<class Factory>
+            void initialize(Factory& the_factory)
+            {
+                (void)the_factory;
             }
 
+            template<class Factory>
+            void construct(Factory& the_factory)
+            {
+                (void)the_factory;
+            }
         };
 
-        template<class Factory>
-        void initialize(Factory& the_factory)
-        {
-            (void)the_factory;
-        }
-
-        template<class Factory>
-        void construct(Factory& the_factory)
-        {
-            (void)the_factory;
-        }
-    };
-
-    template<class FieldType>
-    class test_debug_coefficient_storage :
-        public debug_coefficient_storage<
-               coefficient_value_access<
-               coefficient_storage<
-               coefficient_info<
-               storage_block_info<
-               dummy_layer<
+        template<class FieldType>
+        class test_debug_coefficient_storage :
+            public debug_coefficient_storage<
+                   coefficient_value_access<
+                   coefficient_storage<
+                   coefficient_info<
+                   storage_block_info<
+                   dummy_layer<
                    FieldType> > > > > >
-    { };
+            { };
+    }
 }
 
 TEST(TestDebugCoefficientStorage, api)

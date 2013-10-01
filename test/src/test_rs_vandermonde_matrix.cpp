@@ -43,26 +43,33 @@
 namespace kodo
 {
 
-    template<class Field>
-    class vandermonde_stack
-        : public vandermonde_matrix<
-                 finite_field_math<typename fifi::default_field<Field>::type,
-                 finite_field_info<Field,
-                 final_coder_factory<
-                 vandermonde_stack<Field>
-                     > > > >
-    { };
+    // Put dummy layers and tests classes in an anonymous namespace
+    // to avoid violations of ODF (one-definition-rule) in other
+    // translation units
+    namespace
+    {
 
-    template<class Field>
-    class systematic_vandermonde_stack
-        : public systematic_vandermonde_matrix<
-                 finite_field_math<typename fifi::default_field<Field>::type,
-                 finite_field_info<Field,
-                 final_coder_factory<
-                 systematic_vandermonde_stack<Field>
-                     > > > >
-    { };
 
+        template<class Field>
+        class vandermonde_stack
+            : public vandermonde_matrix<
+                     finite_field_math<typename fifi::default_field<Field>::type,
+                     finite_field_info<Field,
+                     final_coder_factory<
+                     vandermonde_stack<Field>
+                         > > > >
+        { };
+
+        template<class Field>
+        class systematic_vandermonde_stack
+            : public systematic_vandermonde_matrix<
+                     finite_field_math<typename fifi::default_field<Field>::type,
+                     finite_field_info<Field,
+                     final_coder_factory<
+                     systematic_vandermonde_stack<Field>
+                         > > > >
+        { };
+    }
 }
 
 /// Tests:

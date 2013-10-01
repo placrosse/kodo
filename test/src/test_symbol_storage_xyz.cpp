@@ -31,98 +31,105 @@
 namespace kodo
 {
 
-    // Deep Symbol Storage
-    template<class Field>
-    class deep_storage_stack
-        : public deep_symbol_storage<
-                 storage_bytes_used<
-                 storage_block_info<
-                 finite_field_info<Field,
-                 final_coder_factory<
-                 deep_storage_stack<Field>
-                     > > > > >
-    {};
+    // Put dummy layers and tests classes in an anonymous namespace
+    // to avoid violations of ODF (one-definition-rule) in other
+    // translation units
+    namespace
+    {
 
-    template<class Field>
-    class deep_storage_stack_pool
-        : public deep_symbol_storage<
-                 storage_bytes_used<
-                 storage_block_info<
-                 finite_field_info<Field,
-                 final_coder_factory_pool<
-                 deep_storage_stack_pool<Field>
-                     > > > > >
-    {};
+        // Deep Symbol Storage
+        template<class Field>
+        class deep_storage_stack
+            : public deep_symbol_storage<
+            storage_bytes_used<
+                storage_block_info<
+                    finite_field_info<Field,
+                        final_coder_factory<
+                            deep_storage_stack<Field>
+                            > > > > >
+        {};
 
-    // Mutable Shallow Symbol Storage
-    template<class Field>
-    class mutable_shallow_stack
-        : public mutable_shallow_symbol_storage<
-                 storage_bytes_used<
-                 storage_block_info<
-                 finite_field_info<Field,
-                 final_coder_factory<
-                 mutable_shallow_stack<Field>
-                     > > > > >
-    {};
+        template<class Field>
+        class deep_storage_stack_pool
+            : public deep_symbol_storage<
+            storage_bytes_used<
+                storage_block_info<
+                    finite_field_info<Field,
+                        final_coder_factory_pool<
+                            deep_storage_stack_pool<Field>
+                            > > > > >
+        {};
 
-    template<class Field>
-    class mutable_shallow_stack_pool
-        : public mutable_shallow_symbol_storage<
-                 storage_bytes_used<
-                 storage_block_info<
-                 finite_field_info<Field,
-                 final_coder_factory_pool<
-                 mutable_shallow_stack_pool<Field>
-                     > > > > >
-    {};
+        // Mutable Shallow Symbol Storage
+        template<class Field>
+        class mutable_shallow_stack
+            : public mutable_shallow_symbol_storage<
+            storage_bytes_used<
+                storage_block_info<
+                    finite_field_info<Field,
+                        final_coder_factory<
+                            mutable_shallow_stack<Field>
+                            > > > > >
+        {};
 
-    // Const Shallow Symbol Storage
-    template<class Field>
-    class const_shallow_stack
-        : public const_shallow_symbol_storage<
-                 storage_bytes_used<
-                 storage_block_info<
-                 finite_field_info<Field,
-                 final_coder_factory<
-                 const_shallow_stack<Field>
-                     > > > > >
-    {};
+        template<class Field>
+        class mutable_shallow_stack_pool
+            : public mutable_shallow_symbol_storage<
+            storage_bytes_used<
+                storage_block_info<
+                    finite_field_info<Field,
+                        final_coder_factory_pool<
+                            mutable_shallow_stack_pool<Field>
+                            > > > > >
+        {};
 
-    template<class Field>
-    class const_shallow_stack_pool
-        : public const_shallow_symbol_storage<
-                 storage_bytes_used<
-                 storage_block_info<
-                 finite_field_info<Field,
-                 final_coder_factory_pool<
-                 const_shallow_stack_pool<Field>
-                     > > > > >
-    {};
+        // Const Shallow Symbol Storage
+        template<class Field>
+        class const_shallow_stack
+            : public const_shallow_symbol_storage<
+            storage_bytes_used<
+                storage_block_info<
+                    finite_field_info<Field,
+                        final_coder_factory<
+                            const_shallow_stack<Field>
+                            > > > > >
+        {};
 
-    // Partial Shallow Symbol Storage
-    template<class Field>
-    class partial_shallow_stack
-        : public partial_shallow_symbol_storage<
-                 storage_bytes_used<
-                 storage_block_info<
-                 finite_field_info<Field,
-                 final_coder_factory<
-                 partial_shallow_stack<Field>
-                     > > > > >
-    {};
+        template<class Field>
+        class const_shallow_stack_pool
+            : public const_shallow_symbol_storage<
+            storage_bytes_used<
+                storage_block_info<
+                    finite_field_info<Field,
+                        final_coder_factory_pool<
+                            const_shallow_stack_pool<Field>
+                            > > > > >
+        {};
 
-    template<class Field>
-    class partial_shallow_stack_pool
-        : public partial_shallow_symbol_storage<
-                 storage_bytes_used<
-                 storage_block_info<
-                 finite_field_info<Field,
-                 final_coder_factory_pool<
-                 partial_shallow_stack_pool<Field>
-                     > > > > >
-    {};
+        // Partial Shallow Symbol Storage
+        template<class Field>
+        class partial_shallow_stack
+            : public partial_shallow_symbol_storage<
+            storage_bytes_used<
+                storage_block_info<
+                    finite_field_info<Field,
+                        final_coder_factory<
+                            partial_shallow_stack<Field>
+                            > > > > >
+        {};
 
+        template<class Field>
+        class partial_shallow_stack_pool
+            : public partial_shallow_symbol_storage<
+            storage_bytes_used<
+                storage_block_info<
+                    finite_field_info<Field,
+                        final_coder_factory_pool<
+                            partial_shallow_stack_pool<Field>
+                            > > > > >
+        {};
+
+    }
 }
 
 /// Tests: Setting partial data on a storage object. Any unfilled or partial

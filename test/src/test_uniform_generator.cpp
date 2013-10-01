@@ -11,33 +11,39 @@
 namespace kodo
 {
 
-    // Uniform generator
-    template<class Field>
-    class uniform_generator_stack :
-        public uniform_generator<
-               fake_codec_layer<
-               coefficient_info<
-               fake_symbol_storage<
-               storage_block_info<
-               finite_field_info<Field,
-               final_coder_factory<
-               uniform_generator_stack<Field>
-               > > > > > > >
-    { };
+    // Put dummy layers and tests classes in an anonymous namespace
+    // to avoid violations of ODF (one-definition-rule) in other
+    // translation units
+    namespace
+    {
 
-    template<class Field>
-    class uniform_generator_stack_pool :
-        public uniform_generator<
-               fake_codec_layer<
-               coefficient_info<
-               fake_symbol_storage<
-               storage_block_info<
-               finite_field_info<Field,
-               final_coder_factory_pool<
-               uniform_generator_stack_pool<Field>
-               > > > > > > >
-    { };
+        // Uniform generator
+        template<class Field>
+        class uniform_generator_stack :
+            public uniform_generator<
+                   fake_codec_layer<
+                   coefficient_info<
+                   fake_symbol_storage<
+                   storage_block_info<
+                   finite_field_info<Field,
+                   final_coder_factory<
+                   uniform_generator_stack<Field>
+                   > > > > > > >
+        { };
 
+        template<class Field>
+        class uniform_generator_stack_pool :
+            public uniform_generator<
+                   fake_codec_layer<
+                   coefficient_info<
+                   fake_symbol_storage<
+                   storage_block_info<
+                   finite_field_info<Field,
+                   final_coder_factory_pool<
+                   uniform_generator_stack_pool<Field>
+                   > > > > > > >
+        { };
+    }
 }
 
 /// Run the tests typical coefficients stack

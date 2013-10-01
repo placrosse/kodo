@@ -12,28 +12,36 @@
 #include <fifi/field_types.hpp>
 #include <kodo/offset_coefficient_value_access.hpp>
 #include <kodo/storage_block_info.hpp>
+
 namespace kodo
 {
 
-    /// Helper class to test coefficient value access layer
-    template<class FieldType>
-    class test_layer
+    // Put dummy layers and tests classes in an anonymous namespace
+    // to avoid violations of ODF (one-definition-rule) in other
+    // translation units
+    namespace
     {
-    public:
 
-        /// Field used
-        typedef FieldType field_type;
+        /// Helper class to test coefficient value access layer
+        template<class FieldType>
+        class test_layer
+        {
+        public:
 
-        /// The value type
-        typedef typename field_type::value_type value_type;
+            /// Field used
+            typedef FieldType field_type;
 
-    };
+            /// The value type
+            typedef typename field_type::value_type value_type;
 
-    /// Helper stack for testing the coefficient access layer
-    template<class FieldType>
-    class test_stack :
-        public offset_coefficient_value_access<test_layer<FieldType> >
-    { };
+        };
+
+        /// Helper stack for testing the coefficient access layer
+        template<class FieldType>
+        class test_stack :
+            public offset_coefficient_value_access<test_layer<FieldType> >
+        { };
+    }
 }
 
 TEST(TestOffsetCoefficientValueAccess, api)

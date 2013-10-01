@@ -29,31 +29,37 @@
 namespace kodo
 {
 
-    // Coefficient Storage
-    template<class Field>
-    class coefficient_storage_stack
-        : public coefficient_storage<
-                 coefficient_info<
-                 storage_block_info<
-                 finite_field_info<Field,
-                 final_coder_factory<
-                 coefficient_storage_stack<Field>
-                     > > > > >
-    {};
+    // Put dummy layers and tests classes in an anonymous namespace
+    // to avoid violations of ODF (one-definition-rule) in other
+    // translation units
+    namespace
+    {
 
-    // Coefficient Storage
-    template<class Field>
-    class coefficient_storage_stack_pool
+        // Coefficient Storage
+        template<class Field>
+        class coefficient_storage_stack
+            : public coefficient_storage<
+                     coefficient_info<
+                     storage_block_info<
+                     finite_field_info<Field,
+                     final_coder_factory<
+                     coefficient_storage_stack<Field>
+                         > > > > >
+        {};
 
-        : public coefficient_storage<
-                 coefficient_info<
-                 storage_block_info<
-                 finite_field_info<Field,
-                 final_coder_factory<
-                 coefficient_storage_stack_pool<Field>
-                     > > > > >
-    {};
+        // Coefficient Storage
+        template<class Field>
+        class coefficient_storage_stack_pool
 
+            : public coefficient_storage<
+                     coefficient_info<
+                     storage_block_info<
+                     finite_field_info<Field,
+                     final_coder_factory<
+                     coefficient_storage_stack_pool<Field>
+                         > > > > >
+        {};
+    }
 }
 
 /// Tests:

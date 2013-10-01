@@ -13,63 +13,66 @@
 
 namespace kodo
 {
-
-    // Dummy layer needed to instantiate the payload_rank_decoder layer
-    class dummy_layer
+    // Put dummy layers and tests classes in an anonymous namespace
+    // to avoid violations of ODF (one-definition-rule) in other
+    // translation units
+    namespace
     {
-    public:
-
-        // The data type of the rank
-        typedef uint32_t rank_type;
-
-    public:
-
-        // The dummy factory object
-        class factory
+        // Dummy layer needed to instantiate the payload_rank_decoder layer
+        class dummy_layer
         {
         public:
 
-            factory(uint32_t max_symbols, uint32_t max_symbol_size)
+            // The data type of the rank
+            typedef uint32_t rank_type;
+
+        public:
+
+            // The dummy factory object
+            class factory
             {
-                (void) max_symbols;
-                (void) max_symbol_size;
+            public:
+
+                factory(uint32_t max_symbols, uint32_t max_symbol_size)
+                {
+                    (void) max_symbols;
+                    (void) max_symbol_size;
+                }
+
+                uint32_t max_payload_size() const
+                {
+                    return 0;
+                }
+            };
+
+        public:
+
+            uint32_t encode(uint8_t* payload)
+            {
+                m_payload = payload;
+                return 0;
             }
 
-            uint32_t max_payload_size() const
+            rank_type seen_encoder_rank() const
+            {
+                return m_seen_encoder_rank;
+            }
+
+            uint32_t payload_size() const
             {
                 return 0;
             }
+
+        public:
+
+            uint8_t* m_payload;
+            uint32_t m_seen_encoder_rank;
+
         };
 
-    public:
-
-        uint32_t encode(uint8_t* payload)
-        {
-            m_payload = payload;
-            return 0;
-        }
-
-        rank_type seen_encoder_rank() const
-        {
-            return m_seen_encoder_rank;
-        }
-
-        uint32_t payload_size() const
-        {
-            return 0;
-        }
-
-    public:
-
-        uint8_t* m_payload;
-        uint32_t m_seen_encoder_rank;
-
-    };
-
-
-    class test_stack : public payload_rank_recoder<dummy_layer>
-    { };
-
+        class test_stack : public payload_rank_recoder<dummy_layer>
+        { };
+    }
 }
 
 TEST(TestPayloadRankRecoder, factory)

@@ -17,19 +17,26 @@
 
 namespace kodo
 {
+    // Put dummy layers and tests classes in an anonymous namespace
+    // to avoid violations of ODF (one-definition-rule) in other
+    // translation units
+    namespace
+    {
 
-    /// Test stack for the cached_symbol_decoder
-    template<class Field>
-    class cached_symbol_decoder_stack :
-        public cached_symbol_decoder<
-               empty_decoder<
-               coefficient_info<
-               storage_block_info<
-               finite_field_info<Field,
-               final_coder_factory<
-               cached_symbol_decoder_stack<Field>
-                   > > > > > >
-    { };
+        /// Test stack for the cached_symbol_decoder
+        template<class Field>
+        class cached_symbol_decoder_stack :
+            public cached_symbol_decoder<
+                   empty_decoder<
+                   coefficient_info<
+                   storage_block_info<
+                   finite_field_info<Field,
+                   final_coder_factory<
+                   cached_symbol_decoder_stack<Field>
+                       > > > > > >
+        { };
+
+    }
 }
 
 template<class Stack>

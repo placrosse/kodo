@@ -102,62 +102,6 @@ struct config_less_than :
     }
 };
 
-/// When we encode / decode data we actually record many counters although
-/// the benchmark only asks for one-at-a-time to avoid running the same
-/// the same configuration for the encoder / decoder again and again for
-/// the different operations this small class "remembers" the results.
-/// So that if the configuration did not change we may simply return the
-/// unread results
-class result_memory
-{
-public:
-    typedef std::stack<double> result_stack;
-    typedef std::map<gauge::config_set, result_stack, config_less_than>
-    result_map;
-
-    void store_result(uint32_t symbols,
-                      uint32_t symbol_size,
-                      const std::string &operation,
-                      const std::string &type,
-                      double result)
-    {
-        // Create the config
-        gauge::config_set cs;
-        cs.set_value<uint32_t>("symbols", symbols);
-        cs.set_value<uint32_t>("symbol_size", symbol_size);
-        cs.set_value<std::string>("operation", operation);
-        cs.set_value<std::string>("type", type);
-
-        m_results[cs].push(result);
-        assert(m_results[cs].size() > 0);
-    }
-
-    bool has_result(const gauge::config_set &config) const
-    {
-        auto it = m_results.find(config);
-
-        if(it == m_results.end())
-            return false;
-        else
-            return it->second.size() > 0;
-    }
-
-    double measurement(const gauge::config_set &config)
-    {
-        assert(has_result(config));
-
-        result_stack &r = m_results[config];
-
-        double result = r.top();
-        r.pop();
-
-        return result;
-    }
-
-    result_map m_results;
-
-};
-
 template<class Encoder, class Decoder>
 class operations_benchmark : public gauge::benchmark
 {

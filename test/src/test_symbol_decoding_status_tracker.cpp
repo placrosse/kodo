@@ -14,66 +14,74 @@
 namespace kodo
 {
 
-    // Small helper struct which provides the API needed by the
-    // symbol_decoding_status_tracker layer.
-    struct dummy_layer
+    // Put dummy layers and tests classes in an anonymous namespace
+    // to avoid violations of ODF (one-definition-rule) in other
+    // translation units
+    namespace
     {
 
-        uint32_t symbols() const
+
+        // Small helper struct which provides the API needed by the
+        // symbol_decoding_status_tracker layer.
+        struct dummy_layer
         {
-            return m_symbols;
-        }
 
-        template<class Factory>
-        void construct(Factory &the_factory)
+            uint32_t symbols() const
+            {
+                return m_symbols;
+            }
+
+            template<class Factory>
+            void construct(Factory &the_factory)
+            {
+                (void) the_factory;
+            }
+
+            template<class Factory>
+            void initialize(Factory& the_factory)
+            {
+                m_symbols = the_factory.symbols();
+            }
+
+            uint32_t m_symbols;
+        };
+
+        // Small helper struct which provides the API needed by the
+        // symbol_decoding_status_tracker layer.
+        struct dummy_factory
         {
-            (void) the_factory;
-        }
 
-        template<class Factory>
-        void initialize(Factory& the_factory)
-        {
-            m_symbols = the_factory.symbols();
-        }
+            uint32_t max_symbols() const
+            {
+                return m_symbols;
+            }
 
-        uint32_t m_symbols;
-    };
+            uint32_t symbols() const
+            {
+                return m_symbols;
+            }
 
-    // Small helper struct which provides the API needed by the
-    // symbol_decoding_status_tracker layer.
-    struct dummy_factory
-    {
-
-        uint32_t max_symbols() const
-        {
-            return m_symbols;
-        }
-
-        uint32_t symbols() const
-        {
-            return m_symbols;
-        }
-
-        uint32_t m_symbols;
-    };
+            uint32_t m_symbols;
+        };
 
 
 
-    // Instantiate a stack containing the symbol_decoding_status_tracker
-    class test_stack
-        : public // Payload API
-                 // Codec Header API
-                 // Symbol ID API
-                 // Codec API
-                 symbol_decoding_status_tracker<
-                 // Coefficient Storage API
-                 // Storage API
-                 // Finite Field API
-                 // Factory API
-                 // Final type
-                 dummy_layer>
-    { };
-
+        // Instantiate a stack containing the symbol_decoding_status_tracker
+        class test_stack
+            : public
+              // Payload API
+              // Codec Header API
+              // Symbol ID API
+              // Codec API
+              symbol_decoding_status_tracker<
+              // Coefficient Storage API
+              // Storage API
+              // Finite Field API
+              // Factory API
+              // Final type
+              dummy_layer>
+          { };
+    }
 }
 
 /// Run the tests typical coefficients stack

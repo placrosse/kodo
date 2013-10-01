@@ -38,94 +38,102 @@
 /// Here we define the stacks which should be tested.
 namespace kodo
 {
-    // Test layer against real api to ensure that we get an error if the layer
-    // doesn't complies with the api.
-    template<class Field>
-    class copy_payload_decoder_stack
-        : public // Payload API
-                 copy_payload_decoder<
-                 payload_decoder<
-                 // Codec Header API
-                 systematic_decoder<
-                 symbol_id_decoder<
-                 // Symbol ID API
-                 plain_symbol_id_reader<
-                 // Decoder API
-                 forward_linear_block_decoder<
-                 symbol_decoding_status_counter<
-                 symbol_decoding_status_tracker<
-                 // Coefficient Storage API
-                 coefficient_value_access<
-                 coefficient_storage<
-                 coefficient_info<
-                 // Storage API
-                 deep_symbol_storage<
-                 storage_bytes_used<
-                 storage_block_info<
-                 // Finite Field API
-                 finite_field_math<typename fifi::default_field<Field>::type,
-                 finite_field_info<Field,
-                 // Factory API
-                 final_coder_factory_pool<
-                 // Final type
-                 copy_payload_decoder_stack<Field>
-                     > > > > > > > > > > > > > > > > >
-    {};
 
-    // A dummi api to replace the real stack
-    class dummy_api
+    // Put dummy layers and tests classes in an anonymous namespace
+    // to avoid violations of ODF (one-definition-rule) in other
+    // translation units
+    namespace
     {
-    public:
 
-        struct factory
+        // Test layer against real api to ensure that we get an error if the layer
+        // doesn't complies with the api.
+        template<class Field>
+        class copy_payload_decoder_stack
+            : public // Payload API
+                     copy_payload_decoder<
+                     payload_decoder<
+                     // Codec Header API
+                     systematic_decoder<
+                     symbol_id_decoder<
+                     // Symbol ID API
+                     plain_symbol_id_reader<
+                     // Decoder API
+                     forward_linear_block_decoder<
+                     symbol_decoding_status_counter<
+                     symbol_decoding_status_tracker<
+                     // Coefficient Storage API
+                     coefficient_value_access<
+                     coefficient_storage<
+                     coefficient_info<
+                     // Storage API
+                     deep_symbol_storage<
+                     storage_bytes_used<
+                     storage_block_info<
+                     // Finite Field API
+                     finite_field_math<typename fifi::default_field<Field>::type,
+                     finite_field_info<Field,
+                     // Factory API
+                     final_coder_factory_pool<
+                     // Final type
+                     copy_payload_decoder_stack<Field>
+                         > > > > > > > > > > > > > > > > >
+        {};
+
+        // A dummi api to replace the real stack
+        class dummy_api
         {
+        public:
 
-            /// @copydoc layer::factory::symbol_size() const;
-            uint32_t symbol_size() const
+            struct factory
             {
-                return m_symbol_size;
-            }
 
-            /// @copydoc layer::factory::set_symbol_size(uint32_t)
-            void set_symbol_size(uint32_t symbol_size)
-            {
-                m_symbol_size = symbol_size;
-            }
+                /// @copydoc layer::factory::symbol_size() const;
+                uint32_t symbol_size() const
+                {
+                    return m_symbol_size;
+                }
 
+                /// @copydoc layer::factory::set_symbol_size(uint32_t)
+                void set_symbol_size(uint32_t symbol_size)
+                {
+                    m_symbol_size = symbol_size;
+                }
+
+                uint32_t m_symbol_size;
+
+            };
+
+            /// @copydoc layer::initialize(Factory&)
+            template<class Factory>
+            void initialize(Factory& the_factory)
+                {
+                    m_symbol_size = the_factory.symbol_size();
+                }
+
+            /// @copydoc layer::decode(uint8_t*)
+            void decode(uint8_t *payload)
+                {
+                    assert(payload != 0);
+
+                    // Clear payload
+                    std::fill_n(payload, payload_size(), 0);
+                }
+
+            /// @copydoc layer::payload_size() const
+            uint32_t payload_size() const
+                {
+                    return m_symbol_size;
+                }
+
+        private:
+
+            /// Number of symbols
             uint32_t m_symbol_size;
-
         };
 
-        /// @copydoc layer::initialize(Factory&)
-        template<class Factory>
-        void initialize(Factory& the_factory)
-            {
-                m_symbol_size = the_factory.symbol_size();
-            }
-
-        /// @copydoc layer::decode(uint8_t*)
-        void decode(uint8_t *payload)
-            {
-                assert(payload != 0);
-
-                // Clear payload
-                std::fill_n(payload, payload_size(), 0);
-            }
-
-        /// @copydoc layer::payload_size() const
-        uint32_t payload_size() const
-            {
-                return m_symbol_size;
-            }
-
-    private:
-
-        /// Number of symbols
-        uint32_t m_symbol_size;
-    };
-
-    // Test functionality of the individual layer
-    typedef copy_payload_decoder<dummy_api> copy_payload_coder;
+        // Test functionality of the individual layer
+        typedef copy_payload_decoder<dummy_api> copy_payload_coder;
+    }
 }
 
 // Test the layer itself - confirms that it acts as expected

@@ -11,33 +11,40 @@
 
 namespace kodo
 {
+    // Put dummy layers and tests classes in an anonymous namespace
+    // to avoid violations of ODF (one-definition-rule) in other
+    // translation units
+    namespace
+    {
 
-    // Sparse uniform generator
-    template<class Field>
-    class sparse_uniform_generator_stack :
-        public sparse_uniform_generator<
-               fake_codec_layer<
-               coefficient_info<
-               fake_symbol_storage<
-               storage_block_info<
-               finite_field_info<Field,
-               final_coder_factory<
-               sparse_uniform_generator_stack<Field>
-               > > > > > > >
-    { };
+        // Sparse uniform generator
+        template<class Field>
+        class sparse_uniform_generator_stack :
+            public sparse_uniform_generator<
+                   fake_codec_layer<
+                   coefficient_info<
+                   fake_symbol_storage<
+                   storage_block_info<
+                   finite_field_info<Field,
+                   final_coder_factory<
+                   sparse_uniform_generator_stack<Field>
+                   > > > > > > >
+        { };
 
-    template<class Field>
-    class sparse_uniform_generator_stack_pool :
-        public sparse_uniform_generator<
-               fake_codec_layer<
-               coefficient_info<
-               fake_symbol_storage<
-               storage_block_info<
-               finite_field_info<Field,
-               final_coder_factory_pool<
-               sparse_uniform_generator_stack_pool<Field>
-               > > > > > > >
-    { };
+        template<class Field>
+        class sparse_uniform_generator_stack_pool :
+            public sparse_uniform_generator<
+                   fake_codec_layer<
+                   coefficient_info<
+                   fake_symbol_storage<
+                   storage_block_info<
+                   finite_field_info<Field,
+                   final_coder_factory_pool<
+                   sparse_uniform_generator_stack_pool<Field>
+                   > > > > > > >
+        { };
+
+    }
 
 }
 

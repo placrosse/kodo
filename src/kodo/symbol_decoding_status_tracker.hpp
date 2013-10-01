@@ -64,42 +64,42 @@ namespace kodo
         /// @copydoc layer::set_symbol_missing(uint32_t)
         void set_symbol_missing(uint32_t index)
         {
-            assert(index < SuperCoder::symbols());
+            assert(index < m_status.size());
             m_status[index] = symbol_decoding_status::missing;
         }
 
         /// @copydoc layer::set_symbol_seen(uint32_t)
         void set_symbol_seen(uint32_t index)
         {
-            assert(index < SuperCoder::symbols());
+            assert(index < m_status.size());
             m_status[index] = symbol_decoding_status::seen;
         }
 
         /// @copydoc layer::set_symbol_decoded(uint32_t)
         void set_symbol_decoded(uint32_t index)
         {
-            assert(index < SuperCoder::symbols());
+            assert(index < m_status.size());
             m_status[index] = symbol_decoding_status::decoded;
         }
 
         /// @copydoc layer::is_symbol_missing(uint32_t) const
         bool is_symbol_missing(uint32_t index) const
         {
-            assert(index < SuperCoder::symbols());
+            assert(index < m_status.size());
             return m_status[index] == symbol_decoding_status::missing;
         }
 
         /// @copydoc layer::is_symbol_seen(uint32_t) const
         bool is_symbol_seen(uint32_t index) const
         {
-            assert(index < SuperCoder::symbols());
+            assert(index < m_status.size());
             return m_status[index] == symbol_decoding_status::seen;
         }
 
         /// @copydoc layer::is_symbol_decoded(uint32_t) const
         bool is_symbol_decoded(uint32_t index) const
         {
-            assert(index < SuperCoder::symbols());
+            assert(index < m_status.size());
             return m_status[index] == symbol_decoding_status::decoded;
         }
 

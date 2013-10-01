@@ -17,82 +17,89 @@
 namespace kodo
 {
 
-    // Small helper struct which provides the API needed by the
-    // rank_symbol_decoding_status_updater layer.
-    struct dummy_layer
+    // Put dummy layers and tests classes in an anonymous namespace
+    // to avoid violations of ODF (one-definition-rule) in other
+    // translation units
+    namespace
     {
-        typedef uint32_t rank_type;
 
-        template<class Factory>
-        void construct(Factory& the_factory)
+        // Small helper struct which provides the API needed by the
+        // rank_symbol_decoding_status_updater layer.
+        struct dummy_layer
         {
-            (void) the_factory;
-        }
+            typedef uint32_t rank_type;
 
-        template<class Factory>
-        void initialize(Factory& the_factory)
+            template<class Factory>
+            void construct(Factory& the_factory)
+            {
+                (void) the_factory;
+            }
+
+            template<class Factory>
+            void initialize(Factory& the_factory)
+            {
+                m_symbols = the_factory.symbols();
+            }
+
+            void decode(uint8_t *payload)
+            {
+                m_payload = payload;
+            }
+
+            uint32_t rank() const
+            {
+                return m_rank;
+            }
+
+            uint32_t seen_encoder_rank() const
+            {
+                return m_seen_encoder_rank;
+            }
+
+            uint32_t symbols() const
+            {
+                return m_symbols;
+            }
+
+            uint8_t* m_payload;
+            uint32_t m_rank;
+            uint32_t m_seen_encoder_rank;
+            uint32_t m_symbols;
+        };
+
+        // Instantiate a stack containing the
+        // rank_symbol_decoding_status_updater
+        class dummy_stack
+            : public // Payload API
+                     rank_symbol_decoding_status_updater<
+                     // Codec Header API
+                     // Symbol ID API
+                     // Decoder API
+                     symbol_decoding_status_counter<
+                     symbol_decoding_status_tracker<
+                     // Coefficient Storage API
+                     // Storage API
+                     // Finite Field API
+                     // Factory API
+                     // Final type
+                     dummy_layer> > >
+        { };
+
+        struct dummy_factory
         {
-            m_symbols = the_factory.symbols();
-        }
+            uint32_t symbols() const
+            {
+                return m_symbols;
+            }
 
-        void decode(uint8_t *payload)
-        {
-            m_payload = payload;
-        }
+            uint32_t max_symbols() const
+            {
+                return m_symbols;
+            }
 
-        uint32_t rank() const
-        {
-            return m_rank;
-        }
-
-        uint32_t seen_encoder_rank() const
-        {
-            return m_seen_encoder_rank;
-        }
-
-        uint32_t symbols() const
-        {
-            return m_symbols;
-        }
-
-        uint8_t* m_payload;
-        uint32_t m_rank;
-        uint32_t m_seen_encoder_rank;
-        uint32_t m_symbols;
-    };
-
-    // Instantiate a stack containing the rank_symbol_decoding_status_updater
-    class dummy_stack
-        : public // Payload API
-                 rank_symbol_decoding_status_updater<
-                 // Codec Header API
-                 // Symbol ID API
-                 // Decoder API
-                 symbol_decoding_status_counter<
-                 symbol_decoding_status_tracker<
-                 // Coefficient Storage API
-                 // Storage API
-                 // Finite Field API
-                 // Factory API
-                 // Final type
-                 dummy_layer> > >
-    { };
-
-    struct dummy_factory
-    {
-        uint32_t symbols() const
-        {
-            return m_symbols;
-        }
-
-        uint32_t max_symbols() const
-        {
-            return m_symbols;
-        }
-
-        uint32_t m_symbols;
-    };
-
+            uint32_t m_symbols;
+        };
+    }
 }
 
 TEST(TestRankSymbolDecodingStatusUpdator, api)
