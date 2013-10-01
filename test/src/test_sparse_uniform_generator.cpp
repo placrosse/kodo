@@ -48,112 +48,120 @@ namespace kodo
 
 }
 
+// Put dummy layers and tests classes in an anonymous namespace
+// to avoid violations of ODF (one-definition-rule) in other
+// translation units
+namespace
+{
+
 /// Tests:
 ///   - layer::set_density(double)
 ///   - layer::set_average_nonzero_symbols(double)
 ///   - layer::density()
-template<class Coder>
-struct api_density
-{
-
-    typedef typename Coder::factory factory_type;
-    typedef typename Coder::pointer pointer_type;
-    typedef typename Coder::field_type field_type;
-    typedef typename Coder::value_type value_type;
-
-    api_density(uint32_t max_symbols,
-                uint32_t max_symbol_size)
-        : m_factory(max_symbols, max_symbol_size)
-    { }
-
-    void run()
+    template<class Coder>
+    struct api_density
     {
-        // We invoke the test multiple times to ensure that if the
-        // factory recycles the objects they are safe to reuse
-        run_once(m_factory.max_symbols(),
-                 m_factory.max_symbol_size());
 
-        run_once(m_factory.max_symbols(),
-                 m_factory.max_symbol_size());
+        typedef typename Coder::factory factory_type;
+        typedef typename Coder::pointer pointer_type;
+        typedef typename Coder::field_type field_type;
+        typedef typename Coder::value_type value_type;
 
-        // Build with different from max values
-        uint32_t symbols =
-            rand_symbols(m_factory.max_symbols());
-        uint32_t symbol_size =
-            rand_symbol_size(m_factory.max_symbol_size());
+        api_density(uint32_t max_symbols,
+                    uint32_t max_symbol_size)
+            : m_factory(max_symbols, max_symbol_size)
+        { }
 
-        run_once(symbols, symbol_size);
-
-        // Test lower bounds
-        run_once(1, symbol_size);
-        run_once(symbols, 4);
-        run_once(1, 4);
-    }
-
-    void run_once(uint32_t symbols, uint32_t symbol_size)
-    {
-        m_factory.set_symbols(symbols);
-        m_factory.set_symbol_size(symbol_size);
-
-        pointer_type coder = m_factory.build();
-
-        std::vector<uint8_t> vector_a =
-            random_vector(coder->coefficients_size());
-
-        std::vector<uint8_t> vector_b =
-            random_vector(coder->coefficients_size());
-
-        std::vector<uint8_t> vector_c =
-            random_vector(coder->coefficients_size());
-
-        std::vector<uint8_t> vector_d =
-            random_vector(coder->coefficients_size());
-
-        if (fifi::is_binary<field_type>::value)
+        void run()
         {
-            double average_nonzero_symbols = symbols/2.0;
-            coder->set_average_nonzero_symbols(average_nonzero_symbols);
-            EXPECT_EQ(average_nonzero_symbols/symbols, coder->density());
-        }
-        else
-        {
-            double average_nonzero_symbols = std::ceil(symbols/2.0);
-            coder->set_average_nonzero_symbols(average_nonzero_symbols);
-            EXPECT_EQ(average_nonzero_symbols/symbols, coder->density());
+            // We invoke the test multiple times to ensure that if the
+            // factory recycles the objects they are safe to reuse
+            run_once(m_factory.max_symbols(),
+                     m_factory.max_symbol_size());
 
-            coder->set_average_nonzero_symbols(symbols);
-            EXPECT_EQ(1.0, coder->density());
+            run_once(m_factory.max_symbols(),
+                     m_factory.max_symbol_size());
 
-            coder->set_density(1.0);
-            EXPECT_EQ(1.0, coder->density());
+            // Build with different from max values
+            uint32_t symbols =
+                rand_symbols(m_factory.max_symbols());
+            uint32_t symbol_size =
+                rand_symbol_size(m_factory.max_symbol_size());
+
+            run_once(symbols, symbol_size);
+
+            // Test lower bounds
+            run_once(1, symbol_size);
+            run_once(symbols, 4);
+            run_once(1, 4);
         }
 
-        coder->set_density(0.01);
-        EXPECT_EQ(0.01, coder->density());
+        void run_once(uint32_t symbols, uint32_t symbol_size)
+        {
+            m_factory.set_symbols(symbols);
+            m_factory.set_symbol_size(symbol_size);
 
-        coder->seed(0);
-        coder->generate(&vector_a[0]);
+            pointer_type coder = m_factory.build();
 
-        coder->seed(0);
-        coder->generate(&vector_b[0]);
+            std::vector<uint8_t> vector_a =
+                random_vector(coder->coefficients_size());
 
-        auto storage_a = sak::storage(vector_a);
-        auto storage_b = sak::storage(vector_b);
+            std::vector<uint8_t> vector_b =
+                random_vector(coder->coefficients_size());
 
-        EXPECT_TRUE(sak::equal(storage_a,storage_b));
+            std::vector<uint8_t> vector_c =
+                random_vector(coder->coefficients_size());
 
-        coder->seed(0);
+            std::vector<uint8_t> vector_d =
+                random_vector(coder->coefficients_size());
 
-        coder->generate(&vector_c[0]);
-        coder->generate(&vector_d[0]);
-    }
+            if (fifi::is_binary<field_type>::value)
+            {
+                double average_nonzero_symbols = symbols/2.0;
+                coder->set_average_nonzero_symbols(average_nonzero_symbols);
+                EXPECT_EQ(average_nonzero_symbols/symbols, coder->density());
+            }
+            else
+            {
+                double average_nonzero_symbols = std::ceil(symbols/2.0);
+                coder->set_average_nonzero_symbols(average_nonzero_symbols);
+                EXPECT_EQ(average_nonzero_symbols/symbols, coder->density());
 
-private:
+                coder->set_average_nonzero_symbols(symbols);
+                EXPECT_EQ(1.0, coder->density());
 
-    // The factory
-    factory_type m_factory;
+                coder->set_density(1.0);
+                EXPECT_EQ(1.0, coder->density());
+            }
 
-};
+            coder->set_density(0.01);
+            EXPECT_EQ(0.01, coder->density());
+
+            coder->seed(0);
+            coder->generate(&vector_a[0]);
+
+            coder->seed(0);
+            coder->generate(&vector_b[0]);
+
+            auto storage_a = sak::storage(vector_a);
+            auto storage_b = sak::storage(vector_b);
+
+            EXPECT_TRUE(sak::equal(storage_a,storage_b));
+
+            coder->seed(0);
+
+            coder->generate(&vector_c[0]);
+            coder->generate(&vector_d[0]);
+        }
+
+    private:
+
+        // The factory
+        factory_type m_factory;
+
+    };
+
+}
 
 /// Run the tests typical coefficients stack
 TEST(TestCoefficientGenerator, sparse_uniform_generator_stack)

@@ -45,7 +45,7 @@ namespace kodo
                      final_coder_factory<
                      coefficient_storage_stack<Field>
                          > > > > >
-        {};
+        { };
 
         // Coefficient Storage
         template<class Field>
@@ -58,32 +58,39 @@ namespace kodo
                      final_coder_factory<
                      coefficient_storage_stack_pool<Field>
                          > > > > >
-        {};
+        { };
     }
 }
 
-/// Tests:
-///   - layer::factory::max_coefficients_size() const
-///   - layer::coefficients_size() const
-///   - layer::coefficients_length() const
-///   - layer::coefficients_value(uint32_t)
-///   - layer::coefficients_value(uint32_t) const
-///   - layer::coefficients(uint32_t)
-///   - layer::coefficients(uint32_t) const
-///   - layer::set_coefficients(uint32_t, const sak::const_storage&)
-template<class Coder>
-struct api_coefficients_storage
+// Put dummy layers and tests classes in an anonymous namespace
+// to avoid violations of ODF (one-definition-rule) in other
+// translation units
+namespace
 {
 
-    typedef typename Coder::factory factory_type;
-    typedef typename Coder::pointer pointer_type;
-    typedef typename Coder::field_type field_type;
+    /// Tests:
+    ///   - layer::factory::max_coefficients_size() const
+    ///   - layer::coefficients_size() const
+    ///   - layer::coefficients_length() const
+    ///   - layer::coefficients_value(uint32_t)
+    ///   - layer::coefficients_value(uint32_t) const
+    ///   - layer::coefficients(uint32_t)
+    ///   - layer::coefficients(uint32_t) const
+    ///   - layer::set_coefficients(uint32_t, const sak::const_storage&)
+    template<class Coder>
+    struct api_coefficients_storage
+    {
 
-    api_coefficients_storage(uint32_t max_symbols, uint32_t max_symbol_size)
-        : m_factory(max_symbols, max_symbol_size)
+        typedef typename Coder::factory factory_type;
+        typedef typename Coder::pointer pointer_type;
+        typedef typename Coder::field_type field_type;
+
+        api_coefficients_storage(uint32_t max_symbols,
+                                 uint32_t max_symbol_size)
+            : m_factory(max_symbols, max_symbol_size)
         { }
 
-    void run()
+        void run()
         {
             // We invoke the test three times to ensure that if the
             // factory recycles the objects they are safe to reuse
@@ -102,7 +109,7 @@ struct api_coefficients_storage
             run_once(symbols, symbol_size);
         }
 
-    void run_once(uint32_t symbols, uint32_t symbol_size)
+        void run_once(uint32_t symbols, uint32_t symbol_size)
         {
             m_factory.set_symbols(symbols);
             m_factory.set_symbol_size(symbol_size);
@@ -115,7 +122,8 @@ struct api_coefficients_storage
             uint32_t max_coefficients_size =
                 fifi::elements_to_size<field_type>(m_factory.max_symbols());
 
-            EXPECT_EQ(max_coefficients_size, m_factory.max_coefficients_size());
+            EXPECT_EQ(max_coefficients_size,
+                      m_factory.max_coefficients_size());
 
             uint32_t size =
                 fifi::elements_to_size<field_type>(symbols);
@@ -184,12 +192,14 @@ struct api_coefficients_storage
 
         }
 
-private:
+    private:
 
-    // The factory
-    factory_type m_factory;
+        // The factory
+        factory_type m_factory;
 
-};
+    };
+
+}
 
 /// Run the tests typical coefficients stack
 TEST(TestSymbolStorage, test_coefficients_storage_stack)

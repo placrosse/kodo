@@ -67,18 +67,18 @@ namespace kodo
         // Instantiate a stack containing the symbol_decoding_status_counter
         class test_stack
             : public // Payload API
-        // Codec Header API
-        // Symbol ID API
-        // Codec API
-        symbol_decoding_status_counter<
-            symbol_decoding_status_tracker<
-                // Coefficient Storage API
-                // Storage API
-                // Finite Field API
-                // Factory API
-                // Final type
-                dummy_layer> >
-        { };
+                     // Codec Header API
+                     // Symbol ID API
+                     // Codec API
+                     symbol_decoding_status_counter<
+                     symbol_decoding_status_tracker<
+                     // Coefficient Storage API
+                     // Storage API
+                     // Finite Field API
+                     // Factory API
+                     // Final type
+                    dummy_layer> >
+            { };
     }
 }
 
@@ -92,8 +92,6 @@ TEST(TestSymbolDecodingStatusCounter, api)
 
     stack.construct(factory);
     stack.initialize(factory);
-
-    std::cout << "f " << factory.m_symbols << std::endl;
 
     EXPECT_EQ(stack.symbols(), factory.m_symbols);
     EXPECT_EQ(stack.symbols(), factory.symbols());
