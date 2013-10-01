@@ -25,6 +25,12 @@ Latest
   layer to ensure that proper detection of early decoding happens
   correctly. The existing on-the-fly codes in the
   src/kodo/rlnc/on_the_fly_codes.hpp have been updated.
+* Bug: Several unit tests defined classes in the .cpp files. While
+  this is typically not a problem, it can unexpectedly result in a
+  violation of the ODR (One-Definition-Rule) resulting in undefined
+  behavior of the resulting binary. To avoid this problem classes /
+  structs defined in the .cpp files should be wrapped in an anonymous
+  namespace.
 
 14.0.0
 ------
