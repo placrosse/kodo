@@ -4,6 +4,12 @@ News for Kodo
 This file lists the major changes between versions. For a more detailed list
 of every change, see the Git log.
 
+Latest
+------
+* Major: Update the coefficient storage API. The previous naming
+  scheme caused some confusion about the API, the new naming scheme
+  hopefully makes the API easier to read and understand.
+
 15.0.0
 ------
 * Major: renamed method for specifying the average number of nonzero symbols
