@@ -102,7 +102,8 @@ TEST(TestOnTheFlyCodes, test_reuse_api)
 /// encoder
 TEST(TestOnTheFlyCodes, test_reuse_incomplete_api)
 {
-    test_reuse_incomplete<kodo::on_the_fly_encoder, kodo::on_the_fly_decoder>();
+    test_reuse_incomplete<kodo::on_the_fly_encoder,
+        kodo::on_the_fly_decoder>();
 }
 
 //------------------------------------------------------------------

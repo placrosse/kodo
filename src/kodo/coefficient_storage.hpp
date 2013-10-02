@@ -81,7 +81,8 @@ namespace kodo
             assert(storage.m_data != 0);
 
             auto dest = sak::storage(
-                coefficient_vector_data(index), SuperCoder::coefficient_vector_size());
+                coefficient_vector_data(index),
+                SuperCoder::coefficient_vector_size());
 
             sak::copy_storage(dest, storage);
         }

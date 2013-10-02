@@ -19,59 +19,69 @@
 namespace kodo
 {
 
-    template<class Field>
-    class test_backward_stack
-        : public // Payload API
-                 // Codec Header API
-                 // Symbol ID API
-                 // Codec API
-                 debug_linear_block_decoder<
-                 backward_linear_block_decoder<
-                 // Coefficient Storage API
-                 coefficient_value_access<
-                 coefficient_storage<
-                 coefficient_info<
-                 // Storage API
-                 deep_symbol_storage<
-                 storage_bytes_used<
-                 storage_block_info<
-                 // Finite Field API
-                 finite_field_math<typename fifi::default_field<Field>::type,
-                 finite_field_info<Field,
-                 // Factory API
-                 final_coder_factory_pool<
-                 // Final type
-                 test_backward_stack<Field>
-                     > > > > > > > > > > >
-    { };
+    // Put dummy layers and tests classes in an anonymous namespace
+    // to avoid violations of ODF (one-definition-rule) in other
+    // translation units
+    namespace
+    {
 
-    template<class Field>
-    class test_backward_delayed_stack
-        : public // Payload API
-                 // Codec Header API
-                 // Symbol ID API
-                 // Codec API
-                 debug_linear_block_decoder<
-                 linear_block_decoder_delayed<
-                 backward_linear_block_decoder<
-                 // Coefficient Storage API
-                 coefficient_value_access<
-                 coefficient_storage<
-                 coefficient_info<
-                 // Storage API
-                 deep_symbol_storage<
-                 storage_bytes_used<
-                 storage_block_info<
-                 // Finite Field API
-                 finite_field_math<typename fifi::default_field<Field>::type,
-                 finite_field_info<Field,
-                 // Factory API
-                 final_coder_factory_pool<
-                 // Final type
-                 test_backward_stack<Field>
-                     > > > > > > > > > > > >
-    { };
+        template<class Field>
+        class test_backward_stack
+            : public // Payload API
+                     // Codec Header API
+                     // Symbol ID API
+                     // Decoder API
+                     debug_linear_block_decoder<
+                     backward_linear_block_decoder<
+                     symbol_decoding_status_counter<
+                     symbol_decoding_status_tracker<
+                     // Coefficient Storage API
+                     coefficient_value_access<
+                     coefficient_storage<
+                     coefficient_info<
+                     // Storage API
+                     deep_symbol_storage<
+                     storage_bytes_used<
+                     storage_block_info<
+                     // Finite Field API
+                     finite_field_math<typename fifi::default_field<Field>::type,
+                     finite_field_info<Field,
+                     // Factory API
+                     final_coder_factory_pool<
+                     // Final type
+                     test_backward_stack<Field>
+                         > > > > > > > > > > > > >
+        { };
 
+        template<class Field>
+        class test_backward_delayed_stack
+            : public // Payload API
+                     // Codec Header API
+                     // Symbol ID API
+                     // Codec API
+                     debug_linear_block_decoder<
+                     linear_block_decoder_delayed<
+                     backward_linear_block_decoder<
+                     symbol_decoding_status_counter<
+                     symbol_decoding_status_tracker<
+                     // Coefficient Storage API
+                     coefficient_value_access<
+                     coefficient_storage<
+                     coefficient_info<
+                     // Storage API
+                     deep_symbol_storage<
+                     storage_bytes_used<
+                     storage_block_info<
+                     // Finite Field API
+                     finite_field_math<typename fifi::default_field<Field>::type,
+                     finite_field_info<Field,
+                     // Factory API
+                     final_coder_factory_pool<
+                     // Final type
+                     test_backward_stack<Field>
+                         > > > > > > > > > > > > > >
+        { };
+    }
 }
 
 template<template <class> class Stack>
@@ -99,7 +109,7 @@ void test_backward_stack()
     // d->print_decoder_state(std::cout);
 
     EXPECT_EQ(d->rank(), 1U);
-    EXPECT_TRUE(d->symbol_pivot(6));
+    EXPECT_TRUE(d->is_symbol_pivot(6));
 
     // Create an encoding vector looking like this: 10000010
     coefficients[0] = 0;
@@ -110,8 +120,8 @@ void test_backward_stack()
     // d->print_decoder_state(std::cout);
 
     EXPECT_EQ(d->rank(), 2U);
-    EXPECT_TRUE(d->symbol_pivot(6));
-    EXPECT_TRUE(d->symbol_pivot(1));
+    EXPECT_TRUE(d->is_symbol_pivot(6));
+    EXPECT_TRUE(d->is_symbol_pivot(1));
 
     // Create an encoding vector looking like this: 11100010
     coefficients[0] = 0;
@@ -124,9 +134,9 @@ void test_backward_stack()
     // d->print_decoder_state(std::cout);
 
     EXPECT_EQ(d->rank(), 3U);
-    EXPECT_TRUE(d->symbol_pivot(6));
-    EXPECT_TRUE(d->symbol_pivot(1));
-    EXPECT_TRUE(d->symbol_pivot(2));
+    EXPECT_TRUE(d->is_symbol_pivot(6));
+    EXPECT_TRUE(d->is_symbol_pivot(1));
+    EXPECT_TRUE(d->is_symbol_pivot(2));
 
     // Create an encoding vector looking like this: 11100010 (linear dept.)
     coefficients[0] = 0;
@@ -139,9 +149,9 @@ void test_backward_stack()
     // d->print_decoder_state(std::cout);
 
     EXPECT_EQ(d->rank(), 3U);
-    EXPECT_TRUE(d->symbol_pivot(6));
-    EXPECT_TRUE(d->symbol_pivot(1));
-    EXPECT_TRUE(d->symbol_pivot(2));
+    EXPECT_TRUE(d->is_symbol_pivot(6));
+    EXPECT_TRUE(d->is_symbol_pivot(1));
+    EXPECT_TRUE(d->is_symbol_pivot(2));
 
 
     // Create an encoding vector looking like this: 10111100
@@ -156,10 +166,10 @@ void test_backward_stack()
     // d->print_decoder_state(std::cout);
 
     EXPECT_EQ(d->rank(), 4U);
-    EXPECT_TRUE(d->symbol_pivot(6));
-    EXPECT_TRUE(d->symbol_pivot(5));
-    EXPECT_TRUE(d->symbol_pivot(1));
-    EXPECT_TRUE(d->symbol_pivot(2));
+    EXPECT_TRUE(d->is_symbol_pivot(6));
+    EXPECT_TRUE(d->is_symbol_pivot(5));
+    EXPECT_TRUE(d->is_symbol_pivot(1));
+    EXPECT_TRUE(d->is_symbol_pivot(2));
 
 
     // Create an encoding vector looking like this: 10000100
@@ -171,11 +181,11 @@ void test_backward_stack()
     // d->print_decoder_state(std::cout);
 
     EXPECT_EQ(d->rank(), 5U);
-    EXPECT_TRUE(d->symbol_pivot(6));
-    EXPECT_TRUE(d->symbol_pivot(5));
-    EXPECT_TRUE(d->symbol_pivot(4));
-    EXPECT_TRUE(d->symbol_pivot(2));
-    EXPECT_TRUE(d->symbol_pivot(1));
+    EXPECT_TRUE(d->is_symbol_pivot(6));
+    EXPECT_TRUE(d->is_symbol_pivot(5));
+    EXPECT_TRUE(d->is_symbol_pivot(4));
+    EXPECT_TRUE(d->is_symbol_pivot(2));
+    EXPECT_TRUE(d->is_symbol_pivot(1));
 
     // Create an encoding vector looking like this: 10010000
     coefficients[0] = 0;
@@ -186,12 +196,12 @@ void test_backward_stack()
     // d->print_decoder_state(std::cout);
 
     EXPECT_EQ(d->rank(), 6U);
-    EXPECT_TRUE(d->symbol_pivot(6));
-    EXPECT_TRUE(d->symbol_pivot(5));
-    EXPECT_TRUE(d->symbol_pivot(4));
-    EXPECT_TRUE(d->symbol_pivot(3));
-    EXPECT_TRUE(d->symbol_pivot(2));
-    EXPECT_TRUE(d->symbol_pivot(1));
+    EXPECT_TRUE(d->is_symbol_pivot(6));
+    EXPECT_TRUE(d->is_symbol_pivot(5));
+    EXPECT_TRUE(d->is_symbol_pivot(4));
+    EXPECT_TRUE(d->is_symbol_pivot(3));
+    EXPECT_TRUE(d->is_symbol_pivot(2));
+    EXPECT_TRUE(d->is_symbol_pivot(1));
 
     // Create an encoding vector looking like this: 00011001
     coefficients[0] = 0;
@@ -203,13 +213,13 @@ void test_backward_stack()
     // d->print_decoder_state(std::cout);
 
     EXPECT_EQ(d->rank(), 7U);
-    EXPECT_TRUE(d->symbol_pivot(7));
-    EXPECT_TRUE(d->symbol_pivot(6));
-    EXPECT_TRUE(d->symbol_pivot(5));
-    EXPECT_TRUE(d->symbol_pivot(4));
-    EXPECT_TRUE(d->symbol_pivot(3));
-    EXPECT_TRUE(d->symbol_pivot(2));
-    EXPECT_TRUE(d->symbol_pivot(1));
+    EXPECT_TRUE(d->is_symbol_pivot(7));
+    EXPECT_TRUE(d->is_symbol_pivot(6));
+    EXPECT_TRUE(d->is_symbol_pivot(5));
+    EXPECT_TRUE(d->is_symbol_pivot(4));
+    EXPECT_TRUE(d->is_symbol_pivot(3));
+    EXPECT_TRUE(d->is_symbol_pivot(2));
+    EXPECT_TRUE(d->is_symbol_pivot(1));
 
     // Create an encoding vector looking like this: 00011001
     coefficients[0] = 0;
@@ -219,14 +229,14 @@ void test_backward_stack()
     // d->print_decoder_state(std::cout);
 
     EXPECT_EQ(d->rank(), 8U);
-    EXPECT_TRUE(d->symbol_pivot(7));
-    EXPECT_TRUE(d->symbol_pivot(6));
-    EXPECT_TRUE(d->symbol_pivot(5));
-    EXPECT_TRUE(d->symbol_pivot(4));
-    EXPECT_TRUE(d->symbol_pivot(3));
-    EXPECT_TRUE(d->symbol_pivot(2));
-    EXPECT_TRUE(d->symbol_pivot(1));
-    EXPECT_TRUE(d->symbol_pivot(0));
+    EXPECT_TRUE(d->is_symbol_pivot(7));
+    EXPECT_TRUE(d->is_symbol_pivot(6));
+    EXPECT_TRUE(d->is_symbol_pivot(5));
+    EXPECT_TRUE(d->is_symbol_pivot(4));
+    EXPECT_TRUE(d->is_symbol_pivot(3));
+    EXPECT_TRUE(d->is_symbol_pivot(2));
+    EXPECT_TRUE(d->is_symbol_pivot(1));
+    EXPECT_TRUE(d->is_symbol_pivot(0));
 
 }
 

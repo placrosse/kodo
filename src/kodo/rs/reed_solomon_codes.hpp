@@ -29,6 +29,9 @@
 #include "../encode_symbol_tracker.hpp"
 #include "../linear_block_encoder.hpp"
 #include "../forward_linear_block_decoder.hpp"
+#include "../symbol_decoding_status_tracker.hpp"
+#include "../symbol_decoding_status_counter.hpp"
+
 
 #include "reed_solomon_symbol_id_writer.hpp"
 #include "reed_solomon_symbol_id_reader.hpp"
@@ -55,7 +58,7 @@ namespace kodo
                  // Symbol ID API
                  reed_solomon_symbol_id_writer<
                  systematic_vandermonde_matrix<
-                 // Codec API
+                 // Encoder API
                  encode_symbol_tracker<
                  zero_symbol_encoder<
                  linear_block_encoder<
@@ -93,8 +96,10 @@ namespace kodo
                  // Symbol ID API
                  reed_solomon_symbol_id_reader<
                  systematic_vandermonde_matrix<
-                 // Codec API
+                 // Decoder API
                  forward_linear_block_decoder<
+                 symbol_decoding_status_counter<
+                 symbol_decoding_status_tracker<
                  // Coefficient Storage API
                  coefficient_value_access<
                  coefficient_storage<
@@ -110,7 +115,7 @@ namespace kodo
                  final_coder_factory_pool<
                  // Final type
                  rs_decoder<Field>
-                     > > > > > > > > > > > > > > >
+                     > > > > > > > > > > > > > > > > >
     { };
 
 }

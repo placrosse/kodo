@@ -20,7 +20,7 @@
 namespace kodo
 {
 
-    /// @ingroup codec_layers
+    /// @ingroup decoder_layers
     /// @brief This layer can be added to a decoding stack to monitor the
     ///        coding coefficients passed to a decoder. This specific layer
     ///        tracks the largest index where it have seen non-zero

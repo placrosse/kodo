@@ -32,35 +32,40 @@
 namespace kodo
 {
 
-    template<class Field>
-    class plain_uniform_stack
-        : public plain_symbol_id_reader<
-                 plain_symbol_id_writer<
-                 uniform_generator<
-                 coefficient_info<
-                 storage_block_info<
-                 finite_field_info<Field,
-                 final_coder_factory<
-                 plain_uniform_stack<Field>
-                     > > > > > > >
-    { };
+    // Put dummy layers and tests classes in an anonymous namespace
+    // to avoid violations of ODF (one-definition-rule) in other
+    // translation units
+    namespace
+    {
 
-    template<class Field>
-    class rs_vandermond_nonsystematic_stack
-        : public reed_solomon_symbol_id_reader<
-                 reed_solomon_symbol_id_writer<
-                 vandermonde_matrix<
-                 coefficient_info<
-                 storage_block_info<
-                 encode_symbol_tracker<
-                 finite_field_math<typename fifi::default_field<Field>::type,
-                 finite_field_info<Field,
-                 final_coder_factory<
-                 rs_vandermond_nonsystematic_stack<Field>
-                     > > > > > > > > >
-    { };
+        template<class Field>
+        class plain_uniform_stack
+            : public plain_symbol_id_reader<
+                     plain_symbol_id_writer<
+                     uniform_generator<
+                     coefficient_info<
+                     storage_block_info<
+                     finite_field_info<Field,
+                     final_coder_factory<
+                     plain_uniform_stack<Field>
+                         > > > > > > >
+        { };
 
-
+        template<class Field>
+        class rs_vandermond_nonsystematic_stack
+            : public reed_solomon_symbol_id_reader<
+                     reed_solomon_symbol_id_writer<
+                     vandermonde_matrix<
+                     coefficient_info<
+                     storage_block_info<
+                     encode_symbol_tracker<
+                     finite_field_math<typename fifi::default_field<Field>::type,
+                     finite_field_info<Field,
+                     final_coder_factory<
+                     rs_vandermond_nonsystematic_stack<Field>
+                         > > > > > > > > >
+        { };
+    }
 }
 
 /// Tests:

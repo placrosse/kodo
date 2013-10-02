@@ -38,6 +38,9 @@
 #include "../debug_cached_symbol_decoder.hpp"
 #include "../debug_linear_block_decoder.hpp"
 #include "../rank_info.hpp"
+#include "../symbol_decoding_status_tracker.hpp"
+#include "../symbol_decoding_status_counter.hpp"
+
 
 #include "../linear_block_encoder.hpp"
 #include "../forward_linear_block_decoder.hpp"
@@ -111,7 +114,7 @@ namespace kodo
                  recoding_symbol_id<
                  // Coefficient Generator API
                  uniform_generator<
-                 // Codec API
+                 // Encoder API
                  encode_symbol_tracker<
                  zero_symbol_encoder<
                  linear_block_encoder<
@@ -140,9 +143,11 @@ namespace kodo
                  symbol_id_decoder<
                  // Symbol ID API
                  plain_symbol_id_reader<
-                 // Codec API
+                 // Decoder API
                  aligned_coefficients_decoder<
                  forward_linear_block_decoder<
+                 symbol_decoding_status_counter<
+                 symbol_decoding_status_tracker<
                  // Coefficient Storage API
                  coefficient_value_access<
                  coefficient_storage<
@@ -158,7 +163,7 @@ namespace kodo
                  final_coder_factory_pool<
                  // Final type
                  full_rlnc_decoder<Field>
-                     > > > > > > > > > > > > > > > >
+                     > > > > > > > > > > > > > > > > > >
     { };
 
     /// @ingroup fec_stacks
@@ -176,13 +181,15 @@ namespace kodo
                  symbol_id_decoder<
                  // Symbol ID API
                  plain_symbol_id_reader<
-                 // Codec API
+                 // Decoder API
                  aligned_coefficients_decoder<
                  debug_linear_block_decoder<  // <-- Debug layer
                  debug_cached_symbol_decoder< // <-- Debug layer
                  cached_symbol_decoder<       // <-- Access to decoding symbols
                  forward_linear_block_decoder<
                  rank_info<
+                 symbol_decoding_status_counter<
+                 symbol_decoding_status_tracker<
                  // Coefficient Storage API
                  coefficient_value_access<
                  coefficient_storage<
@@ -198,7 +205,7 @@ namespace kodo
                  final_coder_factory_pool<
                  // Final type
                  debug_full_rlnc_decoder<Field>
-                     > > > > > > > > > > > > > > > > > > > >
+                     > > > > > > > > > > > > > > > > > > > > > >
     { };
 
 }

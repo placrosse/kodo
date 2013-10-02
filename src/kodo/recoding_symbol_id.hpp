@@ -129,7 +129,7 @@ namespace kodo
                     continue;
                 }
 
-                assert(SuperCoder::symbol_pivot(i));
+                assert(SuperCoder::is_symbol_pivot(i));
 
                 const value_type *source_id =
                     SuperCoder::coefficient_vector_values( i );

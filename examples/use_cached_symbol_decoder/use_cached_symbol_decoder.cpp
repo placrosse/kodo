@@ -32,7 +32,7 @@ namespace kodo
                  symbol_id_decoder<
                  // Symbol ID API
                  plain_symbol_id_reader<
-                 // Codec API
+                 // Decoder API
                  cached_symbol_decoder<  // <-- Cached symbol decoder
                  empty_decoder<
                  // Coefficient Storage API

@@ -39,6 +39,8 @@ namespace kodo
 
                  aligned_coefficients_decoder<
                  forward_linear_block_decoder<
+                 symbol_decoding_status_counter<
+                 symbol_decoding_status_tracker<
                  // Coefficient Storage API
                  coefficient_value_access<
                  coefficient_storage<
@@ -54,7 +56,7 @@ namespace kodo
                  final_coder_factory_pool<
                  // Final type
                  full_rlnc_callback_decoder<Field>
-                     > > > > > > > > > > > > > > > >
+                     > > > > > > > > > > > > > > > > > >
     {};
 }
 

@@ -63,8 +63,8 @@ namespace kodo
             return m_pivots;
         }
 
-        /// @copydoc layer::symbol_pivot(uint32_t) const
-        bool symbol_pivot(uint32_t index) const
+        /// @copydoc layer::is_symbol_pivot(uint32_t) const
+        bool is_symbol_pivot(uint32_t index) const
         {
             assert(index < SuperCoder::symbols());
             return m_pivot[index];
@@ -207,7 +207,7 @@ struct api_generate
             value_type v_d = fifi::get_value<field_type>(
                 (value_type*)&vector_d[0], i);
 
-            if(!coder->symbol_pivot(i))
+            if(!coder->is_symbol_pivot(i))
             {
                 ASSERT_EQ(v_a, 0U);
                 ASSERT_EQ(v_b, 0U);

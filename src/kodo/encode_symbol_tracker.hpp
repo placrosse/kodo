@@ -10,7 +10,7 @@
 namespace kodo
 {
 
-    /// @ingroup codec_layers
+    /// @ingroup encoder_layers
     /// @brief Counts the number of symbols which have been encoded.
     template<class SuperCoder>
     class encode_symbol_tracker : public SuperCoder

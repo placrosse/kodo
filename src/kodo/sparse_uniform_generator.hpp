@@ -91,7 +91,7 @@ namespace kodo
 
             for (uint32_t i = 0; i < symbols; ++i)
             {
-                if (!SuperCoder::symbol_pivot(i))
+                if (!SuperCoder::is_symbol_pivot(i))
                 {
                     continue;
                 }

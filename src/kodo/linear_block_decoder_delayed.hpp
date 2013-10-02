@@ -7,15 +7,15 @@
 
 #include <cstdint>
 
-#include <boost/shared_ptr.hpp>
-#include <boost/noncopyable.hpp>
-#include <boost/make_shared.hpp>
 #include <boost/optional.hpp>
+
+#include <fifi/fifi_utils.hpp>
+#include <fifi/is_binary.hpp>
 
 namespace kodo
 {
 
-    /// @ingroup codec_layers
+    /// @ingroup decoder_layers
     /// @brief Linear block decoder with delayer backwards substitution.
     ///
     /// The delayed backwards substitution can reduce the fill-in
@@ -33,7 +33,7 @@ namespace kodo
         /// The value_type used to store the field elements
         typedef typename field_type::value_type value_type;
 
-        ///
+        /// Access the direction policy used by the underlying decoder
         typedef typename SuperCoder::direction_policy direction_policy;
 
     public:
@@ -59,13 +59,13 @@ namespace kodo
             assert(symbol_index < SuperCoder::symbols());
             assert(symbol_data != 0);
 
-            if(m_uncoded[symbol_index])
+            if(SuperCoder::is_symbol_decoded(symbol_index))
                 return;
 
-            const value_type *symbol
-                = reinterpret_cast<const value_type*>( symbol_data );
+            const value_type *symbol =
+                reinterpret_cast<const value_type*>( symbol_data );
 
-            if(m_coded[symbol_index])
+            if(SuperCoder::is_symbol_seen(symbol_index))
             {
                 SuperCoder::swap_decode(symbol, symbol_index);
             }
@@ -75,11 +75,6 @@ namespace kodo
                 // encoding vector
                 SuperCoder::store_uncoded_symbol(symbol, symbol_index);
 
-                // We have increased the rank
-                ++m_rank;
-
-                m_uncoded[ symbol_index ] = true;
-
                 m_maximum_pivot =
                     direction_policy::max(symbol_index, m_maximum_pivot);
 
@@ -88,6 +83,7 @@ namespace kodo
             if(SuperCoder::is_complete())
             {
                 final_backward_substitute();
+                SuperCoder::update_symbol_status();
             }
 
         }
@@ -95,10 +91,7 @@ namespace kodo
     protected:
 
         // Fetch the variables needed
-        using SuperCoder::m_rank;
         using SuperCoder::m_maximum_pivot;
-        using SuperCoder::m_coded;
-        using SuperCoder::m_uncoded;
 
     protected:
 
@@ -132,10 +125,6 @@ namespace kodo
             SuperCoder::store_coded_symbol(
                 symbol_data, coefficients,*pivot_index);
 
-            // We have increased the rank
-            ++m_rank;
-
-            m_coded[ *pivot_index ] = true;
 
             m_maximum_pivot =
                 direction_policy::max(*pivot_index, m_maximum_pivot);
@@ -143,6 +132,7 @@ namespace kodo
             if(SuperCoder::is_complete())
             {
                 final_backward_substitute();
+                SuperCoder::update_symbol_status();
             }
         }
 

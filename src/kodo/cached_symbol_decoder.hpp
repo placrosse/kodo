@@ -17,7 +17,7 @@
 namespace kodo
 {
 
-    /// @ingroup codec_layers
+    /// @ingroup decoder_layers
     ///
     /// @brief This layer extracts the symbol coefficients and symbol data
     /// and makes it available for use. It does not perform any decoding on the

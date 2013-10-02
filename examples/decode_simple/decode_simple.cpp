@@ -37,11 +37,13 @@ namespace kodo
     // Simple RLNC decoder
     template<class Field>
     class rlnc_decoder
-        : public // Codec API
+        : public // Decoder API
                  debug_cached_symbol_decoder<
                  cached_symbol_decoder<
                  debug_linear_block_decoder<
                  forward_linear_block_decoder<
+                 symbol_decoding_status_counter<
+                 symbol_decoding_status_tracker<
                  // Coefficient Storage API
                  debug_coefficient_storage<
                  coefficient_value_access<
@@ -59,7 +61,7 @@ namespace kodo
                  final_coder_factory_pool<
                  // Final type
                  rlnc_decoder<Field>
-                     > > > > > > > > > > > > > > >
+                     > > > > > > > > > > > > > > > > >
     {};
 }
 

@@ -20,33 +20,43 @@
 
 namespace kodo
 {
-    template<class Field>
-    class test_partial_stack
-        : public // Payload API
-                 // Codec Header API
-                 // Symbol ID API
-                 // Codec API
-                 largest_nonzero_index_decoder<
-                 forward_linear_block_decoder<
-                 rank_info<
-                 // Coefficient Storage API
-                 coefficient_value_access<
-                 coefficient_storage<
-                 coefficient_info<
-                 // Storage API
-                 deep_symbol_storage<
-                 storage_bytes_used<
-                 storage_block_info<
-                 // Finite Field API
-                 finite_field_math<typename fifi::default_field<Field>::type,
-                 finite_field_info<Field,
-                 // Factory API
-                 final_coder_factory_pool<
-                 // Final type
-                 test_partial_stack<Field>
-                     > > > > > > > > > > > >
-    { };
 
+    // Put dummy layers and tests classes in an anonymous namespace
+    // to avoid violations of ODF (one-definition-rule) in other
+    // translation units
+    namespace
+    {
+
+        template<class Field>
+        class test_partial_stack
+            : public // Payload API
+                     // Codec Header API
+                     // Symbol ID API
+                     // Codec API
+                     largest_nonzero_index_decoder<
+                     forward_linear_block_decoder<
+                     rank_info<
+                     symbol_decoding_status_counter<
+                     symbol_decoding_status_tracker<
+                     // Coefficient Storage API
+                     coefficient_value_access<
+                     coefficient_storage<
+                     coefficient_info<
+                     // Storage API
+                     deep_symbol_storage<
+                     storage_bytes_used<
+                     storage_block_info<
+                     // Finite Field API
+                     finite_field_math<typename fifi::default_field<Field>::type,
+                     finite_field_info<Field,
+                     // Factory API
+                     final_coder_factory_pool<
+                     // Final type
+                     test_partial_stack<Field>
+                         > > > > > > > > > > > > > >
+        { };
+
+    }
 }
 
 /// Run the tests typical coefficients stack

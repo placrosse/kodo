@@ -43,64 +43,75 @@
 namespace kodo
 {
 
-    template<class Field>
-    class vandermonde_stack
-        : public vandermonde_matrix<
-                 finite_field_math<typename fifi::default_field<Field>::type,
-                 finite_field_info<Field,
-                 final_coder_factory<
-                 vandermonde_stack<Field>
-                     > > > >
-    { };
+    // Put dummy layers and tests classes in an anonymous namespace
+    // to avoid violations of ODF (one-definition-rule) in other
+    // translation units
+    namespace
+    {
 
-    template<class Field>
-    class systematic_vandermonde_stack
-        : public systematic_vandermonde_matrix<
-                 finite_field_math<typename fifi::default_field<Field>::type,
-                 finite_field_info<Field,
-                 final_coder_factory<
-                 systematic_vandermonde_stack<Field>
-                     > > > >
-    { };
 
+        template<class Field>
+        class vandermonde_stack
+            : public vandermonde_matrix<
+                     finite_field_math<typename fifi::default_field<Field>::type,
+                     finite_field_info<Field,
+                     final_coder_factory<
+                     vandermonde_stack<Field>
+                         > > > >
+        { };
+
+        template<class Field>
+        class systematic_vandermonde_stack
+            : public systematic_vandermonde_matrix<
+                     finite_field_math<typename fifi::default_field<Field>::type,
+                     finite_field_info<Field,
+                     final_coder_factory<
+                     systematic_vandermonde_stack<Field>
+                         > > > >
+        { };
+    }
 }
 
-/// Tests:
-///   - construct_matrix(uint32_t)
-template<class Generator>
-struct api_construct_matrix
+namespace
 {
-    typedef typename Generator::factory factory_type;
-    typedef typename Generator::field_type field_type;
-    typedef typename Generator::value_type value_type;
 
-    api_construct_matrix(uint32_t max_symbols, uint32_t max_symbol_size)
-        : m_factory(max_symbols, max_symbol_size)
-        { }
+    /// Tests:
+    ///   - construct_matrix(uint32_t)
+    template<class Generator>
+    struct api_construct_matrix
+    {
+        typedef typename Generator::factory factory_type;
+        typedef typename Generator::field_type field_type;
+        typedef typename Generator::value_type value_type;
 
-    void run(uint32_t symbols, const value_type *test_values)
-        {
-            auto matrix = m_factory.construct_matrix(symbols);
+        api_construct_matrix(uint32_t max_symbols, uint32_t max_symbol_size)
+            : m_factory(max_symbols, max_symbol_size)
+            { }
 
-            for(uint32_t i = 0; i < field_type::order - 1; ++i)
+        void run(uint32_t symbols, const value_type *test_values)
             {
-                for(uint32_t j = 0; j < symbols; ++j)
-                {
-                    value_type test = test_values[i * symbols + j];
-                    value_type actual = matrix->element(i, j);
+                auto matrix = m_factory.construct_matrix(symbols);
 
-                    ASSERT_EQ(test, actual);
+                for(uint32_t i = 0; i < field_type::order - 1; ++i)
+                {
+                    for(uint32_t j = 0; j < symbols; ++j)
+                    {
+                        value_type test = test_values[i * symbols + j];
+                        value_type actual = matrix->element(i, j);
+
+                        ASSERT_EQ(test, actual);
+                    }
                 }
             }
-        }
 
-private:
+    private:
 
-    // The factory
-    factory_type m_factory;
+        // The factory
+        factory_type m_factory;
 
-};
+    };
 
+}
 
 
 // Array with results for the Vandermonde matrix with 10

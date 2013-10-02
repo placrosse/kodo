@@ -15,167 +15,174 @@
 
 #include "basic_api_test_helper.hpp"
 
-/// Dummy API to replace an actual encoder or decoder stack
-struct dummy_coder
+// Put dummy layers and tests classes in an anonymous namespace
+// to avoid violations of ODF (one-definition-rule) in other
+// translation units
+namespace
 {
-public:
 
-    typedef boost::shared_ptr<dummy_coder> pointer;
-
-    class factory
+    /// Dummy API to replace an actual encoder or decoder stack
+    struct dummy_coder
     {
     public:
 
-        /// @copydoc layer::factory::factory(uint32_t,uint32_t)
-        factory(uint32_t max_symbols, uint32_t max_symbol_size)
-            : m_max_symbols(max_symbols),
-              m_max_symbol_size(max_symbol_size),
-              m_symbols(max_symbols),
-              m_symbol_size(max_symbol_size)
-        {}
+        typedef boost::shared_ptr<dummy_coder> pointer;
 
-        /// @copydoc layer::factory::build()
-        pointer build()
+        class factory
         {
-            return boost::make_shared<dummy_coder>(m_symbols, m_symbol_size);
-        }
+        public:
 
-        /// @copydoc layer::factory::max_symbols() const
-        uint32_t max_symbols() const
-        {
-            return m_max_symbols;
-        }
+            /// @copydoc layer::factory::factory(uint32_t,uint32_t)
+            factory(uint32_t max_symbols, uint32_t max_symbol_size)
+                : m_max_symbols(max_symbols),
+                  m_max_symbol_size(max_symbol_size),
+                  m_symbols(max_symbols),
+                  m_symbol_size(max_symbol_size)
+            {}
 
-        /// @copydoc layer::factory::max_symbol_size() const
-        uint32_t max_symbol_size() const
-        {
-            return m_max_symbol_size;
-        }
+            /// @copydoc layer::factory::build()
+            pointer build()
+            {
+                return boost::make_shared<dummy_coder>(m_symbols, m_symbol_size);
+            }
 
-        /// @copydoc layer::factory::symbols() const;
+            /// @copydoc layer::factory::max_symbols() const
+            uint32_t max_symbols() const
+            {
+                return m_max_symbols;
+            }
+
+            /// @copydoc layer::factory::max_symbol_size() const
+            uint32_t max_symbol_size() const
+            {
+                return m_max_symbol_size;
+            }
+
+            /// @copydoc layer::factory::symbols() const;
+            uint32_t symbols() const
+            {
+                return m_symbols;
+            }
+
+            /// @copydoc layer::factory::symbol_size() const;
+            uint32_t symbol_size() const
+            {
+                return m_symbol_size;
+            }
+
+            /// @copydoc layer::factory::set_symbols(uint32_t)
+            void set_symbols(uint32_t symbols)
+            {
+                assert(symbols > 0);
+                assert(symbols <= m_max_symbols);
+
+                m_symbols = symbols;
+            }
+
+            /// @copydoc layer::factory::set_symbol_size(uint32_t)
+            void set_symbol_size(uint32_t symbol_size)
+            {
+                assert(symbol_size > 0);
+                assert(symbol_size <= m_max_symbol_size);
+
+                m_symbol_size = symbol_size;
+            }
+
+            uint32_t m_max_symbols;
+            uint32_t m_max_symbol_size;
+            uint32_t m_symbols;
+            uint32_t m_symbol_size;
+
+        };
+
+        dummy_coder(uint32_t symbols, uint32_t symbol_size)
+            : m_symbols(symbols),
+              m_symbol_size(symbol_size)
+            {}
+
+        /// @copydoc layer::set_bytes_used(uint32_t)
+        void set_bytes_used(uint32_t bytes_used)
+            {
+                m_bytes_used = bytes_used;
+            }
+
+        /// @copydoc layer::bytes_used() const
+        uint32_t bytes_used() const
+            {
+                return m_bytes_used;
+            }
+
+        /// @copydoc layer::block_size() const
+        uint32_t block_size() const
+            {
+                return m_symbols * m_symbol_size;
+            }
+
+        /// @copydoc layer::symbols() const
         uint32_t symbols() const
-        {
-            return m_symbols;
-        }
+            {
+                return m_symbols;
+            }
 
-        /// @copydoc layer::factory::symbol_size() const;
+        /// @copydoc layer::symbol_size() const
         uint32_t symbol_size() const
-        {
-            return m_symbol_size;
-        }
+            {
+                return m_symbol_size;
+            }
 
-        /// @copydoc layer::factory::set_symbols(uint32_t)
-        void set_symbols(uint32_t symbols)
-        {
-            assert(symbols > 0);
-            assert(symbols <= m_max_symbols);
+        /// Test function need to test whether the encoder
+        /// is initialized with data from the right offset
+        /// @param byte_offset The offset in bytes
+        void set_byte_offset(uint32_t byte_offset)
+            {
+                m_byte_offset = byte_offset;
+            }
 
-            m_symbols = symbols;
-        }
+        /// Test function returning the byte offset
+        /// @return The byte offset of the encoder
+        uint32_t byte_offset() const
+            {
+                return m_byte_offset;
+            }
 
-        /// @copydoc layer::factory::set_symbol_size(uint32_t)
-        void set_symbol_size(uint32_t symbol_size)
-        {
-            assert(symbol_size > 0);
-            assert(symbol_size <= m_max_symbol_size);
-
-            m_symbol_size = symbol_size;
-        }
-
-        uint32_t m_max_symbols;
-        uint32_t m_max_symbol_size;
         uint32_t m_symbols;
         uint32_t m_symbol_size;
+        uint32_t m_byte_offset;
+        uint32_t m_bytes_used;
 
     };
 
-    dummy_coder(uint32_t symbols, uint32_t symbol_size)
-        : m_symbols(symbols),
-          m_symbol_size(symbol_size)
-        {}
+    /// Dummy API to replace an ObjectData compatible class
+    class dummy_object_data
+    {
+    public:
 
-    /// @copydoc layer::set_bytes_used(uint32_t)
-    void set_bytes_used(uint32_t bytes_used)
-        {
-            m_bytes_used = bytes_used;
-        }
+        typedef dummy_coder::pointer pointer;
 
-    /// @copydoc layer::bytes_used() const
-    uint32_t bytes_used() const
-        {
-            return m_bytes_used;
-        }
-
-    /// @copydoc layer::block_size() const
-    uint32_t block_size() const
-        {
-            return m_symbols * m_symbol_size;
-        }
-
-    /// @copydoc layer::symbols() const
-    uint32_t symbols() const
-        {
-            return m_symbols;
-        }
-
-    /// @copydoc layer::symbol_size() const
-    uint32_t symbol_size() const
-        {
-            return m_symbol_size;
-        }
-
-    /// Test function need to test whether the encoder
-    /// is initialized with data from the right offset
-    /// @param byte_offset The offset in bytes
-    void set_byte_offset(uint32_t byte_offset)
-        {
-            m_byte_offset = byte_offset;
-        }
-
-    /// Test function returning the byte offset
-    /// @return The byte offset of the encoder
-    uint32_t byte_offset() const
-        {
-            return m_byte_offset;
-        }
-
-    uint32_t m_symbols;
-    uint32_t m_symbol_size;
-    uint32_t m_byte_offset;
-    uint32_t m_bytes_used;
-
-};
-
-/// Dummy API to replace an ObjectData compatible class
-class dummy_object_data
-{
-public:
-
-    typedef dummy_coder::pointer pointer;
-
-    dummy_object_data(uint32_t size)
-        : m_size(size)
-        {}
+        dummy_object_data(uint32_t size)
+            : m_size(size)
+            {}
 
 
-    /// @copydoc object_data::read(pointer, uint32_t, uint32_t)
-    void read(pointer &coder, uint32_t offset, uint32_t size)
-        {
-            coder->set_bytes_used(size);
-            coder->set_byte_offset(offset);
-        }
+        /// @copydoc object_data::read(pointer, uint32_t, uint32_t)
+        void read(pointer &coder, uint32_t offset, uint32_t size)
+            {
+                coder->set_bytes_used(size);
+                coder->set_byte_offset(offset);
+            }
 
-    /// @copydoc object_data::size() const
-    uint32_t size() const
-        {
-            return m_size;
-        }
+        /// @copydoc object_data::size() const
+        uint32_t size() const
+            {
+                return m_size;
+            }
 
-private:
+    private:
 
-    uint32_t m_size;
+        uint32_t m_size;
 
-};
+    };
+}
 
 /// Runs the actual test with the object_encoder and object_decoder
 template<

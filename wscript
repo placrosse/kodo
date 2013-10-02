@@ -4,7 +4,7 @@
 import os
 
 APPNAME = 'kodo'
-VERSION = '14.0.0'
+VERSION = '15.0.0'
 
 def recurse_helper(ctx, name):
     if not ctx.has_dependency_path(name):
@@ -105,13 +105,12 @@ def build(bld):
         bld.recurse('examples/rank_callback')
         bld.recurse('examples/use_cached_symbol_decoder')
         bld.recurse('examples/use_debug_layers')
-
+        bld.recurse('examples/switch_systematic_on_off')
 
         bld.recurse('benchmark/throughput')
         bld.recurse('benchmark/count_operations')
         bld.recurse('benchmark/overhead')
         bld.recurse('benchmark/decoding_probability')
-
 
     # Export own includes
     bld(includes = './src',

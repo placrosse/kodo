@@ -4,10 +4,33 @@ News for Kodo
 This file lists the major changes between versions. For a more detailed list
 of every change, see the Git log.
 
-Latest
+15.0.0
 ------
 * Major: renamed method for specifying the average number of nonzero symbols
   in the sparse codes from set_nonzero_symbols to set_average_nonzero_symbols.
+* Major: Added a new decoding symbol status API which allows the state
+  of the decoding symbols to be tracked. A decoding symbol may be in
+  three states "missing", "seen" and "decoded" checkout the
+  symbol_decoding_status_tracker and symbol_decoding_status_counter
+  layers. The bidirectional_linear_block_decoder now directly uses
+  these layers instead of internally maintaining the information. So
+  if you use the bidirectional_linear_block_decoder layer you need to
+  specify at least the symbol_decoding_status_tracker layer in your
+  stacks.
+* Minor: Added new example which shows how to switch between
+  systematic and unsystematic encoding. The example can be found in
+  the examples/switch_systematic_on_off folder.
+* Major: Users of the partial_decoding_tracker layer for on-the-fly
+  decoding should now use the rank_symbol_decoding_status_updater
+  layer to ensure that proper detection of early decoding happens
+  correctly. The existing on-the-fly codes in the
+  src/kodo/rlnc/on_the_fly_codes.hpp have been updated.
+* Bug: Several unit tests are defining classes in the .cpp
+  files. While this is typically not a problem, it can unexpectedly
+  result in a violation of the ODR (One-Definition-Rule) resulting in
+  undefined behavior of the resulting binary. To avoid this problem
+  classes / structs defined in the .cpp files should be wrapped in an
+  anonymous namespace.
 
 14.0.0
 ------

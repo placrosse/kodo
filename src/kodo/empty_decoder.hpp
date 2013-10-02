@@ -10,7 +10,7 @@
 namespace kodo
 {
 
-    /// @ingroup codec_layers
+    /// @ingroup decoder_layers
     /// @ingroup empty
     /// @brief Empty implementation of the decode_symbol(uint8_t*,uint8_t*) and
     ///        decode_symbol(uint8_t*, uint32_t) functions.

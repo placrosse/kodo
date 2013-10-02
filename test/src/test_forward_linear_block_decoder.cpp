@@ -18,58 +18,70 @@
 
 namespace kodo
 {
-    template<class Field>
-    class test_forward_stack
-        : public // Payload API
-                 // Codec Header API
-                 // Symbol ID API
-                 // Codec API
-                 debug_linear_block_decoder<
-                 forward_linear_block_decoder<
-                 // Coefficient Storage API
-                 coefficient_value_access<
-                 coefficient_storage<
-                 coefficient_info<
-                 // Storage API
-                 deep_symbol_storage<
-                 storage_bytes_used<
-                 storage_block_info<
-                 // Finite Field API
-                 finite_field_math<typename fifi::default_field<Field>::type,
-                 finite_field_info<Field,
-                 // Factory API
-                 final_coder_factory_pool<
-                 // Final type
-                 test_forward_stack<Field>
-                     > > > > > > > > > > >
-    { };
 
-    template<class Field>
-    class test_forward_delayed_stack
-        : public // Payload API
-                 // Codec Header API
-                 // Symbol ID API
-                 // Codec API
-                 debug_linear_block_decoder<
-                 linear_block_decoder_delayed<
-                 forward_linear_block_decoder<
-                 // Coefficient Storage API
-                 coefficient_value_access<
-                 coefficient_storage<
-                 coefficient_info<
-                 // Storage API
-                 deep_symbol_storage<
-                 storage_bytes_used<
-                 storage_block_info<
-                 // Finite Field API
-                 finite_field_math<typename fifi::default_field<Field>::type,
-                 finite_field_info<Field,
-                 // Factory API
-                 final_coder_factory_pool<
-                 // Final type
-                 test_forward_delayed_stack<Field>
-                     > > > > > > > > > > > >
-    { };
+    // Put dummy layers and tests classes in an anonymous namespace
+    // to avoid violations of ODF (one-definition-rule) in other
+    // translation units
+    namespace
+    {
+
+        template<class Field>
+        class test_forward_stack
+            : public // Payload API
+                     // Codec Header API
+                     // Symbol ID API
+                     // Decoder API
+                     debug_linear_block_decoder<
+                     forward_linear_block_decoder<
+                     symbol_decoding_status_counter<
+                     symbol_decoding_status_tracker<
+                     // Coefficient Storage API
+                     coefficient_value_access<
+                     coefficient_storage<
+                     coefficient_info<
+                     // Storage API
+                     deep_symbol_storage<
+                     storage_bytes_used<
+                     storage_block_info<
+                     // Finite Field API
+                     finite_field_math<typename fifi::default_field<Field>::type,
+                     finite_field_info<Field,
+                     // Factory API
+                     final_coder_factory_pool<
+                     // Final type
+                     test_forward_stack<Field>
+                         > > > > > > > > > > > > >
+        { };
+
+        template<class Field>
+        class test_forward_delayed_stack
+            : public // Payload API
+                     // Codec Header API
+                     // Symbol ID API
+                     // Decoder API
+                     debug_linear_block_decoder<
+                     linear_block_decoder_delayed<
+                     forward_linear_block_decoder<
+                     symbol_decoding_status_counter<
+                     symbol_decoding_status_tracker<
+                     // Coefficient Storage API
+                     coefficient_value_access<
+                     coefficient_storage<
+                     coefficient_info<
+                     // Storage API
+                     deep_symbol_storage<
+                     storage_bytes_used<
+                     storage_block_info<
+                     // Finite Field API
+                     finite_field_math<typename fifi::default_field<Field>::type,
+                     finite_field_info<Field,
+                     // Factory API
+                     final_coder_factory_pool<
+                     // Final type
+                     test_forward_delayed_stack<Field>
+                         > > > > > > > > > > > > > >
+        { };
+    }
 
 }
 
@@ -99,9 +111,9 @@ void test_forward_stack()
 
     EXPECT_EQ(d->rank(), 1U);
 
-    EXPECT_TRUE(d->symbol_pivot(1U));
+    EXPECT_TRUE(d->is_symbol_pivot(1U));
 
-    EXPECT_TRUE(d->symbol_coded(1U));
+    EXPECT_TRUE(d->is_symbol_seen(1U));
 
     EXPECT_FALSE(d->is_complete());
 
@@ -115,11 +127,11 @@ void test_forward_stack()
 
     EXPECT_EQ(d->rank(), 2U);
 
-    EXPECT_TRUE(d->symbol_pivot(0));
-    EXPECT_TRUE(d->symbol_pivot(1));
+    EXPECT_TRUE(d->is_symbol_pivot(0));
+    EXPECT_TRUE(d->is_symbol_pivot(1));
 
-    EXPECT_TRUE(d->symbol_coded(0));
-    EXPECT_TRUE(d->symbol_coded(1));
+    EXPECT_TRUE(d->is_symbol_seen(0));
+    EXPECT_TRUE(d->is_symbol_seen(1));
 
     EXPECT_FALSE(d->is_complete());
 
@@ -129,13 +141,13 @@ void test_forward_stack()
 
     EXPECT_EQ(d->rank(), 3U);
 
-    EXPECT_TRUE(d->symbol_pivot(0));
-    EXPECT_TRUE(d->symbol_pivot(1));
-    EXPECT_TRUE(d->symbol_pivot(2));
+    EXPECT_TRUE(d->is_symbol_pivot(0));
+    EXPECT_TRUE(d->is_symbol_pivot(1));
+    EXPECT_TRUE(d->is_symbol_pivot(2));
 
-    EXPECT_TRUE(d->symbol_coded(0));
-    EXPECT_TRUE(d->symbol_coded(1));
-    EXPECT_FALSE(d->symbol_coded(2));
+    EXPECT_TRUE(d->is_symbol_seen(0));
+    EXPECT_TRUE(d->is_symbol_seen(1));
+    EXPECT_TRUE(d->is_symbol_decoded(2));
 
     EXPECT_FALSE(d->is_complete());
 
@@ -150,15 +162,15 @@ void test_forward_stack()
     // d->print_decoder_state(std::cout);
 
     EXPECT_EQ(d->rank(), 4U);
-    EXPECT_TRUE(d->symbol_pivot(0));
-    EXPECT_TRUE(d->symbol_pivot(1));
-    EXPECT_TRUE(d->symbol_pivot(2));
-    EXPECT_TRUE(d->symbol_pivot(4));
+    EXPECT_TRUE(d->is_symbol_pivot(0));
+    EXPECT_TRUE(d->is_symbol_pivot(1));
+    EXPECT_TRUE(d->is_symbol_pivot(2));
+    EXPECT_TRUE(d->is_symbol_pivot(4));
 
-    EXPECT_TRUE(d->symbol_coded(0));
-    EXPECT_TRUE(d->symbol_coded(1));
-    EXPECT_FALSE(d->symbol_coded(2));
-    EXPECT_TRUE(d->symbol_coded(4));
+    EXPECT_TRUE(d->is_symbol_seen(0));
+    EXPECT_TRUE(d->is_symbol_seen(1));
+    EXPECT_TRUE(d->is_symbol_decoded(2));
+    EXPECT_TRUE(d->is_symbol_seen(4));
 
     EXPECT_FALSE(d->is_complete());
 
@@ -174,15 +186,15 @@ void test_forward_stack()
 
     EXPECT_EQ(d->rank(), 4U);
 
-    EXPECT_TRUE(d->symbol_pivot(0));
-    EXPECT_TRUE(d->symbol_pivot(1));
-    EXPECT_TRUE(d->symbol_pivot(2));
-    EXPECT_TRUE(d->symbol_pivot(4));
+    EXPECT_TRUE(d->is_symbol_pivot(0));
+    EXPECT_TRUE(d->is_symbol_pivot(1));
+    EXPECT_TRUE(d->is_symbol_pivot(2));
+    EXPECT_TRUE(d->is_symbol_pivot(4));
 
-    EXPECT_TRUE(d->symbol_coded(0));
-    EXPECT_TRUE(d->symbol_coded(1));
-    EXPECT_FALSE(d->symbol_coded(2));
-    EXPECT_TRUE(d->symbol_coded(4));
+    EXPECT_TRUE(d->is_symbol_seen(0));
+    EXPECT_TRUE(d->is_symbol_seen(1));
+    EXPECT_TRUE(d->is_symbol_decoded(2));
+    EXPECT_TRUE(d->is_symbol_seen(4));
 
     EXPECT_FALSE(d->is_complete());
 
@@ -198,29 +210,29 @@ void test_forward_stack()
 
     EXPECT_EQ(d->rank(), 5U);
 
-    EXPECT_TRUE(d->symbol_pivot(0));
-    EXPECT_TRUE(d->symbol_pivot(1));
-    EXPECT_TRUE(d->symbol_pivot(2));
-    EXPECT_TRUE(d->symbol_pivot(3));
-    EXPECT_TRUE(d->symbol_pivot(4));
+    EXPECT_TRUE(d->is_symbol_pivot(0));
+    EXPECT_TRUE(d->is_symbol_pivot(1));
+    EXPECT_TRUE(d->is_symbol_pivot(2));
+    EXPECT_TRUE(d->is_symbol_pivot(3));
+    EXPECT_TRUE(d->is_symbol_pivot(4));
 
-    EXPECT_TRUE(d->symbol_coded(0));
-    EXPECT_TRUE(d->symbol_coded(1));
-    EXPECT_FALSE(d->symbol_coded(2));
-    EXPECT_TRUE(d->symbol_coded(3));
-    EXPECT_TRUE(d->symbol_coded(4));
+    EXPECT_TRUE(d->is_symbol_decoded(0));
+    EXPECT_TRUE(d->is_symbol_decoded(1));
+    EXPECT_TRUE(d->is_symbol_decoded(2));
+    EXPECT_TRUE(d->is_symbol_decoded(3));
+    EXPECT_TRUE(d->is_symbol_decoded(4));
 
     EXPECT_TRUE(d->is_complete());
 
 }
 
 /// Run the tests typical coefficients stack
-TEST(TestLinearBlockDecoder, test_decoder)
+TEST(TestForwardLinearBlockDecoder, test_decoder)
 {
     test_forward_stack<kodo::test_forward_stack>();
 }
 
-TEST(TestLinearBlockDecoder, test_decoder_delayed)
+TEST(TestForwardLinearBlockDecoder, test_decoder_delayed)
 {
     test_forward_stack<kodo::test_forward_delayed_stack>();
 }

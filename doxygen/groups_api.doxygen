@@ -77,7 +77,7 @@
 /// @brief Implementations of the coefficient generator API.
 
 //------------------------------------------------------------------
-// SYMBOL ID
+// SYMBOL ID API
 //------------------------------------------------------------------
 
 /// @defgroup symbol_id Symbol IDs
@@ -113,7 +113,7 @@
 /// @brief Implementations of the symbol id API.
 
 //------------------------------------------------------------------
-// SYMBOL STORAGE API LAYERS
+// SYMBOL STORAGE API
 //------------------------------------------------------------------
 
 /// @defgroup symbol_storage Symbol Storage
@@ -129,7 +129,7 @@
 /// @brief Implementations of the storage API.
 
 //------------------------------------------------------------------
-// COEFFICIENT STORAGE API LAYERS
+// COEFFICIENT STORAGE API
 //------------------------------------------------------------------
 
 /// @defgroup coefficient_storage Coefficient Storage
@@ -145,23 +145,55 @@
 /// @brief Implementations of the storage API.
 
 //------------------------------------------------------------------
-// CODEC
+// CODEC API
 //------------------------------------------------------------------
 
 /// @defgroup codec Codec
 /// @ingroup api_layer
-/// @brief Implements encoding and decoding algorithms.
+/// @brief Implements API common to encoding and decoding algorithms.
 
 /// @defgroup codec_api API
 /// @ingroup codec
-/// @brief The API used by encoding and decoding algorithms.
+/// @brief The common API used by encoding and decoding algorithms.
 
 /// @defgroup codec_layers Layers
 /// @ingroup codec
 /// @brief Implementations of the codec API.
 
 //------------------------------------------------------------------
-// CODEC HEADER
+// DECODER API
+//------------------------------------------------------------------
+
+/// @defgroup decoder Decoder
+/// @ingroup api_layer
+/// @brief Implements decoding API.
+
+/// @defgroup decoder_api API
+/// @ingroup decoder
+/// @brief The API used by the decoding algorithms.
+
+/// @defgroup decoder_layers Layers
+/// @ingroup decoder
+/// @brief Implementations of the decoder API.
+
+//------------------------------------------------------------------
+// ENCODER API
+//------------------------------------------------------------------
+
+/// @defgroup encoder Encoder
+/// @ingroup api_layer
+/// @brief Implements decoding API.
+
+/// @defgroup encoder_api API
+/// @ingroup encoder
+/// @brief The API used by the encoding algorithms.
+
+/// @defgroup encoder_layers Layers
+/// @ingroup encoder
+/// @brief Implementations of the encoder API.
+
+//------------------------------------------------------------------
+// CODEC HEADER API
 //------------------------------------------------------------------
 
 /// @defgroup codec_header Codec Header

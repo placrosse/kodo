@@ -15,37 +15,44 @@
 
 #include "basic_api_test_helper.hpp"
 
-// A dummy encoder class to replace using a real encoder
-class dummy_encoder
+// Put dummy layers and tests classes in an anonymous namespace
+// to avoid violations of ODF (one-definition-rule) in other
+// translation units
+namespace
 {
-public:
 
-    // Pointer to the dummy encoder
-    typedef boost::shared_ptr<dummy_encoder> pointer;
+    // A dummy encoder class to replace using a real encoder
+    class dummy_encoder
+    {
+    public:
 
-public:
+        // Pointer to the dummy encoder
+        typedef boost::shared_ptr<dummy_encoder> pointer;
 
-    /// @copydoc layer::set_symbols(const sak::const_storage&)
-    void set_symbols(const sak::const_storage &symbol_storage)
+    public:
+
+        /// @copydoc layer::set_symbols(const sak::const_storage&)
+        void set_symbols(const sak::const_storage &symbol_storage)
         {
             m_symbol_storage = symbol_storage;
         }
 
-    /// @copydoc layer::set_bytes_used(uint32_t)
-    void set_bytes_used(uint32_t bytes_used)
+        /// @copydoc layer::set_bytes_used(uint32_t)
+        void set_bytes_used(uint32_t bytes_used)
         {
             m_bytes_used = bytes_used;
         }
 
-public:
+    public:
 
-    // Save the storage if need in the test
-    sak::const_storage m_symbol_storage;
+        // Save the storage if need in the test
+        sak::const_storage m_symbol_storage;
 
-    // Save the bytes use if needed in the test
-    uint32_t m_bytes_used;
+        // Save the bytes use if needed in the test
+        uint32_t m_bytes_used;
 
-};
+    };
+}
 
 /// Tests:
 ///  - storage_reader::size() const

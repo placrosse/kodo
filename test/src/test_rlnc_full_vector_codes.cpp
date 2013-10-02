@@ -34,108 +34,118 @@
 namespace kodo
 {
 
-    /// Implementation of RLNC decode using the delayed
-    /// backwards substitution layer.
-    template<class Field>
-    class full_rlnc_decoder_delayed
-        : public // Payload API
-                 payload_recoder<recoding_stack,
-                 payload_decoder<
-                 // Codec Header API
-                 systematic_decoder<
-                 symbol_id_decoder<
-                 // Symbol ID API
-                 plain_symbol_id_reader<
-                 // Codec API
-                 aligned_coefficients_decoder<
-                 linear_block_decoder_delayed<
-                 forward_linear_block_decoder<
-                 // Coefficient Storage API
-                 coefficient_value_access<
-                 coefficient_storage<
-                 coefficient_info<
-                 // Storage API
-                 deep_symbol_storage<
-                 storage_bytes_used<
-                 storage_block_info<
-                 // Finite Field Math API
-                 finite_field_math<typename fifi::default_field<Field>::type,
-                 finite_field_info<Field,
-                 // Factory API
-                 final_coder_factory_pool<
-                 // Final type
-                 full_rlnc_decoder_delayed<Field>
-                     > > > > > > > > > > > > > > > > >
-    {};
+    // Put dummy layers and tests classes in an anonymous namespace
+    // to avoid violations of ODF (one-definition-rule) in other
+    // translation units
+    namespace
+    {
 
-    /// Implementation of RLNC decode using the delayed
-    /// backwards substitution layer.
-    template<class Field>
-    class full_rlnc_decoder_delayed_shallow
-        : public // Payload API
-                 payload_recoder<recoding_stack,
-                 payload_decoder<
-                 // Codec Header API
-                 systematic_decoder<
-                 symbol_id_decoder<
-                 // Symbol ID API
-                 plain_symbol_id_reader<
-                 // Codec API
-                 aligned_coefficients_decoder<
-                 linear_block_decoder_delayed<
-                 forward_linear_block_decoder<
-                 // Coefficient Storage API
-                 coefficient_value_access<
-                 coefficient_storage<
-                 coefficient_info<
-                 // Storage API
-                 mutable_shallow_symbol_storage<
-                 storage_bytes_used<
-                 storage_block_info<
-                 // Finite Field Math API
-                 finite_field_math<typename fifi::default_field<Field>::type,
-                 finite_field_info<Field,
-                 // Factory API
-                 final_coder_factory_pool<
-                 // Final type
-                 full_rlnc_decoder_delayed_shallow<Field>
-                     > > > > > > > > > > > > > > > > >
-    {};
+        /// Implementation of RLNC decode using the delayed
+        /// backwards substitution layer.
+        template<class Field>
+        class full_rlnc_decoder_delayed
+            : public // Payload API
+                     payload_recoder<recoding_stack,
+                     payload_decoder<
+                     // Codec Header API
+                     systematic_decoder<
+                     symbol_id_decoder<
+                     // Symbol ID API
+                     plain_symbol_id_reader<
+                     // Decoder API
+                     aligned_coefficients_decoder<
+                     linear_block_decoder_delayed<
+                     forward_linear_block_decoder<
+                     symbol_decoding_status_counter<
+                     symbol_decoding_status_tracker<
+                     // Coefficient Storage API
+                     coefficient_value_access<
+                     coefficient_storage<
+                     coefficient_info<
+                     // Storage API
+                     deep_symbol_storage<
+                     storage_bytes_used<
+                     storage_block_info<
+                     // Finite Field Math API
+                     finite_field_math<typename fifi::default_field<Field>::type,
+                     finite_field_info<Field,
+                     // Factory API
+                     final_coder_factory_pool<
+                     // Final type
+                     full_rlnc_decoder_delayed<Field>
+                         > > > > > > > > > > > > > > > > > > >
+        {};
 
-    template<class Field>
-    class full_rlnc_encoder_shallow
-        : public // Payload Codec API
-                 payload_encoder<
-                 // Codec Header API
-                 systematic_encoder<
-                 symbol_id_encoder<
-                 // Symbol ID API
-                 plain_symbol_id_writer<
-                 // Coefficient Generator API
-                 storage_aware_generator<
-                 uniform_generator<
-                 // Codec API
-                 encode_symbol_tracker<
-                 zero_symbol_encoder<
-                 linear_block_encoder<
-                 storage_aware_encoder<
-                 // Coefficient Storage API
-                 coefficient_value_access<
-                 coefficient_info<
-                 // Symbol Storage API
-                 partial_shallow_symbol_storage<
-                 storage_bytes_used<
-                 storage_block_info<
-                 // Finite Field API
-                 finite_field_math<typename fifi::default_field<Field>::type,
-                 finite_field_info<Field,
-                 // Factory API
-                 final_coder_factory_pool<
-                 // Final type
-                 full_rlnc_encoder_shallow<Field>
-                     > > > > > > > > > > > > > > > > > >
-    { };
+        /// Implementation of RLNC decode using the delayed
+        /// backwards substitution layer.
+        template<class Field>
+        class full_rlnc_decoder_delayed_shallow
+            : public // Payload API
+                     payload_recoder<recoding_stack,
+                     payload_decoder<
+                     // Codec Header API
+                     systematic_decoder<
+                     symbol_id_decoder<
+                     // Symbol ID API
+                     plain_symbol_id_reader<
+                     // Decoder API
+                     aligned_coefficients_decoder<
+                     linear_block_decoder_delayed<
+                     forward_linear_block_decoder<
+                     symbol_decoding_status_counter<
+                     symbol_decoding_status_tracker<
+                     // Coefficient Storage API
+                     coefficient_value_access<
+                     coefficient_storage<
+                     coefficient_info<
+                     // Storage API
+                     mutable_shallow_symbol_storage<
+                     storage_bytes_used<
+                     storage_block_info<
+                     // Finite Field Math API
+                     finite_field_math<typename fifi::default_field<Field>::type,
+                     finite_field_info<Field,
+                     // Factory API
+                     final_coder_factory_pool<
+                     // Final type
+                     full_rlnc_decoder_delayed_shallow<Field>
+                         > > > > > > > > > > > > > > > > > > >
+        {};
 
+        template<class Field>
+        class full_rlnc_encoder_shallow
+            : public // Payload Codec API
+                     payload_encoder<
+                     // Codec Header API
+                     systematic_encoder<
+                     symbol_id_encoder<
+                     // Symbol ID API
+                     plain_symbol_id_writer<
+                     // Coefficient Generator API
+                     storage_aware_generator<
+                     uniform_generator<
+                     // Encoder API
+                     encode_symbol_tracker<
+                     zero_symbol_encoder<
+                     linear_block_encoder<
+                     storage_aware_encoder<
+                     // Coefficient Storage API
+                     coefficient_value_access<
+                     coefficient_info<
+                     // Symbol Storage API
+                     partial_shallow_symbol_storage<
+                     storage_bytes_used<
+                     storage_block_info<
+                     // Finite Field API
+                     finite_field_math<typename fifi::default_field<Field>::type,
+                     finite_field_info<Field,
+                     // Factory API
+                     final_coder_factory_pool<
+                     // Final type
+                     full_rlnc_encoder_shallow<Field>
+                         > > > > > > > > > > > > > > > > > >
+        { };
+    }
 
 }
 

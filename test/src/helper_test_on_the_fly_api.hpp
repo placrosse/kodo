@@ -58,13 +58,13 @@ inline void test_on_the_fly(uint32_t symbols, uint32_t symbol_size)
         {
             // Check that we as many pivot elements as expected and that these
             // are decoded
-            uint32_t pivot_count = 0;
+            uint32_t symbols_decoded = 0;
             for(uint32_t i = 0; i < decoder->symbols(); ++i)
             {
-                if(!decoder->symbol_pivot(i))
+                if(!decoder->is_symbol_decoded(i))
                     continue;
 
-                ++pivot_count;
+                ++symbols_decoded;
 
                 auto symbol_storage =
                     sak::storage(decoder->symbol(i), decoder->symbol_size());
@@ -72,7 +72,7 @@ inline void test_on_the_fly(uint32_t symbols, uint32_t symbol_size)
                 EXPECT_TRUE(sak::equal(symbol_storage, symbol_sequence[i]));
             }
 
-            EXPECT_EQ(pivot_count, decoder->rank());
+            EXPECT_EQ(symbols_decoded, decoder->symbols_decoded());
         }
 
         if(((rand() % 2) == 0) && encoder->rank() < symbols)
@@ -169,19 +169,35 @@ inline void test_on_the_fly_systematic(uint32_t symbols, uint32_t symbol_size)
         if((rand() % 2) == 0)
             continue;
 
+        uint32_t old_rank = decoder->rank();
+
         decoder->decode( &payload[0] );
+
+        if(decoder->rank() > old_rank)
+        {
+            // We has a rank increase
+            if(encoder->rank() == decoder->rank())
+            {
+                // The rank of the encoder matches the decoder, if
+                // this unit test fails you most likely do not have a
+                // layer which updates the decoding symbol status when
+                // rank matches.  E.g. look at:
+                // rank_symbol_decoding_status_updater.hpp
+                EXPECT_TRUE(kodo::is_partial_complete(decoder));
+            }
+        }
 
         if(kodo::is_partial_complete(decoder))
         {
             // Check that we as many pivot elements as expected and that these
             // are decoded
-            uint32_t pivot_count = 0;
+            uint32_t symbols_decoded = 0;
             for(uint32_t i = 0; i < decoder->symbols(); ++i)
             {
-                if(!decoder->symbol_pivot(i))
+                if(!decoder->is_symbol_decoded(i))
                     continue;
 
-                ++pivot_count;
+                ++symbols_decoded;
 
                 auto symbol_storage =
                     sak::storage(decoder->symbol(i), decoder->symbol_size());
@@ -189,7 +205,7 @@ inline void test_on_the_fly_systematic(uint32_t symbols, uint32_t symbol_size)
                 EXPECT_TRUE(sak::equal(symbol_storage, symbol_sequence[i]));
             }
 
-            EXPECT_EQ(pivot_count, decoder->rank());
+            EXPECT_EQ(symbols_decoded, decoder->symbols_decoded());
         }
 
 
@@ -295,13 +311,13 @@ inline void test_on_the_fly_systematic_no_errors(uint32_t symbols,
         {
             // Check that we as many pivot elements as expected and that these
             // are decoded
-            uint32_t pivot_count = 0;
+            uint32_t symbols_decoded = 0;
             for(uint32_t i = 0; i < decoder->symbols(); ++i)
             {
-                if(!decoder->symbol_pivot(i))
+                if(!decoder->is_symbol_decoded(i))
                     continue;
 
-                ++pivot_count;
+                ++symbols_decoded;
 
                 auto symbol_storage =
                     sak::storage(decoder->symbol(i), decoder->symbol_size());
@@ -309,12 +325,12 @@ inline void test_on_the_fly_systematic_no_errors(uint32_t symbols,
                 EXPECT_TRUE(sak::equal(symbol_storage, symbol_sequence[i]));
             }
 
-            EXPECT_EQ(pivot_count, decoder->rank());
+            EXPECT_EQ(symbols_decoded, decoder->symbols_decoded());
         }
 
 
         // set symbol 50% of the time ONLY if rank is not full
-        if((/*(rand() % 2) == 0) && (*/encoder->rank() < symbols))
+        if(encoder->rank() < symbols)
         {
             uint32_t i = encoder->rank();
             encoder->set_symbol(i, symbol_sequence[i]);
