@@ -39,6 +39,7 @@ namespace kodo
         {
             // Copy the symbol
             assert(symbol_index < SuperCoder::symbols());
+
             assert(SuperCoder::is_symbol_pivot(symbol_index));
 
             sak::mutable_storage dest =
@@ -72,6 +73,7 @@ namespace kodo
 
                 // Did you forget to set the data on the encoder?
                 assert(symbol_i != 0);
+
                 assert(SuperCoder::is_symbol_pivot(i));
 
                 if(fifi::is_binary<field_type>::value)

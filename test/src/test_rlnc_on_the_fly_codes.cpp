@@ -106,6 +106,14 @@ TEST(TestOnTheFlyCodes, test_reuse_incomplete_api)
         kodo::on_the_fly_decoder>();
 }
 
+/// Tests that we can progressively set on symbol at-a-time on
+/// encoder
+TEST(TestOnTheFlyCodes, test_systematic_packets_decode)
+{
+    test_systematic_packets_decode<kodo::on_the_fly_encoder,
+        kodo::on_the_fly_decoder>();
+}
+
 //------------------------------------------------------------------
 // kodo::on_the_fly_encoder, kodo::debug_on_the_fly_decoder
 //------------------------------------------------------------------

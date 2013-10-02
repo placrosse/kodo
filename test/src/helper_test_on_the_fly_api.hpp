@@ -270,7 +270,6 @@ inline void test_on_the_fly_systematic()
     test_on_the_fly_systematic<Encoder, Decoder>(symbols, symbol_size);
 }
 
-
 /// This class tests on-the-fly adding symbols to the encoding while
 /// using the systematic feature of the encoder
 template<class Encoder, class Decoder>
@@ -392,5 +391,122 @@ inline void test_on_the_fly_systematic_no_errors()
         symbols, symbol_size);
 }
 
+
+/// This test checks that the systematic packets that are received are
+/// correctly reported as decoded
+template<class Encoder, class Decoder>
+inline void test_systematic_packets_decode()
+{
+    uint32_t symbols = 5;
+    uint32_t symbol_size = 1400;
+
+    // Common setting
+    typename Encoder::factory encoder_factory(symbols, symbol_size);
+    auto encoder = encoder_factory.build();
+
+    typename Decoder::factory decoder_factory(symbols, symbol_size);
+    auto decoder = decoder_factory.build();
+
+    std::vector<uint8_t> payload(encoder->payload_size());
+    std::vector<uint8_t> data_in = random_vector(encoder->block_size());
+
+    auto symbol_sequence = sak::split_storage(
+        sak::storage(data_in), symbol_size);
+
+    // Lets start by specifying the first three symbols
+    encoder->set_symbol(0, symbol_sequence[0]);
+    encoder->set_symbol(1, symbol_sequence[1]);
+    encoder->set_symbol(2, symbol_sequence[2]);
+
+    // Make sure the encoder is systematic
+    if(kodo::is_systematic_encoder(encoder))
+        kodo::set_systematic_on(encoder);
+
+    encoder->encode( &payload[0] );
+    decoder->decode( &payload[0] );
+
+    EXPECT_TRUE(decoder->is_partial_complete());
+    EXPECT_TRUE(decoder->is_symbol_decoded(0));
+
+    encoder->encode( &payload[0] );
+    // Simulate a packet loss
+
+    encoder->encode( &payload[0] );
+    decoder->decode( &payload[0] );
+
+    EXPECT_TRUE(decoder->is_partial_complete());
+    EXPECT_TRUE(decoder->is_symbol_decoded(0));
+    EXPECT_TRUE(decoder->is_symbol_decoded(2));
+
+    // We now have to loop since we are producing coded packets
+    // and we might generate linear dependent packets
+    uint32_t loop = 0;
+    while(decoder->symbols_decoded() != 3)
+    {
+        encoder->encode( &payload[0] );
+        decoder->decode( &payload[0] );
+        ++loop;
+
+        // std::cout << "Loop " << loop << std::endl;
+    }
+
+    EXPECT_TRUE(decoder->is_partial_complete());
+    EXPECT_TRUE(decoder->is_symbol_decoded(0));
+    EXPECT_TRUE(decoder->is_symbol_decoded(1));
+    EXPECT_TRUE(decoder->is_symbol_decoded(2));
+
+    encoder->set_symbol(3, symbol_sequence[3]);
+
+    encoder->encode( &payload[0] );
+    decoder->decode( &payload[0] );
+
+    EXPECT_TRUE(decoder->is_partial_complete());
+    EXPECT_TRUE(decoder->is_symbol_decoded(3));
+
+    // Nothing should happen now since the encoder contains no
+    // new symbols
+    encoder->encode( &payload[0] );
+    decoder->decode( &payload[0] );
+
+    EXPECT_FALSE(decoder->is_partial_complete());
+
+    encoder->encode( &payload[0] );
+    decoder->decode( &payload[0] );
+
+    EXPECT_FALSE(decoder->is_partial_complete());
+
+    encoder->set_symbol(4, symbol_sequence[4]);
+
+    encoder->encode( &payload[0] );
+    // Packet loss
+
+    while(decoder->symbols_decoded() != 5)
+    {
+        encoder->encode( &payload[0] );
+        decoder->decode( &payload[0] );
+        ++loop;
+
+        // std::cout << "Loop " << loop << std::endl;
+    }
+
+
+}
+
+template
+<
+    template <class> class Encoder,
+    template <class> class Decoder
+>
+inline void test_systematic_packets_decode()
+{
+    test_systematic_packets_decode<
+        Encoder<fifi::binary>, Decoder<fifi::binary> >();
+
+    test_systematic_packets_decode<
+        Encoder<fifi::binary8>, Decoder<fifi::binary8> >();
+
+    test_systematic_packets_decode<
+        Encoder<fifi::binary16>, Decoder<fifi::binary16> >();
+}
 
 

@@ -99,6 +99,7 @@ struct api_symbol_id
             // Build with different from max values
             uint32_t symbols =
                 rand_symbols(m_factory.max_symbols());
+
             uint32_t symbol_size =
                 rand_symbol_size(m_factory.max_symbol_size());
 
