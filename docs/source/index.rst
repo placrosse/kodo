@@ -40,6 +40,7 @@ Documentation
    overview
    getting_started
    including_kodo_in_your_application
+   using_kodo
    hacking_kodo
    howto
    misc
