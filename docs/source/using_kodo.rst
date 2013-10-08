@@ -4,7 +4,7 @@ Using Kodo
 .. _using_kodo:
 
 This page provides background information and useful guidelines about
-using Kodo in common scenarios.
+using Kodo in common communication scenarios.
 
 Network Coding
 --------------
@@ -19,9 +19,9 @@ instead of simply forwarding them.
 Overview of Random Linear Network Coding (RLNC)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 The figure below gives a basic overview of the operations performed in a
-network coding system. If you intend to encode a large file then it should
- be split into several blocks, also called generations each consisting
-of *g* packets. If the whole file was considered one big block, then the
+network coding system. If you intend to encode a large file then it should 
+be split into several blocks, also called generations each consisting
+of **g** packets. If the whole file was considered one big block, then the
 computational complexity of the encoding and decoding operations would
 be very high.
 
@@ -29,17 +29,17 @@ be very high.
    :scale: 50
    :align: center
 
-The top component in the figure is the *encoder* that
+The top component in the figure is the **encoder** that
 generates and transmits linear combinations of the original data packets
 in a given generation. Addition and multiplication are performed over
 a Galois field, therefore a linear combination of several packets will
 have the same size as a single packet.
 Note that any number of encoded packets can be generated for a single
 generation.
-The middle layer in this system is the wireless *channel* where packet
+The middle layer in this system is the wireless **channel** where packet
 erasures may occur depending on the channel conditions. The network
 nodes receive a series of encoded packets that are passed to the
-*decoder* (the bottom component in the figure) which will be able to
+**decoder** (the bottom component in the figure) which will be able to
 reconstruct the original data packets after receiving at least *g*
 linearly independent packets.
 
