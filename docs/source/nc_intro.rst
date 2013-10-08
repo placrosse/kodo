@@ -11,9 +11,9 @@ What is Network Coding?
 
 Network coding is an interesting technique which can provide throughput
 improvements and a high degree of robustness in packet networks.
-It breaks with a fundamental principle of conventional communication networks
-by allowing any network node to recombine several input packets into one,
-instead of simply forwarding them.
+It breaks with the "store-and-forward" principle of conventional
+communication networks by allowing any network node to recombine several
+input packets into one coded packet, instead of simple forwarding.
 
 
 Overview of Random Linear Network Coding (RLNC)
@@ -106,6 +106,16 @@ different nodes simultaneously.
 
 Best-Effort Multicast
 ~~~~~~~~~~~~~~~~~~~~~
+
+Sometimes reliable data distribution is not a requirement or it is not
+possible at all. For example, consider video streaming to a large number
+of receivers on a wireless network where feedback would be impractical.
+In this case, Network Coding can help to maximize the impact of each
+retransmission to the receivers. Ideally, a number of redundancy packets
+should be transmitted for each generation to provide a sufficient
+degree of reliability for the majority of receivers. This redundancy
+ratio (also known as "overshoot") should be adjusted according to the
+estimated Packet Error Probability.
 
 Multi-hop Networks
 ~~~~~~~~~~~~~~~~~~
