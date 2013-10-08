@@ -1,13 +1,13 @@
-Using Kodo
+Introduction to Network Coding
 ==========
 
-.. _using_kodo:
+.. _nc_intro:
 
 This page provides background information and useful guidelines about
-using Kodo in common communication scenarios.
+using Network Coding in common communication scenarios.
 
-Network Coding
---------------
+What is Network Coding?
+-----------------------
 
 Network coding is an interesting technique which can provide throughput
 improvements and a high degree of robustness in packet networks.
@@ -19,7 +19,7 @@ instead of simply forwarding them.
 Overview of Random Linear Network Coding (RLNC)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 The figure below gives a basic overview of the operations performed in a
-network coding system. If you intend to encode a large file then it should 
+network coding system. If you intend to encode a large file then it should
 be split into several blocks, also called generations each consisting
 of **g** packets. If the whole file was considered one big block, then the
 computational complexity of the encoding and decoding operations would
@@ -56,6 +56,22 @@ only has to receive enough linearly independent encoded packets.
 Point-to-point Communication
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+Network Coding can be used to repair packet losses on a lossy link,
+just like any other Erasure Correcting Code. If a good estimate is
+available about the Packet Error Probability, then a certain amount
+of redundancy packets can be generated pro-actively to combat packet
+losses. This is known as Forward Error Correction (FEC) or simply
+"overshooting".
+
+Another approach is to repair packet losses retro-actively which
+typically requires some feedback from the receiver about the
+lost packets. Of course, the sender could simply retransmit the original
+packets without any coding. Network Coding helps in reducing the
+necessary feedback from the receiver, because it does not have to
+communicate which packets were lost, just how many. The sender can
+simply generate and send as many coded packets as the number of packets
+lost on the receiver.
+
 Reliable Multicast
 ~~~~~~~~~~~~~~~~~~
 
@@ -88,6 +104,10 @@ combinations of the original data. One coded packet
 carries information which can potentially correct different errors at
 different nodes simultaneously.
 
+Best-Effort Multicast
+~~~~~~~~~~~~~~~~~~~~~
 
+Multi-hop Networks
+~~~~~~~~~~~~~~~~~~
 
 
