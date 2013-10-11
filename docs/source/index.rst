@@ -30,6 +30,11 @@ protocols and systems and for research on implementation of Network Codes.
 .. To ensure ease of use, several codes are predefined and a high level API
 .. is provided.
 
+Frequently Asked Questions
+--------------------------
+
+   faq
+
 Documentation
 -------------
 

@@ -21,7 +21,7 @@ Overview of Random Linear Network Coding (RLNC)
 The figure below gives a basic overview of the operations performed in a
 network coding system. If you intend to encode a large file then it should
 be split into several blocks, also called generations each consisting
-of **g** packets. If the whole file was considered one big block, then the
+of **g** symbols. If the whole file was considered one big block, then the
 computational complexity of the encoding and decoding operations would
 be very high.
 
@@ -30,17 +30,17 @@ be very high.
    :align: center
 
 The top component in the figure is the **encoder** that
-generates and transmits linear combinations of the original data packets
+generates and transmits linear combinations of some original symbols
 in a given generation. Addition and multiplication are performed over
-a Galois field, therefore a linear combination of several packets will
-have the same size as a single packet.
+a Galois field, therefore a linear combination of several symbols will
+have the same size as a single symbol.
 Note that any number of encoded packets can be generated for a single
 generation.
 The middle layer in this system is the wireless **channel** where packet
 erasures may occur depending on the channel conditions. The network
 nodes receive a series of encoded packets that are passed to the
 **decoder** (the bottom component in the figure) which will be able to
-reconstruct the original data packets after receiving at least *g*
+reconstruct the original symbols after receiving at least *g*
 linearly independent packets.
 
 
@@ -117,7 +117,25 @@ degree of reliability for the majority of receivers. This redundancy
 ratio (also known as "overshoot") should be adjusted according to the
 estimated Packet Error Probability.
 
-Multi-hop Networks
-~~~~~~~~~~~~~~~~~~
+Recoding and Multi-hop Networks
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+If the network nodes are constantly moving or if they are connected in a
+multi-hop fashion (where some devices can only be reached over multiple hops),
+then Network Coding offers even greater benefits due to the unique ability of
+recoding. This feature essentially allows all network nodes to generate new
+”re-encoded” packets, thus new linear combinations of the packets that they have
+previously received. A sender can transmit recoded packets from partially
+decoded generations. In contrast, traditional end-to-end coding schemes require
+the original data set to be fully decoded before it can be encoded again.
 
+In a multi-hop network, the individual nodes have limited or no information
+about the state of other devices, especially if those are several hops away.
+Even a small amount of coding operations can substantially increase the number
+of innovative transmissions as opposed to just re-transmitting the packets
+received from other nodes. A coded packet can contain new information with a
+high probability. If recoding is also enabled, then new recoded packets can be
+generated even before a generation is completely received. In general, Random
+Linear Network Coding helps to minimize signaling between two communicating
+devices as the random combinations provide an implicit solution for
+coordination.
