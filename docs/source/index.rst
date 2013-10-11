@@ -33,7 +33,10 @@ protocols and systems and for research on implementation of Network Codes.
 Frequently Asked Questions
 --------------------------
 
-   faq
+* `FAQ`_
+
+.. _FAQ: ./faq.html
+
 
 Documentation
 -------------
