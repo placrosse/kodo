@@ -32,10 +32,13 @@ were used to calculate the coded packet.
 What is a finite field?
 -------
 
-A finite field or Galois field is a field that contains a finite number of
-elements. Essentially, it is a set of numbers (elements) and rules for
+A finite field (or Galois field) is a field that contains a finite number of
+elements. In other words, it is a set of numbers (elements) and rules for
 arithmetic operations (primarily addition and multiplication) which are defined
-so that their result is always a field element.
+so that their result is always a field element. In Network Coding, the typically
+used finite fields are GF(2), which only contains 2 elements, and GF(2^8) that
+contains 256 elements. With GF(2), one field element signifies a single bit of
+data. With GF(2^8), one field element signifies one byte of data.
 
 What does linear dependency mean?
 -------
@@ -57,13 +60,11 @@ What is systematic coding?
 --------
 
 It is not always necessary to transmit encoded packets while using
-Network Coding. Uncoded packets can be considered primitive linear combinations,
-so they can be processed by the decoder. Systematic coding means
-transmitting each generation in two stages. In the first stage, the sender
-transmits all packets uncoded. Each of these packets will contain new useful
-information for the individual receivers. In the second stage, the sender
-generates random linear combinations of the original symbols in order to
-correct any packet losses which might have occurred during the first stage.
+Network Coding. Systematic coding means transmitting each generation in two
+stages. In the first stage, the sender transmits all original symbols uncoded.
+In the second stage, the sender generates random linear combinations of the
+original symbols in order to correct any packet losses which might have
+occurred during the first stage.
 
 What is the code density?
 ------------------------
