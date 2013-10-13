@@ -6,6 +6,8 @@ of every change, see the Git log.
 
 Latest
 ------
+* Minor: Adding the user_defined_generator layer, which allows users to
+  specify the coding coefficients to be used directly.
 * Major: Update the coefficient storage API. The previous naming
   scheme caused some confusion about the API, the new naming scheme
   hopefully makes the API easier to read and understand.
