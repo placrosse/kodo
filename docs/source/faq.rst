@@ -9,21 +9,21 @@ This page tries to answer common questions about Network Coding and Kodo.
 .. contents::
 
 
-What is
--------
+Network Coding
+--------------
 
-a source?
-.........
+What is a source?
+.................
 
 A source is a node that transmits data to one or more other node(s).
 
-a sink?
-.......
+What is a sink?
+...............
 
 A sink is a node that receives data from other node(s).
 
-a relay?
-........
+What is a relay?
+................
 
 A relay is a node that receives data from other node(s) and transmit that data to other node(s), typically the relay is not itself interested in receiving the data.
 
@@ -32,24 +32,24 @@ Original data
  
 Some data that is to be transferred from a source to one or more sinks.
 
-encoding?
-.........
+What is encoding?
+.................
 
 Encoding is performed at source(s) where the original data to be send is encoded and packetized and transmitted via the network.
 
-decoding?
-.........
+What is decoding?
+.................
 
 Decoding is performed at sink(s) where the coded data is decoded in order to recreate the original data from the source(s).
 
-recoding?
-.........
+What is recoding?
+.................
 
 Recoding can be performed in the network at relay node(s) between the source and the sink. Such a node can combine received coded packets in order to create new coded packets. A sink that has not fully decoded the data can also recode.
 
 
-a finite field?
-...............
+What is a finite field?
+.......................
 
 
 A finite field is a mathematical construct and entails to much explanations to be included here. It is not necessary to have a deep understanding of finite fields, however, you must be familiar with a couple of related terms. Finite fields can be used to implement linear codes on computers with fixed precision, which is what they are used for in Kodo. Several finite fields are implemented in Fifi, which you can find alongside Kodo on GitHub.
@@ -63,19 +63,19 @@ contains 256 elements. With GF(2), one field element signifies a single bit of
 data. With FF(2^8), one field element signifies one byte of data.
 
 
-an element?
-...........
+What is an element?
+...................
 
 An element is a variable with the type of a specific finite field variable.
 
-a symbol?
-.........
+What is a symbol?
+.................
 
 A symbol is a vector of elements that represent some data. E.g. 8 elements in FF(2) represents a byte.
 
 
-a generation?
-.............
+What is a generation?
+.....................
 
 A generation is a group of symbols that are encoded and decoded together.
 
@@ -89,27 +89,27 @@ Generation
 
 A generation is sometimes also referred to as a *source block* or a *batch*.
 
-the generation size?
-....................
+What is the generation size?
+............................
 
 is the number of symbols in the generation denoted :math:`g`
 
 
-a coded symbol?
-...............
+What is a coded symbol?
+.......................
 
 A coded symbol is
 
 
-the coding vector?
-..................
+What is the coding vector?
+..........................
 
 The coding vector describes how a coded symbol was coded. It contains a coeffcient (which is a element) for each symbol in the generation. This vector of elements are the coefficients which have been multiplied onto the original symbols.
 
 
 
-a coded packet?
-...............
+What is a coded packet?
+.......................
 
 Is a pair of a coded symbol and a coding vector. To decode a coded symbol the corresponding codeding vector must be known and therefore typically the two are tranmitted together in a single packet.
 
@@ -120,16 +120,16 @@ Vector          Coded Symbol
 ===============  ===============
 
 
-linear dependency?
-..................
+What is linear dependency?
+..........................
 
 A packet is non-innovative or linearly dependent if it only
 contains information about previously known symbols. In other words, the
 packet can be reduced to the zero vector using the linear combination of some
 (partially) decoded symbols.
 
-systematic coding?
-..................
+What is systematic coding?
+..........................
 
 It is not always necessary to transmit encoded packets while using
 Network Coding. Systematic coding means transmitting each generation in two
@@ -138,8 +138,8 @@ In the second stage, the sender generates random linear combinations of the
 original symbols in order to correct any packet losses which might have
 occurred during the first stage.
 
-the code density? 
-.................
+What is the code density? 
+.........................
 
 Sometimes also refered to as the degree
 
@@ -160,14 +160,12 @@ where:
 :math:`g` is the generation size
 
 
-How
----
 
-Can the role of a node change during a session?
-...............................................
+How can the role of a node change during a session?
+...................................................
 
-does coding affect delay?
-.........................
+How does coding affect delay?
+.............................
 
 The fact that packets need to be decoded has an impact on delay.
 The actual delay depends heavily on the size of generations, since decoding is
@@ -175,8 +173,8 @@ usually completed after receiving all encoded packets in a generation.
 The generation size should be chosen to fit the required delay values.
 
 
-does coding affect the overhead?
-................................
+How does coding affect the overhead?
+....................................
 
 Network Coding involves some overhead as it is necessary to communicate
 additional information in the coded packets (in the encoding vectors).
@@ -191,21 +189,16 @@ This should be considered if we choose a small field size or low code density.
 In practice, we can use a systematic code to ensure reliability with a
 low overhead. This is the recommended approach in single-hop networks.
 
-does the generation size affect coding?
-.......................................
+How does the generation size affect coding?
+...........................................
 
-does the field size impact coding?
-..................................
+How does the field size impact coding?
+......................................
 
-does the density impact coding?
-...............................
+How does the density impact coding?
+...................................
 
-
-
-Why
----
-
-do we need generations?
+Why do we need generations?
 ...........................
 
 If a whole file was considered one big block, then the
@@ -223,6 +216,9 @@ not have any information about which packets were lost. In this case, at least
 N coded packets are required to recover them. Note that the packets will not be
 recovered one-by-one, but all at once after the decoder processes N innovative
 coded packets.
+
+Kodo
+----
 
 
 
