@@ -30,13 +30,6 @@ protocols and systems and for research on implementation of Network Codes.
 .. To ensure ease of use, several codes are predefined and a high level API
 .. is provided.
 
-Frequently Asked Questions
---------------------------
-
-* `FAQ`_
-
-.. _FAQ: ./faq.html
-
 
 Documentation
 -------------
@@ -49,12 +42,12 @@ Documentation
    overview
    getting_started
    nc_intro
+   faq
    including_kodo_in_your_application
    hacking_kodo
    howto
    misc
    c_bindings
-   nc_glossary
 
 
    contribution/contribution
