@@ -1,4 +1,4 @@
-Frequently Asked Questions
+cd Frequently Asked Questions
 ==========================
 
 .. _faq:
@@ -24,13 +24,12 @@ A relay is a node that receives data from other node(s) and transmit that data t
 What is original data?
 ......................
  
-The original data is the data that is to be transferred from a source to one or more sinks.
-
+The original data is the data that is to be transferred from a source to one or more sinks with a size :math:`B` in bits.
 
 What is a finite field?
 .......................
 
-A finite field (FF) (or Galois field) is a mathematical construct and entails to much explanations to be included here. It is not necessary to have a deep understanding of finite fields, but some understanding is useful. Simplified a FF is a variable where special rules are defined for the arithmetic operations. These rules guarentee that the result of operating on a finite field will always result in a value that is in the field which is very useful on computers with fixed precision. One common field is the binary field FF(2) where addition is defined by the XOR operation. Typically FF(2) or FF(2^8) is used since they correspond to a bit and a byte respectively.
+A finite field (FF) (or Galois field) is a mathematical construct and entails to much explanations to be included here. It is not necessary to have a deep understanding of finite fields, but some understanding is useful. Simplified a FF is a variable where special rules are defined for the arithmetic operations. These rules guarentee that the result of operating on a finite field will always result in a value that is in the field which is very useful on computers with fixed precision. One common field is the binary field FF(2) where addition is defined by the XOR operation. Typically FF(2) or FF(2^8) is used since they correspond to a bit and a byte respectively. The size of a field is typically denoted :math:`q`.
 
 What is an element?
 ...................
@@ -40,23 +39,21 @@ An element is an element in a FF which can be though of as a variable with the t
 What is a symbol?
 .................
 
-A symbol is a column vector of elements that represent some data. E.g. 8 elements in FF(2) can represent a byte.
+A symbol is a vector of FF elements that represent some data. The size of a symbol is given by the number of elements and the size of each element.
 
-:math:`\boldsymbol{s} = \{s_0; s_1; ... s_{m-1} \}`
+:math:`|\boldsymbol{s}| = n \cdot \log_2(q) ~ [b]`
+
+As an example 16 elements in FF(2) can represent two bytes.
 
 What is a generation?
 .....................
 
-A generation is a group of symbols that are encoded and decoded together. The generation is typically represented as a matrix :math:`\boldsymbol{M}` where each column is a symbol. Thus each generation constitutes :math:`g` original symbols, where each symbol represent a part of the original data. The data in each generation is encoded, decode and recoded separately, so it can be thought of as a block of data.
-
-:math:`\boldsymbol{M} = \{ \boldsymbol{m_0}; \boldsymbol{m_1}; ... ; \boldsymbol{m_{g-1}} \}`
-
-A generation is sometimes also referred to as a *source block* or a *batch*.
+Each generation constitutes :math:`g` symbols of size :math:`m`, where :math:`g` is called the generation size. The :math:`g` original symbols in one generation, are arranged in the matrix :math:`\boldsymbol{M}= [ \boldsymbol{m}_1 ; \boldsymbol{m}_2 ; \hdots ; \boldsymbol{m}_g ]`, where :math:`\boldsymbol{m}_i` is a column vector. In an application the block of data can be a file or a part of a media stream, and is divided into :math:`\lceil \frac{B}{m} \rceil` pieces, called symbols. Generation number 0 constitutes the first `g` symbols, or the first :math:`g \cdot m` bytes of data, there are :math:`\lceil \frac{B}{g \cdot m} \rceil` such generations.
 
 What is the generation size?
 ............................
 
-The generation size is the number of symbols in the generation denoted :math:`g`
+The generation size is the number of symbols in the generation denoted :math:`g`.
 
 
 What is the coding vector?
@@ -64,7 +61,7 @@ What is the coding vector?
 
 The coding vector describes how a coded symbol was coded. It contains a coeffcient (which is a element) for each symbol in the generation.
 
-:math:`\boldsymbol{s} = \{v_0; v_1; ... v_{g-1} \}`
+:math:`\boldsymbol{v} = \{v_0; v_1; ... v_{g-1} \}`
 
 This column vector of elements are the coefficients which have been multiplied onto the original symbols.
 
@@ -86,22 +83,23 @@ Is a pair of a coded symbol and a coding vector. To decode a coded symbol the co
 What is encoding?
 .................
 
-Encoding is performed at source(s) where the original data to be send is encoded and packetized and transmitted via the network.
+.. _encoding:
 
-:math:`\boldsymbol{X} = \boldsymbol{M} \cdot \boldsymbol{V}`
+To encode a new symbol :math:`\boldsymbol{x}` from a generation at the source, :math:`\boldsymbol{M}` is multiplied with a randomly generated coding vector :math:`\boldsymbol{v}` of length :math:`g`, :math:`\boldsymbol{x} = \boldsymbol{M} \times \boldsymbol{v}`. In this way we can construct :math:`g+r` coded symbols and coding vectors, where :math:`r` is any number of redundant symbols as the code is rateless. When a coded symbol is transmitted on the network it is accompanied by its coding vector, and together they form a coded packet. A practical interpretation is that each coded symbol, is a combination or mix of the original symbols from one generation. The benefit is that nearly infinite coded symbols can be created.
 
 What is decoding?
 .................
 
-Decoding is performed at sink(s) where the coded data is decoded in order to recreate the original data from the source(s).
+.. _decoding:
 
-:math:`\boldsymbol{M} = \boldsymbol{\hat{X}} \cdot \boldsymbol{\hat{V}}^{-1}`
+In order for a sink to successfully decode a generation, it must receive :math:`g` linearly independent symbols and coding vectors from that generation. All received symbols are placed in the matrix :math:`\boldsymbol{\hat{X}} = [\boldsymbol{\hat{x}_1} ; \boldsymbol{\hat{x}_2} ; \hdots ; \boldsymbol{\hat{x}_g}]` and all coding vectors are placed in the matrix :math:`\boldsymbol{\hat{V}}=[\boldsymbol{\hat{v}_1} ; \boldsymbol{\hat{v}_2} ; \hdots ;\boldsymbol{\hat{v}_g} ]`, we denote :math:`\boldsymbol{\hat{V}}` the coding matrix. The original data :math:`\boldsymbol{M}` can then be decoded as :math:`\boldsymbol{\hat{M}} = \boldsymbol{\hat{X}} \times \boldsymbol{\hat{V}}^{-1}`. In practice if approximately **any** :math:`g` symbols from a generation are received the original data in that generation can be decoded. This is a much looser condition, compared to when no coding is used, where exactly **all** :math:`g` unique original symbols must be collected.
 
 What is recoding?
 .................
 
-Recoding can be performed in the network at relay node(s) between the source and the sink. Such a node can combine received coded packets (and non-coded packets) in order to create new coded packets. A sink that has not fully decoded the data can also recode.
+.. _recoding:
 
+Any node that have received :math:`g'`, where :math:`g' = [2,g]` is the number of received linearly independent symbols from a generation and is equal to the rank of :math:`\boldsymbol{\hat{V}}`, can recode. All received symbols are placed in the matrix :math:`\boldsymbol{\hat{X}} = [\boldsymbol{\hat{x}_1} ; \boldsymbol{\hat{x}_2} ; \hdots ; \boldsymbol{\hat{x}_{g'}}]` and all coding vectors in the matrix :math:`\boldsymbol{\hat{V}} = [\boldsymbol{\hat{v}_1} ; \boldsymbol{\hat{v}_2} ; \hdots ; \boldsymbol{\hat{v}_{g'}}]`. To recode a symbol these matrices are multiplied with a randomly generated vector :math:`\boldsymbol{w}` of length `g'`, :math:`\boldsymbol{\tilde{v}} = \boldsymbol{\hat{G}} \times \boldsymbol{w}`,  :math:`\boldsymbol{\tilde{x}} = \boldsymbol{\hat{X}} \times \boldsymbol{w}`. In this way we can construct :math:`r'` randomly generated recoding vectors and :math:`r'` recoded symbols. :math:`r'>g'` is possible, however a node can never create more than :math:`g'` independent symbols. Note that :math:`\boldsymbol{w}` is only used locally and that there is no need to distinguish between coded and recoded symbols. In practice this means that a node that have received more than one symbol can recombine those symbols into recoded symbols, similar to the way coded symbols are constructed at the source.
 
 
 What is linear dependency?
@@ -142,15 +140,6 @@ How can the role of a node change during a session?
 
 From sink to relay to source
 
-How does coding affect delay?
-.............................
-
-The fact that packets need to be decoded has an impact on delay.
-The actual delay depends heavily on the size of generations, since decoding is
-usually completed after receiving all encoded packets in a generation.
-The generation size should be chosen to fit the required delay values.
-
-
 How does coding affect the overhead?
 ....................................
 
@@ -167,11 +156,15 @@ This should be considered if we choose a small field size or low code density.
 In practice, we can use a systematic code to ensure reliability with a
 low overhead. This is the recommended approach in single-hop networks.
 
-How does the generation size affect coding?
-...........................................
 
-How does the field size impact coding?
-......................................
+How does the field size affect the overhead?
+............................................
+
+How does the generation size affect delay?
+..........................................
+
+The generation size :math:`g` is the number of symbols over which encoding is performed, and defines the maximal number of symbols that can be combined into a coded symbol. Data is decoded on a per generation level, thus at least :math:`ĝ` symbols must be received before decoding is possible. Hence the size of a generation :math:`g \cdot m` dictates the decoding delay which is the minimum amount of data that must be received before decoding is possible.
+
 
 How does the density impact coding?
 ...................................
