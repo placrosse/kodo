@@ -27,10 +27,10 @@ What is a relay?
 
 A relay is a node that receives data from other node(s) and transmit that data to other node(s), typically the relay is not itself interested in receiving the data.
 
-Original data
-.............
+What is original data?
+......................
  
-Some data that is to be transferred from a source to one or more sinks.
+The original data is the data that is to be transferred from a source to one or more sinks.
 
 What is encoding?
 .................
