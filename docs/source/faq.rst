@@ -1,4 +1,4 @@
-cd Frequently Asked Questions
+Frequently Asked Questions
 ==========================
 
 .. _faq:
@@ -11,6 +11,8 @@ This page tries to answer common questions about Network Coding and Kodo.
 
 Network Coding
 --------------
+
+Questions about general terms and concepts in network coding.
 
 What is a source, sink, and relay?
 ..................................
@@ -56,12 +58,12 @@ What is the generation size?
 The generation size is the number of symbols in the generation denoted :math:`g`.
 
 
-What is the coding vector?
+What is a coding vector?
 ..........................
 
 The coding vector describes how a coded symbol was coded. It contains a coeffcient (which is a element) for each symbol in the generation.
 
-:math:`\boldsymbol{v} = \{v_0; v_1; ... v_{g-1} \}`
+The coding vector is typically denoted; :math:`\boldsymbol{v} = \{v_0; v_1; ... v_{g-1} \}`
 
 This column vector of elements are the coefficients which have been multiplied onto the original symbols.
 
@@ -71,35 +73,12 @@ What is a coded symbol?
 
 A coded symbol is a symbol which is a combination of the original symbols in a generation. Therefore a coded symbol is a representation of all the data in a generation, but it has the same size as an original symbol.
 
-:math:`\boldsymbol{x} = \boldsymbol{M} \cdot \boldsymbol{v}`
+A coded symbol is encoded by multiplying the original data with a coding vector; :math:`\boldsymbol{x} = \boldsymbol{M} \cdot \boldsymbol{v}`. See encoding_ for a more detailed description, and recoding_ for how coded symbols are created when recoding.
 
 What is a coded packet?
 .......................
 
-Is a pair of a coded symbol and a coding vector. To decode a coded symbol the corresponding codeding vector must be known and therefore typically the two are tranmitted together in a single packet; 
-
-:math:`\{ \boldsymbol{v}, \boldsymbol{x} \}`
-
-What is encoding?
-.................
-
-.. _encoding:
-
-To encode a new symbol :math:`\boldsymbol{x}` from a generation at the source, :math:`\boldsymbol{M}` is multiplied with a randomly generated coding vector :math:`\boldsymbol{v}` of length :math:`g`, :math:`\boldsymbol{x} = \boldsymbol{M} \times \boldsymbol{v}`. In this way we can construct :math:`g+r` coded symbols and coding vectors, where :math:`r` is any number of redundant symbols as the code is rateless. When a coded symbol is transmitted on the network it is accompanied by its coding vector, and together they form a coded packet. A practical interpretation is that each coded symbol, is a combination or mix of the original symbols from one generation. The benefit is that nearly infinite coded symbols can be created.
-
-What is decoding?
-.................
-
-.. _decoding:
-
-In order for a sink to successfully decode a generation, it must receive :math:`g` linearly independent symbols and coding vectors from that generation. All received symbols are placed in the matrix :math:`\boldsymbol{\hat{X}} = [\boldsymbol{\hat{x}_1} ; \boldsymbol{\hat{x}_2} ; \hdots ; \boldsymbol{\hat{x}_g}]` and all coding vectors are placed in the matrix :math:`\boldsymbol{\hat{V}}=[\boldsymbol{\hat{v}_1} ; \boldsymbol{\hat{v}_2} ; \hdots ;\boldsymbol{\hat{v}_g} ]`, we denote :math:`\boldsymbol{\hat{V}}` the coding matrix. The original data :math:`\boldsymbol{M}` can then be decoded as :math:`\boldsymbol{\hat{M}} = \boldsymbol{\hat{X}} \times \boldsymbol{\hat{V}}^{-1}`. In practice if approximately **any** :math:`g` symbols from a generation are received the original data in that generation can be decoded. This is a much looser condition, compared to when no coding is used, where exactly **all** :math:`g` unique original symbols must be collected.
-
-What is recoding?
-.................
-
-.. _recoding:
-
-Any node that have received :math:`g'`, where :math:`g' = [2,g]` is the number of received linearly independent symbols from a generation and is equal to the rank of :math:`\boldsymbol{\hat{V}}`, can recode. All received symbols are placed in the matrix :math:`\boldsymbol{\hat{X}} = [\boldsymbol{\hat{x}_1} ; \boldsymbol{\hat{x}_2} ; \hdots ; \boldsymbol{\hat{x}_{g'}}]` and all coding vectors in the matrix :math:`\boldsymbol{\hat{V}} = [\boldsymbol{\hat{v}_1} ; \boldsymbol{\hat{v}_2} ; \hdots ; \boldsymbol{\hat{v}_{g'}}]`. To recode a symbol these matrices are multiplied with a randomly generated vector :math:`\boldsymbol{w}` of length `g'`, :math:`\boldsymbol{\tilde{v}} = \boldsymbol{\hat{G}} \times \boldsymbol{w}`,  :math:`\boldsymbol{\tilde{x}} = \boldsymbol{\hat{X}} \times \boldsymbol{w}`. In this way we can construct :math:`r'` randomly generated recoding vectors and :math:`r'` recoded symbols. :math:`r'>g'` is possible, however a node can never create more than :math:`g'` independent symbols. Note that :math:`\boldsymbol{w}` is only used locally and that there is no need to distinguish between coded and recoded symbols. In practice this means that a node that have received more than one symbol can recombine those symbols into recoded symbols, similar to the way coded symbols are constructed at the source.
+Is a pair of a coded symbol and a coding vector. To decode a coded symbol the corresponding coding vector must be known and therefore typically the two are tranmitted together in a single packet; :math:`\{ \boldsymbol{v}, \boldsymbol{x} \}`
 
 
 What is linear dependency?
@@ -123,29 +102,48 @@ What is the code density?
 .........................
 
 The code density can be defined as the ratio of non-zero scalars in an
-encoding vector. Full density can be achieved by selecting coding coefficients
+coding vector. Full density can be achieved by selecting coding coefficients
 according to a random uniform distribution. In contrast, sparse codes use
-many zero coefficients in the encoding vectors which makes the encoding process
-significantly faster. The density of a coding vector is the ratio of non-zero elements in the coding vector
+many zero coefficients in the coding vectors which makes the encoding process
+significantly faster. The density of a coding vector is the ratio of non-zero elements in the coding vector.
 
-:math:`d(\boldsymbol{h}) = \frac{\sum_{k=1}^g \boldsymbol{h}_k \neq 0}{g}`
+:math:`d(\boldsymbol{v}) = \frac{\sum_{i=1}^g \boldsymbol{v}_i \neq 0}{g}` , where: :math:`\boldsymbol{v}_i` is the coding vector
 
-where: :math:`\boldsymbol{h}_i` is the vector
+The density is sometimes also refered to as the degree.
 
-The density is sometimes also refered to as the degree
+How does encoding work?
+.......................
+
+.. _encoding:
+
+To encode a new symbol :math:`\boldsymbol{x}` from a generation at the source, :math:`\boldsymbol{M}` is multiplied with a randomly generated coding vector :math:`\boldsymbol{v}` of length :math:`g`, :math:`\boldsymbol{x} = \boldsymbol{M} \times \boldsymbol{v}`. In this way we can construct :math:`g+r` coded symbols and coding vectors, where :math:`r` is any number of redundant symbols as the code is rateless. When a coded symbol is transmitted on the network it is accompanied by its coding vector, and together they form a coded packet. A practical interpretation is that each coded symbol, is a combination or mix of the original symbols from one generation. The benefit is that nearly infinite coded symbols can be created.
+
+How does decoding work?
+.......................
+
+.. _decoding:
+
+In order for a sink to successfully decode a generation, it must receive :math:`g` linearly independent symbols and coding vectors from that generation. All received symbols are placed in the matrix :math:`\boldsymbol{\hat{X}} = [\boldsymbol{\hat{x}_1} ; \boldsymbol{\hat{x}_2} ; \hdots ; \boldsymbol{\hat{x}_g}]` and all coding vectors are placed in the matrix :math:`\boldsymbol{\hat{V}}=[\boldsymbol{\hat{v}_1} ; \boldsymbol{\hat{v}_2} ; \hdots ;\boldsymbol{\hat{v}_g} ]`, we denote :math:`\boldsymbol{\hat{V}}` the coding matrix. The original data :math:`\boldsymbol{M}` can then be decoded as :math:`\boldsymbol{\hat{M}} = \boldsymbol{\hat{X}} \times \boldsymbol{\hat{V}}^{-1}`. In practice if approximately **any** :math:`g` symbols from a generation are received the original data in that generation can be decoded. This is a much looser condition, compared to when no coding is used, where exactly **all** :math:`g` unique original symbols must be collected.
+
+How does recoding work?
+.......................
+
+.. _recoding:
+
+Any node that have received :math:`g'`, where :math:`g' = [2,g]` is the number of received linearly independent symbols from a generation and is equal to the rank of :math:`\boldsymbol{\hat{V}}`, can recode. All received symbols are placed in the matrix :math:`\boldsymbol{\hat{X}} = [\boldsymbol{\hat{x}_1} ; \boldsymbol{\hat{x}_2} ; \hdots ; \boldsymbol{\hat{x}_{g'}}]` and all coding vectors in the matrix :math:`\boldsymbol{\hat{V}} = [\boldsymbol{\hat{v}_1} ; \boldsymbol{\hat{v}_2} ; \hdots ; \boldsymbol{\hat{v}_{g'}}]`. To recode a symbol these matrices are multiplied with a randomly generated vector :math:`\boldsymbol{w}` of length `g'`, :math:`\boldsymbol{\tilde{v}} = \boldsymbol{\hat{G}} \times \boldsymbol{w}`,  :math:`\boldsymbol{\tilde{x}} = \boldsymbol{\hat{X}} \times \boldsymbol{w}`. In this way we can construct :math:`r'` randomly generated recoding vectors and :math:`r'` recoded symbols. :math:`r'>g'` is possible, however a node can never create more than :math:`g'` independent symbols. Note that :math:`\boldsymbol{w}` is only used locally and that there is no need to distinguish between coded and recoded symbols. In practice this means that a node that have received more than one symbol can recombine those symbols into recoded symbols, similar to the way coded symbols are constructed at the source.
 
 
 How can the role of a node change during a session?
 ...................................................
 
-From sink to relay to source
+A sink can become a relay, and a relay can become a source. As an example lets consider a topology with three nodes, A, B and C. B has a link to both A and C, but A and C only have a link to B, and therefore cannot communicate directly. A is the source and hold data that is to be transmitted to both sinks B and C. Initially A transmits coded packets to B. After some time B holds some coded (and uncoded) packets but not the full data from A and starts to send recoded packets to C, B has now become a relay. After some more time B has received enough packets from A to decode the original data, B continues to send packets to C, but B is now a source since it has all the original data and can encode.
 
 How does coding affect the overhead?
 ....................................
 
 Network Coding involves some overhead as it is necessary to communicate
-additional information in the coded packets (in the encoding vectors).
-In practice, the size of the encoding vector is generally small compared to
+additional information in the coded packets (in the coding vectors).
+In practice, the size of the coding vector is generally small compared to
 the packet payload. The exact size depends on the finite field size, the
 generation size and the coding vector representation.
 
@@ -157,17 +155,17 @@ In practice, we can use a systematic code to ensure reliability with a
 low overhead. This is the recommended approach in single-hop networks.
 
 
-How does the field size affect the overhead?
-............................................
+.. How does the field size affect the overhead?
+.. ............................................
 
 How does the generation size affect delay?
 ..........................................
 
-The generation size :math:`g` is the number of symbols over which encoding is performed, and defines the maximal number of symbols that can be combined into a coded symbol. Data is decoded on a per generation level, thus at least :math:`ĝ` symbols must be received before decoding is possible. Hence the size of a generation :math:`g \cdot m` dictates the decoding delay which is the minimum amount of data that must be received before decoding is possible.
+The generation size :math:`g` is the number of symbols over which encoding is performed, and defines the maximal number of symbols that can be combined into a coded symbol. Data is decoded on a per generation level, thus at least :math:`g` symbols must be received before decoding is possible. Hence the size of a generation :math:`g \cdot m` dictates the decoding delay which is the minimum amount of data that must be received before decoding is possible.
 
 
-How does the density impact coding?
-...................................
+.. How does the density impact coding?
+.. ...................................
 
 Why do we need generations?
 ...........................
