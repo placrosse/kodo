@@ -73,14 +73,10 @@ public:
 
         results.set_value("used", m_symbols_used);
 
-        for(uint32_t i = 0; i < m_rank_used.size(); ++i)
-        {
-            if(!results.has_column("rank " + to_string(i)))
-                results.add_column("rank " + to_string(i));
+        if(!results.has_column("rank"))
+            results.add_column("rank");
 
-            results.set_value("rank " + to_string(i), m_rank_used[i]);
-        }
-
+        results.set_value("rank", m_rank_used);
     }
 
     std::string unit_text() const
