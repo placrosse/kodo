@@ -865,6 +865,55 @@ namespace
     };
 
     /// Tests:
+    ///   - layer::swap_symbols(std::vector<std::vector<uint8_t>>&)
+    ///   - layer::copy_symbols(const sak::mutable_storage&)
+    template<class Coder>
+    struct api_swap_symbols_vector_data
+    {
+
+        typedef typename Coder::factory factory_type;
+        typedef typename Coder::pointer pointer_type;
+
+        api_swap_symbols_vector_data(uint32_t max_symbols,
+                              uint32_t max_symbol_size)
+            : m_factory(max_symbols, max_symbol_size)
+        { }
+
+        void run()
+        {
+            // Build with the max_symbols and max_symbol_size
+            pointer_type coder = m_factory.build();
+
+            auto vector_in = random_vector(coder->block_size());
+            auto vector_out = random_vector(coder->block_size());
+
+            sak::mutable_storage storage_out = sak::storage(vector_out);
+
+            std::vector<std::vector<uint8_t>>
+                vector_swap(m_factory.max_symbols());
+
+            for (uint32_t i = 0; i < coder->symbols(); ++i)
+            {
+                vector_swap[i].resize(coder->symbol_size());
+                std::copy_n(&vector_in[i*coder->symbol_size()],
+                    coder->symbol_size(), &vector_swap[i][0]);
+            }
+
+            coder->swap_symbols(vector_swap);
+            coder->copy_symbols(storage_out);
+
+            EXPECT_TRUE(sak::equal(sak::storage(vector_in),
+                                   sak::storage(vector_out)));
+        }
+
+    private:
+
+        // The factory
+        factory_type m_factory;
+
+    };
+
+    /// Tests:
     ///   - layer::factory_max_symbols()
     template<class Coder>
     struct api_factory_max_symbols
@@ -1573,6 +1622,143 @@ namespace
         factory_type m_factory;
 
     };
+
+    /// Tests:
+    ///   - layer::symbol_exists(uint32_t) const
+    ///   - layer::symbol_count() const
+    ///   - layer::is_storage_full() const
+    template<class Coder>
+    struct api_segmented_swap_storage_status
+    {
+        typedef typename Coder::factory factory_type;
+        typedef typename Coder::pointer pointer_type;
+
+        api_segmented_swap_storage_status(uint32_t max_symbols, uint32_t max_symbol_size)
+            : m_factory(max_symbols, max_symbol_size)
+        { }
+
+        void run()
+        {
+            swap_symbols();
+        }
+
+        /// Using:
+        ///   - layer::swap_symbols(std::vector<uint8_t>&)
+        void swap_symbols()
+        {
+            pointer_type coder = m_factory.build();
+
+            EXPECT_EQ(coder->symbols_available(), coder->symbols());
+            EXPECT_EQ(coder->symbols_initialized(), 0U);
+
+            EXPECT_TRUE(coder->is_symbols_available());
+            EXPECT_FALSE(coder->is_symbols_initialized());
+
+            std::vector<std::vector<uint8_t>>
+                vector_data(m_factory.max_symbols());
+
+            for (uint32_t i = 0; i < m_factory.max_symbols(); ++i)
+            {
+                vector_data[i] = random_vector(coder->symbol_size());
+            }
+
+            coder->swap_symbols(vector_data);
+
+            EXPECT_EQ(coder->symbols_available(), coder->symbols());
+            EXPECT_EQ(coder->symbols_initialized(), coder->symbols());
+
+            EXPECT_TRUE(coder->is_symbols_available());
+            EXPECT_TRUE(coder->is_symbols_initialized());
+
+            for(uint32_t i = 0; i < coder->symbols(); ++i)
+            {
+                EXPECT_TRUE(coder->is_symbol_available(i));
+                EXPECT_TRUE(coder->is_symbol_initialized(i));
+            }
+
+            coder = m_factory.build();
+
+            EXPECT_EQ(coder->symbols_initialized(), 0U);
+            EXPECT_EQ(coder->symbols_available(), coder->symbols());
+
+            EXPECT_FALSE(coder->is_symbols_initialized());
+            EXPECT_TRUE(coder->is_symbols_available());
+
+            for(uint32_t i = 0; i < coder->symbols(); ++i)
+            {
+                EXPECT_FALSE(coder->is_symbol_initialized(i));
+                EXPECT_TRUE(coder->is_symbol_available(i));
+            }
+
+        }
+
+    private:
+
+        // The factory
+        factory_type m_factory;
+
+    };
+
+    /// Tests:
+    ///   - layer::swap_segments(uint32_t,uint32)
+    template<class Coder>
+    struct api_segmented_swap_segments
+    {
+        typedef typename Coder::factory factory_type;
+        typedef typename Coder::pointer pointer_type;
+
+        api_segmented_swap_segments(uint32_t max_symbols, uint32_t max_symbol_size)
+            : m_factory(max_symbols, max_symbol_size)
+        { }
+
+        void run()
+        {
+            swap_segments();
+        }
+
+        /// Using:
+        ///   - layer::swap_segments(uint32_t,uint32_t)
+        void swap_segments()
+        {
+            pointer_type coder = m_factory.build();
+
+            auto vector1 = random_vector(coder->symbol_size());
+            auto vector2 = random_vector(coder->symbol_size());
+
+            sak::const_storage storage1 = sak::storage(vector1);
+            sak::const_storage storage2 = sak::storage(vector2);
+
+            coder->set_symbol(1, storage1);
+            coder->set_symbol(2, storage2);
+
+            EXPECT_TRUE(coder->is_symbol_initialized(1));
+            EXPECT_TRUE(coder->is_symbol_initialized(2));
+            EXPECT_FALSE(coder->is_symbol_initialized(3));
+
+            coder->swap_segments(2, 3);
+
+            EXPECT_FALSE(coder->is_symbol_initialized(2));
+            EXPECT_TRUE(coder->is_symbol_initialized(3));
+
+            coder->swap_segments(1, 3);
+            
+            EXPECT_TRUE(coder->is_symbol_initialized(1));
+            EXPECT_TRUE(coder->is_symbol_initialized(3));
+
+            coder->swap_segments(4, 5);
+
+            EXPECT_FALSE(coder->is_symbol_initialized(4));
+            EXPECT_FALSE(coder->is_symbol_initialized(5));
+
+        }
+
+    private:
+
+        // The factory
+        factory_type m_factory;
+
+    };
+
 }
 
 
@@ -1774,6 +1960,73 @@ TEST(TestSymbolStorage, test_mutable_shallow_stack)
     run_mutable_shallow_stack_tests<kodo::mutable_shallow_stack_pool>();
 }
 
+/// Helper function for running all the API and related tests
+/// which are compatible with the segmented stack.
+template<template <class> class Stack>
+void run_segmented_stack_tests()
+{
+
+    uint32_t symbols = rand_symbols();
+    uint32_t symbol_size = rand_symbol_size();
+
+    // API tests:
+    run_test<Stack, api_copy_symbols>(
+        symbols, symbol_size);
+    run_test<Stack, api_copy_symbol>(
+        symbols, symbol_size);
+    run_test<Stack, api_symbol_const>(
+        symbols, symbol_size);
+    run_test<Stack, api_symbol>(
+        symbols, symbol_size);
+    run_test<Stack, api_symbol_value_const>(
+        symbols, symbol_size);
+    run_test<Stack, api_symbol_value>(
+        symbols, symbol_size);
+    run_test<Stack, api_set_symbols_const_storage>(
+        symbols, symbol_size);
+    run_test<Stack, api_set_symbols_mutable_storage>(
+        symbols, symbol_size);
+    run_test<Stack, api_set_symbol_const_storage>(
+        symbols, symbol_size);
+    run_test<Stack, api_set_symbol_mutable_storage>(
+        symbols, symbol_size);
+    run_test<Stack, api_swap_symbols_vector_data>(
+        symbols, symbol_size);
+    run_test<Stack, api_factory_max_symbols>(
+        symbols, symbol_size);
+    run_test<Stack, api_factory_max_symbol_size>(
+        symbols, symbol_size);
+    run_test<Stack, api_factory_max_block_size>(
+        symbols, symbol_size);
+    run_test<Stack, api_symbols>(
+        symbols, symbol_size);
+    run_test<Stack, api_symbol_length>(
+        symbols, symbol_size);
+    run_test<Stack, api_block_size>(
+        symbols, symbol_size);
+    run_test<Stack, api_bytes_used>(
+        symbols, symbol_size);
+//    run_test<Stack, api_segmented_storage_status>(
+//        symbols, symbol_size);
+    run_test<Stack, api_deep_storage_status>(
+        symbols, symbol_size);
+    run_test<Stack, api_segmented_swap_storage_status>(
+        symbols, symbol_size);
+
+    // Other
+    run_test<Stack, api_segmented_swap_segments>(
+        symbols, symbol_size);
+
+}
+
+/// Run the tests typical segmented_storage stack
+TEST(TestSymbolStorage, test_segmented_stack)
+{
+    run_segmented_stack_tests<kodo::segmented_storage_stack>();
+    run_segmented_stack_tests<kodo::segmented_storage_stack_pool>();
+}
+
+
 /// Tests the has_shallow_symbol_storage template
 TEST(TestSymbolStorage, test_has_shallow_symbol_storage)
 {
@@ -1812,6 +2065,15 @@ TEST(TestSymbolStorage, test_has_shallow_symbol_storage)
 
     EXPECT_FALSE(kodo::has_shallow_symbol_storage<
                      kodo::deep_storage_stack<fifi::binary16> >::value);
+
+    EXPECT_FALSE(kodo::has_shallow_symbol_storage<
+                     kodo::segmented_storage_stack<fifi::binary> >::value);
+
+    EXPECT_FALSE(kodo::has_shallow_symbol_storage<
+                     kodo::segmented_storage_stack<fifi::binary8> >::value);
+
+    EXPECT_FALSE(kodo::has_shallow_symbol_storage<
+                     kodo::segmented_storage_stack<fifi::binary16> >::value);
 
     EXPECT_FALSE(kodo::has_shallow_symbol_storage<int>::value);
 
@@ -1879,6 +2141,15 @@ TEST(TestSymbolStorage, test_has_deep_symbol_storage)
 
     EXPECT_FALSE(kodo::has_deep_symbol_storage<
                      kodo::const_shallow_stack<fifi::binary16> >::value);
+
+    EXPECT_FALSE(kodo::has_deep_symbol_storage<
+                    kodo::segmented_storage_stack<fifi::binary> >::value);
+
+    EXPECT_FALSE(kodo::has_deep_symbol_storage<
+                    kodo::segmented_storage_stack<fifi::binary8> >::value);
+
+    EXPECT_FALSE(kodo::has_deep_symbol_storage<
+                    kodo::segmented_storage_stack<fifi::binary16> >::value);
 
     EXPECT_TRUE(kodo::has_deep_symbol_storage<
                     kodo::deep_storage_stack<fifi::binary> >::value);
