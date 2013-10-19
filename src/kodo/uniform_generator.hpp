@@ -46,8 +46,10 @@ namespace kodo
         void generate(uint8_t *coefficients)
         {
             assert(coefficients != 0);
+            /// @todo: Enable this
+            // assert(SuperCoder::rank() == SuperCoder::symbols());
 
-            uint32_t size = SuperCoder::coefficients_size();
+            uint32_t size = SuperCoder::coefficient_vector_size();
             for(uint32_t i = 0; i < size; ++i)
             {
                 coefficients[i] = m_distribution(m_random_generator);
@@ -61,8 +63,7 @@ namespace kodo
 
             // Since we will not set all coefficients we should ensure
             // that the non specified ones are zero
-            std::fill_n(
-                coefficients, SuperCoder::coefficients_size(), 0);
+            std::fill_n(coefficients, SuperCoder::coefficient_vector_size(), 0);
 
             value_type *c = reinterpret_cast<value_type*>(coefficients);
 
@@ -70,7 +71,7 @@ namespace kodo
 
             for(uint32_t i = 0; i < symbols; ++i)
             {
-                if(!SuperCoder::symbol_pivot(i))
+                if(!SuperCoder::is_symbol_pivot(i))
                 {
                     continue;
                 }

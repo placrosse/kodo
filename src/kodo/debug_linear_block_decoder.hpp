@@ -9,6 +9,8 @@
 #include <cassert>
 #include <iostream>
 #include <vector>
+#include <iomanip>
+
 
 #include <fifi/fifi_utils.hpp>
 
@@ -67,31 +69,35 @@ namespace kodo
         {
             for(uint32_t i = 0; i < SuperCoder::symbols(); ++i)
             {
-                if (!SuperCoder::symbol_pivot(i))
+                if (SuperCoder::is_symbol_missing(i))
                 {
-                    out << i << " ?:  ";
+                    out << std::setfill(' ') << std::setw(3) << i << " ?:  ";
                 }
-                else if (SuperCoder::symbol_coded(i))
+                else if (SuperCoder::is_symbol_seen(i))
                 {
-                    out << i << " C:  ";
+                    out << std::setfill(' ') << std::setw(3) << i << " C:  ";
                 }
                 else
                 {
-                    out << i << " U:  ";
+                    assert(SuperCoder::is_symbol_decoded(i));
+                    out << std::setfill(' ') << std::setw(3) << i << " U:  ";
                 }
 
-                const value_type* c = SuperCoder::coefficients(i);
+                const value_type* c = SuperCoder::coefficient_vector_values(i);
 
-                for(uint32_t j = 0; j < SuperCoder::symbols(); ++j)
+                for(uint32_t j = 0; j < SuperCoder::coefficient_vectors(); ++j)
                 {
-                    value_type value = fifi::get_value<field_type>(c, j);
+
+                    static_assert(sizeof(uint32_t) >= sizeof(value_type),
+                                  "value_type will overflow in this print");
+
+                    value_type value = SuperCoder::coefficient_value(c, j);
                     out << (uint32_t)value << " ";
                 }
 
-                std::cout << std::endl;
+                out << std::endl;
             }
 
-            std::cout << std::endl;
         }
 
     };

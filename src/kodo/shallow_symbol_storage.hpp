@@ -194,7 +194,7 @@ namespace kodo
         /// @copydoc layer::symbols_initialized() const
         uint32_t symbols_initialized() const
         {
-            return m_symbols_count;
+            return symbols_available();
         }
 
         /// @copydoc layer::is_symbols_available() const
@@ -206,7 +206,7 @@ namespace kodo
         /// @copydoc layer::is_symbols_initialized() const
         bool is_symbols_initialized() const
         {
-            return m_symbols_count == SuperCoder::symbols();
+            return is_symbols_available();
         }
 
         /// @copydoc layer::is_symbol_available(uint32_t) const
@@ -218,7 +218,7 @@ namespace kodo
         /// @copydoc layer::is_symbol_initialized(uint32_t) const
         bool is_symbol_initialized(uint32_t symbol_index) const
         {
-            return m_data[symbol_index] != 0;
+            return is_symbol_available(symbol_index);
         }
 
     protected:
@@ -280,6 +280,36 @@ namespace kodo
             return reinterpret_cast<value_type*>(symbol(index));
         }
 
+        /// @copydoc layer::copy_into_symbols(const sak::mutable_storage&)
+        void copy_into_symbols(const sak::const_storage &src)
+        {
+            auto symbol_sequence = sak::split_storage(
+                src, Super::symbol_size());
+
+            uint32_t sequence_size = symbol_sequence.size();
+            assert(sequence_size == Super::symbols());
+
+            for(uint32_t i = 0; i < sequence_size; ++i)
+            {
+                copy_into_symbol(i, symbol_sequence[i]);
+            }
+        }
+
+        /// @copydoc layer::copy_into_symbol(uint32_t,
+        ///              const sak::mutable_storage&)
+        void copy_into_symbol(uint32_t index,
+                              const sak::const_storage &src)
+        {
+            assert(src.m_data != 0);
+            assert(src.m_size == Super::symbol_size());
+            assert(index < Super::symbols());
+            assert(Super::is_symbol_available(index));
+
+            sak::mutable_storage dest =
+                sak::storage(symbol(index), Super::symbol_size());
+
+            sak::copy_storage(dest, src);
+        }
     };
 
 }

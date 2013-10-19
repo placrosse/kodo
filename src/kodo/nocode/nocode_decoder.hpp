@@ -12,6 +12,7 @@
 namespace kodo
 {
 
+    /// @ingroup decoder_layers
     /// @ingroup codec_layers
     ///
     /// Implements the functionality to consume an un-coded / systematic

@@ -38,11 +38,11 @@ namespace kodo
 
         /// The symbol count type
         typedef typename systematic_base_coder::counter_type
-        counter_type;
+            counter_type;
 
         /// The flag type
         typedef typename systematic_base_coder::flag_type
-        flag_type;
+            flag_type;
 
     public:
 
@@ -161,6 +161,7 @@ namespace kodo
             sak::big_endian::put<counter_type>(
                 m_systematic_count, symbol_header + sizeof(flag_type));
 
+            /// @todo consider if the systematic packets are not added in-order
             SuperCoder::encode_symbol(symbol_data, m_systematic_count);
 
             ++m_systematic_count;

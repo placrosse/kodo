@@ -4,8 +4,19 @@ Kodo Dependencies
 .. _sourcecode:
 
 
-Download the Kodo sourcecode
+
+Obtain a License for Kodo
+-------------------------
+
+Before you download or use Kodo **you MUST obtain a valid license**. 
+This can be done by filling out the license request form_.
+
+.. _form: http://steinwurf.com/license/
+
+
+Download the Kodo Source Code
 ----------------------------
+
 There are several ways in which you may get the Kodo library and its
 dependencies. Which approach you prefer might depend on your intended
 use-case for Kodo.
@@ -25,7 +36,7 @@ easily get new updates whenever the library is updated. In addition to
 this it is also possible to download the library as either zip or tar.gz
 archive. We will describe both approaches in the following:
 
-Recommended: Clone the git repository
+Recommended: Clone the Git Repository
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 1. Create a suitable directory for the projects (optional)
@@ -41,7 +52,7 @@ Recommended: Clone the git repository
 
      git clone git://github.com/steinwurf/kodo.git
 
-Alternative: Download the source code as archives
+Alternative: Download the Source Code as Archives
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Download the zip or tar.gz archive from the following location and
@@ -49,7 +60,7 @@ extract it to a desired location.
 
 * https://github.com/steinwurf/kodo/downloads
 
-Waf (build system)
+Waf (Build System)
 ------------------
 We use the Waf build-system to build all Kodo examples and
 unit-tests. Waf is a Python based build-system and supports
@@ -69,7 +80,7 @@ A Waf project contains two types of files:
 
 
 
-Quick Start (building Kodo examples and unit tests)
+Quick Start (Building Kodo Examples and Unit Tests)
 ---------------------------------------------------
 
 .. _getting_started:
@@ -120,7 +131,7 @@ Provided that you have the :ref:`tools-needed` installed.
    b. **Windows**: Run unit-tests from the Kodo directory by running
       ``build/win32/test/kodo_tests.exe`` in your command prompt.
 
-Customize the build
+Customize the Build
 -------------------
 
 You may customize the build process. The list below describes the most

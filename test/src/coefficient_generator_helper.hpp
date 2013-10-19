@@ -63,8 +63,8 @@ namespace kodo
             return m_pivots;
         }
 
-        /// @copydoc layer::symbol_pivot(uint32_t) const
-        bool symbol_pivot(uint32_t index) const
+        /// @copydoc layer::is_symbol_pivot(uint32_t) const
+        bool is_symbol_pivot(uint32_t index) const
         {
             assert(index < SuperCoder::symbols());
             return m_pivot[index];
@@ -129,16 +129,16 @@ struct api_generate
         pointer_type coder = m_factory.build();
 
         std::vector<uint8_t> vector_a =
-            random_vector(coder->coefficients_size());
+            random_vector(coder->coefficient_vector_size());
 
         std::vector<uint8_t> vector_b =
-            random_vector(coder->coefficients_size());
+            random_vector(coder->coefficient_vector_size());
 
         std::vector<uint8_t> vector_c =
-            random_vector(coder->coefficients_size());
+            random_vector(coder->coefficient_vector_size());
 
         std::vector<uint8_t> vector_d =
-            random_vector(coder->coefficients_size());
+            random_vector(coder->coefficient_vector_size());
 
         coder->seed(0);
         coder->generate(&vector_a[0]);
@@ -162,16 +162,16 @@ struct api_generate
         pointer_type coder = m_factory.build();
 
         std::vector<uint8_t> vector_a =
-            random_vector(coder->coefficients_size());
+            random_vector(coder->coefficient_vector_size());
 
         std::vector<uint8_t> vector_b =
-            random_vector(coder->coefficients_size());
+            random_vector(coder->coefficient_vector_size());
 
         std::vector<uint8_t> vector_c =
-            random_vector(coder->coefficients_size());
+            random_vector(coder->coefficient_vector_size());
 
         std::vector<uint8_t> vector_d =
-            random_vector(coder->coefficients_size());
+            random_vector(coder->coefficient_vector_size());
 
         coder->seed(0);
         coder->generate_partial(&vector_a[0]);
@@ -207,7 +207,7 @@ struct api_generate
             value_type v_d = fifi::get_value<field_type>(
                 (value_type*)&vector_d[0], i);
 
-            if(!coder->symbol_pivot(i))
+            if(!coder->is_symbol_pivot(i))
             {
                 ASSERT_EQ(v_a, 0U);
                 ASSERT_EQ(v_b, 0U);

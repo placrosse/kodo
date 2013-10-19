@@ -45,7 +45,7 @@ namespace kodo
             /// @copydoc layer::factory::max_id_size() const
             uint32_t max_id_size() const
             {
-                return SuperCoder::factory::max_coefficients_size();
+                return SuperCoder::factory::max_coefficient_vector_size();
             }
 
         };
@@ -58,8 +58,8 @@ namespace kodo
         {
             SuperCoder::construct(the_factory);
 
-            m_coefficients.resize(the_factory.max_coefficients_size());
-            m_recode_id.resize(the_factory.max_coefficients_size());
+            m_coefficients.resize(the_factory.max_coefficient_vector_size());
+            m_recode_id.resize(the_factory.max_coefficient_vector_size());
         }
 
         /// @copydoc layer::initialize(Factory&)
@@ -68,7 +68,7 @@ namespace kodo
         {
             SuperCoder::initialize(the_factory);
 
-            m_id_size = SuperCoder::coefficients_size();
+            m_id_size = SuperCoder::coefficient_vector_size();
             assert(m_id_size > 0);
         }
 
@@ -121,30 +121,29 @@ namespace kodo
 
             for(uint32_t i = 0; i < SuperCoder::symbols(); ++i)
             {
-                value_type c =
-                    fifi::get_value<field_type>(recode_coefficients, i);
+                value_type c = SuperCoder::coefficient_value(
+                    recode_coefficients, i);
 
                 if(!c)
                 {
                     continue;
                 }
 
-                assert(SuperCoder::symbol_pivot(i));
+                assert(SuperCoder::is_symbol_pivot(i));
 
                 const value_type *source_id =
-                    SuperCoder::coefficients_value( i );
+                    SuperCoder::coefficient_vector_values( i );
 
                 if(fifi::is_binary<field_type>::value)
                 {
-                    SuperCoder::add(
-                        recode_id, source_id,
-                        SuperCoder::coefficients_length());
+                    SuperCoder::add(recode_id, source_id,
+                                    SuperCoder::coefficient_vector_length());
                 }
                 else
                 {
                     SuperCoder::multiply_add(
                         recode_id, source_id, c,
-                        SuperCoder::coefficients_length());
+                        SuperCoder::coefficient_vector_length());
                 }
             }
 

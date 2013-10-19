@@ -38,7 +38,7 @@ namespace kodo
             /// @copydoc layer::factory::max_id_size() const
             uint32_t max_id_size() const
             {
-                return SuperCoder::factory::max_coefficients_size();
+                return SuperCoder::factory::max_coefficient_vector_size();
             }
         };
 
@@ -50,7 +50,7 @@ namespace kodo
         {
             SuperCoder::initialize(the_factory);
 
-            m_id_size = SuperCoder::coefficients_size();
+            m_id_size = SuperCoder::coefficient_vector_size();
             assert(m_id_size > 0);
         }
 

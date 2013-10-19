@@ -39,20 +39,27 @@ namespace kodo
                 : SuperCoder::factory(max_symbols, max_symbol_size)
             { }
 
-            /// @copydoc layer::factory::max_coefficients_size() const
-            uint32_t max_coefficients_size() const
+            /// @copydoc layer::factory::max_coefficient_vector_size() const
+            uint32_t max_coefficient_vector_size() const
             {
                 return fifi::elements_to_size<field_type>(
                     SuperCoder::factory::max_symbols());
             }
+
+            /// @copydoc layer::factory::max_coefficient_vectors() const
+            uint32_t max_coefficient_vectors() const
+            {
+                return SuperCoder::factory::max_symbols();
+            }
+
         };
 
     public:
 
         /// Constructor
         coefficient_info()
-            : m_coefficients_length(0),
-              m_coefficients_size(0)
+            : m_coefficient_vector_length(0),
+              m_coefficient_vector_size(0)
         { }
 
         /// @copydoc layer::initialize(Factory&)
@@ -61,37 +68,49 @@ namespace kodo
         {
             SuperCoder::initialize(the_factory);
 
-            m_coefficients_length =
+            m_coefficient_vector_length =
                 fifi::elements_to_length<field_type>(the_factory.symbols());
 
-            m_coefficients_size =
+            m_coefficient_vector_size =
                 fifi::elements_to_size<field_type>(the_factory.symbols());
 
-            assert(m_coefficients_length > 0);
-            assert(m_coefficients_size > 0);
+            assert(m_coefficient_vector_length > 0);
+            assert(m_coefficient_vector_size > 0);
         }
 
-        /// @copydoc layer::coefficients_length() const
-        uint32_t coefficients_length() const
+        /// @copydoc layer::coefficient_vectors() const
+        uint32_t coefficient_vectors() const
         {
-            assert(m_coefficients_length > 0);
-            return m_coefficients_length;
+            return SuperCoder::symbols();
         }
 
-        /// @copydoc layer::coefficients_size() const
-        uint32_t coefficients_size() const
+        /// @copydoc layer::coefficient_vector_elements() const
+        uint32_t coefficient_vector_elements() const
         {
-            assert(m_coefficients_size > 0);
-            return m_coefficients_size;
+            return SuperCoder::symbols();
+        }
+
+        /// @copydoc layer::coefficient_vector_length() const
+        uint32_t coefficient_vector_length() const
+        {
+            assert(m_coefficient_vector_length > 0);
+            return m_coefficient_vector_length;
+        }
+
+        /// @copydoc layer::coefficient_vector_size() const
+        uint32_t coefficient_vector_size() const
+        {
+            assert(m_coefficient_vector_size > 0);
+            return m_coefficient_vector_size;
         }
 
     private:
 
         /// The length of coefficients in value_type elements
-        uint32_t m_coefficients_length;
+        uint32_t m_coefficient_vector_length;
 
         /// The size of coefficients in bytes
-        uint32_t m_coefficients_size;
+        uint32_t m_coefficient_vector_size;
     };
 
 }

@@ -10,119 +10,100 @@
 #include <gtest/gtest.h>
 
 #include <kodo/partial_decoding_tracker.hpp>
-#include <kodo/empty_decoder.hpp>
-#include <kodo/rlnc/full_vector_codes.hpp>
-
-#include <kodo/debug_linear_block_decoder.hpp>
-
-#include "basic_api_test_helper.hpp"
 
 namespace kodo
 {
-    template<class Field>
-    class test_partial_stack
-        : public // Payload API
-                 // Codec Header API
-                 // Symbol ID API
-                 // Codec API
-                 partial_decoding_tracker<
-                 linear_block_decoder<
-                 // Coefficient Storage API
-                 coefficient_storage<
-                 coefficient_info<
-                 // Storage API
-                 deep_symbol_storage<
-                 storage_bytes_used<
-                 storage_block_info<
-                 // Finite Field API
-                 finite_field_math<typename fifi::default_field<Field>::type,
-                 finite_field_info<Field,
-                 // Factory API
-                 final_coder_factory_pool<
-                 // Final type
-                 test_partial_stack<Field>
-                     > > > > > > > > > >
-    { };
 
+    // Put dummy layers and tests classes in an anonymous namespace
+    // to avoid violations of ODF (one-definition-rule) in other
+    // translation units
+    namespace
+    {
+
+        // Small helper struct which provides the API needed by the
+        // partial_decoding_tracker layer.
+        struct dummy_layer
+        {
+
+            template<class Factory>
+            void initialize(Factory& the_factory)
+            {
+                (void) the_factory;
+            }
+
+            void decode(uint8_t *payload)
+            {
+                m_payload = payload;
+                m_symbols_decoded = m_symbols_decoded_new;
+            }
+
+            uint32_t symbols_decoded() const
+            {
+                return m_symbols_decoded;
+            }
+
+            uint8_t* m_payload;
+            uint32_t m_symbols_decoded;
+            uint32_t m_symbols_decoded_new;
+        };
+
+        // Instantiate a stack containing the partial_decoding_tracker
+        class dummy_stack
+            : public // Payload API
+                     partial_decoding_tracker<
+                     // Codec Header API
+                     // Symbol ID API
+                     // Decoder API
+                     // Coefficient Storage API
+                     // Storage API
+                     // Finite Field API
+                     // Factory API
+                     // Final type
+                     dummy_layer>
+        { };
+
+        struct dummy_factory
+        { };
+    }
 }
+
 
 /// Run the tests typical coefficients stack
-TEST(TestPartialDecodingTracker, test_tracker)
+TEST(TestPartialDecodingTracker, test_partial_decoding)
 {
-    typedef fifi::binary field_type;
+    kodo::dummy_factory factory;
+    kodo::dummy_stack stack;
 
-    kodo::test_partial_stack<field_type>::factory f(5, 1600);
+    EXPECT_FALSE(stack.is_partial_complete());
+    stack.initialize(factory);
+    EXPECT_FALSE(stack.is_partial_complete());
 
-    auto d = f.build();
+    std::vector<uint8_t> payload(10);
 
-    EXPECT_EQ(d->coefficients_size(), 1U);
+    stack.m_symbols_decoded = 0;
+    stack.m_symbols_decoded_new = 0;
+    stack.decode(&payload[0]);
 
-    uint8_t coefficients[1];
+    EXPECT_FALSE(stack.is_partial_complete());
 
-    // Create an encoding vector looking like this: 01100
-    coefficients[0] = 0;
-    fifi::set_value<field_type>(coefficients, 1, 1U);
-    fifi::set_value<field_type>(coefficients, 2, 1U);
+    stack.m_symbols_decoded_new = 1;
+    stack.decode(&payload[0]);
 
-    // Create a dummy symbol
-    std::vector<uint8_t> symbol = random_vector(d->symbol_size());
+    EXPECT_TRUE(stack.is_partial_complete());
 
-    d->decode_symbol(&symbol[0], coefficients);
+    stack.m_symbols_decoded_new = 1;
+    stack.decode(&payload[0]);
 
-    EXPECT_EQ(d->rank(), 1U);
-    EXPECT_EQ(d->largest_nonzero_index(), 2U);
-    EXPECT_FALSE(d->is_partial_complete());
+    EXPECT_FALSE(stack.is_partial_complete());
 
-    // Create an encoding vector looking like this: 11000
-    coefficients[0] = 0;
-    fifi::set_value<field_type>(coefficients, 0, 1U);
-    fifi::set_value<field_type>(coefficients, 1, 1U);
+    stack.m_symbols_decoded_new = 10;
+    stack.decode(&payload[0]);
 
-    d->decode_symbol(&symbol[0], coefficients);
+    EXPECT_TRUE(stack.is_partial_complete());
 
-    EXPECT_EQ(d->rank(), 2U);
-    EXPECT_EQ(d->largest_nonzero_index(), 2U);
-    EXPECT_FALSE(d->is_partial_complete());
-
-    // Create an encoding vector looking like this: 11100
-    coefficients[0] = 0;
-    fifi::set_value<field_type>(coefficients, 0, 1U);
-    fifi::set_value<field_type>(coefficients, 1, 1U);
-    fifi::set_value<field_type>(coefficients, 2, 1U);
-
-    d->decode_symbol(&symbol[0], coefficients);
-
-    EXPECT_EQ(d->rank(), 3U);
-    EXPECT_EQ(d->largest_nonzero_index(), 2U);
-    EXPECT_TRUE(d->is_partial_complete());
-
-    // Create an encoding vector looking like this: 11101
-    coefficients[0] = 0;
-    fifi::set_value<field_type>(coefficients, 0, 1U);
-    fifi::set_value<field_type>(coefficients, 1, 1U);
-    fifi::set_value<field_type>(coefficients, 2, 1U);
-    fifi::set_value<field_type>(coefficients, 4, 1U);
-
-    d->decode_symbol(&symbol[0], coefficients);
-
-    EXPECT_EQ(d->rank(), 4U);
-    EXPECT_EQ(d->largest_nonzero_index(), 4U);
-    EXPECT_FALSE(d->is_partial_complete());
-
-    // Create an encoding vector looking like this: 01110
-    coefficients[0] = 0;
-
-    fifi::set_value<field_type>(coefficients, 1, 1U);
-    fifi::set_value<field_type>(coefficients, 2, 1U);
-    fifi::set_value<field_type>(coefficients, 3, 1U);
-
-    d->decode_symbol(&symbol[0], coefficients);
-
-    EXPECT_EQ(d->rank(), 5U);
-    EXPECT_EQ(d->largest_nonzero_index(), 4U);
-    EXPECT_TRUE(d->is_partial_complete());
+    stack.initialize(factory);
+    EXPECT_FALSE(stack.is_partial_complete());
 
 }
-
 
 

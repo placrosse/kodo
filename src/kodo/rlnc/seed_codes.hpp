@@ -3,8 +3,7 @@
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
 
-#ifndef KODO_RLNC_SEED_CODES_HPP
-#define KODO_RLNC_SEED_CODES_HPP
+#pragma once
 
 #include <cstdint>
 
@@ -36,9 +35,13 @@
 #include "../proxy_layer.hpp"
 #include "../storage_aware_encoder.hpp"
 #include "../encode_symbol_tracker.hpp"
+#include "../symbol_decoding_status_tracker.hpp"
+#include "../symbol_decoding_status_counter.hpp"
+
 
 #include "../linear_block_encoder.hpp"
-#include "../linear_block_decoder.hpp"
+#include "../forward_linear_block_decoder.hpp"
+#include "../coefficient_value_access.hpp"
 
 namespace kodo
 {
@@ -65,12 +68,13 @@ namespace kodo
                  seed_symbol_id_writer<
                  // Coefficient Generator API
                  uniform_generator<
-                 // Codec API
+                 // Encoder API
                  encode_symbol_tracker<
                  zero_symbol_encoder<
                  linear_block_encoder<
                  storage_aware_encoder<
                  // Coefficient Storage API
+                 coefficient_value_access<
                  coefficient_info<
                  // Symbol Storage API
                  deep_symbol_storage<
@@ -83,7 +87,7 @@ namespace kodo
                  final_coder_factory_pool<
                  // Final type
                  seed_rlnc_encoder<Field>
-                     > > > > > > > > > > > > > > > >
+                     > > > > > > > > > > > > > > > > >
     { };
 
     /// @ingroup fec_stacks
@@ -103,10 +107,13 @@ namespace kodo
                  seed_symbol_id_reader<
                  // Coefficient Generator API
                  uniform_generator<
-                 // Codec API
+                 // Decoder API
                  aligned_coefficients_decoder<
-                 linear_block_decoder<
+                 forward_linear_block_decoder<
+                 symbol_decoding_status_counter<
+                 symbol_decoding_status_tracker<
                  // Coefficient Storage API
+                 coefficient_value_access<
                  coefficient_storage<
                  coefficient_info<
                  // Storage API
@@ -120,10 +127,9 @@ namespace kodo
                  final_coder_factory_pool<
                  // Final type
                  seed_rlnc_decoder<Field>
-                     > > > > > > > > > > > > > > >
+                     > > > > > > > > > > > > > > > > > >
     { };
 
 }
 
-#endif
 

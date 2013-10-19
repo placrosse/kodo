@@ -47,7 +47,7 @@ namespace kodo
             SuperCoder::initialize(the_factory);
 
             m_coefficients.resize(
-                Super::coefficients_size(), 0);
+                Super::coefficient_vector_size(), 0);
         }
 
         /// @copydoc layer::write_id(uint8_t*, uint8_t**)

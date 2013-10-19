@@ -21,37 +21,48 @@
 namespace kodo
 {
 
-    /// Decoder stack with shallow storage as required by the
-    /// storage decoder.
-    template<class Field>
-    class shallow_rlnc_decoder :
-        public // Payload API
-               payload_recoder<recoding_stack,
-               payload_decoder<
-               // Codec Header API
-               systematic_decoder<
-               symbol_id_decoder<
-               // Symbol ID API
-               plain_symbol_id_reader<
-               // Codec API
-               aligned_coefficients_decoder<
-               linear_block_decoder<
-               // Coefficient Storage API
-               coefficient_storage<
-               coefficient_info<
-               // Storage API
-               mutable_shallow_symbol_storage<
-               storage_bytes_used<
-               storage_block_info<
-               // Finite Field API
-               finite_field_math<typename fifi::default_field<Field>::type,
-               finite_field_info<Field,
-               // Factory API
-               final_coder_factory_pool<
-               // Final type
-               shallow_rlnc_decoder<Field>
-               > > > > > > > > > > > > > > >
-    { };
+    // Put dummy layers and tests classes in an anonymous namespace
+    // to avoid violations of ODF (one-definition-rule) in other
+    // translation units
+    namespace
+    {
+
+        /// Decoder stack with shallow storage as required by the
+        /// storage decoder.
+        template<class Field>
+        class shallow_rlnc_decoder :
+            public // Payload API
+                  payload_recoder<recoding_stack,
+                  payload_decoder<
+                  // Codec Header API
+                  systematic_decoder<
+                  symbol_id_decoder<
+                  // Symbol ID API
+                  plain_symbol_id_reader<
+                  // Decoder API
+                  aligned_coefficients_decoder<
+                  forward_linear_block_decoder<
+                  symbol_decoding_status_counter<
+                  symbol_decoding_status_tracker<
+                  // Coefficient Storage API
+                  coefficient_value_access<
+                  coefficient_storage<
+                  coefficient_info<
+                  // Storage API
+                  mutable_shallow_symbol_storage<
+                  storage_bytes_used<
+                  storage_block_info<
+                  // Finite Field API
+                  finite_field_math<typename fifi::default_field<Field>::type,
+                  finite_field_info<Field,
+                  // Factory API
+                  final_coder_factory_pool<
+                  // Final type
+                  shallow_rlnc_decoder<Field>
+                   > > > > > > > > > > > > > > > > > >
+        { };
+
+    }
 }
 
 

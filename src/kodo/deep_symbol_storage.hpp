@@ -123,7 +123,13 @@ namespace kodo
         void set_symbol(uint32_t index, const sak::const_storage &symbol)
         {
             assert(symbol.m_data != 0);
-            assert(symbol.m_size == SuperCoder::symbol_size());
+
+            // If the user sets a specific symbol on deep storage we allow that
+            // it does not have the full size. In this cases it is the users
+            // who must ensure correct decoding
+            assert(symbol.m_size <= SuperCoder::symbol_size());
+            assert(symbol.m_size > 0);
+
             assert(index < SuperCoder::symbols());
 
             sak::mutable_storage dest_data = sak::storage(m_data);
@@ -145,7 +151,7 @@ namespace kodo
         }
 
         /// @copydoc layer::copy_symbols(const sak::mutable_storage&)
-        void copy_symbols(const sak::mutable_storage &dest_storage)
+        void copy_symbols(const sak::mutable_storage &dest_storage) const
         {
             assert(dest_storage.m_size > 0);
             assert(dest_storage.m_data != 0);
@@ -161,6 +167,7 @@ namespace kodo
             sak::copy_storage(dest_storage, src_storage);
         }
 
+        /// @todo Change to copy_from_symbol
         /// @copydoc layer::copy_symbol(uint32_t,
         ///                             const sak::mutable_storage&)
         void copy_symbol(uint32_t index,
@@ -176,6 +183,24 @@ namespace kodo
                 sak::storage(symbol(index), data_to_copy);
 
             sak::copy_storage(dest, src);
+        }
+
+        /// @copydoc layer::copy_into_symbols(const sak::const_storage&)
+        void copy_into_symbols(const sak::const_storage &src)
+        {
+            // For deep symbol storage this is the same as using
+            // layer::set_symbols(const sak::mutable_storage&)
+            set_symbols(src);
+        }
+
+        /// @copydoc layer::copy_into_symbol(uint32_t,
+        ///              const sak::const_storage&)
+        void copy_into_symbol(uint32_t index,
+                              const sak::const_storage &src)
+        {
+            // For deep symbol storage this is the same as using
+            // layer::set_symbol(uint32_t, const sak::mutable_storage&)
+            set_symbol(index, src);
         }
 
         /// @copydoc layer::symbols_available() const

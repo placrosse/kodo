@@ -17,19 +17,26 @@
 
 namespace kodo
 {
+    // Put dummy layers and tests classes in an anonymous namespace
+    // to avoid violations of ODF (one-definition-rule) in other
+    // translation units
+    namespace
+    {
 
-    /// Test stack for the cached_symbol_decoder
-    template<class Field>
-    class cached_symbol_decoder_stack :
-        public cached_symbol_decoder<
-               empty_decoder<
-               coefficient_info<
-               storage_block_info<
-               finite_field_info<Field,
-               final_coder_factory<
-               cached_symbol_decoder_stack<Field>
-                   > > > > > >
-    { };
+        /// Test stack for the cached_symbol_decoder
+        template<class Field>
+        class cached_symbol_decoder_stack :
+            public cached_symbol_decoder<
+                   empty_decoder<
+                   coefficient_info<
+                   storage_block_info<
+                   finite_field_info<Field,
+                   final_coder_factory<
+                   cached_symbol_decoder_stack<Field>
+                       > > > > > >
+        { };
+
+    }
 }
 
 template<class Stack>
@@ -41,8 +48,11 @@ void test_cached_symbol_decoder(uint32_t symbols, uint32_t symbol_size)
     EXPECT_EQ(factory.symbol_size(), symbol_size);
     EXPECT_EQ(stack->symbol_size(), symbol_size);
 
-    std::vector<uint8_t> data_in = random_vector(symbol_size);
-    std::vector<uint8_t> coeff_in = random_vector(stack->coefficients_size());
+    std::vector<uint8_t> data_in =
+        random_vector(symbol_size);
+
+    std::vector<uint8_t> coeff_in =
+        random_vector(stack->coefficient_vector_size());
 
     stack->decode_symbol(&data_in[0], &coeff_in[0]);
 
@@ -55,7 +65,7 @@ void test_cached_symbol_decoder(uint32_t symbols, uint32_t symbol_size)
                                          stack->symbol_size());
 
     auto coeff_storage_out = sak::storage(stack->cached_symbol_coefficients(),
-                                          stack->coefficients_size());
+                                          stack->coefficient_vector_size());
 
     EXPECT_TRUE(sak::equal(data_storage_in, data_storage_out));
     EXPECT_TRUE(sak::equal(coeff_storage_in, coeff_storage_out));

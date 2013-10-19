@@ -24,10 +24,14 @@
 #include "../symbol_id_decoder.hpp"
 #include "../coefficient_storage.hpp"
 #include "../coefficient_info.hpp"
+#include "../coefficient_value_access.hpp"
 #include "../storage_aware_encoder.hpp"
 #include "../encode_symbol_tracker.hpp"
 #include "../linear_block_encoder.hpp"
-#include "../linear_block_decoder.hpp"
+#include "../forward_linear_block_decoder.hpp"
+#include "../symbol_decoding_status_tracker.hpp"
+#include "../symbol_decoding_status_counter.hpp"
+
 
 #include "reed_solomon_symbol_id_writer.hpp"
 #include "reed_solomon_symbol_id_reader.hpp"
@@ -54,12 +58,13 @@ namespace kodo
                  // Symbol ID API
                  reed_solomon_symbol_id_writer<
                  systematic_vandermonde_matrix<
-                 // Codec API
+                 // Encoder API
                  encode_symbol_tracker<
                  zero_symbol_encoder<
                  linear_block_encoder<
                  storage_aware_encoder<
                  // Coefficient Storage API
+                 coefficient_value_access<
                  coefficient_info<
                  // Symbol Storage API
                  deep_symbol_storage<
@@ -72,7 +77,7 @@ namespace kodo
                  final_coder_factory_pool<
                  // Final type
                  rs_encoder<Field>
-                     > > > > > > > > > > > > > > > >
+                     > > > > > > > > > > > > > > > > >
     { };
 
     /// @ingroup fec_stacks
@@ -91,9 +96,12 @@ namespace kodo
                  // Symbol ID API
                  reed_solomon_symbol_id_reader<
                  systematic_vandermonde_matrix<
-                 // Codec API
-                 linear_block_decoder<
+                 // Decoder API
+                 forward_linear_block_decoder<
+                 symbol_decoding_status_counter<
+                 symbol_decoding_status_tracker<
                  // Coefficient Storage API
+                 coefficient_value_access<
                  coefficient_storage<
                  coefficient_info<
                  // Storage API
@@ -107,7 +115,7 @@ namespace kodo
                  final_coder_factory_pool<
                  // Final type
                  rs_decoder<Field>
-                     > > > > > > > > > > > > > >
+                     > > > > > > > > > > > > > > > > >
     { };
 
 }

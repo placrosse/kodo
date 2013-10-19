@@ -69,7 +69,7 @@ namespace kodo
 
                 // The row size of the generator matrix should fit
                 // the expected coefficient buffer size
-                assert(coder->coefficients_size() ==
+                assert(coder->coefficient_vector_size() ==
                        this_coder->m_matrix->row_size());
 
                 return coder;

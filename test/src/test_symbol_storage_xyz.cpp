@@ -33,1718 +33,1547 @@
 namespace kodo
 {
 
-    // Deep Symbol Storage
-    template<class Field>
-    class deep_storage_stack
-        : public deep_symbol_storage<
-                 storage_bytes_used<
-                 storage_block_info<
-                 finite_field_info<Field,
-                 final_coder_factory<
-                 deep_storage_stack<Field>
-                     > > > > >
-    {};
+    // Put dummy layers and tests classes in an anonymous namespace
+    // to avoid violations of ODF (one-definition-rule) in other
+    // translation units
+    namespace
+    {
 
-    template<class Field>
-    class deep_storage_stack_pool
-        : public deep_symbol_storage<
-                 storage_bytes_used<
-                 storage_block_info<
-                 finite_field_info<Field,
-                 final_coder_factory_pool<
-                 deep_storage_stack_pool<Field>
-                     > > > > >
-    {};
+        // Deep Symbol Storage
+        template<class Field>
+        class deep_storage_stack
+            : public deep_symbol_storage<
+            storage_bytes_used<
+                storage_block_info<
+                    finite_field_info<Field,
+                        final_coder_factory<
+                            deep_storage_stack<Field>
+                            > > > > >
+        {};
 
-    // Mutable Shallow Symbol Storage
-    template<class Field>
-    class mutable_shallow_stack
-        : public mutable_shallow_symbol_storage<
-                 storage_bytes_used<
-                 storage_block_info<
-                 finite_field_info<Field,
-                 final_coder_factory<
-                 mutable_shallow_stack<Field>
-                     > > > > >
-    {};
+        template<class Field>
+        class deep_storage_stack_pool
+            : public deep_symbol_storage<
+            storage_bytes_used<
+                storage_block_info<
+                    finite_field_info<Field,
+                        final_coder_factory_pool<
+                            deep_storage_stack_pool<Field>
+                            > > > > >
+        {};
 
-    template<class Field>
-    class mutable_shallow_stack_pool
-        : public mutable_shallow_symbol_storage<
-                 storage_bytes_used<
-                 storage_block_info<
-                 finite_field_info<Field,
-                 final_coder_factory_pool<
-                 mutable_shallow_stack_pool<Field>
-                     > > > > >
-    {};
+        // Mutable Shallow Symbol Storage
+        template<class Field>
+        class mutable_shallow_stack
+            : public mutable_shallow_symbol_storage<
+            storage_bytes_used<
+                storage_block_info<
+                    finite_field_info<Field,
+                        final_coder_factory<
+                            mutable_shallow_stack<Field>
+                            > > > > >
+        {};
 
-    // Const Shallow Symbol Storage
-    template<class Field>
-    class const_shallow_stack
-        : public const_shallow_symbol_storage<
-                 storage_bytes_used<
-                 storage_block_info<
-                 finite_field_info<Field,
-                 final_coder_factory<
-                 const_shallow_stack<Field>
-                     > > > > >
-    {};
+        template<class Field>
+        class mutable_shallow_stack_pool
+            : public mutable_shallow_symbol_storage<
+            storage_bytes_used<
+                storage_block_info<
+                    finite_field_info<Field,
+                        final_coder_factory_pool<
+                            mutable_shallow_stack_pool<Field>
+                            > > > > >
+        {};
 
-    template<class Field>
-    class const_shallow_stack_pool
-        : public const_shallow_symbol_storage<
-                 storage_bytes_used<
-                 storage_block_info<
-                 finite_field_info<Field,
-                 final_coder_factory_pool<
-                 const_shallow_stack_pool<Field>
-                     > > > > >
-    {};
+        // Const Shallow Symbol Storage
+        template<class Field>
+        class const_shallow_stack
+            : public const_shallow_symbol_storage<
+            storage_bytes_used<
+                storage_block_info<
+                    finite_field_info<Field,
+                        final_coder_factory<
+                            const_shallow_stack<Field>
+                            > > > > >
+        {};
 
-    // Partial Shallow Symbol Storage
-    template<class Field>
-    class partial_shallow_stack
-        : public partial_shallow_symbol_storage<
-                 storage_bytes_used<
-                 storage_block_info<
-                 finite_field_info<Field,
-                 final_coder_factory<
-                 partial_shallow_stack<Field>
-                     > > > > >
-    {};
+        template<class Field>
+        class const_shallow_stack_pool
+            : public const_shallow_symbol_storage<
+            storage_bytes_used<
+                storage_block_info<
+                    finite_field_info<Field,
+                        final_coder_factory_pool<
+                            const_shallow_stack_pool<Field>
+                            > > > > >
+        {};
 
-    template<class Field>
-    class partial_shallow_stack_pool
-        : public partial_shallow_symbol_storage<
-                 storage_bytes_used<
-                 storage_block_info<
-                 finite_field_info<Field,
-                 final_coder_factory_pool<
-                 partial_shallow_stack_pool<Field>
-                     > > > > >
-    {};
+        // Partial Shallow Symbol Storage
+        template<class Field>
+        class partial_shallow_stack
+            : public partial_shallow_symbol_storage<
+            storage_bytes_used<
+                storage_block_info<
+                    finite_field_info<Field,
+                        final_coder_factory<
+                            partial_shallow_stack<Field>
+                            > > > > >
+        {};
 
-    // Segmented Symbol Storage
-    template<class Field>
-    class segmented_storage_stack
-        : public segmented_symbol_storage<
-                 storage_bytes_used<
-                 storage_block_info<
-                 finite_field_info<Field,
-                 final_coder_factory<
-                 segmented_storage_stack<Field>
-                     > > > > >
-    {};
+        template<class Field>
+        class partial_shallow_stack_pool
+            : public partial_shallow_symbol_storage<
+            storage_bytes_used<
+                storage_block_info<
+                    finite_field_info<Field,
+                        final_coder_factory_pool<
+                            partial_shallow_stack_pool<Field>
+                            > > > > >
+        {};
 
-    template<class Field>
-    class segmented_storage_stack_pool
-        : public segmented_symbol_storage<
-                 storage_bytes_used<
-                 storage_block_info<
-                 finite_field_info<Field,
-                 final_coder_factory_pool<
-                 segmented_storage_stack_pool<Field>
-                     > > > > >
-    {};
+        // Segmented Symbol Storage
+        template<class Field>
+        class segmented_storage_stack
+            : public segmented_symbol_storage<
+            storage_bytes_used<
+                storage_block_info<
+                    finite_field_info<Field,
+                        final_coder_factory<
+                            segmented_storage_stack<Field>
+                            > > > > >
+        {};
 
+        template<class Field>
+        class segmented_storage_stack_pool
+            : public segmented_symbol_storage<
+            storage_bytes_used<
+                storage_block_info<
+                    finite_field_info<Field,
+                        final_coder_factory_pool<
+                            segmented_storage_stack_pool<Field>
+                            > > > > >
+        {};
+
+    }
 }
 
-/// Tests: Setting partial data on a storage object. Any unfilled or partial
-///        symbols should be available but their memory zero'ed.
-template<class Coder>
-struct set_partial_data
+namespace
 {
 
-    typedef typename Coder::factory factory_type;
-    typedef typename Coder::pointer pointer_type;
-
-    set_partial_data(uint32_t max_symbols, uint32_t max_symbol_size)
-        : m_factory(max_symbols, max_symbol_size)
-    { }
-
-    void run()
+    /// Tests: Setting partial data on a storage object. Any unfilled or partial
+    ///        symbols should be available but their memory zero'ed.
+    template<class Coder>
+    struct set_partial_data
     {
-        // We invoke the test three times to ensure that if the
-        // factory recycles the objects they are safe to reuse
-        run_once(m_factory.max_symbols(),
-                 m_factory.max_symbol_size());
 
-        run_once(m_factory.max_symbols(),
-                 m_factory.max_symbol_size());
+        typedef typename Coder::factory factory_type;
+        typedef typename Coder::pointer pointer_type;
 
-        // Build with different from max values
-        uint32_t symbols =
-            rand_symbols(m_factory.max_symbols());
-        uint32_t symbol_size =
-            rand_symbol_size(m_factory.max_symbol_size());
+        set_partial_data(uint32_t max_symbols, uint32_t max_symbol_size)
+            : m_factory(max_symbols, max_symbol_size)
+        { }
 
-        run_once(symbols, symbol_size);
-    }
-
-    void run_once(uint32_t symbols, uint32_t symbol_size)
-    {
-        m_factory.set_symbols(symbols);
-        m_factory.set_symbol_size(symbol_size);
-
-        pointer_type coder = m_factory.build();
-
-        uint32_t vector_size = rand() % coder->block_size();
-
-        // Avoid zero vector size
-        vector_size = vector_size ? vector_size : 1;
-
-        auto vector_in = random_vector(vector_size);
-
-        sak::mutable_storage storage_in = sak::storage(vector_in);
-        coder->set_symbols(storage_in);
-
-        auto symbol_storage =
-            sak::split_storage(storage_in, coder->symbol_size());
-
-        for(uint32_t i = 0; i < coder->symbols(); ++i)
+        void run()
         {
-            std::vector<uint8_t> symbol_a(coder->symbol_size(), '\0');
-            std::vector<uint8_t> symbol_b(coder->symbol_size(), '\0');
+            // We invoke the test three times to ensure that if the
+            // factory recycles the objects they are safe to reuse
+            run_once(m_factory.max_symbols(),
+                     m_factory.max_symbol_size());
 
-            sak::mutable_storage storage_a = sak::storage(symbol_a);
-            sak::mutable_storage storage_b = sak::storage(symbol_b);
+            run_once(m_factory.max_symbols(),
+                     m_factory.max_symbol_size());
 
-            coder->copy_symbol(i, storage_a);
+            // Build with different from max values
+            uint32_t symbols =
+                rand_symbols(m_factory.max_symbols());
+            uint32_t symbol_size =
+                rand_symbol_size(m_factory.max_symbol_size());
 
-            // If we have symbol in the input data there are three
-            // cases:
-            // 1) The full symbol is available, so we just copy it to
-            //    symbol_b.
-            // 2) We had insufficient data to fill an entire symbol.
-            //    In this case the storage layer
-            //    should have stored a zero padded symbol. Since we
-            //    copy symbols to the zero initialized symbol_b
-            //    buffer we do not have to do any zero padding.
-            // 3) The symbol was not available in the input data. This
-            //    should result in a zero initialized symbol.
-            //    So comparing directly with symbol_b is OK.
-            if(i < symbol_storage.size())
+            run_once(symbols, symbol_size);
+        }
+
+        void run_once(uint32_t symbols, uint32_t symbol_size)
+        {
+            m_factory.set_symbols(symbols);
+            m_factory.set_symbol_size(symbol_size);
+
+            pointer_type coder = m_factory.build();
+
+            uint32_t vector_size = rand() % coder->block_size();
+
+            // Avoid zero vector size
+            vector_size = vector_size ? vector_size : 1;
+
+            auto vector_in = random_vector(vector_size);
+
+            sak::mutable_storage storage_in = sak::storage(vector_in);
+            coder->set_symbols(storage_in);
+
+            auto symbol_storage =
+                sak::split_storage(storage_in, coder->symbol_size());
+
+            for(uint32_t i = 0; i < coder->symbols(); ++i)
             {
-                // Handles case 1,2
-                sak::copy_storage(storage_b, symbol_storage[i]);
+                std::vector<uint8_t> symbol_a(coder->symbol_size(), '\0');
+                std::vector<uint8_t> symbol_b(coder->symbol_size(), '\0');
+
+                sak::mutable_storage storage_a = sak::storage(symbol_a);
+                sak::mutable_storage storage_b = sak::storage(symbol_b);
+
+                coder->copy_symbol(i, storage_a);
+
+                // If we have symbol in the input data there are three
+                // cases:
+                // 1) The full symbol is available, so we just copy it to
+                //    symbol_b.
+                // 2) We had insufficient data to fill an entire symbol.
+                //    In this case the storage layer
+                //    should have stored a zero padded symbol. Since we
+                //    copy symbols to the zero initialized symbol_b
+                //    buffer we do not have to do any zero padding.
+                // 3) The symbol was not available in the input data. This
+                //    should result in a zero initialized symbol.
+                //    So comparing directly with symbol_b is OK.
+                if(i < symbol_storage.size())
+                {
+                    // Handles case 1,2
+                    sak::copy_storage(storage_b, symbol_storage[i]);
+                }
+
+                EXPECT_TRUE(sak::equal(storage_a, storage_b));
+            }
+        }
+
+    private:
+
+        // The factory
+        factory_type m_factory;
+
+    };
+
+    /// Tests:
+    ///   - layer::set_symbols(const sak::mutable_storage&)
+    ///   - layer::copy_symbols(const sak::mutable_storage&)
+    template<class Coder>
+    struct api_copy_symbols
+    {
+        typedef typename Coder::factory factory_type;
+        typedef typename Coder::pointer pointer_type;
+        typedef typename Coder::value_type value_type;
+
+        api_copy_symbols(uint32_t max_symbols, uint32_t max_symbol_size)
+            : m_factory(max_symbols, max_symbol_size)
+        { }
+
+        void run()
+        {
+            // Build with the max_symbols and max_symbol_size
+            pointer_type coder = m_factory.build();
+
+            auto vector_in = random_vector(coder->block_size());
+            auto vector_out = random_vector(coder->block_size());
+
+            sak::mutable_storage storage_in = sak::storage(vector_in);
+            sak::mutable_storage storage_out = sak::storage(vector_out);
+
+            coder->set_symbols(storage_in);
+            coder->copy_symbols(storage_out);
+
+            EXPECT_TRUE(sak::equal(sak::storage(vector_in),
+                                   sak::storage(vector_out)));
+        }
+
+    private:
+
+        // The factory
+        factory_type m_factory;
+
+    };
+
+    /// Tests:
+    ///   - layer::set_symbols(const sak::mutable_storage&)
+    ///   - layer::copy_symbol(uint32_t, const sak::mutable_storage&)
+    template<class Coder>
+    struct api_copy_symbol
+    {
+
+        typedef typename Coder::factory factory_type;
+        typedef typename Coder::pointer pointer_type;
+        typedef typename Coder::value_type value_type;
+
+        api_copy_symbol(uint32_t max_symbols, uint32_t max_symbol_size)
+            : m_factory(max_symbols, max_symbol_size)
+        { }
+
+        void run()
+        {
+            // Build with the max_symbols and max_symbol_size
+            pointer_type coder = m_factory.build();
+
+            auto vector_in = random_vector(coder->block_size());
+
+            sak::mutable_storage storage_in = sak::storage(vector_in);
+            coder->set_symbols(storage_in);
+
+            auto symbols =
+                sak::split_storage(storage_in, coder->symbol_size());
+
+            // Prepare buffer for a single symbol
+            auto vector_out = random_vector(coder->symbol_size());
+
+            // Check that we correctly copy out the symbols
+            for(uint32_t i = 0; i < coder->symbols(); ++i)
+            {
+                sak::mutable_storage symbol_out = sak::storage(vector_out);
+                coder->copy_symbol(i, symbol_out);
+
+                EXPECT_TRUE(sak::equal(symbols[i], symbol_out));
+            }
+        }
+
+    private:
+
+        // The factory
+        factory_type m_factory;
+
+    };
+
+    /// Tests:
+    ///   - layer::symbol(uint32_t) const
+    ///   - layer::set_symbols(const sak::mutable_storage&)
+    template<class Coder>
+    struct api_symbol_const
+    {
+
+        typedef typename Coder::factory factory_type;
+        typedef typename Coder::pointer pointer_type;
+        typedef typename Coder::value_type value_type;
+
+        api_symbol_const(uint32_t max_symbols, uint32_t max_symbol_size)
+            : m_factory(max_symbols, max_symbol_size)
+        { }
+
+        void run()
+        {
+            // Build with the max_symbols and max_symbol_size
+            pointer_type coder = m_factory.build();
+
+            // Make sure we call the const version of the function
+            const pointer_type &const_coder = coder;
+
+            auto vector_in = random_vector(coder->block_size());
+
+            sak::mutable_storage storage_in = sak::storage(vector_in);
+            coder->set_symbols(storage_in);
+
+            auto symbols =
+                sak::split_storage(storage_in, coder->symbol_size());
+
+            // Check that we correctly copy out the symbols
+            for(uint32_t i = 0; i < coder->symbols(); ++i)
+            {
+                const uint8_t* symbol = const_coder->symbol(i);
+
+                // Compare the storage
+                auto s1 = symbols[i];
+                auto s2 = sak::storage(symbol, coder->symbol_size());
+                EXPECT_TRUE(sak::equal(s1, s2));
+            }
+        }
+
+    private:
+
+        // The factory
+        factory_type m_factory;
+
+    };
+
+    /// Tests:
+    ///   - layer::symbol(uint32_t index)
+    ///   - layer::set_symbols(const sak::mutable_storage&)
+    template<class Coder>
+    struct api_symbol
+    {
+        typedef typename Coder::factory factory_type;
+        typedef typename Coder::pointer pointer_type;
+
+        api_symbol(uint32_t max_symbols, uint32_t max_symbol_size)
+            : m_factory(max_symbols, max_symbol_size)
+        { }
+
+        void run()
+        {
+            // Build with the max_symbols and max_symbol_size
+            pointer_type coder = m_factory.build();
+
+            auto vector_in = random_vector(coder->block_size());
+
+            sak::mutable_storage storage_in = sak::storage(vector_in);
+            coder->set_symbols(storage_in);
+
+            auto symbols =
+                sak::split_storage(storage_in, coder->symbol_size());
+
+            // Check that we correctly copy out the symbols
+            for(uint32_t i = 0; i < coder->symbols(); ++i)
+            {
+                uint8_t* symbol = coder->symbol(i);
+
+                // Compare the storage
+                auto s1 = symbols[i];
+                auto s2 = sak::storage(symbol, coder->symbol_size());
+                EXPECT_TRUE(sak::equal(s1, s2));
+            }
+        }
+
+    private:
+
+        // The factory
+        factory_type m_factory;
+
+    };
+
+    /// Tests:
+    ///   - layer::symbol_value(uint32_t) const
+    ///   - layer::set_symbols(const sak::mutable_storage&)
+    template<class Coder>
+    struct api_symbol_value_const
+    {
+
+        typedef typename Coder::factory factory_type;
+        typedef typename Coder::pointer pointer_type;
+        typedef typename Coder::value_type value_type;
+
+        api_symbol_value_const(uint32_t max_symbols, uint32_t max_symbol_size)
+            : m_factory(max_symbols, max_symbol_size)
+        { }
+
+
+        void run()
+        {
+            // Build with the max_symbols and max_symbol_size
+            pointer_type coder = m_factory.build();
+
+            // Make sure we call the const version of the function
+            const pointer_type &const_coder = coder;
+
+            auto vector_in = random_vector(coder->block_size());
+
+            sak::mutable_storage storage_in = sak::storage(vector_in);
+            coder->set_symbols(storage_in);
+
+            auto symbols =
+                sak::split_storage(storage_in, coder->symbol_size());
+
+            // Check that we correctly copy out the symbols
+            for(uint32_t i = 0; i < coder->symbols(); ++i)
+            {
+                const value_type* symbol = const_coder->symbol_value(i);
+
+                // Compare the storage
+                auto s1 = symbols[i];
+                auto s2 = sak::storage(symbol, coder->symbol_size());
+                EXPECT_TRUE(sak::equal(s1, s2));
+            }
+        }
+
+    private:
+
+        // The factory
+        factory_type m_factory;
+
+    };
+
+
+    /// Tests:
+    ///   - layer::symbol_value(uint32_t)
+    ///   - layer::set_symbols(const sak::mutable_storage&)
+    template<class Coder>
+    struct api_symbol_value
+    {
+
+        typedef typename Coder::factory factory_type;
+        typedef typename Coder::pointer pointer_type;
+        typedef typename Coder::value_type value_type;
+
+        api_symbol_value(uint32_t max_symbols, uint32_t max_symbol_size)
+            : m_factory(max_symbols, max_symbol_size)
+        { }
+
+        void run()
+        {
+            // Build with the max_symbols and max_symbol_size
+            pointer_type coder = m_factory.build();
+
+            auto vector_in = random_vector(coder->block_size());
+
+            sak::mutable_storage storage_in = sak::storage(vector_in);
+            coder->set_symbols(storage_in);
+
+            auto symbols =
+                sak::split_storage(storage_in, coder->symbol_size());
+
+            // Check that we correctly copy out the symbols
+            for(uint32_t i = 0; i < coder->symbols(); ++i)
+            {
+                value_type* symbol = coder->symbol_value(i);
+
+                // Compare the storage
+                auto s1 = symbols[i];
+                auto s2 = sak::storage(symbol, coder->symbol_size());
+                EXPECT_TRUE(sak::equal(s1, s2));
+            }
+        }
+
+    private:
+
+        // The factory
+        factory_type m_factory;
+
+
+    };
+
+    /// Tests:
+    ///   - layer::set_symbols(const sak::const_storage&)
+    ///   - layer::symbol(uint32_t) const
+    template<class Coder>
+    struct api_set_symbols_const_storage
+    {
+
+        typedef typename Coder::factory factory_type;
+        typedef typename Coder::pointer pointer_type;
+        typedef typename Coder::value_type value_type;
+
+        api_set_symbols_const_storage(uint32_t max_symbols, uint32_t max_symbol_size)
+            : m_factory(max_symbols, max_symbol_size)
+        { }
+
+        void run()
+        {
+            // Build with the max_symbols and max_symbol_size
+            pointer_type coder = m_factory.build();
+
+            auto vector_in = random_vector(coder->block_size());
+
+            sak::const_storage storage_in = sak::storage(vector_in);
+            coder->set_symbols(storage_in);
+
+            auto symbols =
+                sak::split_storage(storage_in, coder->symbol_size());
+
+            EXPECT_EQ(symbols.size(), coder->symbols());
+
+            // Check that we correctly can access the symbols
+            for(uint32_t i = 0; i < coder->symbols(); ++i)
+            {
+                const uint8_t* symbol = coder->symbol(i);
+
+                // Compare the storage
+                auto s1 = symbols[i];
+                auto s2 = sak::storage(symbol, coder->symbol_size());
+                EXPECT_TRUE(sak::equal(s1, s2));
+            }
+        }
+
+    private:
+
+        // The factory
+        factory_type m_factory;
+
+    };
+
+    /// Tests:
+    ///   - layer::set_symbols(const sak::mutable_storage&)
+    ///   - layer::symbol(uint32_t) const
+    template<class Coder>
+    struct api_set_symbols_mutable_storage
+    {
+
+        typedef typename Coder::factory factory_type;
+        typedef typename Coder::pointer pointer_type;
+        typedef typename Coder::value_type value_type;
+
+        api_set_symbols_mutable_storage(uint32_t max_symbols,
+                                        uint32_t max_symbol_size)
+            : m_factory(max_symbols, max_symbol_size)
+        { }
+
+        void run()
+        {
+            // Build with the max_symbols and max_symbol_size
+            pointer_type coder = m_factory.build();
+
+            auto vector_in = random_vector(coder->block_size());
+            auto vector_out = random_vector(coder->block_size());
+
+            sak::mutable_storage storage_in = sak::storage(vector_in);
+            coder->set_symbols(storage_in);
+
+            auto symbols =
+                sak::split_storage(storage_in, coder->symbol_size());
+
+            EXPECT_EQ(symbols.size(), coder->symbols());
+
+            // Check that we correctly can access the symbols
+            for(uint32_t i = 0; i < coder->symbols(); ++i)
+            {
+                const uint8_t* symbol = coder->symbol(i);
+
+                // Compare the storage
+                auto s1 = symbols[i];
+                auto s2 = sak::storage(symbol, coder->symbol_size());
+                EXPECT_TRUE(sak::equal(s1, s2));
+            }
+        }
+
+    private:
+
+        // The factory
+        factory_type m_factory;
+
+    };
+
+    /// Tests:
+    ///   - layer::set_symbol(uint32_t, const sak::const_storage&)
+    ///   - layer::symbol(uint32_t)
+    template<class Coder>
+    struct api_set_symbol_const_storage
+    {
+
+        typedef typename Coder::factory factory_type;
+        typedef typename Coder::pointer pointer_type;
+        typedef typename Coder::value_type value_type;
+
+        api_set_symbol_const_storage(uint32_t max_symbols,
+                                     uint32_t max_symbol_size)
+            : m_factory(max_symbols, max_symbol_size)
+        { }
+
+        void run()
+        {
+            // Build with the max_symbols and max_symbol_size
+            pointer_type coder = m_factory.build();
+
+            auto vector_in = random_vector(coder->block_size());
+
+            sak::const_storage storage_in = sak::storage(vector_in);
+
+            std::vector<sak::const_storage> symbols =
+                sak::split_storage(storage_in, coder->symbol_size());
+
+            EXPECT_EQ(symbols.size(), coder->symbols());
+
+            // Check that we correctly can access the symbols
+            for(uint32_t i = 0; i < coder->symbols(); ++i)
+            {
+                coder->set_symbol(i, symbols[i]);
+                const uint8_t* symbol = coder->symbol(i);
+
+                // Compare the storage
+                auto s1 = symbols[i];
+                auto s2 = sak::storage(symbol, coder->symbol_size());
+                EXPECT_TRUE(sak::equal(s1, s2));
+            }
+        }
+
+    private:
+
+        // The factory
+        factory_type m_factory;
+
+    };
+
+    /// Tests:
+    ///   - layer::set_symbols(uint32_t, const sak::mutable_storage&)
+    ///   - layer::symbol(uint32_t)
+    template<class Coder>
+    struct api_set_symbol_mutable_storage
+    {
+
+        typedef typename Coder::factory factory_type;
+        typedef typename Coder::pointer pointer_type;
+        typedef typename Coder::value_type value_type;
+
+        api_set_symbol_mutable_storage(uint32_t max_symbols,
+                                       uint32_t max_symbol_size)
+            : m_factory(max_symbols, max_symbol_size)
+        { }
+
+        void run()
+        {
+            // Build with the max_symbols and max_symbol_size
+            pointer_type coder = m_factory.build();
+
+            auto vector_in = random_vector(coder->block_size());
+
+            sak::mutable_storage storage_in = sak::storage(vector_in);
+
+            std::vector<sak::mutable_storage> symbols =
+                sak::split_storage(storage_in, coder->symbol_size());
+
+            EXPECT_EQ(symbols.size(), coder->symbols());
+
+            // Check that we correctly can access the symbols
+            for(uint32_t i = 0; i < coder->symbols(); ++i)
+            {
+                coder->set_symbol(i, symbols[i]);
+                const uint8_t* symbol = coder->symbol(i);
+
+                // Compare the storage
+                auto s1 = symbols[i];
+                auto s2 = sak::storage(symbol, coder->symbol_size());
+                EXPECT_TRUE(sak::equal(s1, s2));
+            }
+        }
+
+    private:
+
+        // The factory
+        factory_type m_factory;
+
+    };
+
+    /// Tests:
+    ///   - layer::swap_symbols(std::vector<const uint8_t*>&)
+    ///   - layer::copy_symbols(const sak::mutable_storage&)
+    template<class Coder>
+    struct api_swap_symbols_const_pointer
+    {
+        typedef typename Coder::factory factory_type;
+        typedef typename Coder::pointer pointer_type;
+
+        api_swap_symbols_const_pointer(uint32_t max_symbols,
+                                       uint32_t max_symbol_size)
+            : m_factory(max_symbols, max_symbol_size)
+        { }
+
+        void run()
+        {
+            // Build with the max_symbols and max_symbol_size
+            pointer_type coder = m_factory.build();
+
+            auto vector_in = random_vector(coder->block_size());
+            auto vector_out = random_vector(coder->block_size());
+
+            sak::mutable_storage storage_out = sak::storage(vector_out);
+
+            std::vector<const uint8_t*> symbols;
+            for(uint32_t i = 0; i < coder->symbols(); ++i)
+            {
+                symbols.push_back(&vector_in[i*coder->symbol_size()]);
             }
 
-            EXPECT_TRUE(sak::equal(storage_a, storage_b));
+            coder->swap_symbols(symbols);
+            coder->copy_symbols(storage_out);
+
+            EXPECT_TRUE(sak::equal(sak::storage(vector_in),
+                                   sak::storage(vector_out)));
         }
-    }
 
-private:
+    private:
 
-    // The factory
-    factory_type m_factory;
+        // The factory
+        factory_type m_factory;
 
-};
+    };
 
-/// Tests:
-///   - layer::set_symbols(const sak::mutable_storage&)
-///   - layer::copy_symbols(const sak::mutable_storage&)
-template<class Coder>
-struct api_copy_symbols
-{
-    typedef typename Coder::factory factory_type;
-    typedef typename Coder::pointer pointer_type;
-    typedef typename Coder::value_type value_type;
-
-    api_copy_symbols(uint32_t max_symbols, uint32_t max_symbol_size)
-        : m_factory(max_symbols, max_symbol_size)
-    { }
-
-    void run()
+    /// Tests:
+    ///   - layer::swap_symbols(std::vector<uint8_t*>&)
+    ///   - layer::copy_symbols(const sak::mutable_storage&)
+    template<class Coder>
+    struct api_swap_symbols_pointer
     {
-        // Build with the max_symbols and max_symbol_size
-        pointer_type coder = m_factory.build();
 
-        auto vector_in = random_vector(coder->block_size());
-        auto vector_out = random_vector(coder->block_size());
+        typedef typename Coder::factory factory_type;
+        typedef typename Coder::pointer pointer_type;
 
-        sak::mutable_storage storage_in = sak::storage(vector_in);
-        sak::mutable_storage storage_out = sak::storage(vector_out);
-
-        coder->set_symbols(storage_in);
-        coder->copy_symbols(storage_out);
-
-        EXPECT_TRUE(sak::equal(sak::storage(vector_in),
-                               sak::storage(vector_out)));
-    }
-
-private:
-
-    // The factory
-    factory_type m_factory;
-
-};
-
-/// Tests:
-///   - layer::set_symbols(const sak::mutable_storage&)
-///   - layer::copy_symbol(uint32_t, const sak::mutable_storage&)
-template<class Coder>
-struct api_copy_symbol
-{
-
-    typedef typename Coder::factory factory_type;
-    typedef typename Coder::pointer pointer_type;
-    typedef typename Coder::value_type value_type;
-
-    api_copy_symbol(uint32_t max_symbols, uint32_t max_symbol_size)
-        : m_factory(max_symbols, max_symbol_size)
-    { }
-
-    void run()
-    {
-        // Build with the max_symbols and max_symbol_size
-        pointer_type coder = m_factory.build();
-
-        auto vector_in = random_vector(coder->block_size());
-
-        sak::mutable_storage storage_in = sak::storage(vector_in);
-        coder->set_symbols(storage_in);
-
-        auto symbols =
-            sak::split_storage(storage_in, coder->symbol_size());
-
-        // Prepare buffer for a single symbol
-        auto vector_out = random_vector(coder->symbol_size());
-
-        // Check that we correctly copy out the symbols
-        for(uint32_t i = 0; i < coder->symbols(); ++i)
-        {
-            sak::mutable_storage symbol_out = sak::storage(vector_out);
-            coder->copy_symbol(i, symbol_out);
-
-            EXPECT_TRUE(sak::equal(symbols[i], symbol_out));
-        }
-    }
-
-private:
-
-    // The factory
-    factory_type m_factory;
-
-};
-
-/// Tests:
-///   - layer::symbol(uint32_t) const
-///   - layer::set_symbols(const sak::mutable_storage&)
-template<class Coder>
-struct api_symbol_const
-{
-
-    typedef typename Coder::factory factory_type;
-    typedef typename Coder::pointer pointer_type;
-    typedef typename Coder::value_type value_type;
-
-    api_symbol_const(uint32_t max_symbols, uint32_t max_symbol_size)
-        : m_factory(max_symbols, max_symbol_size)
-    { }
-
-    void run()
-    {
-        // Build with the max_symbols and max_symbol_size
-        pointer_type coder = m_factory.build();
-
-        // Make sure we call the const version of the function
-        const pointer_type &const_coder = coder;
-
-        auto vector_in = random_vector(coder->block_size());
-
-        sak::mutable_storage storage_in = sak::storage(vector_in);
-        coder->set_symbols(storage_in);
-
-        auto symbols =
-            sak::split_storage(storage_in, coder->symbol_size());
-
-        // Check that we correctly copy out the symbols
-        for(uint32_t i = 0; i < coder->symbols(); ++i)
-        {
-            const uint8_t* symbol = const_coder->symbol(i);
-
-            // Compare the storage
-            auto s1 = symbols[i];
-            auto s2 = sak::storage(symbol, coder->symbol_size());
-            EXPECT_TRUE(sak::equal(s1, s2));
-        }
-    }
-
-private:
-
-    // The factory
-    factory_type m_factory;
-
-};
-
-/// Tests:
-///   - layer::symbol(uint32_t index)
-///   - layer::set_symbols(const sak::mutable_storage&)
-template<class Coder>
-struct api_symbol
-{
-    typedef typename Coder::factory factory_type;
-    typedef typename Coder::pointer pointer_type;
-
-    api_symbol(uint32_t max_symbols, uint32_t max_symbol_size)
-        : m_factory(max_symbols, max_symbol_size)
-    { }
-
-    void run()
-    {
-        // Build with the max_symbols and max_symbol_size
-        pointer_type coder = m_factory.build();
-
-        auto vector_in = random_vector(coder->block_size());
-
-        sak::mutable_storage storage_in = sak::storage(vector_in);
-        coder->set_symbols(storage_in);
-
-        auto symbols =
-            sak::split_storage(storage_in, coder->symbol_size());
-
-        // Check that we correctly copy out the symbols
-        for(uint32_t i = 0; i < coder->symbols(); ++i)
-        {
-            uint8_t* symbol = coder->symbol(i);
-
-            // Compare the storage
-            auto s1 = symbols[i];
-            auto s2 = sak::storage(symbol, coder->symbol_size());
-            EXPECT_TRUE(sak::equal(s1, s2));
-        }
-    }
-
-private:
-
-    // The factory
-    factory_type m_factory;
-
-};
-
-/// Tests:
-///   - layer::symbol_value(uint32_t) const
-///   - layer::set_symbols(const sak::mutable_storage&)
-template<class Coder>
-struct api_symbol_value_const
-{
-
-    typedef typename Coder::factory factory_type;
-    typedef typename Coder::pointer pointer_type;
-    typedef typename Coder::value_type value_type;
-
-    api_symbol_value_const(uint32_t max_symbols, uint32_t max_symbol_size)
-        : m_factory(max_symbols, max_symbol_size)
-    { }
-
-
-    void run()
-    {
-        // Build with the max_symbols and max_symbol_size
-        pointer_type coder = m_factory.build();
-
-        // Make sure we call the const version of the function
-        const pointer_type &const_coder = coder;
-
-        auto vector_in = random_vector(coder->block_size());
-
-        sak::mutable_storage storage_in = sak::storage(vector_in);
-        coder->set_symbols(storage_in);
-
-        auto symbols =
-            sak::split_storage(storage_in, coder->symbol_size());
-
-        // Check that we correctly copy out the symbols
-        for(uint32_t i = 0; i < coder->symbols(); ++i)
-        {
-            const value_type* symbol = const_coder->symbol_value(i);
-
-            // Compare the storage
-            auto s1 = symbols[i];
-            auto s2 = sak::storage(symbol, coder->symbol_size());
-            EXPECT_TRUE(sak::equal(s1, s2));
-        }
-    }
-
-private:
-
-    // The factory
-    factory_type m_factory;
-
-};
-
-
-/// Tests:
-///   - layer::symbol_value(uint32_t)
-///   - layer::set_symbols(const sak::mutable_storage&)
-template<class Coder>
-struct api_symbol_value
-{
-
-    typedef typename Coder::factory factory_type;
-    typedef typename Coder::pointer pointer_type;
-    typedef typename Coder::value_type value_type;
-
-    api_symbol_value(uint32_t max_symbols, uint32_t max_symbol_size)
-        : m_factory(max_symbols, max_symbol_size)
-    { }
-
-    void run()
-    {
-        // Build with the max_symbols and max_symbol_size
-        pointer_type coder = m_factory.build();
-
-        auto vector_in = random_vector(coder->block_size());
-
-        sak::mutable_storage storage_in = sak::storage(vector_in);
-        coder->set_symbols(storage_in);
-
-        auto symbols =
-            sak::split_storage(storage_in, coder->symbol_size());
-
-        // Check that we correctly copy out the symbols
-        for(uint32_t i = 0; i < coder->symbols(); ++i)
-        {
-            value_type* symbol = coder->symbol_value(i);
-
-            // Compare the storage
-            auto s1 = symbols[i];
-            auto s2 = sak::storage(symbol, coder->symbol_size());
-            EXPECT_TRUE(sak::equal(s1, s2));
-        }
-    }
-
-private:
-
-    // The factory
-    factory_type m_factory;
-
-
-};
-
-/// Tests:
-///   - layer::set_symbols(const sak::const_storage&)
-///   - layer::symbol(uint32_t) const
-template<class Coder>
-struct api_set_symbols_const_storage
-{
-
-    typedef typename Coder::factory factory_type;
-    typedef typename Coder::pointer pointer_type;
-    typedef typename Coder::value_type value_type;
-
-    api_set_symbols_const_storage(uint32_t max_symbols, uint32_t max_symbol_size)
-        : m_factory(max_symbols, max_symbol_size)
-    { }
-
-    void run()
-    {
-        // Build with the max_symbols and max_symbol_size
-        pointer_type coder = m_factory.build();
-
-        auto vector_in = random_vector(coder->block_size());
-
-        sak::const_storage storage_in = sak::storage(vector_in);
-        coder->set_symbols(storage_in);
-
-        auto symbols =
-            sak::split_storage(storage_in, coder->symbol_size());
-
-        EXPECT_EQ(symbols.size(), coder->symbols());
-
-        // Check that we correctly can access the symbols
-        for(uint32_t i = 0; i < coder->symbols(); ++i)
-        {
-            const uint8_t* symbol = coder->symbol(i);
-
-            // Compare the storage
-            auto s1 = symbols[i];
-            auto s2 = sak::storage(symbol, coder->symbol_size());
-            EXPECT_TRUE(sak::equal(s1, s2));
-        }
-    }
-
-private:
-
-    // The factory
-    factory_type m_factory;
-
-};
-
-/// Tests:
-///   - layer::set_symbols(const sak::mutable_storage&)
-///   - layer::symbol(uint32_t) const
-template<class Coder>
-struct api_set_symbols_mutable_storage
-{
-
-    typedef typename Coder::factory factory_type;
-    typedef typename Coder::pointer pointer_type;
-    typedef typename Coder::value_type value_type;
-
-    api_set_symbols_mutable_storage(uint32_t max_symbols, uint32_t max_symbol_size)
-        : m_factory(max_symbols, max_symbol_size)
-    { }
-
-    void run()
-    {
-        // Build with the max_symbols and max_symbol_size
-        pointer_type coder = m_factory.build();
-
-        auto vector_in = random_vector(coder->block_size());
-        auto vector_out = random_vector(coder->block_size());
-
-        sak::mutable_storage storage_in = sak::storage(vector_in);
-        coder->set_symbols(storage_in);
-
-        auto symbols =
-            sak::split_storage(storage_in, coder->symbol_size());
-
-        EXPECT_EQ(symbols.size(), coder->symbols());
-
-        // Check that we correctly can access the symbols
-        for(uint32_t i = 0; i < coder->symbols(); ++i)
-        {
-            const uint8_t* symbol = coder->symbol(i);
-
-            // Compare the storage
-            auto s1 = symbols[i];
-            auto s2 = sak::storage(symbol, coder->symbol_size());
-            EXPECT_TRUE(sak::equal(s1, s2));
-        }
-    }
-
-private:
-
-    // The factory
-    factory_type m_factory;
-
-};
-
-/// Tests:
-///   - layer::set_symbol(uint32_t, const sak::const_storage&)
-///   - layer::symbol(uint32_t)
-template<class Coder>
-struct api_set_symbol_const_storage
-{
-
-    typedef typename Coder::factory factory_type;
-    typedef typename Coder::pointer pointer_type;
-    typedef typename Coder::value_type value_type;
-
-    api_set_symbol_const_storage(uint32_t max_symbols,
+        api_swap_symbols_pointer(uint32_t max_symbols,
                                  uint32_t max_symbol_size)
-        : m_factory(max_symbols, max_symbol_size)
-    { }
+            : m_factory(max_symbols, max_symbol_size)
+        { }
 
-    void run()
-    {
-        // Build with the max_symbols and max_symbol_size
-        pointer_type coder = m_factory.build();
-
-        auto vector_in = random_vector(coder->block_size());
-
-        sak::const_storage storage_in = sak::storage(vector_in);
-
-        std::vector<sak::const_storage> symbols =
-            sak::split_storage(storage_in, coder->symbol_size());
-
-        EXPECT_EQ(symbols.size(), coder->symbols());
-
-        // Check that we correctly can access the symbols
-        for(uint32_t i = 0; i < coder->symbols(); ++i)
+        void run()
         {
-            coder->set_symbol(i, symbols[i]);
-            const uint8_t* symbol = coder->symbol(i);
+            // Build with the max_symbols and max_symbol_size
+            pointer_type coder = m_factory.build();
 
-            // Compare the storage
-            auto s1 = symbols[i];
-            auto s2 = sak::storage(symbol, coder->symbol_size());
-            EXPECT_TRUE(sak::equal(s1, s2));
-        }
-    }
+            auto vector_in = random_vector(coder->block_size());
+            auto vector_out = random_vector(coder->block_size());
 
-private:
+            sak::mutable_storage storage_out = sak::storage(vector_out);
 
-    // The factory
-    factory_type m_factory;
-
-};
-
-/// Tests:
-///   - layer::set_symbols(uint32_t, const sak::mutable_storage&)
-///   - layer::symbol(uint32_t)
-template<class Coder>
-struct api_set_symbol_mutable_storage
-{
-
-    typedef typename Coder::factory factory_type;
-    typedef typename Coder::pointer pointer_type;
-    typedef typename Coder::value_type value_type;
-
-    api_set_symbol_mutable_storage(uint32_t max_symbols,
-                                   uint32_t max_symbol_size)
-        : m_factory(max_symbols, max_symbol_size)
-    { }
-
-    void run()
-    {
-        // Build with the max_symbols and max_symbol_size
-        pointer_type coder = m_factory.build();
-
-        auto vector_in = random_vector(coder->block_size());
-
-        sak::mutable_storage storage_in = sak::storage(vector_in);
-
-        std::vector<sak::mutable_storage> symbols =
-            sak::split_storage(storage_in, coder->symbol_size());
-
-        EXPECT_EQ(symbols.size(), coder->symbols());
-
-        // Check that we correctly can access the symbols
-        for(uint32_t i = 0; i < coder->symbols(); ++i)
-        {
-            coder->set_symbol(i, symbols[i]);
-            const uint8_t* symbol = coder->symbol(i);
-
-            // Compare the storage
-            auto s1 = symbols[i];
-            auto s2 = sak::storage(symbol, coder->symbol_size());
-            EXPECT_TRUE(sak::equal(s1, s2));
-        }
-    }
-
-private:
-
-    // The factory
-    factory_type m_factory;
-
-};
-
-/// Tests:
-///   - layer::swap_symbols(std::vector<const uint8_t*>&)
-///   - layer::copy_symbols(const sak::mutable_storage&)
-template<class Coder>
-struct api_swap_symbols_const_pointer
-{
-    typedef typename Coder::factory factory_type;
-    typedef typename Coder::pointer pointer_type;
-
-    api_swap_symbols_const_pointer(uint32_t max_symbols,
-                                   uint32_t max_symbol_size)
-        : m_factory(max_symbols, max_symbol_size)
-    { }
-
-    void run()
-    {
-        // Build with the max_symbols and max_symbol_size
-        pointer_type coder = m_factory.build();
-
-        auto vector_in = random_vector(coder->block_size());
-        auto vector_out = random_vector(coder->block_size());
-
-        sak::mutable_storage storage_out = sak::storage(vector_out);
-
-        std::vector<const uint8_t*> symbols;
-        for(uint32_t i = 0; i < coder->symbols(); ++i)
-        {
-            symbols.push_back(&vector_in[i*coder->symbol_size()]);
-        }
-
-        coder->swap_symbols(symbols);
-        coder->copy_symbols(storage_out);
-
-        EXPECT_TRUE(sak::equal(sak::storage(vector_in),
-                               sak::storage(vector_out)));
-    }
-
-private:
-
-    // The factory
-    factory_type m_factory;
-
-};
-
-/// Tests:
-///   - layer::swap_symbols(std::vector<uint8_t*>&)
-///   - layer::copy_symbols(const sak::mutable_storage&)
-template<class Coder>
-struct api_swap_symbols_pointer
-{
-
-    typedef typename Coder::factory factory_type;
-    typedef typename Coder::pointer pointer_type;
-
-    api_swap_symbols_pointer(uint32_t max_symbols,
-                             uint32_t max_symbol_size)
-        : m_factory(max_symbols, max_symbol_size)
-    { }
-
-    void run()
-    {
-        // Build with the max_symbols and max_symbol_size
-        pointer_type coder = m_factory.build();
-
-        auto vector_in = random_vector(coder->block_size());
-        auto vector_out = random_vector(coder->block_size());
-
-        sak::mutable_storage storage_out = sak::storage(vector_out);
-
-        std::vector<uint8_t*> symbols;
-        for(uint32_t i = 0; i < coder->symbols(); ++i)
-        {
-            symbols.push_back(&vector_in[i*coder->symbol_size()]);
-        }
-
-        coder->swap_symbols(symbols);
-        coder->copy_symbols(storage_out);
-
-        EXPECT_TRUE(sak::equal(sak::storage(vector_in),
-                               sak::storage(vector_out)));
-    }
-
-private:
-
-    // The factory
-    factory_type m_factory;
-
-};
-
-/// Tests:
-///   - layer::swap_symbols(std::vector<uint8_t>&)
-///   - layer::copy_symbols(const sak::mutable_storage&)
-template<class Coder>
-struct api_swap_symbols_data
-{
-
-    typedef typename Coder::factory factory_type;
-    typedef typename Coder::pointer pointer_type;
-
-    api_swap_symbols_data(uint32_t max_symbols,
-                          uint32_t max_symbol_size)
-        : m_factory(max_symbols, max_symbol_size)
-    { }
-
-    void run()
-    {
-        // Build with the max_symbols and max_symbol_size
-        pointer_type coder = m_factory.build();
-
-        auto vector_in = random_vector(coder->block_size());
-        auto vector_out = random_vector(coder->block_size());
-
-        sak::mutable_storage storage_out = sak::storage(vector_out);
-
-        // Make vector_swap a copy of vector in
-        auto vector_swap = vector_in;
-
-        coder->swap_symbols(vector_swap);
-        coder->copy_symbols(storage_out);
-
-        EXPECT_TRUE(sak::equal(sak::storage(vector_in),
-                               sak::storage(vector_out)));
-    }
-
-private:
-
-    // The factory
-    factory_type m_factory;
-
-};
-
-/// Tests:
-///   - layer::swap_symbols(std::vector<std::vector<uint8_t>>&)
-///   - layer::copy_symbols(const sak::mutable_storage&)
-template<class Coder>
-struct api_swap_symbols_vector_data
-{
-
-    typedef typename Coder::factory factory_type;
-    typedef typename Coder::pointer pointer_type;
-
-    api_swap_symbols_vector_data(uint32_t max_symbols,
-                          uint32_t max_symbol_size)
-        : m_factory(max_symbols, max_symbol_size)
-    { }
-
-    void run()
-    {
-        // Build with the max_symbols and max_symbol_size
-        pointer_type coder = m_factory.build();
-
-        auto vector_in = random_vector(coder->block_size());
-        auto vector_out = random_vector(coder->block_size());
-
-        sak::mutable_storage storage_out = sak::storage(vector_out);
-
-        std::vector<std::vector<uint8_t>>
-            vector_swap(m_factory.max_symbols());
-
-        for (uint32_t i = 0; i < coder->symbols(); ++i)
-        {
-            vector_swap[i].resize(coder->symbol_size());
-            std::copy_n(&vector_in[i*coder->symbol_size()],
-                coder->symbol_size(), &vector_swap[i][0]);
-        }
-
-        coder->swap_symbols(vector_swap);
-        coder->copy_symbols(storage_out);
-
-        EXPECT_TRUE(sak::equal(sak::storage(vector_in),
-                               sak::storage(vector_out)));
-    }
-
-private:
-
-    // The factory
-    factory_type m_factory;
-
-};
-
-/// Tests:
-///   - layer::factory_max_symbols()
-template<class Coder>
-struct api_factory_max_symbols
-{
-    typedef typename Coder::factory factory_type;
-
-    api_factory_max_symbols(uint32_t max_symbols,
-                            uint32_t max_symbol_size)
-        : m_factory(max_symbols, max_symbol_size), m_max_symbols(max_symbols)
-    { }
-
-    void run()
-    {
-        EXPECT_EQ(m_factory.max_symbols(), m_max_symbols);
-    }
-
-private:
-
-    // The factory
-    factory_type m_factory;
-
-    // The maximum number of symbols
-    uint32_t m_max_symbols;
-
-};
-
-/// Tests:
-///   - layer::factory_max_symbol_size()
-template<class Coder>
-struct api_factory_max_symbol_size
-{
-    typedef typename Coder::factory factory_type;
-
-    api_factory_max_symbol_size(uint32_t max_symbols,
-                                uint32_t max_symbol_size)
-        : m_factory(max_symbols, max_symbol_size),
-          m_max_symbol_size(max_symbol_size)
-    { }
-
-    void run()
-    {
-        EXPECT_EQ(m_factory.max_symbol_size(), m_max_symbol_size);
-    }
-
-private:
-
-    // The factory
-    factory_type m_factory;
-
-    // The maximum number of symbols
-    uint32_t m_max_symbol_size;
-
-};
-
-/// Tests:
-///   - layer::factory_max_block_size()
-template<class Coder>
-struct api_factory_max_block_size
-{
-    typedef typename Coder::factory factory_type;
-
-    api_factory_max_block_size(uint32_t max_symbols,
-                               uint32_t max_symbol_size)
-        : m_factory(max_symbols, max_symbol_size),
-          m_max_block_size(max_symbols*max_symbol_size)
-    { }
-
-    void run()
-    {
-        EXPECT_EQ(m_factory.max_block_size(), m_max_block_size);
-    }
-
-private:
-
-    // The factory
-    factory_type m_factory;
-
-    // The maximum number of symbols
-    uint32_t m_max_block_size;
-
-};
-
-/// Tests:
-///   - layer::symbols()
-template<class Coder>
-struct api_symbols
-{
-    typedef typename Coder::factory factory_type;
-    typedef typename Coder::pointer pointer_type;
-
-    api_symbols(uint32_t max_symbols, uint32_t max_symbol_size)
-        : m_factory(max_symbols, max_symbol_size)
-    { }
-
-    void run()
-    {
-        // Build with the max_symbols and max_symbol_size
-        pointer_type coder = m_factory.build();
-
-        EXPECT_EQ(coder->symbols(), m_factory.max_symbols());
-    }
-
-private:
-
-    // The factory
-    factory_type m_factory;
-
-};
-
-/// Tests:
-///   - layer::symbol_size()
-template<class Coder>
-struct api_symbol_size
-{
-
-    typedef typename Coder::factory factory_type;
-    typedef typename Coder::pointer pointer_type;
-
-    api_symbol_size(uint32_t max_symbols, uint32_t max_symbol_size)
-        : m_factory(max_symbols, max_symbol_size)
-    { }
-
-    void run()
-    {
-        // Build with the max_symbols and max_symbol_size
-        pointer_type coder = m_factory.build();
-
-        EXPECT_EQ(coder->symbol_size(), m_factory.max_symbol_size());
-    }
-
-private:
-
-    // The factory
-    factory_type m_factory;
-
-};
-
-/// Tests:
-///   - layer::symbol_length()
-template<class Coder>
-struct api_symbol_length
-{
-    typedef typename Coder::factory factory_type;
-    typedef typename Coder::pointer pointer_type;
-    typedef typename Coder::field_type field_type;
-
-    api_symbol_length(uint32_t max_symbols, uint32_t max_symbol_size)
-        : m_factory(max_symbols, max_symbol_size)
-    { }
-
-    void run()
-    {
-        // Build with the max_symbols and max_symbol_size
-        pointer_type coder = m_factory.build();
-
-        uint32_t length =
-            fifi::size_to_length<field_type>(coder->symbol_size());
-
-        EXPECT_EQ(coder->symbol_length(), length);
-    }
-private:
-
-    // The factory
-    factory_type m_factory;
-
-};
-
-/// Tests:
-///   - layer::block_size()
-template<class Coder>
-struct api_block_size
-{
-    typedef typename Coder::factory factory_type;
-    typedef typename Coder::pointer pointer_type;
-
-    api_block_size(uint32_t max_symbols, uint32_t max_symbol_size)
-        : m_factory(max_symbols, max_symbol_size)
-    { }
-
-    void run()
-    {
-        // Build with the max_symbols and max_symbol_size
-        pointer_type coder = m_factory.build();
-
-        EXPECT_EQ(coder->block_size(),
-                  m_factory.max_symbols() * m_factory.max_symbol_size());
-    }
-
-private:
-
-    // The factory
-    factory_type m_factory;
-
-};
-
-/// Tests:
-///   - layer::set_bytes_used(uint32_t)
-///   - layer::bytes_used()
-template<class Coder>
-struct api_bytes_used
-{
-    typedef typename Coder::factory factory_type;
-    typedef typename Coder::pointer pointer_type;
-
-    api_bytes_used(uint32_t max_symbols, uint32_t max_symbol_size)
-        : m_factory(max_symbols, max_symbol_size)
-    { }
-
-    void run()
-    {
-        // Build with the max_symbols and max_symbol_size
-        pointer_type coder = m_factory.build();
-
-        uint32_t used =
-            m_factory.max_symbols() * m_factory.max_symbol_size();
-
-        coder->set_bytes_used(used);
-        EXPECT_EQ(coder->bytes_used(), used);
-
-        coder->set_bytes_used(1U);
-        EXPECT_EQ(coder->bytes_used(), 1U);
-
-    }
-
-private:
-
-    // The factory
-    factory_type m_factory;
-
-};
-
-/// Tests:
-///   - layer::is_symbols_available() const
-///   - layer::is_symbols_initialized() const
-///   - layer::symbols_available() const
-///   - layer::symbols_initialized() const
-///   - layer::is_symbol_available(uint32_t) const
-///   - layer::is_symbol_initialized(uint32_t) const
-template<class Coder>
-struct api_deep_storage_status
-{
-    typedef typename Coder::factory factory_type;
-    typedef typename Coder::pointer pointer_type;
-
-    api_deep_storage_status(uint32_t max_symbols, uint32_t max_symbol_size)
-        : m_factory(max_symbols, max_symbol_size),
-          m_factory_fixed(10, 100)
-    { }
-
-    void run()
-    {
-        set_symbol();
-        set_symbols();
-    }
-
-    /// Using:
-    ///   - layer::set_symbol(uint32_t, const sak::mutable_storage&)
-    void set_symbol()
-    {
-        // Build with the max_symbols and max_symbol_size
-        pointer_type coder = m_factory_fixed.build();
-
-        for(uint32_t i = 0; i < coder->symbols(); ++i)
-        {
-            EXPECT_TRUE(coder->is_symbol_available(i));
-            EXPECT_FALSE(coder->is_symbol_initialized(i));
-        }
-
-        EXPECT_EQ(coder->symbols_available(), coder->symbols());
-        EXPECT_EQ(coder->symbols_initialized(), 0U);
-
-        // Set some symbols
-        auto vector_in = random_vector(coder->symbol_size());
-
-        std::set<uint32_t> indexes;
-
-        sak::mutable_storage s = sak::storage(vector_in);
-
-        coder->set_symbol(2, s);
-        coder->set_symbol(7, s);
-        coder->set_symbol(1, s);
-        coder->set_symbol(8, s);
-
-        indexes.insert(2);
-        indexes.insert(7);
-        indexes.insert(1);
-        indexes.insert(8);
-
-        for(uint32_t i = 0; i < coder->symbols(); ++i)
-        {
-            auto it = indexes.find(i);
-            if(it != indexes.end())
+            std::vector<uint8_t*> symbols;
+            for(uint32_t i = 0; i < coder->symbols(); ++i)
             {
-                EXPECT_TRUE(coder->is_symbol_available(i));
-                EXPECT_TRUE(coder->is_symbol_initialized(i));
+                symbols.push_back(&vector_in[i*coder->symbol_size()]);
             }
-            else
+
+            coder->swap_symbols(symbols);
+            coder->copy_symbols(storage_out);
+
+            EXPECT_TRUE(sak::equal(sak::storage(vector_in),
+                                   sak::storage(vector_out)));
+        }
+
+    private:
+
+        // The factory
+        factory_type m_factory;
+
+    };
+
+    /// Tests:
+    ///   - layer::swap_symbols(std::vector<uint8_t>&)
+    ///   - layer::copy_symbols(const sak::mutable_storage&)
+    template<class Coder>
+    struct api_swap_symbols_data
+    {
+
+        typedef typename Coder::factory factory_type;
+        typedef typename Coder::pointer pointer_type;
+
+        api_swap_symbols_data(uint32_t max_symbols,
+                              uint32_t max_symbol_size)
+            : m_factory(max_symbols, max_symbol_size)
+        { }
+
+        void run()
+        {
+            // Build with the max_symbols and max_symbol_size
+            pointer_type coder = m_factory.build();
+
+            auto vector_in = random_vector(coder->block_size());
+            auto vector_out = random_vector(coder->block_size());
+
+            sak::mutable_storage storage_out = sak::storage(vector_out);
+
+            // Make vector_swap a copy of vector in
+            auto vector_swap = vector_in;
+
+            coder->swap_symbols(vector_swap);
+            coder->copy_symbols(storage_out);
+
+            EXPECT_TRUE(sak::equal(sak::storage(vector_in),
+                                   sak::storage(vector_out)));
+        }
+
+    private:
+
+        // The factory
+        factory_type m_factory;
+
+    };
+
+    /// Tests:
+    ///   - layer::factory_max_symbols()
+    template<class Coder>
+    struct api_factory_max_symbols
+    {
+        typedef typename Coder::factory factory_type;
+
+        api_factory_max_symbols(uint32_t max_symbols,
+                                uint32_t max_symbol_size)
+            : m_factory(max_symbols, max_symbol_size),
+              m_max_symbols(max_symbols)
+        { }
+
+        void run()
+        {
+            EXPECT_EQ(m_factory.max_symbols(), m_max_symbols);
+        }
+
+    private:
+
+        // The factory
+        factory_type m_factory;
+
+        // The maximum number of symbols
+        uint32_t m_max_symbols;
+
+    };
+
+    /// Tests:
+    ///   - layer::factory_max_symbol_size()
+    template<class Coder>
+    struct api_factory_max_symbol_size
+    {
+        typedef typename Coder::factory factory_type;
+
+        api_factory_max_symbol_size(uint32_t max_symbols,
+                                    uint32_t max_symbol_size)
+            : m_factory(max_symbols, max_symbol_size),
+              m_max_symbol_size(max_symbol_size)
+        { }
+
+        void run()
+        {
+            EXPECT_EQ(m_factory.max_symbol_size(), m_max_symbol_size);
+        }
+
+    private:
+
+        // The factory
+        factory_type m_factory;
+
+        // The maximum number of symbols
+        uint32_t m_max_symbol_size;
+
+    };
+
+    /// Tests:
+    ///   - layer::factory_max_block_size()
+    template<class Coder>
+    struct api_factory_max_block_size
+    {
+        typedef typename Coder::factory factory_type;
+
+        api_factory_max_block_size(uint32_t max_symbols,
+                                   uint32_t max_symbol_size)
+            : m_factory(max_symbols, max_symbol_size),
+              m_max_block_size(max_symbols*max_symbol_size)
+        { }
+
+        void run()
+        {
+            EXPECT_EQ(m_factory.max_block_size(), m_max_block_size);
+        }
+
+    private:
+
+        // The factory
+        factory_type m_factory;
+
+        // The maximum number of symbols
+        uint32_t m_max_block_size;
+
+    };
+
+    /// Tests:
+    ///   - layer::symbols()
+    template<class Coder>
+    struct api_symbols
+    {
+        typedef typename Coder::factory factory_type;
+        typedef typename Coder::pointer pointer_type;
+
+        api_symbols(uint32_t max_symbols, uint32_t max_symbol_size)
+            : m_factory(max_symbols, max_symbol_size)
+        { }
+
+        void run()
+        {
+            // Build with the max_symbols and max_symbol_size
+            pointer_type coder = m_factory.build();
+
+            EXPECT_EQ(coder->symbols(), m_factory.max_symbols());
+        }
+
+    private:
+
+        // The factory
+        factory_type m_factory;
+
+    };
+
+    /// Tests:
+    ///   - layer::symbol_size()
+    template<class Coder>
+    struct api_symbol_size
+    {
+
+        typedef typename Coder::factory factory_type;
+        typedef typename Coder::pointer pointer_type;
+
+        api_symbol_size(uint32_t max_symbols, uint32_t max_symbol_size)
+            : m_factory(max_symbols, max_symbol_size)
+        { }
+
+        void run()
+        {
+            // Build with the max_symbols and max_symbol_size
+            pointer_type coder = m_factory.build();
+
+            EXPECT_EQ(coder->symbol_size(), m_factory.max_symbol_size());
+        }
+
+    private:
+
+        // The factory
+        factory_type m_factory;
+
+    };
+
+    /// Tests:
+    ///   - layer::symbol_length()
+    template<class Coder>
+    struct api_symbol_length
+    {
+        typedef typename Coder::factory factory_type;
+        typedef typename Coder::pointer pointer_type;
+        typedef typename Coder::field_type field_type;
+
+        api_symbol_length(uint32_t max_symbols, uint32_t max_symbol_size)
+            : m_factory(max_symbols, max_symbol_size)
+        { }
+
+        void run()
+        {
+            // Build with the max_symbols and max_symbol_size
+            pointer_type coder = m_factory.build();
+
+            uint32_t length =
+                fifi::size_to_length<field_type>(coder->symbol_size());
+
+            EXPECT_EQ(coder->symbol_length(), length);
+        }
+    private:
+
+        // The factory
+        factory_type m_factory;
+
+    };
+
+    /// Tests:
+    ///   - layer::block_size()
+    template<class Coder>
+    struct api_block_size
+    {
+        typedef typename Coder::factory factory_type;
+        typedef typename Coder::pointer pointer_type;
+
+        api_block_size(uint32_t max_symbols, uint32_t max_symbol_size)
+            : m_factory(max_symbols, max_symbol_size)
+        { }
+
+        void run()
+        {
+            // Build with the max_symbols and max_symbol_size
+            pointer_type coder = m_factory.build();
+
+            EXPECT_EQ(coder->block_size(),
+                      m_factory.max_symbols() * m_factory.max_symbol_size());
+        }
+
+    private:
+
+        // The factory
+        factory_type m_factory;
+
+    };
+
+    /// Tests:
+    ///   - layer::set_bytes_used(uint32_t)
+    ///   - layer::bytes_used()
+    template<class Coder>
+    struct api_bytes_used
+    {
+        typedef typename Coder::factory factory_type;
+        typedef typename Coder::pointer pointer_type;
+
+        api_bytes_used(uint32_t max_symbols, uint32_t max_symbol_size)
+            : m_factory(max_symbols, max_symbol_size)
+        { }
+
+        void run()
+        {
+            // Build with the max_symbols and max_symbol_size
+            pointer_type coder = m_factory.build();
+
+            uint32_t used =
+                m_factory.max_symbols() * m_factory.max_symbol_size();
+
+            coder->set_bytes_used(used);
+            EXPECT_EQ(coder->bytes_used(), used);
+
+            coder->set_bytes_used(1U);
+            EXPECT_EQ(coder->bytes_used(), 1U);
+
+        }
+
+    private:
+
+        // The factory
+        factory_type m_factory;
+
+    };
+
+    /// Tests:
+    ///   - layer::is_symbols_available() const
+    ///   - layer::is_symbols_initialized() const
+    ///   - layer::symbols_available() const
+    ///   - layer::symbols_initialized() const
+    ///   - layer::is_symbol_available(uint32_t) const
+    ///   - layer::is_symbol_initialized(uint32_t) const
+    template<class Coder>
+    struct api_deep_storage_status
+    {
+        typedef typename Coder::factory factory_type;
+        typedef typename Coder::pointer pointer_type;
+
+        api_deep_storage_status(uint32_t max_symbols, uint32_t max_symbol_size)
+            : m_factory(max_symbols, max_symbol_size),
+              m_factory_fixed(10, 100)
+        { }
+
+        void run()
+        {
+            set_symbol();
+            set_symbols();
+        }
+
+        /// Using:
+        ///   - layer::set_symbol(uint32_t, const sak::mutable_storage&)
+        void set_symbol()
+        {
+            // Build with the max_symbols and max_symbol_size
+            pointer_type coder = m_factory_fixed.build();
+
+            for(uint32_t i = 0; i < coder->symbols(); ++i)
             {
                 EXPECT_TRUE(coder->is_symbol_available(i));
                 EXPECT_FALSE(coder->is_symbol_initialized(i));
             }
+
+            EXPECT_EQ(coder->symbols_available(), coder->symbols());
+            EXPECT_EQ(coder->symbols_initialized(), 0U);
+
+            // Set some symbols
+            auto vector_in = random_vector(coder->symbol_size());
+
+            std::set<uint32_t> indexes;
+
+            sak::mutable_storage s = sak::storage(vector_in);
+
+            coder->set_symbol(0, s);
+            coder->set_symbol(1, s);
+            coder->set_symbol(2, s);
+            coder->set_symbol(3, s);
+
+            indexes.insert(0);
+            indexes.insert(1);
+            indexes.insert(2);
+            indexes.insert(3);
+
+            for(uint32_t i = 0; i < coder->symbols(); ++i)
+            {
+                auto it = indexes.find(i);
+                if(it != indexes.end())
+                {
+                    EXPECT_TRUE(coder->is_symbol_available(i));
+                    EXPECT_TRUE(coder->is_symbol_initialized(i));
+                }
+                else
+                {
+                    EXPECT_TRUE(coder->is_symbol_available(i));
+                    EXPECT_FALSE(coder->is_symbol_initialized(i));
+                }
+            }
+
+            EXPECT_EQ(coder->symbols_available(), coder->symbols());
+            EXPECT_EQ(coder->symbols_initialized(), indexes.size());
+
         }
 
-        EXPECT_EQ(coder->symbols_available(), coder->symbols());
-        EXPECT_EQ(coder->symbols_initialized(), indexes.size());
-
-    }
-
-    /// Using:
-    ///   - layer::set_symbols(const sak::mutable_storage&)
-    void set_symbols()
-    {
-        pointer_type coder = m_factory.build();
-
-        EXPECT_EQ(coder->symbols_available(), coder->symbols());
-        EXPECT_EQ(coder->symbols_initialized(), 0U);
-
-        EXPECT_TRUE(coder->is_symbols_available());
-        EXPECT_FALSE(coder->is_symbols_initialized());
-
-        std::vector<uint8_t> vector_data =
-            random_vector(coder->block_size());
-
-        sak::mutable_storage s = sak::storage(vector_data);
-
-        coder->set_symbols(s);
-
-        EXPECT_EQ(coder->symbols_available(), coder->symbols());
-        EXPECT_EQ(coder->symbols_initialized(), coder->symbols());
-
-        EXPECT_TRUE(coder->is_symbols_available());
-        EXPECT_TRUE(coder->is_symbols_initialized());
-
-        coder = m_factory.build();
-
-        EXPECT_EQ(coder->symbols_available(), coder->symbols());
-        EXPECT_EQ(coder->symbols_initialized(), 0U);
-
-        EXPECT_TRUE(coder->is_symbols_available());
-        EXPECT_FALSE(coder->is_symbols_initialized());
-
-        coder->set_symbols(s);
-
-        EXPECT_EQ(coder->symbols_available(), coder->symbols());
-        EXPECT_EQ(coder->symbols_initialized(), coder->symbols());
-
-        EXPECT_TRUE(coder->is_symbols_available());
-        EXPECT_TRUE(coder->is_symbols_initialized());
-    }
-
-private:
-
-    // The factory
-    factory_type m_factory;
-
-    // Factory with fixed max_symbol_size and max_symbols
-    factory_type m_factory_fixed;
-
-};
-
-/// Tests:
-///   - layer::is_symbols_available() const
-///   - layer::is_symbols_initialized() const
-///   - layer::symbols_available() const
-///   - layer::symbols_initialized() const
-///   - layer::is_symbol_available(uint32_t) const
-///   - layer::is_symbol_initialized(uint32_t) const
-template<class Coder>
-struct api_shallow_storage_status
-{
-    typedef typename Coder::factory factory_type;
-    typedef typename Coder::pointer pointer_type;
-
-    api_shallow_storage_status(uint32_t max_symbols,
-                               uint32_t max_symbol_size)
-        : m_factory(max_symbols, max_symbol_size),
-          m_factory_fixed(10, 100)
-    { }
-
-    void run()
-    {
-        set_symbol();
-        set_symbols();
-    }
-
-    /// Using:
-    ///   - layer::set_symbol(uint32_t, const sak::mutable_storage&)
-    void set_symbol()
-    {
-        // Build with the max_symbols and max_symbol_size
-        pointer_type coder = m_factory_fixed.build();
-
-        for(uint32_t i = 0; i < coder->symbols(); ++i)
+        /// Using:
+        ///   - layer::set_symbols(const sak::mutable_storage&)
+        void set_symbols()
         {
-            EXPECT_FALSE(coder->is_symbol_available(i));
-            EXPECT_FALSE(coder->is_symbol_initialized(i));
+            pointer_type coder = m_factory.build();
+
+            EXPECT_EQ(coder->symbols_available(), coder->symbols());
+            EXPECT_EQ(coder->symbols_initialized(), 0U);
+
+            EXPECT_TRUE(coder->is_symbols_available());
+            EXPECT_FALSE(coder->is_symbols_initialized());
+
+            std::vector<uint8_t> vector_data =
+                random_vector(coder->block_size());
+
+            sak::mutable_storage s = sak::storage(vector_data);
+
+            coder->set_symbols(s);
+
+            EXPECT_EQ(coder->symbols_available(), coder->symbols());
+            EXPECT_EQ(coder->symbols_initialized(), coder->symbols());
+
+            EXPECT_TRUE(coder->is_symbols_available());
+            EXPECT_TRUE(coder->is_symbols_initialized());
+
+            coder = m_factory.build();
+
+            EXPECT_EQ(coder->symbols_available(), coder->symbols());
+            EXPECT_EQ(coder->symbols_initialized(), 0U);
+
+            EXPECT_TRUE(coder->is_symbols_available());
+            EXPECT_FALSE(coder->is_symbols_initialized());
+
+            coder->set_symbols(s);
+
+            EXPECT_EQ(coder->symbols_available(), coder->symbols());
+            EXPECT_EQ(coder->symbols_initialized(), coder->symbols());
+
+            EXPECT_TRUE(coder->is_symbols_available());
+            EXPECT_TRUE(coder->is_symbols_initialized());
         }
 
-        EXPECT_EQ(coder->symbols_available(), 0U);
-        EXPECT_EQ(coder->symbols_initialized(), 0U);
+    private:
 
-        // Set some symbols
-        auto vector_in = random_vector(coder->symbol_size());
+        // The factory
+        factory_type m_factory;
 
-        std::set<uint32_t> indexes;
+        // Factory with fixed max_symbol_size and max_symbols
+        factory_type m_factory_fixed;
 
-        sak::mutable_storage s = sak::storage(vector_in);
+    };
 
-        coder->set_symbol(2, s);
-        coder->set_symbol(7, s);
-        coder->set_symbol(1, s);
-        coder->set_symbol(8, s);
+    /// Tests:
+    ///   - layer::is_symbols_available() const
+    ///   - layer::is_symbols_initialized() const
+    ///   - layer::symbols_available() const
+    ///   - layer::symbols_initialized() const
+    ///   - layer::is_symbol_available(uint32_t) const
+    ///   - layer::is_symbol_initialized(uint32_t) const
+    template<class Coder>
+    struct api_shallow_storage_status
+    {
+        typedef typename Coder::factory factory_type;
+        typedef typename Coder::pointer pointer_type;
 
-        indexes.insert(2);
-        indexes.insert(7);
-        indexes.insert(1);
-        indexes.insert(8);
+        api_shallow_storage_status(uint32_t max_symbols,
+                                   uint32_t max_symbol_size)
+            : m_factory(max_symbols, max_symbol_size),
+              m_factory_fixed(10, 100)
+        { }
 
-        for(uint32_t i = 0; i < coder->symbols(); ++i)
+        void run()
         {
-            auto it = indexes.find(i);
-            if(it != indexes.end())
+            set_symbol();
+            set_symbols();
+        }
+
+        /// Using:
+        ///   - layer::set_symbol(uint32_t, const sak::mutable_storage&)
+        void set_symbol()
+        {
+            // Build with the max_symbols and max_symbol_size
+            pointer_type coder = m_factory_fixed.build();
+
+            for(uint32_t i = 0; i < coder->symbols(); ++i)
+            {
+                EXPECT_FALSE(coder->is_symbol_available(i));
+                EXPECT_FALSE(coder->is_symbol_initialized(i));
+            }
+
+            EXPECT_EQ(coder->symbols_available(), 0U);
+            EXPECT_EQ(coder->symbols_initialized(), 0U);
+
+            // Set some symbols
+            auto vector_in = random_vector(coder->symbol_size());
+
+            std::set<uint32_t> indexes;
+
+            sak::mutable_storage s = sak::storage(vector_in);
+
+            coder->set_symbol(0, s);
+            coder->set_symbol(1, s);
+            coder->set_symbol(2, s);
+            coder->set_symbol(3, s);
+
+            indexes.insert(0);
+            indexes.insert(1);
+            indexes.insert(2);
+            indexes.insert(3);
+
+            for(uint32_t i = 0; i < coder->symbols(); ++i)
+            {
+                auto it = indexes.find(i);
+                if(it != indexes.end())
+                {
+                    EXPECT_TRUE(coder->is_symbol_available(i));
+                    EXPECT_TRUE(coder->is_symbol_initialized(i));
+                }
+                else
+                {
+                    EXPECT_FALSE(coder->is_symbol_available(i));
+                    EXPECT_FALSE(coder->is_symbol_initialized(i));
+                }
+            }
+
+            EXPECT_EQ(coder->symbols_available(), indexes.size());
+            EXPECT_EQ(coder->symbols_initialized(), indexes.size());
+
+        }
+
+        /// Using:
+        ///   - layer::set_symbols(const sak::mutable_storage&)
+        void set_symbols()
+        {
+            pointer_type coder = m_factory.build();
+
+            EXPECT_EQ(coder->symbols_available(), 0U);
+            EXPECT_EQ(coder->symbols_initialized(), 0U);
+
+            EXPECT_FALSE(coder->is_symbols_available());
+            EXPECT_FALSE(coder->is_symbols_initialized());
+
+            std::vector<uint8_t> vector_data =
+                random_vector(coder->block_size());
+
+            sak::mutable_storage s = sak::storage(vector_data);
+
+            coder->set_symbols(s);
+
+            EXPECT_EQ(coder->symbols_available(), coder->symbols());
+            EXPECT_EQ(coder->symbols_initialized(), coder->symbols());
+
+            EXPECT_TRUE(coder->is_symbols_available());
+            EXPECT_TRUE(coder->is_symbols_initialized());
+
+            coder = m_factory.build();
+
+            EXPECT_EQ(coder->symbols_initialized(), 0U);
+            EXPECT_EQ(coder->symbols_initialized(), 0U);
+
+            EXPECT_FALSE(coder->is_symbols_available());
+            EXPECT_FALSE(coder->is_symbols_initialized());
+
+            coder->set_symbols(s);
+
+            EXPECT_EQ(coder->symbols_available(), coder->symbols());
+            EXPECT_EQ(coder->symbols_initialized(), coder->symbols());
+
+            EXPECT_TRUE(coder->is_symbols_available());
+            EXPECT_TRUE(coder->is_symbols_initialized());
+        }
+
+    private:
+
+        // The factory
+        factory_type m_factory;
+
+        // Factory with fixed max_symbol_size and max_symbols
+        factory_type m_factory_fixed;
+
+    };
+
+
+    /// Tests:
+    ///   - layer::symbol_exists(uint32_t) const
+    ///   - layer::symbol_count() const
+    ///   - layer::is_storage_full() const
+    template<class Coder>
+    struct api_deep_swap_storage_status
+    {
+        typedef typename Coder::factory factory_type;
+        typedef typename Coder::pointer pointer_type;
+
+        api_deep_swap_storage_status(uint32_t max_symbols, uint32_t max_symbol_size)
+            : m_factory(max_symbols, max_symbol_size)
+        { }
+
+        void run()
+        {
+            swap_symbols();
+        }
+
+        /// Using:
+        ///   - layer::swap_symbols(std::vector<uint8_t>&)
+        void swap_symbols()
+        {
+            pointer_type coder = m_factory.build();
+
+            EXPECT_EQ(coder->symbols_available(), coder->symbols());
+            EXPECT_EQ(coder->symbols_initialized(), 0U);
+
+            EXPECT_TRUE(coder->is_symbols_available());
+            EXPECT_FALSE(coder->is_symbols_initialized());
+
+            std::vector<uint8_t> vector_data =
+                random_vector(coder->block_size());
+
+            coder->swap_symbols(vector_data);
+
+            EXPECT_EQ(coder->symbols_available(), coder->symbols());
+            EXPECT_EQ(coder->symbols_initialized(), coder->symbols());
+
+            EXPECT_TRUE(coder->is_symbols_available());
+            EXPECT_TRUE(coder->is_symbols_initialized());
+
+            for(uint32_t i = 0; i < coder->symbols(); ++i)
             {
                 EXPECT_TRUE(coder->is_symbol_available(i));
                 EXPECT_TRUE(coder->is_symbol_initialized(i));
             }
-            else
+
+            coder = m_factory.build();
+
+            EXPECT_EQ(coder->symbols_initialized(), 0U);
+            EXPECT_EQ(coder->symbols_available(), coder->symbols());
+
+            EXPECT_FALSE(coder->is_symbols_initialized());
+            EXPECT_TRUE(coder->is_symbols_available());
+
+            for(uint32_t i = 0; i < coder->symbols(); ++i)
+            {
+                EXPECT_FALSE(coder->is_symbol_initialized(i));
+                EXPECT_TRUE(coder->is_symbol_available(i));
+            }
+
+
+        }
+
+    private:
+
+        // The factory
+        factory_type m_factory;
+
+    };
+
+    /// Tests:
+    ///   - layer::symbol_exists(uint32_t) const
+    ///   - layer::symbol_count() const
+    ///   - layer::is_storage_full() const
+    template<class Coder>
+    struct api_const_shallow_swap_storage_status
+    {
+        typedef typename Coder::factory factory_type;
+        typedef typename Coder::pointer pointer_type;
+
+        api_const_shallow_swap_storage_status(uint32_t max_symbols,
+                                              uint32_t max_symbol_size)
+            : m_factory(max_symbols, max_symbol_size)
+        { }
+
+        void run()
+        {
+            swap_symbols();
+        }
+
+        /// Using:
+        ///   - layer::swap_symbols(std::vector<const uint8_t*>&)
+        void swap_symbols()
+        {
+            pointer_type coder = m_factory.build();
+
+            EXPECT_EQ(coder->symbols_available(), 0U);
+            EXPECT_EQ(coder->symbols_initialized(), 0U);
+
+            EXPECT_FALSE(coder->is_symbols_available());
+            EXPECT_FALSE(coder->is_symbols_initialized());
+
+            // Make a temp. vector with some dummy pointers
+            std::vector<const uint8_t*> vector_const_ptr(
+                m_factory.max_symbols(), (const uint8_t*)1U);
+
+            coder->swap_symbols(vector_const_ptr);
+
+            EXPECT_EQ(coder->symbols_initialized(), coder->symbols());
+            EXPECT_EQ(coder->symbols_available(), coder->symbols());
+
+            EXPECT_TRUE(coder->is_symbols_initialized());
+            EXPECT_TRUE(coder->is_symbols_available());
+
+            for(uint32_t i = 0; i < coder->symbols(); ++i)
+            {
+                EXPECT_TRUE(coder->is_symbol_available(i));
+                EXPECT_TRUE(coder->is_symbol_initialized(i));
+            }
+
+            coder = m_factory.build();
+
+            EXPECT_EQ(coder->symbols_available(), 0U);
+            EXPECT_EQ(coder->symbols_initialized(), 0U);
+
+            EXPECT_FALSE(coder->is_symbols_available());
+            EXPECT_FALSE(coder->is_symbols_initialized());
+
+            for(uint32_t i = 0; i < coder->symbols(); ++i)
             {
                 EXPECT_FALSE(coder->is_symbol_available(i));
                 EXPECT_FALSE(coder->is_symbol_initialized(i));
             }
         }
 
-        EXPECT_EQ(coder->symbols_available(), indexes.size());
-        EXPECT_EQ(coder->symbols_initialized(), indexes.size());
+    private:
 
-    }
+        // The factory
+        factory_type m_factory;
 
-    /// Using:
-    ///   - layer::set_symbols(const sak::mutable_storage&)
-    void set_symbols()
+    };
+
+
+    /// Tests:
+    ///   - layer::symbol_exists(uint32_t) const
+    ///   - layer::symbol_count() const
+    ///   - layer::is_storage_full() const
+    template<class Coder>
+    struct api_mutable_shallow_swap_storage_status
     {
-        pointer_type coder = m_factory.build();
+        typedef typename Coder::factory factory_type;
+        typedef typename Coder::pointer pointer_type;
 
-        EXPECT_EQ(coder->symbols_available(), 0U);
-        EXPECT_EQ(coder->symbols_initialized(), 0U);
+        api_mutable_shallow_swap_storage_status(uint32_t max_symbols,
+                                                uint32_t max_symbol_size)
+            : m_factory(max_symbols, max_symbol_size)
+        { }
 
-        EXPECT_FALSE(coder->is_symbols_available());
-        EXPECT_FALSE(coder->is_symbols_initialized());
-
-        std::vector<uint8_t> vector_data =
-            random_vector(coder->block_size());
-
-        sak::mutable_storage s = sak::storage(vector_data);
-
-        coder->set_symbols(s);
-
-        EXPECT_EQ(coder->symbols_available(), coder->symbols());
-        EXPECT_EQ(coder->symbols_initialized(), coder->symbols());
-
-        EXPECT_TRUE(coder->is_symbols_available());
-        EXPECT_TRUE(coder->is_symbols_initialized());
-
-        coder = m_factory.build();
-
-        EXPECT_EQ(coder->symbols_initialized(), 0U);
-        EXPECT_EQ(coder->symbols_initialized(), 0U);
-
-        EXPECT_FALSE(coder->is_symbols_available());
-        EXPECT_FALSE(coder->is_symbols_initialized());
-
-        coder->set_symbols(s);
-
-        EXPECT_EQ(coder->symbols_available(), coder->symbols());
-        EXPECT_EQ(coder->symbols_initialized(), coder->symbols());
-
-        EXPECT_TRUE(coder->is_symbols_available());
-        EXPECT_TRUE(coder->is_symbols_initialized());
-    }
-
-private:
-
-    // The factory
-    factory_type m_factory;
-
-    // Factory with fixed max_symbol_size and max_symbols
-    factory_type m_factory_fixed;
-
-};
-
-/// Tests:
-///   - layer::symbol_exists(uint32_t) const
-///   - layer::symbol_count() const
-///   - layer::is_storage_full() const
-template<class Coder>
-struct api_deep_swap_storage_status
-{
-    typedef typename Coder::factory factory_type;
-    typedef typename Coder::pointer pointer_type;
-
-    api_deep_swap_storage_status(uint32_t max_symbols, uint32_t max_symbol_size)
-        : m_factory(max_symbols, max_symbol_size)
-    { }
-
-    void run()
-    {
-        swap_symbols();
-    }
-
-    /// Using:
-    ///   - layer::swap_symbols(std::vector<uint8_t>&)
-    void swap_symbols()
-    {
-        pointer_type coder = m_factory.build();
-
-        EXPECT_EQ(coder->symbols_available(), coder->symbols());
-        EXPECT_EQ(coder->symbols_initialized(), 0U);
-
-        EXPECT_TRUE(coder->is_symbols_available());
-        EXPECT_FALSE(coder->is_symbols_initialized());
-
-        std::vector<uint8_t> vector_data =
-            random_vector(coder->block_size());
-
-        coder->swap_symbols(vector_data);
-
-        EXPECT_EQ(coder->symbols_available(), coder->symbols());
-        EXPECT_EQ(coder->symbols_initialized(), coder->symbols());
-
-        EXPECT_TRUE(coder->is_symbols_available());
-        EXPECT_TRUE(coder->is_symbols_initialized());
-
-        for(uint32_t i = 0; i < coder->symbols(); ++i)
+        void run()
         {
-            EXPECT_TRUE(coder->is_symbol_available(i));
-            EXPECT_TRUE(coder->is_symbol_initialized(i));
+            swap_symbols();
         }
 
-        coder = m_factory.build();
-
-        EXPECT_EQ(coder->symbols_initialized(), 0U);
-        EXPECT_EQ(coder->symbols_available(), coder->symbols());
-
-        EXPECT_FALSE(coder->is_symbols_initialized());
-        EXPECT_TRUE(coder->is_symbols_available());
-
-        for(uint32_t i = 0; i < coder->symbols(); ++i)
+        /// Using:
+        ///   - layer::swap_symbols(std::vector<uint8_t*>&)
+        void swap_symbols()
         {
-            EXPECT_FALSE(coder->is_symbol_initialized(i));
-            EXPECT_TRUE(coder->is_symbol_available(i));
+            pointer_type coder = m_factory.build();
+
+            EXPECT_EQ(coder->symbols_available(), 0U);
+            EXPECT_EQ(coder->symbols_initialized(), 0U);
+
+            EXPECT_FALSE(coder->is_symbols_available());
+            EXPECT_FALSE(coder->is_symbols_initialized());
+
+            // Make a temp. vector with some dummy pointers
+            std::vector<uint8_t*> vector_ptr(
+                m_factory.max_symbols(), (uint8_t*)1U);
+
+            coder->swap_symbols(vector_ptr);
+
+            EXPECT_EQ(coder->symbols_initialized(), coder->symbols());
+            EXPECT_EQ(coder->symbols_available(), coder->symbols());
+
+            EXPECT_TRUE(coder->is_symbols_initialized());
+            EXPECT_TRUE(coder->is_symbols_available());
+
+            for(uint32_t i = 0; i < coder->symbols(); ++i)
+            {
+                EXPECT_TRUE(coder->is_symbol_available(i));
+                EXPECT_TRUE(coder->is_symbol_initialized(i));
+            }
+
+            coder = m_factory.build();
+
+            EXPECT_EQ(coder->symbols_available(), 0U);
+            EXPECT_EQ(coder->symbols_initialized(), 0U);
+
+            EXPECT_FALSE(coder->is_symbols_available());
+            EXPECT_FALSE(coder->is_symbols_initialized());
+
+            for(uint32_t i = 0; i < coder->symbols(); ++i)
+            {
+                EXPECT_FALSE(coder->is_symbol_available(i));
+                EXPECT_FALSE(coder->is_symbol_initialized(i));
+            }
         }
 
+    private:
 
-    }
+        // The factory
+        factory_type m_factory;
 
-private:
-
-    // The factory
-    factory_type m_factory;
-
-};
-
-/// Tests:
-///   - layer::symbol_exists(uint32_t) const
-///   - layer::symbol_count() const
-///   - layer::is_storage_full() const
-template<class Coder>
-struct api_const_shallow_swap_storage_status
-{
-    typedef typename Coder::factory factory_type;
-    typedef typename Coder::pointer pointer_type;
-
-    api_const_shallow_swap_storage_status(uint32_t max_symbols,
-                                          uint32_t max_symbol_size)
-        : m_factory(max_symbols, max_symbol_size)
-    { }
-
-    void run()
-    {
-        swap_symbols();
-    }
-
-    /// Using:
-    ///   - layer::swap_symbols(std::vector<const uint8_t*>&)
-    void swap_symbols()
-    {
-        pointer_type coder = m_factory.build();
-
-        EXPECT_EQ(coder->symbols_available(), 0U);
-        EXPECT_EQ(coder->symbols_initialized(), 0U);
-
-        EXPECT_FALSE(coder->is_symbols_available());
-        EXPECT_FALSE(coder->is_symbols_initialized());
-
-        // Make a temp. vector with some dummy pointers
-        std::vector<const uint8_t*> vector_const_ptr(
-            m_factory.max_symbols(), (const uint8_t*)1U);
-
-        coder->swap_symbols(vector_const_ptr);
-
-        EXPECT_EQ(coder->symbols_initialized(), coder->symbols());
-        EXPECT_EQ(coder->symbols_available(), coder->symbols());
-
-        EXPECT_TRUE(coder->is_symbols_initialized());
-        EXPECT_TRUE(coder->is_symbols_available());
-
-        for(uint32_t i = 0; i < coder->symbols(); ++i)
-        {
-            EXPECT_TRUE(coder->is_symbol_available(i));
-            EXPECT_TRUE(coder->is_symbol_initialized(i));
-        }
-
-        coder = m_factory.build();
-
-        EXPECT_EQ(coder->symbols_available(), 0U);
-        EXPECT_EQ(coder->symbols_initialized(), 0U);
-
-        EXPECT_FALSE(coder->is_symbols_available());
-        EXPECT_FALSE(coder->is_symbols_initialized());
-
-        for(uint32_t i = 0; i < coder->symbols(); ++i)
-        {
-            EXPECT_FALSE(coder->is_symbol_available(i));
-            EXPECT_FALSE(coder->is_symbol_initialized(i));
-        }
-    }
-
-private:
-
-    // The factory
-    factory_type m_factory;
-
-};
-
-
-/// Tests:
-///   - layer::symbol_exists(uint32_t) const
-///   - layer::symbol_count() const
-///   - layer::is_storage_full() const
-template<class Coder>
-struct api_mutable_shallow_swap_storage_status
-{
-    typedef typename Coder::factory factory_type;
-    typedef typename Coder::pointer pointer_type;
-
-    api_mutable_shallow_swap_storage_status(uint32_t max_symbols,
-                                            uint32_t max_symbol_size)
-        : m_factory(max_symbols, max_symbol_size)
-    { }
-
-    void run()
-    {
-        swap_symbols();
-    }
-
-    /// Using:
-    ///   - layer::swap_symbols(std::vector<uint8_t*>&)
-    void swap_symbols()
-    {
-        pointer_type coder = m_factory.build();
-
-        EXPECT_EQ(coder->symbols_available(), 0U);
-        EXPECT_EQ(coder->symbols_initialized(), 0U);
-
-        EXPECT_FALSE(coder->is_symbols_available());
-        EXPECT_FALSE(coder->is_symbols_initialized());
-
-        // Make a temp. vector with some dummy pointers
-        std::vector<uint8_t*> vector_ptr(
-            m_factory.max_symbols(), (uint8_t*)1U);
-
-        coder->swap_symbols(vector_ptr);
-
-        EXPECT_EQ(coder->symbols_initialized(), coder->symbols());
-        EXPECT_EQ(coder->symbols_available(), coder->symbols());
-
-        EXPECT_TRUE(coder->is_symbols_initialized());
-        EXPECT_TRUE(coder->is_symbols_available());
-
-        for(uint32_t i = 0; i < coder->symbols(); ++i)
-        {
-            EXPECT_TRUE(coder->is_symbol_available(i));
-            EXPECT_TRUE(coder->is_symbol_initialized(i));
-        }
-
-        coder = m_factory.build();
-
-        EXPECT_EQ(coder->symbols_available(), 0U);
-        EXPECT_EQ(coder->symbols_initialized(), 0U);
-
-        EXPECT_FALSE(coder->is_symbols_available());
-        EXPECT_FALSE(coder->is_symbols_initialized());
-
-        for(uint32_t i = 0; i < coder->symbols(); ++i)
-        {
-            EXPECT_FALSE(coder->is_symbol_available(i));
-            EXPECT_FALSE(coder->is_symbol_initialized(i));
-        }
-    }
-
-private:
-
-    // The factory
-    factory_type m_factory;
-
-};
-
-/// Tests:
-///   - layer::symbol_exists(uint32_t) const
-///   - layer::symbol_count() const
-///   - layer::is_storage_full() const
-template<class Coder>
-struct api_segmented_swap_storage_status
-{
-    typedef typename Coder::factory factory_type;
-    typedef typename Coder::pointer pointer_type;
-
-    api_segmented_swap_storage_status(uint32_t max_symbols, uint32_t max_symbol_size)
-        : m_factory(max_symbols, max_symbol_size)
-    { }
-
-    void run()
-    {
-        swap_symbols();
-    }
-
-    /// Using:
-    ///   - layer::swap_symbols(std::vector<uint8_t>&)
-    void swap_symbols()
-    {
-        pointer_type coder = m_factory.build();
-
-        EXPECT_EQ(coder->symbols_available(), coder->symbols());
-        EXPECT_EQ(coder->symbols_initialized(), 0U);
-
-        EXPECT_TRUE(coder->is_symbols_available());
-        EXPECT_FALSE(coder->is_symbols_initialized());
-
-        std::vector<std::vector<uint8_t>>
-            vector_data(m_factory.max_symbols());
-
-        for (uint32_t i = 0; i < m_factory.max_symbols(); ++i)
-        {
-            vector_data[i] = random_vector(coder->symbol_size());
-        }
-
-        coder->swap_symbols(vector_data);
-
-        EXPECT_EQ(coder->symbols_available(), coder->symbols());
-        EXPECT_EQ(coder->symbols_initialized(), coder->symbols());
-
-        EXPECT_TRUE(coder->is_symbols_available());
-        EXPECT_TRUE(coder->is_symbols_initialized());
-
-        for(uint32_t i = 0; i < coder->symbols(); ++i)
-        {
-            EXPECT_TRUE(coder->is_symbol_available(i));
-            EXPECT_TRUE(coder->is_symbol_initialized(i));
-        }
-
-        coder = m_factory.build();
-
-        EXPECT_EQ(coder->symbols_initialized(), 0U);
-        EXPECT_EQ(coder->symbols_available(), coder->symbols());
-
-        EXPECT_FALSE(coder->is_symbols_initialized());
-        EXPECT_TRUE(coder->is_symbols_available());
-
-        for(uint32_t i = 0; i < coder->symbols(); ++i)
-        {
-            EXPECT_FALSE(coder->is_symbol_initialized(i));
-            EXPECT_TRUE(coder->is_symbol_available(i));
-        }
-
-    }
-
-private:
-
-    // The factory
-    factory_type m_factory;
-
-};
-
-/// Tests:
-///   - layer::swap_segments(uint32_t,uint32)
-template<class Coder>
-struct api_segmented_swap_segments
-{
-    typedef typename Coder::factory factory_type;
-    typedef typename Coder::pointer pointer_type;
-
-    api_segmented_swap_segments(uint32_t max_symbols, uint32_t max_symbol_size)
-        : m_factory(max_symbols, max_symbol_size)
-    { }
-
-    void run()
-    {
-        swap_segments();
-    }
-
-    /// Using:
-    ///   - layer::swap_segments(uint32_t,uint32_t)
-    void swap_segments()
-    {
-        pointer_type coder = m_factory.build();
-
-        auto vector1 = random_vector(coder->symbol_size());
-        auto vector2 = random_vector(coder->symbol_size());
-
-        sak::const_storage storage1 = sak::storage(vector1);
-        sak::const_storage storage2 = sak::storage(vector2);
-
-        coder->set_symbol(1, storage1);
-        coder->set_symbol(2, storage2);
-
-        EXPECT_TRUE(coder->is_symbol_initialized(1));
-        EXPECT_TRUE(coder->is_symbol_initialized(2));
-        EXPECT_FALSE(coder->is_symbol_initialized(3));
-
-        coder->swap_segments(2, 3);
-
-        EXPECT_FALSE(coder->is_symbol_initialized(2));
-        EXPECT_TRUE(coder->is_symbol_initialized(3));
-
-        coder->swap_segments(1, 3);
-        
-        EXPECT_TRUE(coder->is_symbol_initialized(1));
-        EXPECT_TRUE(coder->is_symbol_initialized(3));
-
-        coder->swap_segments(4, 5);
-
-        EXPECT_FALSE(coder->is_symbol_initialized(4));
-        EXPECT_FALSE(coder->is_symbol_initialized(5));
-
-    }
-
-private:
-
-    // The factory
-    factory_type m_factory;
-
-};
+    };
+}
 
 
 /// Helper function for running all the API and related tests
@@ -1945,74 +1774,6 @@ TEST(TestSymbolStorage, test_mutable_shallow_stack)
     run_mutable_shallow_stack_tests<kodo::mutable_shallow_stack_pool>();
 }
 
-
-/// Helper function for running all the API and related tests
-/// which are compatible with the segmented stack.
-template<template <class> class Stack>
-void run_segmented_stack_tests()
-{
-
-    uint32_t symbols = rand_symbols();
-    uint32_t symbol_size = rand_symbol_size();
-
-    // API tests:
-    run_test<Stack, api_copy_symbols>(
-        symbols, symbol_size);
-    run_test<Stack, api_copy_symbol>(
-        symbols, symbol_size);
-    run_test<Stack, api_symbol_const>(
-        symbols, symbol_size);
-    run_test<Stack, api_symbol>(
-        symbols, symbol_size);
-    run_test<Stack, api_symbol_value_const>(
-        symbols, symbol_size);
-    run_test<Stack, api_symbol_value>(
-        symbols, symbol_size);
-    run_test<Stack, api_set_symbols_const_storage>(
-        symbols, symbol_size);
-    run_test<Stack, api_set_symbols_mutable_storage>(
-        symbols, symbol_size);
-    run_test<Stack, api_set_symbol_const_storage>(
-        symbols, symbol_size);
-    run_test<Stack, api_set_symbol_mutable_storage>(
-        symbols, symbol_size);
-    run_test<Stack, api_swap_symbols_vector_data>(
-        symbols, symbol_size);
-    run_test<Stack, api_factory_max_symbols>(
-        symbols, symbol_size);
-    run_test<Stack, api_factory_max_symbol_size>(
-        symbols, symbol_size);
-    run_test<Stack, api_factory_max_block_size>(
-        symbols, symbol_size);
-    run_test<Stack, api_symbols>(
-        symbols, symbol_size);
-    run_test<Stack, api_symbol_length>(
-        symbols, symbol_size);
-    run_test<Stack, api_block_size>(
-        symbols, symbol_size);
-    run_test<Stack, api_bytes_used>(
-        symbols, symbol_size);
-//    run_test<Stack, api_segmented_storage_status>(
-//        symbols, symbol_size);
-    run_test<Stack, api_deep_storage_status>(
-        symbols, symbol_size);
-    run_test<Stack, api_segmented_swap_storage_status>(
-        symbols, symbol_size);
-
-    // Other
-    run_test<Stack, api_segmented_swap_segments>(
-        symbols, symbol_size);
-
-}
-
-/// Run the tests typical segmented_storage stack
-TEST(TestSymbolStorage, test_segmented_stack)
-{
-    run_segmented_stack_tests<kodo::segmented_storage_stack>();
-    run_segmented_stack_tests<kodo::segmented_storage_stack_pool>();
-}
-
-
 /// Tests the has_shallow_symbol_storage template
 TEST(TestSymbolStorage, test_has_shallow_symbol_storage)
 {
@@ -2051,15 +1812,6 @@ TEST(TestSymbolStorage, test_has_shallow_symbol_storage)
 
     EXPECT_FALSE(kodo::has_shallow_symbol_storage<
                      kodo::deep_storage_stack<fifi::binary16> >::value);
-
-    EXPECT_FALSE(kodo::has_shallow_symbol_storage<
-                     kodo::segmented_storage_stack<fifi::binary> >::value);
-
-    EXPECT_FALSE(kodo::has_shallow_symbol_storage<
-                     kodo::segmented_storage_stack<fifi::binary8> >::value);
-
-    EXPECT_FALSE(kodo::has_shallow_symbol_storage<
-                     kodo::segmented_storage_stack<fifi::binary16> >::value);
 
     EXPECT_FALSE(kodo::has_shallow_symbol_storage<int>::value);
 
@@ -2127,15 +1879,6 @@ TEST(TestSymbolStorage, test_has_deep_symbol_storage)
 
     EXPECT_FALSE(kodo::has_deep_symbol_storage<
                      kodo::const_shallow_stack<fifi::binary16> >::value);
-
-    EXPECT_FALSE(kodo::has_deep_symbol_storage<
-                    kodo::segmented_storage_stack<fifi::binary> >::value);
-
-    EXPECT_FALSE(kodo::has_deep_symbol_storage<
-                    kodo::segmented_storage_stack<fifi::binary8> >::value);
-
-    EXPECT_FALSE(kodo::has_deep_symbol_storage<
-                    kodo::segmented_storage_stack<fifi::binary16> >::value);
 
     EXPECT_TRUE(kodo::has_deep_symbol_storage<
                     kodo::deep_storage_stack<fifi::binary> >::value);

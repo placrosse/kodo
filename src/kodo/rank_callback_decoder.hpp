@@ -12,7 +12,7 @@
 namespace kodo
 {
 
-    /// @ingroup codec_layers
+    /// @ingroup decoder_layers
     /// @brief Allows a callback function to be invoked after rank changed
     ///
     /// This layer allows a callback function to be assigned to each decoder.

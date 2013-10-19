@@ -11,37 +11,44 @@
 
 namespace kodo
 {
-    // We just create a version of the full rlnc vector code
-    // without the systematic layer
-    template<class Field>
-    class test_nonsystematic_stack
-        : public // Payload Codec API
-                 payload_encoder<
-                 // Codec Header API
-                 symbol_id_encoder<
-                 // Symbol ID API
-                 plain_symbol_id_writer<
-                 // Coefficient Generator API
-                 uniform_generator<
-                 // Codec API
-                 zero_symbol_encoder<
-                 linear_block_encoder<
-                 // Coefficient Storage API
-                 coefficient_info<
-                 // Symbol Storage API
-                 deep_symbol_storage<
-                 storage_bytes_used<
-                 storage_block_info<
-                 // Finite Field Math API
-                 finite_field_math<typename fifi::default_field<Field>::type,
-                 finite_field_info<Field,
-                 // Factory API
-                 final_coder_factory_pool<
-                 // Final type
-                 test_nonsystematic_stack<Field>
-                     > > > > > > > > > > > > >
-    { };
 
+    // Put dummy layers and tests classes in an anonymous namespace
+    // to avoid violations of ODF (one-definition-rule) in other
+    // translation units
+    namespace
+    {
+
+        // We just create a version of the full rlnc vector code
+        // without the systematic layer
+        template<class Field>
+        class test_nonsystematic_stack
+            : public // Payload Codec API
+                     payload_encoder<
+                     // Codec Header API
+                     symbol_id_encoder<
+                     // Symbol ID API
+                     plain_symbol_id_writer<
+                     // Coefficient Generator API
+                     uniform_generator<
+                     // Codec API
+                     zero_symbol_encoder<
+                     linear_block_encoder<
+                     // Coefficient Storage API
+                     coefficient_info<
+                     // Symbol Storage API
+                     deep_symbol_storage<
+                     storage_bytes_used<
+                     storage_block_info<
+                     // Finite Field Math API
+                     finite_field_math<typename fifi::default_field<Field>::type,
+                     finite_field_info<Field,
+                     // Factory API
+                     final_coder_factory_pool<
+                     // Final type
+                     test_nonsystematic_stack<Field>
+                         > > > > > > > > > > > > >
+        { };
+    }
 }
 
 TEST(TestSystematicOperations, is_systematic_encoder)

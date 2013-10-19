@@ -6,15 +6,99 @@ of every change, see the Git log.
 
 Latest
 ------
+* Minor: Adding the user_defined_generator layer, which allows users to
+  specify the coding coefficients to be used directly.
+* Major: Update the coefficient storage API. The previous naming
+  scheme caused some confusion about the API, the new naming scheme
+  hopefully makes the API easier to read and understand.
+* Minor: Added new segmented_symbol_storage layer, this layer splits the
+  symbol storage into segments of symbols so that symbols can be swapped by
+  swapping symbol pointers.
+
+15.0.0
+------
+* Major: renamed method for specifying the average number of nonzero symbols
+  in the sparse codes from set_nonzero_symbols to set_average_nonzero_symbols.
+* Major: Added a new decoding symbol status API which allows the state
+  of the decoding symbols to be tracked. A decoding symbol may be in
+  three states "missing", "seen" and "decoded" checkout the
+  symbol_decoding_status_tracker and symbol_decoding_status_counter
+  layers. The bidirectional_linear_block_decoder now directly uses
+  these layers instead of internally maintaining the information. So
+  if you use the bidirectional_linear_block_decoder layer you need to
+  specify at least the symbol_decoding_status_tracker layer in your
+  stacks.
+* Minor: Added new example which shows how to switch between
+  systematic and unsystematic encoding. The example can be found in
+  the examples/switch_systematic_on_off folder.
+* Major: Users of the partial_decoding_tracker layer for on-the-fly
+  decoding should now use the rank_symbol_decoding_status_updater
+  layer to ensure that proper detection of early decoding happens
+  correctly. The existing on-the-fly codes in the
+  src/kodo/rlnc/on_the_fly_codes.hpp have been updated.
+* Bug: Several unit tests are defining classes in the .cpp
+  files. While this is typically not a problem, it can unexpectedly
+  result in a violation of the ODR (One-Definition-Rule) resulting in
+  undefined behavior of the resulting binary. To avoid this problem
+  classes / structs defined in the .cpp files should be wrapped in an
+  anonymous namespace.
+
+14.0.0
+------
+* Bug: Fixed assert in the payload_rank_decoder.hpp which incorrectly checked
+  for the received encoder rank to be less than the currently largest rank.
+  This is not the case for e.g. recoding or if packet reordering occurs.
+  Reported by Martin Hundebøll.
+* Major: Fixed problem with is_partial_complete() and recoding. The problem was
+  that the recoder would forward its own rank instead of the rank of the
+  encoder. This could result in cases where a decoder would falsely report
+  an early decoding opportunity since it detected that it had reached the rank
+  of the encoder. This has been fixed by the payload_rank_recoder layer which
+  now forwards the largest seen encoder rank instead of the rank of the
+  recoder. We have also modified the API naming for reading the encoder rank,
+  from "encoder_rank()" to "seen_encoder_rank()". This problem was reported
+  by Martin Hundebøll.
+* Major: Changed the get_density() function in sparse_uniform_generator to
+  density().
+
+13.0.0
+------
+* Major: Replaced the linear_block_decoder with the
+  bidirectional_linear_block_decoder layer. The bidirectional linear
+  block decoder layer uses a direction policy to determine whether to
+  perform Gaussian elimination from left-to-right or
+  right-to-left. Certain newer network coding algorithms can be
+  implemented efficiently utilizing this flexibility. Based on the
+  bidirectional layer we have added the forward and backwards linear
+  block decoder.
+* Minor: Added support for specifying the number of nonzero symbols in the
+  sparse codes (this extends the API which previously only supported a
+  fraction of nonzero symbols to be specified).
+* Minor: Added generic functions for printing debug information from codec
+  stacks where this functionality is supported.
+
+12.0.0
+------
+* Major: Changed the partial_decoding_tracker to only provide the
+  functionality needed to detect "early" or partial decoding. The
+  monitor functionality has been moved to the largest_nonzero_index_decoder
+  layer.
+* Minor: Added the payload_rank_encoder and payload_rank_decoder layers
+  which will explicitly exchange the rank of the encoder matrix and the
+  decoder matrix to support partial decoding.
+
+11.2.0
+------
 * Minor: Added the partial_decoding_tracker layer which "monitors" the
   coding vectors being passed to a decoder in order to detect early
   decoding opportunities. This means that although not all packets have
   yet been sent from the encoder, it might happen that we can decode
   anyway. This kind of functionality is useful especially for applications
   which require low delay.
-* Minor: Added new segmented_symbol_storage layer, this layer splits the
-  symbol storage into segments of symbols so that symbols can be swapped by
-  swapping symbol pointers.
+* Minor: Added on-the-fly encoding and decoding stacks in
+  src/kodo/rlnc/on_he_fly_codes.hpp the on-the-fly stacks have the advantage
+  that they allow encoding and decoding to proceed even without having all
+  encoding symbols available.
 
 11.1.0
 ------

@@ -10,7 +10,7 @@
 namespace kodo
 {
 
-    /// @ingroup codec_layers
+    /// @ingroup encoder_layers
     ///
     /// Implements the functionality to produce an un-coded / systematic
     /// symbol. See use-cases here @link nocode_decoder @endlink.

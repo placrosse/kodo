@@ -35,12 +35,13 @@ namespace kodo
                plain_symbol_id_writer<
                // Coefficient Generator API
                uniform_generator<
-               // Codec API
+               // Encoder API
                storage_aware_encoder<
                encode_symbol_tracker<
                zero_symbol_encoder<
                linear_block_encoder<
                // Coefficient Storage API
+               coefficient_value_access<
                coefficient_info<
                // Symbol Storage API
                partial_shallow_symbol_storage<
@@ -53,7 +54,7 @@ namespace kodo
                final_coder_factory_pool<
                // Final type
                full_rlnc_encoder<Field>
-               > > > > > > > > > > > > > > > >
+                   > > > > > > > > > > > > > > > > >
     { };
 
     /// Decoder stack with shallow storage as required by the
@@ -68,10 +69,13 @@ namespace kodo
                symbol_id_decoder<
                // Symbol ID API
                plain_symbol_id_reader<
-               // Codec API
+               // Decoder API
                aligned_coefficients_decoder<
-               linear_block_decoder<
+               forward_linear_block_decoder<
+               symbol_decoding_status_counter<
+               symbol_decoding_status_tracker<
                // Coefficient Storage API
+               coefficient_value_access<
                coefficient_storage<
                coefficient_info<
                // Storage API
@@ -85,7 +89,7 @@ namespace kodo
                final_coder_factory_pool<
                // Final type
                shallow_rlnc_decoder<Field>
-               > > > > > > > > > > > > > > >
+                   > > > > > > > > > > > > > > > > > >
     { };
 }
 

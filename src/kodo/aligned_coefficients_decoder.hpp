@@ -15,7 +15,7 @@
 namespace kodo
 {
 
-    /// @ingroup codec_layers
+    /// @ingroup decoder_layers
     /// @brief Aligns the symbol coefficient buffer if necessary
     template<class SuperCoder>
     class aligned_coefficients_decoder
@@ -39,7 +39,7 @@ namespace kodo
 
             if(sak::is_aligned(coefficients) == false)
             {
-                uint32_t coefficients_size = Super::coefficients_size();
+                uint32_t coefficients_size = Super::coefficient_vector_size();
 
                 auto src = sak::storage(coefficients, coefficients_size);
                 auto dest = sak::storage(m_coefficients);

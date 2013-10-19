@@ -20,7 +20,7 @@
 #include <fifi/default_field.hpp>
 
 #include <kodo/rank_callback_decoder.hpp>
-#include <kodo/linear_block_decoder.hpp>
+#include <kodo/forward_linear_block_decoder.hpp>
 #include <kodo/coefficient_storage.hpp>
 #include <kodo/coefficient_info.hpp>
 #include <kodo/finite_field_math.hpp>
@@ -29,95 +29,112 @@
 #include <kodo/storage_bytes_used.hpp>
 #include <kodo/storage_block_info.hpp>
 #include <kodo/final_coder_factory_pool.hpp>
+#include <kodo/coefficient_value_access.hpp>
+#include <kodo/symbol_decoding_status_tracker.hpp>
+#include <kodo/symbol_decoding_status_counter.hpp>
+
 
 /// Here we define the stacks which should be tested.
 namespace kodo
 {
-    // Test layer against real api to ensure that we get an error if the
-    // layer doesn't complies with the api.
-    template<class Field>
-    class rank_callback_decoder_stack
-        : public // Codec API
-                 rank_callback_decoder<
-                 linear_block_decoder<
-                 // Coefficient Storage API
-                 coefficient_storage<
-                 coefficient_info<
-                 // Storage api
-                 deep_symbol_storage<
-                 storage_bytes_used<
-                 storage_block_info<
-                 // Finite Field Math API
-                 finite_field_math<typename fifi::default_field<Field>::type,
-                 finite_field_info<Field,
-                 // Factory API
-                 final_coder_factory_pool<
-                 // Final type
-                 rank_callback_decoder_stack<Field>
-                     > > > > > > > > > >
-    {};
 
-    // A dummi api to replace the real stack
-    class dummy_codec_api
+    // Put dummy layers and tests classes in an anonymous namespace
+    // to avoid violations of ODF (one-definition-rule) in other
+    // translation units
+    namespace
     {
-    public:
 
-        struct factory
+         // Test layer against real api to ensure that we get an error if the
+         // layer doesn't complies with the api.
+         template<class Field>
+         class rank_callback_decoder_stack
+             : public // Codec API
+                      rank_callback_decoder<
+                      forward_linear_block_decoder<
+                      symbol_decoding_status_counter<
+                      symbol_decoding_status_tracker<
+                      // Coefficient Storage API
+                      coefficient_value_access<
+                      coefficient_storage<
+                      coefficient_info<
+                      // Storage api
+                      deep_symbol_storage<
+                      storage_bytes_used<
+                      storage_block_info<
+                      // Finite Field Math API
+                      finite_field_math<typename fifi::default_field<Field>::type,
+                      finite_field_info<Field,
+                      // Factory API
+                      final_coder_factory_pool<
+                      // Final type
+                      rank_callback_decoder_stack<Field>
+                          > > > > > > > > > > > > >
+         { };
+
+        // A dummi api to replace the real stack
+        class dummy_codec_api
         {
-            factory(uint32_t max_symbols, uint32_t max_symbol_size)
-                : m_max_symbols(max_symbols),
-                  m_max_symbol_size(max_symbol_size)
+        public:
+
+            struct factory
             {
-            }
+                factory(uint32_t max_symbols, uint32_t max_symbol_size)
+                    : m_max_symbols(max_symbols),
+                      m_max_symbol_size(max_symbol_size)
+                {
+                }
 
-            uint32_t m_max_symbols;
-            uint32_t m_max_symbol_size;
-        };
+                uint32_t m_max_symbols;
+                uint32_t m_max_symbol_size;
+            };
 
-        /// Reset rank changed callback function
-        /// @copydoc layer::initialize(Factory&)
-        template<class Factory>
-        void initialize(Factory& the_factory)
+            /// Reset rank changed callback function
+            /// @copydoc layer::initialize(Factory&)
+            template<class Factory>
+            void initialize(Factory& the_factory)
             {
                 m_symbols = the_factory.m_max_symbols;
                 m_rank = 0;
             }
 
-        /// @copydoc layer::decode_symbol(uint8_t*,uint8_t*)
-        void decode_symbol(uint8_t *symbol_data,
-                           uint8_t *symbol_coefficients)
+            /// @copydoc layer::decode_symbol(uint8_t*,uint8_t*)
+            void decode_symbol(uint8_t *symbol_data,
+                               uint8_t *symbol_coefficients)
             {
                 (void) symbol_data;
                 (void) symbol_coefficients;
                 ++m_rank;
             }
 
-        /// @copydoc layer::decode_symbol(const uint8_t*, uint32_t)
-        void decode_symbol(const uint8_t *symbol_data,
-                           uint32_t symbol_index)
+            /// @copydoc layer::decode_symbol(const uint8_t*, uint32_t)
+            void decode_symbol(const uint8_t *symbol_data,
+                               uint32_t symbol_index)
             {
                 (void) symbol_data;
                 (void) symbol_index;
                 ++m_rank;
             }
 
-        /// @copydoc layer::rank() const
-        uint32_t rank() const
+            /// @copydoc layer::rank() const
+            uint32_t rank() const
             {
                 return m_rank;
             }
 
-    private:
+        private:
 
-        /// The current rank of the decoder
-        uint32_t m_rank;
+            /// The current rank of the decoder
+            uint32_t m_rank;
 
-        /// Number of symbols
-        uint32_t m_symbols;
-    };
+            /// Number of symbols
+            uint32_t m_symbols;
+        };
 
-    // Test functionality of the individual layer
-    typedef rank_callback_decoder<dummy_codec_api> rank_coder;
+        // Test functionality of the individual layer
+        typedef rank_callback_decoder<dummy_codec_api> rank_coder;
+
+    }
+
 }
 
 // callback handler

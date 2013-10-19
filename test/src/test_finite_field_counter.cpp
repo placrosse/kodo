@@ -20,102 +20,109 @@
 namespace kodo
 {
 
-    // Dummy class to provide needed API
-    template<class Field>
-    class dummy_finite_field
+    // Put dummy layers and tests classes in an anonymous namespace
+    // to avoid violations of ODF (one-definition-rule) in other
+    // translation units
+    namespace
     {
-    public:
 
-        /// @copydoc layer::field_type
-        typedef Field field_type;
-
-        /// @copydoc layer::value_type
-        typedef typename field_type::value_type value_type;
-
-    public:
-
-        /// Dummy factory
-        struct factory
-        {};
-
-    public:
-
-        /// @copydoc layer::initialize(Factory&)
-        template<class Factory>
-        void initialize(Factory& the_factory)
+        // Dummy class to provide needed API
+        template<class Field>
+        class dummy_finite_field
         {
-            (void) the_factory;
-        }
+        public:
 
-        /// @copydoc layer::multiply(value_type*,value_type,uint32_t)
-        void multiply(value_type *symbol_dest, value_type coefficient,
-                      uint32_t symbol_length)
-        {
-            (void) symbol_dest;
-            (void) coefficient;
-            (void) symbol_length;
-        }
+            /// @copydoc layer::field_type
+            typedef Field field_type;
 
-        /// @copydoc layer::multipy_add(value_type *, const value_type*,
-        ///                             value_type, uint32_t)
-        void multiply_add(value_type *symbol_dest,
-                          const value_type *symbol_src,
-                          value_type coefficient, uint32_t symbol_length)
-        {
-            (void) symbol_dest;
-            (void) symbol_src;
-            (void) coefficient;
-            (void) symbol_length;
-        }
+            /// @copydoc layer::value_type
+            typedef typename field_type::value_type value_type;
 
-        /// @copydoc layer::add(value_type*, const value_type *, uint32_t)
-        void add(value_type *symbol_dest, const value_type *symbol_src,
-                 uint32_t symbol_length)
-        {
-            (void) symbol_dest;
-            (void) symbol_src;
-            (void) symbol_length;
-        }
+        public:
 
-        /// @copydoc layer::multiply_subtract(
-        ///              value_type*, const value_type*,
-        ///              value_type, uint32_t)
-        void multiply_subtract(value_type *symbol_dest,
-                               const value_type *symbol_src,
-                               value_type coefficient,
-                               uint32_t symbol_length)
-        {
-            (void) symbol_dest;
-            (void) symbol_src;
-            (void) coefficient;
-            (void) symbol_length;
-        }
+            /// Dummy factory
+            struct factory
+            {};
 
-        /// @copydoc layer::subtract(
-        ///              value_type*,const value_type*, uint32_t)
-        void subtract(value_type *symbol_dest, const value_type *symbol_src,
-                      uint32_t symbol_length)
-        {
-            (void) symbol_dest;
-            (void) symbol_src;
-            (void) symbol_length;
-        }
+        public:
 
-        /// @copydoc layer::invert(value_type)
-        value_type invert(value_type value)
-        {
-            return value;
-        }
+            /// @copydoc layer::initialize(Factory&)
+            template<class Factory>
+            void initialize(Factory& the_factory)
+            {
+                (void) the_factory;
+            }
 
-    };
+            /// @copydoc layer::multiply(value_type*,value_type,uint32_t)
+            void multiply(value_type *symbol_dest, value_type coefficient,
+                          uint32_t symbol_length)
+            {
+                (void) symbol_dest;
+                (void) coefficient;
+                (void) symbol_length;
+            }
 
-    /// Dummy stack including the finite field counter
-    template<class Field>
-    class counter_test_stack :
-        public finite_field_counter<
-               dummy_finite_field<Field> >
-    { };
+            /// @copydoc layer::multipy_add(value_type *, const value_type*,
+            ///                             value_type, uint32_t)
+            void multiply_add(value_type *symbol_dest,
+                              const value_type *symbol_src,
+                              value_type coefficient, uint32_t symbol_length)
+            {
+                (void) symbol_dest;
+                (void) symbol_src;
+                (void) coefficient;
+                (void) symbol_length;
+            }
 
+            /// @copydoc layer::add(value_type*, const value_type *, uint32_t)
+            void add(value_type *symbol_dest, const value_type *symbol_src,
+                     uint32_t symbol_length)
+            {
+                (void) symbol_dest;
+                (void) symbol_src;
+                (void) symbol_length;
+            }
+
+            /// @copydoc layer::multiply_subtract(
+            ///              value_type*, const value_type*,
+            ///              value_type, uint32_t)
+            void multiply_subtract(value_type *symbol_dest,
+                                   const value_type *symbol_src,
+                                   value_type coefficient,
+                                   uint32_t symbol_length)
+            {
+                (void) symbol_dest;
+                (void) symbol_src;
+                (void) coefficient;
+                (void) symbol_length;
+            }
+
+            /// @copydoc layer::subtract(
+            ///              value_type*,const value_type*, uint32_t)
+            void subtract(value_type *symbol_dest, const value_type *symbol_src,
+                          uint32_t symbol_length)
+            {
+                (void) symbol_dest;
+                (void) symbol_src;
+                (void) symbol_length;
+            }
+
+            /// @copydoc layer::invert(value_type)
+            value_type invert(value_type value)
+            {
+                return value;
+            }
+
+        };
+
+        /// Dummy stack including the finite field counter
+        template<class Field>
+        class counter_test_stack :
+            public finite_field_counter<
+                   dummy_finite_field<Field> >
+        { };
+
+    }
 }
 
 /// Run the tests for the finite field counter

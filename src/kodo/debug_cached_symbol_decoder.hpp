@@ -22,8 +22,8 @@ namespace kodo
     /// @brief This layer makes it easy to print the incoming coded symbol
     ///        and coding coefficients
     ///
-    /// The debug layer supports printing both the coded symbol data through the
-    /// print_cached_symbol_data() and the coding coefficients through the
+    /// The debug layer supports printing both the coded symbol data through
+    /// the print_cached_symbol_data() and the coding coefficients through the
     /// print_cached_symbol_coefficients().
     ///
     /// For the print_cached_symbol_data() function the output will be the
@@ -68,7 +68,7 @@ namespace kodo
 
             for(uint32_t j = 0; j < symbol_elements; ++j)
             {
-                value_type value = fifi::get_value<field_type>(s, j);
+                value_type value = SuperCoder::coefficient_value(s, j);
 
                 static_assert(sizeof(uint32_t) >= sizeof(value_type),
                               "value_type will overflow in this print");
@@ -93,7 +93,7 @@ namespace kodo
 
                 for(uint32_t j = 0; j < SuperCoder::symbols(); ++j)
                 {
-                    value_type value = fifi::get_value<field_type>(c, j);
+                    value_type value = SuperCoder::coefficient_value(c, j);
 
                     static_assert(sizeof(uint32_t) >= sizeof(value_type),
                                   "value_type will overflow in this print");

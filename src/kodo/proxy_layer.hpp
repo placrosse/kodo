@@ -26,6 +26,9 @@ namespace kodo
         /// Pointer type to the constructed coder
         typedef boost::shared_ptr<FinalType> pointer;
 
+        /// The type of the main stack
+        typedef MainStack main_stack;
+
     public:
 
         /// @ingroup factory_layers
@@ -62,6 +65,20 @@ namespace kodo
             {
                 assert(stack_proxy != 0);
                 m_stack_proxy = stack_proxy;
+            }
+
+            /// @return a pointer to the main proxy stack
+            const MainStack* proxy_stack() const
+            {
+                assert(m_stack_proxy);
+                return m_stack_proxy;
+            }
+
+            /// @return a pointer to the main proxy stack
+            MainStack* proxy_stack()
+            {
+                assert(m_stack_proxy);
+                return m_stack_proxy;
             }
 
             /// @copydoc layer::factory::build()
@@ -125,11 +142,11 @@ namespace kodo
                 return m_factory_proxy->max_payload_size();
             }
 
-            /// @copydoc layer::factory::max_coefficients_size() const
-            uint32_t max_coefficients_size() const
+            /// @copydoc layer::factory::max_coefficient_vector_size() const
+            uint32_t max_coefficient_vector_size() const
             {
                 assert(m_factory_proxy);
-                return m_factory_proxy->max_coefficients_size();
+                return m_factory_proxy->max_coefficient_vector_size();
             }
 
             /// @copydoc layer::factory::symbols() const;
@@ -163,7 +180,6 @@ namespace kodo
             : m_proxy(0)
         { }
 
-
         /// Sets the pointer to the proxy stack
         /// @param proxy The stack where calls should be forwarded.
         void set_proxy(MainStack *proxy)
@@ -184,6 +200,20 @@ namespace kodo
         void initialize(Factory &the_factory)
         {
             (void) the_factory;
+        }
+
+        /// @return a pointer to the main proxy stack
+        const MainStack* proxy_stack() const
+        {
+            assert(m_proxy);
+            return m_proxy;
+        }
+
+        /// @return a pointer to the main proxy stack
+        MainStack* proxy_stack()
+        {
+            assert(m_proxy);
+            return m_proxy;
         }
 
         //------------------------------------------------------------------
@@ -308,46 +338,46 @@ namespace kodo
         // COEFFICIENT STORAGE API
         //------------------------------------------------------------------
 
-        /// @copydoc layer::coefficients_size() const
-        uint32_t coefficients_size() const
+        /// @copydoc layer::coefficient_vector_size() const
+        uint32_t coefficient_vector_size() const
         {
             assert(m_proxy);
-            return m_proxy->coefficients_size();
+            return m_proxy->coefficient_vector_size();
         }
 
-        /// @copydoc layer::coefficients_length() const
-        uint32_t coefficients_length() const
+        /// @copydoc layer::coefficient_vector_length() const
+        uint32_t coefficient_vector_length() const
         {
             assert(m_proxy);
-            return m_proxy->coefficients_length();
+            return m_proxy->coefficient_vector_length();
         }
 
-        /// @copydoc layer::coefficients_value(uint32_t)
-        value_type* coefficients_value(uint32_t index)
+        /// @copydoc layer::coefficient_vector_values(uint32_t)
+        value_type* coefficient_vector_values(uint32_t index)
         {
             assert(m_proxy);
-            return m_proxy->coefficients_value(index);
+            return m_proxy->coefficient_vector_values(index);
         }
 
-        /// @copydoc layer::coefficients_value(uint32_t) const
-        const value_type* coefficients_value(uint32_t index) const
+        /// @copydoc layer::coefficient_vector_value(uint32_t) const
+        const value_type* coefficient_vector_values(uint32_t index) const
         {
             assert(m_proxy);
-            return m_proxy->coefficients_value(index);
+            return m_proxy->coefficient_vector_values(index);
         }
 
-        /// @copydoc layer::coefficients(uint32_t)
-        uint8_t* coefficients(uint32_t index)
+        /// @copydoc layer::coefficient_vector_data(uint32_t)
+        uint8_t* coefficient_vector_data(uint32_t index)
         {
             assert(m_proxy);
-            return m_proxy->coefficients(index);
+            return m_proxy->coefficient_vector_data(index);
         }
 
-        /// @copydoc layer::coefficients(uint32_t) const
-        const uint8_t* coefficients(uint32_t index) const
+        /// @copydoc layer::coefficient_vector_data(uint32_t) const
+        const uint8_t* coefficient_vector_data(uint32_t index) const
         {
             assert(m_proxy);
-            return m_proxy->coefficients(index);
+            return m_proxy->coefficient_vector_data(index);
         }
 
         //------------------------------------------------------------------
@@ -455,11 +485,11 @@ namespace kodo
             return m_proxy->rank();
         }
 
-        /// @copydoc layer::symbol_pivot(uint32_t) const
-        bool symbol_pivot(uint32_t index) const
+        /// @copydoc layer::is_symbol_pivot(uint32_t) const
+        bool is_symbol_pivot(uint32_t index) const
         {
             assert(m_proxy);
-            return m_proxy->symbol_pivot(index);
+            return m_proxy->is_symbol_pivot(index);
         }
 
     protected:

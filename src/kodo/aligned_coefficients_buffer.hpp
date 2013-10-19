@@ -36,7 +36,7 @@ namespace kodo
         void construct(Factory &the_factory)
         {
             SuperCoder::construct(the_factory);
-            m_coefficients.resize(the_factory.max_coefficients_size());
+            m_coefficients.resize(the_factory.max_coefficient_vector_size());
         }
 
     protected:

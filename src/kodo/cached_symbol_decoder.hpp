@@ -17,7 +17,7 @@
 namespace kodo
 {
 
-    /// @ingroup codec_layers
+    /// @ingroup decoder_layers
     ///
     /// @brief This layer extracts the symbol coefficients and symbol data
     /// and makes it available for use. It does not perform any decoding on the
@@ -52,7 +52,7 @@ namespace kodo
             SuperCoder::construct(the_factory);
 
             m_data.resize(the_factory.max_symbol_size());
-            m_coefficients.resize(the_factory.max_coefficients_size());
+            m_coefficients.resize(the_factory.max_coefficient_vector_size());
         }
 
         /// @copydoc layer::decode_symbol(uint8_t*,uint8_t*)
@@ -63,7 +63,7 @@ namespace kodo
             assert(symbol_coefficients != 0);
 
             uint32_t symbol_size = SuperCoder::symbol_size();
-            uint32_t coef_size = SuperCoder::coefficients_size();
+            uint32_t coef_size = SuperCoder::coefficient_vector_size();
 
             auto data_dest = sak::storage(m_data);
             auto coef_dest = sak::storage(m_coefficients);
@@ -129,7 +129,7 @@ namespace kodo
 
         /// @return The coding coefficients used to encode the symbol.
         ///         The size of the coefficients buffer in bytes can be
-        ///         retried by calling the layer::coefficients_size()
+        ///         retried by calling the layer::coefficient_vector_size()
         const uint8_t* cached_symbol_coefficients() const
         {
             assert(m_symbol_coded);

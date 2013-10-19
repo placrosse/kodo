@@ -4,30 +4,39 @@
    contain the root `toctree` directive.
 
 ==================
-Kodo documentation
+Kodo Documentation
 ==================
 
 Welcome to the Kodo Network Coding library documentation.
 
-Kodo is a C++ library for implementing Erasure Correcting Codes in particular
+Kodo is a C++ library for implementing Erasure Correcting Codes, in particular
 Network Codes. The library is intended to be used for reliable communication
 protocols and systems and for research on implementation of Network Codes.
 
 **Additional Links**
 
-* `Kodo source code`_
-* `Build and test status`_
-* `API specification`_
+* `Kodo Source Code`_
+* `Build and Test Status`_
+* `API Specification`_
 
-.. _Kodo source code: https://github.com/steinwurf/kodo
-.. _Build and test status: http://176.28.49.184:12344
-.. _API specification: http://176.28.49.184:12344/doxygen/kodo/
+.. _Kodo Source Code: https://github.com/steinwurf/kodo
+.. _Build and Test Status: http://176.28.49.184:12344
+.. _API Specification: http://176.28.49.184:12344/doxygen/kodo/
 
-.. The library enable researchers to implement, new codes and algorithms, perform simulations,
-.. and benchmark the coding operations on any platform where a C++ compiler is
-.. available. The library provide a multitude of build blocks and parameters that
-.. can be combined in order to create codes. To ensure ease of use several codes
-.. are predefined, and high level API's provided.
+.. The library enables researchers to implement new codes and algorithms,
+.. perform simulations, and benchmark the coding operations on any platform
+.. where a C++ compiler is available. The library provides a multitude of
+.. building blocks and parameters that can be combined to create custom codes.
+.. To ensure ease of use, several codes are predefined and a high level API
+.. is provided.
+
+Frequently Asked Questions
+--------------------------
+
+* `FAQ`_
+
+.. _FAQ: ./faq.html
+
 
 Documentation
 -------------
@@ -39,7 +48,8 @@ Documentation
 
    overview
    getting_started
-   using_kodo_in_your_application
+   nc_intro
+   including_kodo_in_your_application
    hacking_kodo
    howto
    misc

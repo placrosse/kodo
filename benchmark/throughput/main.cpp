@@ -340,7 +340,8 @@ public:
     /// The type of the base benchmark
     typedef throughput_benchmark<Encoder,Decoder> Super;
 
-    /// We need access to the encoder built to adjust the density
+    /// We need access to the encoder built to adjust the average number of
+    /// nonzero symbols
     using Super::m_encoder;
 
 public:
@@ -350,12 +351,13 @@ public:
         auto symbols = options["symbols"].as<std::vector<uint32_t> >();
         auto symbol_size = options["symbol_size"].as<std::vector<uint32_t> >();
         auto types = options["type"].as<std::vector<std::string> >();
-        auto density = options["density"].as<std::vector<double> >();
+        auto average_nonzero_symbols =
+            options["average_nonzero_symbols"].as<std::vector<double> >();
 
         assert(symbols.size() > 0);
         assert(symbol_size.size() > 0);
         assert(types.size() > 0);
-        assert(density.size() > 0);
+        assert(average_nonzero_symbols.size() > 0);
 
         for(const auto& s : symbols)
         {
@@ -363,13 +365,16 @@ public:
             {
                 for(const auto& t : types)
                 {
-                    for(const auto& d: density)
+                    for(const auto& n: average_nonzero_symbols)
                     {
                         gauge::config_set cs;
                         cs.set_value<uint32_t>("symbols", s);
                         cs.set_value<uint32_t>("symbol_size", p);
                         cs.set_value<std::string>("type", t);
-                        cs.set_value<double>("density", d);
+                        cs.set_value<double>("average_nonzero_symbols", n);
+
+                        // Add the calculated density easier output usage
+                        cs.set_value<double>("density", n/s);
 
                         Super::add_configuration(cs);
                     }
@@ -383,9 +388,8 @@ public:
         Super::setup();
 
         gauge::config_set cs = Super::get_current_configuration();
-
-        double density = cs.get_value<double>("density");
-        m_encoder->set_density(density);
+        double symbols = cs.get_value<double>("average_nonzero_symbols");
+        m_encoder->set_average_nonzero_symbols(symbols);
     }
 
 };
@@ -436,27 +440,32 @@ BENCHMARK_OPTION(throughput_options)
     gauge::runner::instance().register_options(options);
 }
 
-BENCHMARK_OPTION(throughput_density_options)
+BENCHMARK_OPTION(throughput_average_nonzero_symbols_options)
 {
     gauge::po::options_description options;
 
-    std::vector<double> density;
-    density.push_back(0.1);
-    density.push_back(0.2);
-    density.push_back(0.3);
-    density.push_back(0.4);
-    density.push_back(0.5);
+    std::vector<double> average_nonzero_symbols;
+    average_nonzero_symbols.push_back(1.0);
+    average_nonzero_symbols.push_back(2.0);
+    average_nonzero_symbols.push_back(3.0);
+    average_nonzero_symbols.push_back(4.0);
+    average_nonzero_symbols.push_back(5.0);
 
-    auto default_density =
+    auto default_average_nonzero_symbols =
         gauge::po::value<std::vector<double> >()->default_value(
-            density, "")->multitoken();
+            average_nonzero_symbols, "")->multitoken();
 
     options.add_options()
-        ("density", default_density, "Set the density of the sparse codes");
+        ("average_nonzero_symbols",
+         default_average_nonzero_symbols,
+         "Set the average number of nonzero symbols of the sparse codes");
 
     gauge::runner::instance().register_options(options);
 }
 
+//------------------------------------------------------------------
+// FullRLNC
+//------------------------------------------------------------------
 
 typedef throughput_benchmark<
     kodo::full_rlnc_encoder<fifi::binary>,
@@ -493,6 +502,55 @@ BENCHMARK_F(setup_rlnc_throughput2325, FullRLNC, Prime2325, 5)
 {
     run_benchmark();
 }
+
+//------------------------------------------------------------------
+// BackwardFullRLNC
+//------------------------------------------------------------------
+
+typedef throughput_benchmark<
+    kodo::full_rlnc_encoder<fifi::binary>,
+    kodo::backward_full_rlnc_decoder<fifi::binary> >
+    setup_backward_rlnc_throughput;
+
+BENCHMARK_F(setup_backward_rlnc_throughput, BackwardFullRLNC, Binary, 5)
+{
+    run_benchmark();
+}
+
+typedef throughput_benchmark<
+    kodo::full_rlnc_encoder<fifi::binary8>,
+    kodo::backward_full_rlnc_decoder<fifi::binary8> >
+    setup_backward_rlnc_throughput8;
+
+BENCHMARK_F(setup_backward_rlnc_throughput8, BackwardFullRLNC, Binary8, 5)
+{
+    run_benchmark();
+}
+
+typedef throughput_benchmark<
+    kodo::full_rlnc_encoder<fifi::binary16>,
+    kodo::backward_full_rlnc_decoder<fifi::binary16> >
+    setup_backward_rlnc_throughput16;
+
+BENCHMARK_F(setup_backward_rlnc_throughput16, BackwardFullRLNC, Binary16, 5)
+{
+    run_benchmark();
+}
+
+typedef throughput_benchmark<
+    kodo::full_rlnc_encoder<fifi::prime2325>,
+    kodo::backward_full_rlnc_decoder<fifi::prime2325> >
+    setup_backward_rlnc_throughput2325;
+
+BENCHMARK_F(setup_backward_rlnc_throughput2325, BackwardFullRLNC, Prime2325, 5)
+{
+    run_benchmark();
+}
+
+
+//------------------------------------------------------------------
+// FullDelayedRLNC
+//------------------------------------------------------------------
 
 typedef throughput_benchmark<
    kodo::full_rlnc_encoder<fifi::binary>,
