@@ -14,6 +14,9 @@ namespace kodo
     template<class SuperCoder>
     class storage_aware_systematic_encoder : public SuperCoder
     {
+
+    protected:
+
         typedef typename SuperCoder::status_vector status_vector;
 
     public:

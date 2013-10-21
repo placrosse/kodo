@@ -25,7 +25,7 @@ namespace kodo
 
     protected:
 
-        typedef uint32_t status_block;
+        typedef uint8_t status_block;
         typedef boost::dynamic_bitset<status_block> status_vector;
 
     public:
