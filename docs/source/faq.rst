@@ -25,18 +25,18 @@ A relay is a node that receives data from other node(s) and transmit that data t
 
 What is original data?
 ......................
- 
+
 The original data is the data that is to be transferred from a source to one or more sinks with a size :math:`B` in bits.
 
 What is a finite field?
 .......................
 
-A finite field (FF) (or Galois field) is a mathematical construct and entails to much explanations to be included here. It is not necessary to have a deep understanding of finite fields, but some understanding is useful. Simplified a FF is a variable where special rules are defined for the arithmetic operations. These rules guarentee that the result of operating on a finite field will always result in a value that is in the field which is very useful on computers with fixed precision. One common field is the binary field FF(2) where addition is defined by the XOR operation. Typically FF(2) or FF(2^8) is used since they correspond to a bit and a byte respectively. The size of a field is typically denoted :math:`q`.
+A finite field (FF) (or Galois field) is a mathematical construct and entails to much explanations to be included here. It is not necessary to have a deep understanding of finite fields, but some understanding is useful. Simplified a FF is a variable where special rules are defined for the arithmetic operations. These rules guarantee that the result of operating on a finite field will always result in a value that is in the field which is very useful on computers with fixed precision. One common field is the binary field FF(2) where addition is defined by the XOR operation. Typically FF(2) or FF(2^8) is used since they correspond to a bit and a byte respectively. The size of a field is typically denoted :math:`q`.
 
 What is an element?
 ...................
 
-An element is an element in a FF which can be though of as a variable with the type of a specific finite field variable.
+An element is an element in a FF which can be thought of as a variable with the type of a specific finite field variable.
 
 What is a symbol?
 .................
@@ -50,7 +50,7 @@ As an example 16 elements in FF(2) can represent two bytes.
 What is a generation?
 .....................
 
-Each generation constitutes :math:`g` symbols of size :math:`m`, where :math:`g` is called the generation size. The :math:`g` original symbols in one generation, are arranged in the matrix :math:`\boldsymbol{M}= [ \boldsymbol{m}_1 ; \boldsymbol{m}_2 ; \hdots ; \boldsymbol{m}_g ]`, where :math:`\boldsymbol{m}_i` is a column vector. In an application the block of data can be a file or a part of a media stream, and is divided into :math:`\lceil \frac{B}{m} \rceil` pieces, called symbols. Generation number 0 constitutes the first `g` symbols, or the first :math:`g \cdot m` bytes of data, there are :math:`\lceil \frac{B}{g \cdot m} \rceil` such generations.
+Each generation constitutes :math:`g` symbols of size :math:`m`, where :math:`g` is called the generation size. The :math:`g` original symbols in one generation, are arranged in the matrix :math:`\boldsymbol{M}= [ \boldsymbol{m}_1 ; \boldsymbol{m}_2 ; \hdots ; \boldsymbol{m}_g ]`, where :math:`\boldsymbol{m}_i` is a column vector. In an application the block of data can be a file or a part of a media stream, and is divided into :math:`\lceil \frac{B}{m} \rceil` pieces, called symbols. Generation number 0 constitutes the first `g` symbols, or the first :math:`g \cdot m` bytes of data, there are :math:`\lceil \frac{B}{g \cdot m} \rceil` of such generations.
 
 What is the generation size?
 ............................
@@ -61,7 +61,7 @@ The generation size is the number of symbols in the generation denoted :math:`g`
 What is a coding vector?
 ..........................
 
-The coding vector describes how a coded symbol was coded. It contains a coeffcient (which is a element) for each symbol in the generation.
+The coding vector describes how a coded symbol was coded. It contains a coefficient (which is a element) for each symbol in the generation.
 
 The coding vector is typically denoted; :math:`\boldsymbol{v} = \{v_0; v_1; ... v_{g-1} \}`
 
@@ -78,7 +78,7 @@ A coded symbol is encoded by multiplying the original data with a coding vector;
 What is a coded packet?
 .......................
 
-Is a pair of a coded symbol and a coding vector. To decode a coded symbol the corresponding coding vector must be known and therefore typically the two are tranmitted together in a single packet; :math:`\{ \boldsymbol{v}, \boldsymbol{x} \}`
+Is a pair of a coded symbol and a coding vector. To decode a coded symbol the corresponding coding vector must be known and therefore typically the two are transmitted together in a single packet; :math:`\{ \boldsymbol{v}, \boldsymbol{x} \}`
 
 
 What is linear dependency?
@@ -98,7 +98,7 @@ In the second stage, the sender generates random linear combinations of the
 original symbols in order to correct any packet losses which might have
 occurred during the first stage.
 
-What is the code density? 
+What is the code density?
 .........................
 
 The code density can be defined as the ratio of non-zero scalars in an
@@ -109,7 +109,7 @@ significantly faster. The density of a coding vector is the ratio of non-zero el
 
 :math:`d(\boldsymbol{v}) = \frac{\sum_{i=1}^g \boldsymbol{v}_i \neq 0}{g}` , where: :math:`\boldsymbol{v}_i` is the coding vector
 
-The density is sometimes also refered to as the degree.
+The density is sometimes also referred to as the degree.
 
 How does encoding work?
 .......................
@@ -149,7 +149,7 @@ generation size and the coding vector representation.
 
 Another source of overhead is linear dependency since a random code might
 produce a small number of linearly dependent (redundant) coded packets.
-This should be considered if we choose a small field size or low code density.
+This should be considered if we choose a small field size or low/sparse code density.
 
 In practice, we can use a systematic code to ensure reliability with a
 low overhead. This is the recommended approach in single-hop networks.
@@ -180,14 +180,12 @@ typically split into several equal-sized generations.
 When are the lost symbols/packets recovered?
 ............................................
 
-Let's suppose the N packets were lost from a generation and the sender does
+Let's suppose the :math:`N:math:` packets were lost from a generation and the sender does
 not have any information about which packets were lost. In this case, at least
-N coded packets are required to recover them. Note that the packets will not be
-recovered one-by-one, but all at once after the decoder processes N innovative
+:math:`N` coded packets are required to recover them. Note that the packets will not be
+recovered one-by-one, but all at once after the decoder processes :math:`N` innovative
 coded packets.
 
 Kodo
 ----
-
-
 
