@@ -28,6 +28,16 @@ What is original data?
 
 The original data is the data that is to be transferred from a source to one or more sinks with a size :math:`B` in bits.
 
+What is a code?
+...............
+
+Abstractly a coding can be thought of representing some original data in a way that is more appropiate for transportation. The kind of codes that is implemented in Kodo are erasure codes which can be used to recover packet erasures. A packet erasure is the loss of a packet, similar to if your letter is lost in the postal service. 
+
+What is a rateless code?
+........................
+
+With a rateless code an infinite number of representations of the original data can be created, unlike for codes with a rate where a fixed number of representations are possible. That make it possible to recover from any number of erasures with a rateless code.
+
 What is a finite field?
 .......................
 
@@ -101,7 +111,7 @@ occurred during the first stage.
 What is the code density?
 .........................
 
-The code density can be defined as the ratio of non-zero scalars in an
+The code density can be defined as the ratio of non-zero elements in an
 coding vector. Full density can be achieved by selecting coding coefficients
 according to a random uniform distribution. In contrast, sparse codes use
 many zero coefficients in the coding vectors which makes the encoding process
@@ -116,21 +126,21 @@ How does encoding work?
 
 .. _encoding:
 
-To encode a new symbol :math:`\boldsymbol{x}` from a generation at the source, :math:`\boldsymbol{M}` is multiplied with a randomly generated coding vector :math:`\boldsymbol{v}` of length :math:`g`, :math:`\boldsymbol{x} = \boldsymbol{M} \times \boldsymbol{v}`. In this way we can construct :math:`g+r` coded symbols and coding vectors, where :math:`r` is any number of redundant symbols as the code is rateless. When a coded symbol is transmitted on the network it is accompanied by its coding vector, and together they form a coded packet. A practical interpretation is that each coded symbol, is a combination or mix of the original symbols from one generation. The benefit is that nearly infinite coded symbols can be created.
+To encode a new symbol :math:`\boldsymbol{x}` from a generation at the source, :math:`\boldsymbol{M}` is multiplied with a randomly generated coding vector :math:`\boldsymbol{v}` of length :math:`g`, :math:`\boldsymbol{x} = \boldsymbol{M} \cdot \boldsymbol{v}`. In this way we can construct :math:`g+r` coded symbols and coding vectors, where :math:`r` is any number of redundant symbols as the code is rateless. When a coded symbol is transmitted on the network it is accompanied by its coding vector, and together they form a coded packet. A practical interpretation is that each coded symbol, is a combination or mix of the original symbols from one generation. The benefit is that nearly infinite coded symbols can be created.
 
 How does decoding work?
 .......................
 
 .. _decoding:
 
-In order for a sink to successfully decode a generation, it must receive :math:`g` linearly independent symbols and coding vectors from that generation. All received symbols are placed in the matrix :math:`\boldsymbol{\hat{X}} = [\boldsymbol{\hat{x}_1} ; \boldsymbol{\hat{x}_2} ; \hdots ; \boldsymbol{\hat{x}_g}]` and all coding vectors are placed in the matrix :math:`\boldsymbol{\hat{V}}=[\boldsymbol{\hat{v}_1} ; \boldsymbol{\hat{v}_2} ; \hdots ;\boldsymbol{\hat{v}_g} ]`, we denote :math:`\boldsymbol{\hat{V}}` the coding matrix. The original data :math:`\boldsymbol{M}` can then be decoded as :math:`\boldsymbol{\hat{M}} = \boldsymbol{\hat{X}} \times \boldsymbol{\hat{V}}^{-1}`. In practice if approximately **any** :math:`g` symbols from a generation are received the original data in that generation can be decoded. This is a much looser condition, compared to when no coding is used, where exactly **all** :math:`g` unique original symbols must be collected.
+In order for a sink to successfully decode a generation, it must receive :math:`g` linearly independent symbols and coding vectors from that generation. All received symbols are placed in the matrix :math:`\boldsymbol{\hat{X}} = [\boldsymbol{\hat{x}_1} ; \boldsymbol{\hat{x}_2} ; \hdots ; \boldsymbol{\hat{x}_g}]` and all coding vectors are placed in the matrix :math:`\boldsymbol{\hat{V}}=[\boldsymbol{\hat{v}_1} ; \boldsymbol{\hat{v}_2} ; \hdots ;\boldsymbol{\hat{v}_g} ]`, we denote :math:`\boldsymbol{\hat{V}}` the coding matrix. The original data :math:`\boldsymbol{M}` can then be decoded as :math:`\boldsymbol{\hat{M}} = \boldsymbol{\hat{X}} \cdot \boldsymbol{\hat{V}}^{-1}`. In practice if approximately **any** :math:`g` symbols from a generation are received the original data in that generation can be decoded. This is a much looser condition, compared to when no coding is used, where exactly **all** :math:`g` unique original symbols must be collected.
 
 How does recoding work?
 .......................
 
 .. _recoding:
 
-Any node that have received :math:`g'`, where :math:`g' = [2,g]` is the number of received linearly independent symbols from a generation and is equal to the rank of :math:`\boldsymbol{\hat{V}}`, can recode. All received symbols are placed in the matrix :math:`\boldsymbol{\hat{X}} = [\boldsymbol{\hat{x}_1} ; \boldsymbol{\hat{x}_2} ; \hdots ; \boldsymbol{\hat{x}_{g'}}]` and all coding vectors in the matrix :math:`\boldsymbol{\hat{V}} = [\boldsymbol{\hat{v}_1} ; \boldsymbol{\hat{v}_2} ; \hdots ; \boldsymbol{\hat{v}_{g'}}]`. To recode a symbol these matrices are multiplied with a randomly generated vector :math:`\boldsymbol{w}` of length `g'`, :math:`\boldsymbol{\tilde{v}} = \boldsymbol{\hat{G}} \times \boldsymbol{w}`,  :math:`\boldsymbol{\tilde{x}} = \boldsymbol{\hat{X}} \times \boldsymbol{w}`. In this way we can construct :math:`r'` randomly generated recoding vectors and :math:`r'` recoded symbols. :math:`r'>g'` is possible, however a node can never create more than :math:`g'` independent symbols. Note that :math:`\boldsymbol{w}` is only used locally and that there is no need to distinguish between coded and recoded symbols. In practice this means that a node that have received more than one symbol can recombine those symbols into recoded symbols, similar to the way coded symbols are constructed at the source.
+Any node that have received :math:`g'`, where :math:`g' = [2,g]` is the number of received linearly independent symbols from a generation and is equal to the rank of :math:`\boldsymbol{\hat{V}}`, can recode. All received symbols are placed in the matrix :math:`\boldsymbol{\hat{X}} = [\boldsymbol{\hat{x}_1} ; \boldsymbol{\hat{x}_2} ; \hdots ; \boldsymbol{\hat{x}_{g'}}]` and all coding vectors in the matrix :math:`\boldsymbol{\hat{V}} = [\boldsymbol{\hat{v}_1} ; \boldsymbol{\hat{v}_2} ; \hdots ; \boldsymbol{\hat{v}_{g'}}]`. To recode a symbol these matrices are multiplied with a randomly generated vector :math:`\boldsymbol{w}` of length `g'`, :math:`\boldsymbol{\tilde{v}} = \boldsymbol{\hat{G}} \cdot \boldsymbol{w}`,  :math:`\boldsymbol{\tilde{x}} = \boldsymbol{\hat{X}} \cdot \boldsymbol{w}`. In this way we can construct :math:`r'` randomly generated recoding vectors and :math:`r'` recoded symbols. :math:`r'>g'` is possible, however a node can never create more than :math:`g'` independent symbols. Note that :math:`\boldsymbol{w}` is only used locally and that there is no need to distinguish between coded and recoded symbols. In practice this means that a node that have received more than one symbol can recombine those symbols into recoded symbols, similar to the way coded symbols are constructed at the source.
 
 
 How can the role of a node change during a session?
