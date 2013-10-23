@@ -11,6 +11,10 @@ Latest
 * Major: Update the coefficient storage API. The previous naming
   scheme caused some confusion about the API, the new naming scheme
   hopefully makes the API easier to read and understand.
+* Major: Updating dependency to gauge version 6.x.y
+* Minor: Added tables dependency
+* Major: Modified output from decoding probability benchmark. The rank is
+  now printed as a 2D list.
 
 15.0.0
 ------
