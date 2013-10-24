@@ -13,6 +13,9 @@ relevant benchmark run on our buildslaves: http://176.28.49.184:12344/buildslave
 
 import pandas as pd
 import scipy as sp
+
+import sys 
+sys.path.insert(0, "../")
 import processing_shared as ps
 
 from datetime import datetime, timedelta
@@ -21,12 +24,6 @@ today = now.date()
 today = datetime(today.year, today.month, today.day)
 yesterday = today - timedelta(1)
 
-query_master = {
-"type": "decoder",
-"branch" : "master",
-"scheduler": "kodo-nightly-benchmark",
-"utc_date" : {"$gte": yesterday, "$lt": today}
-}
 
 query_branches = {
 "type": "decoder",
@@ -34,8 +31,15 @@ query_branches = {
 "utc_date" : {"$gte": now - timedelta(3)}
 }
 
-cursor_master = query_database(query_master)
-cursor_branches = query_database(query_branches)
+query_master = {
+"type": "decoder",
+"branch" : "master",
+"scheduler": "kodo-nightly-benchmark",
+"utc_date" : {"$gte": yesterday, "$lt": today}
+}
+
+cursor_master = ps.query_database(query_master)
+cursor_branches = ps.query_database(query_branches)
 
 df_all = pd.DataFrame.from_records( sp.hstack( [list(cursor_master), list(cursor_branches)] ))
 ps.calculate(df_all)
@@ -45,11 +49,16 @@ from matplotlib import pyplot as pl
 from matplotlib.backends.backend_pdf import PdfPages as pp
 pl.close('all')
 
+PATH  = ("figures_database/")
+
 branches = list(sp.unique(df_all['branch']))
+if len(branches) == 1:
+    print("Only benchmarks for the master branch, no plots will be generated")
+
 pdf = {}
 for branch in branches:
 	if branch != "master":
-		PATH  = ("figures/throughput_gain/" + branch ).replace("-","_")
+		PATH  += branch.replace("-","_")
 		ps.mkdir_p(PATH + "/sparse")
 		ps.mkdir_p(PATH + "/dense")
 		pdf[branch] = pp(PATH + "/all.pdf")

@@ -36,16 +36,12 @@ def query_database(query):
     @param query a dict containing the query
     """
     
-    assert( isinstance(query, dict)
+    assert( isinstance(query, dict) )
     
-    db = connect_database())
+    db = connect_database()
     assert( isinstance(db, pymongo.database.Database) )
 
     mongo_cursor = db.kodo_throughput.find(query)
-
-    if len(mongo_cursor) == 0:
-        print("The query returned zero results") 
-
     return mongo_cursor
 
 def calculate(df):
