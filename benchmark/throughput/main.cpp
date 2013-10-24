@@ -16,6 +16,8 @@
 #include <kodo/rlnc/seed_codes.hpp>
 #include <kodo/rs/reed_solomon_codes.hpp>
 
+#include <tables/table.hpp>
+
 #include "codes.hpp"
 
 /// A test block represents an encoder and decoder pair
@@ -79,8 +81,11 @@ struct throughput_benchmark : public gauge::time_benchmark
         return bytes / time; // MB/s for each iteration
     }
 
-    void store_run(gauge::table& results)
+    void store_run(tables::table& results)
     {
+        if(!results.has_column("throughput"))
+            results.add_column("throughput");
+
         results.set_value("throughput", measurement());
     }
 
