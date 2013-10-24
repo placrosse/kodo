@@ -14,7 +14,7 @@ relevant benchmark run on our buildslaves: http://176.28.49.184:12344/buildslave
 import pandas as pd
 import scipy as sp
 
-import sys 
+import sys
 sys.path.insert(0, "../")
 import processing_shared as ps
 
@@ -49,7 +49,7 @@ from matplotlib import pyplot as pl
 from matplotlib.backends.backend_pdf import PdfPages as pp
 pl.close('all')
 
-PATH  = ("figures_database/")
+PATH  = ("./figures_database/")
 
 branches = list(sp.unique(df_all['branch']))
 if len(branches) == 1:
@@ -58,24 +58,23 @@ if len(branches) == 1:
 pdf = {}
 for branch in branches:
 	if branch != "master":
-		PATH  += branch.replace("-","_")
-		ps.mkdir_p(PATH + "/sparse")
-		ps.mkdir_p(PATH + "/dense")
-		pdf[branch] = pp(PATH + "/all.pdf")
+		ps.mkdir_p(PATH + branch.replace("-","_") + "/sparse")
+		ps.mkdir_p(PATH  + branch.replace("-","_") + "/dense")
+		pdf[branch] = pp(PATH + branch.replace("-","_") + "/all.pdf")
 
 for buildername, group in groups:
 
-    branches_group = group[group['branch'] != "master"].groupby(by = ['branch'])
     master_group = group[sp.array(group['branch'] == "master")]
-    master_group = master_group[master_group['buildnumber'] == max(master_group['buildnumber'])]
-
     group[group['branch'] == "master"]
     if len(master_group) == 0:
-        print "Skipping " + buildername + " as no nightly benchmark resutls exists for the master for this buider yet"
+        print "Skipping " + buildername + " as no nightly benchmark results exists for the master for this buider yet"
         continue
+    master_group = master_group[master_group['buildnumber'] == max(master_group['buildnumber'])]
+
+    branches_group = group[group['branch'] != "master"].groupby(by = ['branch'])
 
     for branch, branch_group in branches_group:
-        PATH  = ("figures/throughput_gain/" + branch ).replace("-","_")
+        PATH_BRANCH  = PATH + (branch ).replace("-","_")
 
         branch_group = branch_group[branch_group["buildnumber"] == max(branch_group['buildnumber'])]
         branch_group['gain'] = (sp.array(branch_group['mean']) - sp.array(master_group['mean']) ) / sp.array(master_group['mean']) * 100
@@ -86,13 +85,13 @@ for buildername, group in groups:
         for key, g in sparse:
             p = ps.plot_sparse_group(g, "gain", buildername)
             pl.ylabel("Throughput gain [%]")
-            pl.savefig(PATH + "/sparse/" + buildername + '.eps')
+            pl.savefig(PATH_BRANCH + "/sparse/" + buildername + '.eps')
             pdf[branch].savefig(transparent=True)
 
         for key, g in dense:
             p = ps.plot_dense_group(g, "gain", buildername)
             pl.ylabel("Throughput gain [%]")
-            pl.savefig(PATH + "/dense/" + buildername + '.eps')
+            pl.savefig(PATH_BRANCH + "/dense/" + buildername + '.eps')
             pdf[branch].savefig(transparent=True)
 
 for p in pdf:
