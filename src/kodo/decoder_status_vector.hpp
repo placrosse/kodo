@@ -19,15 +19,16 @@ namespace kodo
     template<class SuperCoder>
     class decoder_status_vector : public SuperCoder
     {
+    public:
 
-        typedef uint8_t status_block;
-        typedef boost::dynamic_bitset<status_block> status_container;
+        /// The data used for the status vector
+        typedef uint8_t status_block_type;
 
     public:
 
         /// @copydoc layer::construct(Factory&)
         template<class Factory>
-        void construct(Factory &the_factory)
+        void construct(Factory& the_factory)
         {
             SuperCoder::construct(the_factory);
 
@@ -41,8 +42,8 @@ namespace kodo
         {
             SuperCoder::initialize(the_factory);
 
-            m_symbols_seen.reset();
-            m_symbols_decoded.reset();
+            m_symbols_seen.resize(the_factory.symbols(), false);
+            m_symbols_decoded.resize(the_factory.symbols(), false);
         }
 
         /// @copydoc layer::set_symbol_missing(uint32_t)
@@ -90,36 +91,55 @@ namespace kodo
             return m_symbols_decoded[index];
         }
 
-        size_t symbols_seen() const
+        /// @copydoc layer::symbols_seen() const
+        uint32_t symbols_seen() const
         {
             return m_symbols_seen.count();
         }
 
-        size_t symbols_decoded() const
+        /// @copydoc layer::symbols_decoded() const
+        uint32_t symbols_decoded() const
         {
             return m_symbols_decoded.count();
         }
 
-        size_t symbols_missing() const
+        /// @copydoc layer::symbols_missing() const
+        uint32_t symbols_missing() const
         {
             return SuperCoder::symbols() - symbols_decoded() - symbols_seen();
         }
 
-        void get_decoder_status(uint8_t *first) const
+        /// Writes the decoder status to the provided buffer. The decoder status
+        /// is a bit vector where each symbol represented by a 0 if the symbol
+        /// is missing or a 1 if the symbol is seen or decoded.
+        void write_decoder_rank_status(uint8_t *buffer) const
         {
-            assert(first != NULL);
-            boost::to_block_range(m_symbols_seen | m_symbols_decoded, first);
+            assert(buffer);
+            boost::to_block_range(m_symbols_seen | m_symbols_decoded, buffer);
         }
 
-        size_t decoder_status_len() const
+        /// @return The size in bytes of decoder status vector
+        uint32_t decoder_rank_status_size() const
         {
+            assert(m_symbols_seen.num_blocks() ==
+                   m_symbols_decoded.num_blocks());
+
+            static_assert(sizeof(status_block_type) == 1,
+                          "We assume that the block type is 1 byte in the "
+                          "calculation here");
+
             return m_symbols_seen.num_blocks();
         }
 
     private:
 
-        status_container m_symbols_seen;
-        status_container m_symbols_decoded;
+        /// Tracks the symbols which have been "seen", see the
+        /// symbol_decoding_status_tracker layer for a description of
+        /// what seen means.
+        boost::dynamic_bitset<status_block_type> m_symbols_seen;
+
+        /// Tracks the symbols which have been fully decoded.
+        boost::dynamic_bitset<status_block_type> m_symbols_decoded;
     };
 
 }
