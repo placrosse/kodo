@@ -11,6 +11,7 @@
 #include <gauge/console_printer.hpp>
 #include <gauge/python_printer.hpp>
 #include <gauge/csv_printer.hpp>
+#include <gauge/json_printer.hpp>
 
 #include <kodo/rlnc/full_vector_codes.hpp>
 #include <kodo/rlnc/seed_codes.hpp>
@@ -642,6 +643,9 @@ int main(int argc, const char* argv[])
 
     gauge::runner::instance().printers().push_back(
         std::make_shared<gauge::csv_printer>());
+
+    gauge::runner::instance().printers().push_back(
+        std::make_shared<gauge::json_printer>());
 
     gauge::runner::run_benchmarks(argc, argv);
 
