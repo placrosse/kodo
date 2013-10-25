@@ -53,7 +53,7 @@ PATH  = ("./figures_database/")
 
 branches = list(sp.unique(df_all['branch']))
 if len(branches) == 1:
-    print("Only benchmarks for the master branch, no plots will be generated")
+    print("Only recent benchmarks for the master branch in the database, no plots will be generated")
 
 pdf = {}
 for branch in branches:

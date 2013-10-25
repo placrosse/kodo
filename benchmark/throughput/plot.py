@@ -11,7 +11,7 @@ import argparse
 import pandas as pd
 import scipy as sp
 
-import sys 
+import sys
 sys.path.insert(0, "../")
 import processing_shared as ps
 
@@ -26,7 +26,8 @@ def plot_throughput(args):
     if args.jsonfile:
         PATH  = ("figures_local/")
         df = pd.read_json(args.jsonfile)
-        
+        df['buildername'] = "local"
+
     else:
         PATH  = ("figures_database/")
         query = {
