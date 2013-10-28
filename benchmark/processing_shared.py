@@ -30,21 +30,24 @@ def connect_database():
     db.authenticate(username, password)
     return db
 
+def markers(label):
+        if "Binary8" in label:
+            return "v"
+        if "Binary16" in label:
+            return"^"
+        if "Binary" in label:
+            return "o"
+        if "Prime2325" in label:
+            return "*"
+
 def set_markers(plot):
     """
-    Set markers depending on the field 
+    Set markers depending on the field
     @param plot a pylab plot
     """
     for l in plot.lines:
         field = l.get_label()
-        if "Binary" in field:
-            l.set_marker("o")
-        if "Binary8" in field:
-            l.set_marker("v")
-        if "Binary16" in field:
-            l.set_marker("^")
-        if "Prime2325" in field:
-            l.set_marker("*")
+        l.set_marker(markers(field))
 
 def mkdir_p(path):
     try:
@@ -71,8 +74,11 @@ def set_dense_plot():
         'figure.subplot.left': .1
         })
 
+def set_legend():
+    pl.legend(bbox_to_anchor=(1., -0.01), loc=3, ncol=1)
+
 def set_plot_details(p, title):
     p.set_title(title, ha = "left", position = (.0,1.03), fontsize = "medium")
     set_markers(p)
-    pl.legend(bbox_to_anchor=(1., -0.01), loc=3, ncol=1)
+    set_legend()
 

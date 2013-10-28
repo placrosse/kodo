@@ -41,7 +41,6 @@ mc = db.kodo_decoding_probability.find(query)
 df = pd.DataFrame.from_records( list(mc) )
 
 df['dependency'] = df['rank'].apply(sp.mean, axis=0)-1
-df['x_symbols'] = df['symbols'].apply(sp.arange)
 
 sparse = df[df['testcase'] == "SparseFullRLNC"].groupby(by= ['buildername', 'symbol_size','symbols'])
 dense = df[df['testcase'] != "SparseFullRLNC"].groupby(by= ['buildername', 'symbol_size','symbols'])
@@ -55,22 +54,36 @@ ps.mkdir_p(PATH + "dense")
 pdf = pp(PATH + "all.pdf")
 
 for (buildername, symbol_size, symbols), group in sparse:
-    # ps.set_sparse_plot()
-    p = group.pivot_table('dependency',  rows='x_symbols', cols=['benchmark','density']).plot()
-    # ps.set_plot_details(p, buildername)
-    # pl.ylabel("Extra symbols" + " [" + list(group['unit'])[0] + "]")
-    # pl.xticks(list(sp.unique(group['symbols'])))
-    pl.savefig(PATH + "sparse/" + buildername + '.eps')
+
+    pl.figure()
+    ps.set_sparse_plot()
+    for (deps, field,density) in zip(group['dependency'], group['benchmark'], group['density']):
+        pl.plot(sp.arange(symbols), deps, marker = ps.markers(field), label = "(" + field +", " + str(density) + ")")
+
+    pl.title(buildername, ha = "left", position = (.0,1.03), fontsize = "medium")
+    ps.set_legend()
+    pl.xlabel("Rank Defeciency")
+    pl.ylabel("Extra Packets")
+    pl.xticks( symbols-2**sp.arange(sp.log2(symbols))[::-1] , 2**sp.arange(sp.log2(symbols),dtype=int)[::-1])
+    pl.grid('on')
+    pl.savefig(PATH + "sparse/" + buildername + str(symbols) + '.eps')
     pdf.savefig(transparent=True)
 
-# for (buildername,symbols), group in dense:
-#     ps.set_dense_plot()
-#     p = group.pivot_table('mean',  rows='symbols', cols=['benchmark','testcase']).plot()
-#     ps.set_plot_details(p, buildername)
-#     pl.ylabel("Extra symbols" + " [" + list(group['unit'])[0] + "]")
-#     pl.xticks(list(sp.unique(group['symbols'])))
-#     pl.savefig(PATH + "dense/"+ buildername + '.eps')
-#     pdf.savefig(transparent=True)
+for (buildername, symbol_size, symbols), group in dense:
+
+    pl.figure()
+    ps.set_dense_plot()
+    for (deps, field,testcase) in zip(group['dependency'], group['benchmark'], group['testcase']):
+        pl.plot(sp.arange(symbols), deps, marker = ps.markers(field), label = "(" + field +", " + testcase + ")")
+
+    pl.title(buildername, ha = "left", position = (.0,1.03), fontsize = "medium")
+    ps.set_legend()
+    pl.xlabel("Rank Defeciency")
+    pl.ylabel("Extra Packets")
+    pl.xticks( symbols-2**sp.arange(sp.log2(symbols))[::-1] , 2**sp.arange(sp.log2(symbols),dtype=int)[::-1])
+    pl.grid('on')
+    pl.savefig(PATH + "dense/" + buildername + str(symbols) + '.eps')
+    pdf.savefig(transparent=True)
 
 pdf.close()
 
