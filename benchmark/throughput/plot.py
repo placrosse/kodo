@@ -37,10 +37,12 @@ def plot_throughput(args):
         "utc_date" : {"$gte": yesterday, "$lt": today}
         }
 
-        mc = ps.query_database(query)
+        db = ps.connect_database()
+        mc = db.kodo_throughput.find(query)
         df = pd.DataFrame.from_records( list(mc) )
 
-    ps.calculate(df)
+    df['mean'] = df['throughput'].apply(sp.mean)
+    df['std'] = df['throughput'].apply(sp.std)
 
     sparse = df[df['testcase'] == "SparseFullRLNC"].groupby(by= ['buildername', 'symbol_size'])
     dense = df[df['testcase'] != "SparseFullRLNC"].groupby(by= ['buildername', 'symbol_size'])
@@ -54,19 +56,27 @@ def plot_throughput(args):
     pdf = pp(PATH + "all.pdf")
 
     for (buildername,symbols), group in sparse:
-        p = ps.plot_sparse_group(group, "mean", buildername)
+
+        ps.set_sparse_plot()
+        p = group.pivot_table('mean',  rows='symbols', cols=['benchmark','average_nonzero_symbols']).plot()
+        ps.set_plot_details(p, buildername)
+        pl.ylabel("Throughput" + " [" + list(group['unit'])[0] + "]")
+        pl.xticks(list(sp.unique(group['symbols'])))
         p.set_yscale('log')
         pl.savefig(PATH + "sparse/" + buildername + '.eps')
         pdf.savefig(transparent=True)
 
     for (buildername,symbols), group in dense:
-        p = ps.plot_dense_group(group, "mean", buildername)
+        ps.set_dense_plot()
+        p = group.pivot_table('mean',  rows='symbols', cols=['benchmark','testcase']).plot()
+        ps.set_plot_details(p, buildername)
+        pl.ylabel("Throughput" + " [" + list(group['unit'])[0] + "]")
+        pl.xticks(list(sp.unique(group['symbols'])))
         p.set_yscale('log')
         pl.savefig(PATH + "dense/"+ buildername + '.eps')
         pdf.savefig(transparent=True)
 
     pdf.close()
-
 
 if __name__ == '__main__':
 

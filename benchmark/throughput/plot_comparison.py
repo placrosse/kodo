@@ -28,7 +28,7 @@ yesterday = today - timedelta(1)
 query_branches = {
 "type": "decoder",
 "scheduler": "kodo-force-benchmark",
-"utc_date" : {"$gte": now - timedelta(3)}
+"utc_date" : {"$gte": now - timedelta(10)}
 }
 
 query_master = {
@@ -38,11 +38,13 @@ query_master = {
 "utc_date" : {"$gte": yesterday, "$lt": today}
 }
 
-cursor_master = ps.query_database(query_master)
-cursor_branches = ps.query_database(query_branches)
+db = ps.connect_database()
+cursor_master = db.kodo_throughput.find(query_master)
+cursor_branches = db.kodo_throughput.find(query_branches)
 
 df_all = pd.DataFrame.from_records( sp.hstack( [list(cursor_master), list(cursor_branches)] ))
-ps.calculate(df_all)
+df_all['mean'] = df_all['throughput'].apply(sp.mean)
+df_all['std'] = df_all['throughput'].apply(sp.std)
 groups = df_all.groupby(['buildername'])
 
 from matplotlib import pyplot as pl
@@ -83,14 +85,20 @@ for buildername, group in groups:
         dense = branch_group[branch_group['testcase'] != "SparseFullRLNC"].groupby(by= ['symbol_size'])
 
         for key, g in sparse:
-            p = ps.plot_sparse_group(g, "gain", buildername)
-            pl.ylabel("Throughput gain [%]")
+            ps.set_sparse_plot()
+            p = g.pivot_table('gain',  rows='symbols', cols=['benchmark','average_nonzero_symbols']).plot()
+            ps.set_plot_details(p, buildername)
+            pl.ylabel("Throughput gain [\%]")
+            pl.xticks(list(sp.unique(group['symbols'])))
             pl.savefig(PATH_BRANCH + "/sparse/" + buildername + '.eps')
             pdf[branch].savefig(transparent=True)
 
         for key, g in dense:
-            p = ps.plot_dense_group(g, "gain", buildername)
-            pl.ylabel("Throughput gain [%]")
+            ps.set_dense_plot()
+            p = g.pivot_table('gain',  rows='symbols', cols=['benchmark','testcase']).plot()
+            ps.set_plot_details(p, buildername)
+            pl.ylabel("Throughput gain [\%]")
+            pl.xticks(list(sp.unique(group['symbols'])))
             pl.savefig(PATH_BRANCH + "/dense/" + buildername + '.eps')
             pdf[branch].savefig(transparent=True)
 
