@@ -142,7 +142,6 @@ namespace kodo
             return m_systematic_count;
         }
 
-
     protected:
 
         /// Encodes a systematic packet
