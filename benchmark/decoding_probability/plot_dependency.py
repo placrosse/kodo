@@ -94,7 +94,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
 
     parser.add_argument(
-        '--target', dest='jsonfile', action='store',
+        '--json', dest='jsonfile', action='store',
         help='the .json file written by gauge benchmark, if non provided plots from the database',
         default="")
 
