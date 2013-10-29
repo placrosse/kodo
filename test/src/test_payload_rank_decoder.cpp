@@ -103,7 +103,7 @@ TEST(TestPayloadRankDecoder, test_payload_rank_decoder)
 
     // Needs a factory - not used so we can pass any type
     stack.initialize(factory);
-    EXPECT_EQ(stack.seen_encoder_rank(), 0U);
+    EXPECT_EQ(stack.remote_rank(), 0U);
 
     stack.m_payload_size = 0U;
     EXPECT_EQ(stack.payload_size(), sizeof_rank_type);
@@ -115,7 +115,7 @@ TEST(TestPayloadRankDecoder, test_payload_rank_decoder)
 
     sak::big_endian::put<kodo::dummy_final::rank_type>(0U, &payload[0]);
     stack.decode(&payload[0]);
-    EXPECT_EQ(stack.seen_encoder_rank(), 0U);
+    EXPECT_EQ(stack.remote_rank(), 0U);
 
     // This is the payload buffer received in the dummy_final we expect
     // it to be incremented past the rank information
@@ -123,21 +123,21 @@ TEST(TestPayloadRankDecoder, test_payload_rank_decoder)
 
     sak::big_endian::put<kodo::dummy_final::rank_type>(1U, &payload[0]);
     stack.decode(&payload[0]);
-    EXPECT_EQ(stack.seen_encoder_rank(), 1U);
+    EXPECT_EQ(stack.remote_rank(), 1U);
     EXPECT_EQ(stack.m_payload, &payload[sizeof_rank_type]);
 
     sak::big_endian::put<kodo::dummy_final::rank_type>(10U, &payload[0]);
     stack.decode(&payload[0]);
-    EXPECT_EQ(stack.seen_encoder_rank(), 10U);
+    EXPECT_EQ(stack.remote_rank(), 10U);
     EXPECT_EQ(stack.m_payload, &payload[sizeof_rank_type]);
 
     sak::big_endian::put<kodo::dummy_final::rank_type>(10U, &payload[0]);
     stack.decode(&payload[0]);
-    EXPECT_EQ(stack.seen_encoder_rank(), 10U);
+    EXPECT_EQ(stack.remote_rank(), 10U);
     EXPECT_EQ(stack.m_payload, &payload[sizeof_rank_type]);
 
     stack.initialize(factory);
-    EXPECT_EQ(stack.seen_encoder_rank(), 0U);
+    EXPECT_EQ(stack.remote_rank(), 0U);
 
 }
 

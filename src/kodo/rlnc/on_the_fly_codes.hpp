@@ -14,7 +14,7 @@
 #include "../payload_rank_encoder.hpp"
 #include "../payload_rank_decoder.hpp"
 #include "../payload_rank_recoder.hpp"
-#include "../proxy_seen_encoder_rank.hpp"
+#include "../proxy_remote_rank.hpp"
 #include "../coefficient_value_access.hpp"
 #include "../rank_symbol_decoding_status_updater.hpp"
 
@@ -101,7 +101,7 @@ namespace kodo
                  // Coefficient Storage API
                  coefficient_value_access<
                  // Proxy
-                 proxy_seen_encoder_rank<
+                 proxy_remote_rank<
                  proxy_layer<
                  on_the_fly_recoding_stack<MainStack>,
                  MainStack> > > > > > > > > > > > >

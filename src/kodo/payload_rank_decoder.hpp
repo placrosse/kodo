@@ -8,6 +8,8 @@
 #include <cstdint>
 #include <sak/convert_endian.hpp>
 
+#include "rank_reader.hpp"
+
 namespace kodo
 {
 
@@ -15,46 +17,39 @@ namespace kodo
     /// @brief The payload decoder splits the payload buffer into
     ///        symbol header and symbol.
     template<class SuperCoder>
-    class payload_rank_decoder : public SuperCoder
+    class payload_rank_decoder : public rank_reader<SuperCoder>
     {
     public:
 
+        /// The actual super type
+        typedef rank_reader<SuperCoder> Super;
+
         /// @copydoc layer::rank_type
-        typedef typename SuperCoder::rank_type rank_type;
+        typedef typename Super::rank_type rank_type;
 
     public:
 
         /// The factory layer associated with this coder.
         /// In this case only needed to provide the max_payload_size()
         /// function.
-        class factory : public SuperCoder::factory
+        class factory : public Super::factory
         {
         public:
 
             /// @copydoc layer::factory::factory(uint32_t,uint32_t)
             factory(uint32_t max_symbols, uint32_t max_symbol_size)
-                : SuperCoder::factory(max_symbols, max_symbol_size)
+                : Super::factory(max_symbols, max_symbol_size)
             { }
 
             /// @copydoc layer::factory::max_payload_size() const
             uint32_t max_payload_size() const
             {
-                return SuperCoder::factory::max_payload_size() +
+                return Super::factory::max_payload_size() +
                     sizeof(rank_type);
             }
         };
 
     public:
-
-        /// @copydoc layer::initialize(Factory&)
-        template<class Factory>
-        void initialize(Factory& the_factory)
-        {
-            SuperCoder::initialize(the_factory);
-
-            // Reset the state
-            m_seen_encoder_rank = 0;
-        }
 
         /// Unpacks the symbol data and symbol header from the payload
         /// buffer.
@@ -63,28 +58,12 @@ namespace kodo
         {
             assert(payload != 0);
 
-            uint32_t read = read_rank(payload);
-            SuperCoder::decode(payload + read);
-        }
+            uint32_t read = Super::read_rank(payload);
 
-        /// Reads the rank of the encoder from the payload buffer
-        /// @param payload The payload buffer
-        /// @return The amount of bytes read
-        uint32_t read_rank(uint8_t* payload)
-        {
-            assert(payload != 0);
+            // If not true or payload_size() calculation will not work
+            assert(read == sizeof(rank_type));
 
-            // Write the encoder rank to the payload
-            rank_type encoder_rank =
-                sak::big_endian::get<rank_type>(payload);
-
-            // We set the maximum rank of the previously seen and the
-            // newly received. Re-ordering of packets might cause a
-            // the encoder rank to be lower than what has previously
-            // been seen
-            m_seen_encoder_rank = std::max(encoder_rank, m_seen_encoder_rank);
-
-            return sizeof(rank_type);
+            Super::decode(payload + read);
         }
 
         /// @copydoc layer::payload_size() const
@@ -94,19 +73,7 @@ namespace kodo
                 sizeof(rank_type);
         }
 
-        /// @return The rank of the encoder as read from the packet
-        rank_type seen_encoder_rank() const
-        {
-            return m_seen_encoder_rank;
-        }
-
-    private:
-
-        /// Stores the read encoder rank
-        rank_type m_seen_encoder_rank;
-
     };
-
 }
 
 
