@@ -21,70 +21,69 @@ today = now.date()
 today = datetime(today.year, today.month, today.day)
 yesterday = today - timedelta(1)
 
-# def plot_throughput(args):
+def plot(args):
 
-# if args.jsonfile:
-#     PATH  = ("figures_local/")
-#     df = pd.read_json(args.jsonfile)
-#     df['buildername'] = "local"
+    if args.jsonfile:
+        PATH  = ("figures_local/")
+        df = pd.read_json(args.jsonfile)
+        df['buildername'] = "local"
 
-#else:
-PATH  = ("figures_database/")
-query = {
-"branch" : "master",
-"scheduler": "kodo-nightly-benchmark",
-"utc_date" : {"$gte": yesterday, "$lt": today}
-}
+    else:
+        PATH  = ("figures_database/")
+        query = {
+        "branch" : "master",
+        "scheduler": "kodo-nightly-benchmark",
+        "utc_date" : {"$gte": yesterday, "$lt": today}
+        }
 
-db = ps.connect_database()
-mc = db.kodo_decoding_probability.find(query)
-df = pd.DataFrame.from_records( list(mc) )
+        db = ps.connect_database()
+        mc = db.kodo_decoding_probability.find(query)
+        df = pd.DataFrame.from_records( list(mc) )
 
-df['mean'] = df['used'].apply(sp.mean) -df['symbols']
-df['std'] = df['used'].apply(sp.std)
-#df['average_nonzero_symbols'] = df['symbols'] * df['density']
+    df['mean'] = df['used'].apply(sp.mean) -df['symbols']
+    df['std'] = df['used'].apply(sp.std)
 
-sparse = df[df['testcase'] == "SparseFullRLNC"].groupby(by= ['buildername', 'symbol_size'])
-dense = df[df['testcase'] != "SparseFullRLNC"].groupby(by= ['buildername', 'symbol_size'])
+    sparse = df[df['testcase'] == "SparseFullRLNC"].groupby(by= ['buildername', 'symbol_size'])
+    dense = df[df['testcase'] != "SparseFullRLNC"].groupby(by= ['buildername', 'symbol_size'])
 
-from matplotlib import pyplot as pl
-from matplotlib.backends.backend_pdf import PdfPages as pp
-pl.close('all')
+    from matplotlib import pyplot as pl
+    from matplotlib.backends.backend_pdf import PdfPages as pp
+    pl.close('all')
 
-ps.mkdir_p(PATH + "sparse")
-ps.mkdir_p(PATH + "dense")
-pdf = pp(PATH + "all.pdf")
+    ps.mkdir_p(PATH + "sparse")
+    ps.mkdir_p(PATH + "dense")
+    pdf = pp(PATH + "all.pdf")
 
-for (buildername,symbols), group in sparse:
-    ps.set_sparse_plot()
-    p = group.pivot_table('mean',  rows='symbols', cols=['benchmark','density']).plot()
-    ps.set_plot_details(p, buildername)
-    pl.ylabel("Extra symbols" + " [" + list(group['unit'])[0] + "]")
-    pl.xticks(list(sp.unique(group['symbols'])))
-    pl.savefig(PATH + "sparse/" + buildername + '.eps')
-    pdf.savefig(transparent=True)
+    for (buildername,symbols), group in sparse:
+        ps.set_sparse_plot()
+        p = group.pivot_table('mean',  rows='symbols', cols=['benchmark','density']).plot()
+        ps.set_plot_details(p, buildername)
+        pl.ylabel("Extra symbols" + " [" + list(group['unit'])[0] + "]")
+        pl.xticks(list(sp.unique(group['symbols'])))
+        pl.savefig(PATH + "sparse/" + buildername + '.eps')
+        pdf.savefig(transparent=True)
 
-for (buildername,symbols), group in dense:
-    ps.set_dense_plot()
-    p = group.pivot_table('mean',  rows='symbols', cols=['benchmark','testcase']).plot()
-    ps.set_plot_details(p, buildername)
-    pl.ylabel("Extra symbols" + " [" + list(group['unit'])[0] + "]")
-    pl.xticks(list(sp.unique(group['symbols'])))
-    pl.savefig(PATH + "dense/"+ buildername + '.eps')
-    pdf.savefig(transparent=True)
+    for (buildername,symbols), group in dense:
+        ps.set_dense_plot()
+        p = group.pivot_table('mean',  rows='symbols', cols=['benchmark','testcase']).plot()
+        ps.set_plot_details(p, buildername)
+        pl.ylabel("Extra symbols" + " [" + list(group['unit'])[0] + "]")
+        pl.xticks(list(sp.unique(group['symbols'])))
+        pl.savefig(PATH + "dense/"+ buildername + '.eps')
+        pdf.savefig(transparent=True)
 
-pdf.close()
+    pdf.close()
 
 
-# if __name__ == '__main__':
+if __name__ == '__main__':
 
-#     parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser()
 
-#     parser.add_argument(
-#         '--target', dest='jsonfile', action='store',
-#         help='the .json file written by gauge benchmark, if non provided plots from the database',
-#         default="")
+    parser.add_argument(
+        '--target', dest='jsonfile', action='store',
+        help='the .json file written by gauge benchmark, if non provided plots from the database',
+        default="")
 
-#     args = parser.parse_args()
+    args = parser.parse_args()
 
-#     plot_throughput(args)
+    plot(args)
