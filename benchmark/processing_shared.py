@@ -4,7 +4,8 @@ Distributed under the "STEINWURF RESEARCH LICENSE 1.0".
 See accompanying file LICENSE.rst or
 http://www.steinwurf.com/licensing
 
-Various shared functionality for database query, pandas data processing and plotting
+Various shared functionality for database query, pandas data processing and 
+plotting
 """
 
 import os
@@ -15,7 +16,8 @@ assert pymongo.version_tuple[:2] >= (2,5), "You need a newer version of pymongo"
 from pymongo import MongoClient
 
 import pandas as pd
-assert sp.any(sp.array(pd.version.version.split(".")) >= ['1','12',sp.inf]),  "You need a newer version of pandas"
+assert sp.any(sp.array(pd.version.version.split(".")) >= ['1','12',sp.inf]), 
+    "You need a newer version of pandas"
 
 address = "176.28.49.184"
 username = "guest"

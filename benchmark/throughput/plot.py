@@ -44,8 +44,10 @@ def plot_throughput(args):
     df['mean'] = df['throughput'].apply(sp.mean)
     df['std'] = df['throughput'].apply(sp.std)
 
-    sparse = df[df['testcase'] == "SparseFullRLNC"].groupby(by= ['buildername', 'symbol_size'])
-    dense = df[df['testcase'] != "SparseFullRLNC"].groupby(by= ['buildername', 'symbol_size'])
+    sparse = df[df['testcase'] == "SparseFullRLNC"].groupby(by= ['buildername',
+        'symbol_size'])
+    dense = df[df['testcase'] != "SparseFullRLNC"].groupby(by= ['buildername',
+        'symbol_size'])
 
     from matplotlib import pyplot as pl
     from matplotlib.backends.backend_pdf import PdfPages as pp
@@ -58,7 +60,8 @@ def plot_throughput(args):
     for (buildername,symbols), group in sparse:
 
         ps.set_sparse_plot()
-        p = group.pivot_table('mean',  rows='symbols', cols=['benchmark','average_nonzero_symbols']).plot()
+        p = group.pivot_table('mean',  rows='symbols', cols=['benchmark',
+            'average_nonzero_symbols']).plot()
         ps.set_plot_details(p, buildername)
         pl.ylabel("Throughput" + " [" + list(group['unit'])[0] + "]")
         pl.xticks(list(sp.unique(group['symbols'])))
@@ -68,7 +71,8 @@ def plot_throughput(args):
 
     for (buildername,symbols), group in dense:
         ps.set_dense_plot()
-        p = group.pivot_table('mean',  rows='symbols', cols=['benchmark','testcase']).plot()
+        p = group.pivot_table('mean',  rows='symbols', cols=['benchmark',
+            'testcase']).plot()
         ps.set_plot_details(p, buildername)
         pl.ylabel("Throughput" + " [" + list(group['unit'])[0] + "]")
         pl.xticks(list(sp.unique(group['symbols'])))
@@ -84,7 +88,8 @@ if __name__ == '__main__':
 
     parser.add_argument(
         '--json', dest='jsonfile', action='store',
-        help='the .json file written by gauge benchmark, if non provided plots from the database',
+        help='the .json file written by gauge benchmark, if non provided plots \
+        from the database',
         default="")
 
     args = parser.parse_args()

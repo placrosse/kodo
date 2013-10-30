@@ -42,7 +42,8 @@ db = ps.connect_database()
 cursor_master = db.kodo_throughput.find(query_master)
 cursor_branches = db.kodo_throughput.find(query_branches)
 
-df_all = pd.DataFrame.from_records( sp.hstack( [list(cursor_master), list(cursor_branches)] ))
+df_all = pd.DataFrame.from_records( sp.hstack( [list(cursor_master),
+    list(cursor_branches)] ))
 df_all['mean'] = df_all['throughput'].apply(sp.mean)
 df_all['std'] = df_all['throughput'].apply(sp.std)
 groups = df_all.groupby(['buildername'])
@@ -55,7 +56,8 @@ PATH  = ("./figures_database/")
 
 branches = list(sp.unique(df_all['branch']))
 if len(branches) == 1:
-    print("Only recent benchmarks for the master branch in the database, no plots will be generated")
+    print("Only recent benchmarks for the master branch in the database, no \
+        plots will be generated")
 
 pdf = {}
 for branch in branches:
@@ -69,24 +71,31 @@ for buildername, group in groups:
     master_group = group[sp.array(group['branch'] == "master")]
     group[group['branch'] == "master"]
     if len(master_group) == 0:
-        print "Skipping " + buildername + " as no nightly benchmark results exists for the master for this buider yet"
+        print "Skipping " + buildername + " as no nightly benchmark results \
+            exists for the master for this buider yet"
         continue
-    master_group = master_group[master_group['buildnumber'] == max(master_group['buildnumber'])]
+    master_group = master_group[master_group['buildnumber'] == \
+        max(master_group['buildnumber'])]
 
     branches_group = group[group['branch'] != "master"].groupby(by = ['branch'])
 
     for branch, branch_group in branches_group:
         PATH_BRANCH  = PATH + (branch ).replace("-","_")
 
-        branch_group = branch_group[branch_group["buildnumber"] == max(branch_group['buildnumber'])]
-        branch_group['gain'] = (sp.array(branch_group['mean']) - sp.array(master_group['mean']) ) / sp.array(master_group['mean']) * 100
+        branch_group = branch_group[branch_group["buildnumber"] \
+            == max(branch_group['buildnumber'])]
+        branch_group['gain'] = (sp.array(branch_group['mean']) - \
+            sp.array(master_group['mean']) ) / sp.array(master_group['mean'])*100
 
-        sparse = branch_group[branch_group['testcase'] == "SparseFullRLNC"].groupby(by= ['symbol_size'])
-        dense = branch_group[branch_group['testcase'] != "SparseFullRLNC"].groupby(by= ['symbol_size'])
+        sparse = branch_group[branch_group['testcase'] == \
+            "SparseFullRLNC"].groupby(by= ['symbol_size'])
+        dense = branch_group[branch_group['testcase'] != \
+            "SparseFullRLNC"].groupby(by= ['symbol_size'])
 
         for key, g in sparse:
             ps.set_sparse_plot()
-            p = g.pivot_table('gain',  rows='symbols', cols=['benchmark','average_nonzero_symbols']).plot()
+            p = g.pivot_table('gain',  rows='symbols', cols=['benchmark',
+                'average_nonzero_symbols']).plot()
             ps.set_plot_details(p, buildername)
             pl.ylabel("Throughput gain [\%]")
             pl.xticks(list(sp.unique(group['symbols'])))
@@ -95,7 +104,8 @@ for buildername, group in groups:
 
         for key, g in dense:
             ps.set_dense_plot()
-            p = g.pivot_table('gain',  rows='symbols', cols=['benchmark','testcase']).plot()
+            p = g.pivot_table('gain',  rows='symbols', 
+                cols=['benchmark','testcase']).plot()
             ps.set_plot_details(p, buildername)
             pl.ylabel("Throughput gain [\%]")
             pl.xticks(list(sp.unique(group['symbols'])))

@@ -40,10 +40,13 @@ def plot(args):
         mc = db.kodo_overhead.find(query)
         df = pd.DataFrame.from_records( list(mc) )
 
-    df['mean'] = (df['used'].apply(sp.mean) - df['coded'].apply(sp.mean) )/ df['coded'].apply(sp.mean)
+    df['mean'] = (df['used'].apply(sp.mean) - df['coded'].apply(sp.mean) ) \
+        / df['coded'].apply(sp.mean)
 
-    sparse = df[df['testcase'] == "SparseFullRLNC"].groupby(by= ['buildername', 'symbol_size'])
-    dense = df[df['testcase'] != "SparseFullRLNC"].groupby(by= ['buildername', 'symbol_size'])
+    sparse = df[df['testcase'] == "SparseFullRLNC"].groupby(by= ['buildername', 
+        'symbol_size'])
+    dense = df[df['testcase'] != "SparseFullRLNC"].groupby(by= ['buildername', 
+        'symbol_size'])
 
     from matplotlib import pyplot as pl
     from matplotlib.backends.backend_pdf import PdfPages as pp
@@ -55,7 +58,8 @@ def plot(args):
 
     for (buildername,symbols), group in sparse:
         ps.set_sparse_plot()
-        p = group.pivot_table('mean',  rows='symbols', cols=['benchmark','density']).plot()
+        p = group.pivot_table('mean', rows='symbols', 
+            cols=['benchmark','density']).plot()
         ps.set_plot_details(p, buildername)
         p.set_yscale('log')
         pl.ylabel("Overhead [\%]")
@@ -65,7 +69,8 @@ def plot(args):
 
     for (buildername,symbols), group in dense:
         ps.set_dense_plot()
-        p = group.pivot_table('mean',  rows='symbols', cols=['benchmark','testcase']).plot()
+        p = group.pivot_table('mean',  rows='symbols', 
+            cols=['benchmark','testcase']).plot()
         ps.set_plot_details(p, buildername)
         p.set_yscale('log')
         pl.ylabel("Overhead [\%]")
@@ -82,9 +87,10 @@ if __name__ == '__main__':
 
     parser.add_argument(
         '--json', dest='jsonfile', action='store',
-        help='the .json file written by gauge benchmark, if non provided plots from the database',
+        help='the .json file written by gauge benchmark, if non provided plots \
+        from the database',
         default="")
 
     args = parser.parse_args()
 
-    plot_throughput(args)
+    plot(args)
