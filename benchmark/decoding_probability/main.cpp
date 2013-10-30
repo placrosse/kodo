@@ -374,7 +374,6 @@ BENCHMARK_OPTION(overhead_density_options)
     gauge::po::options_description options;
 
     std::vector<double> density;
-    density.push_back(0.1);
     density.push_back(0.2);
     density.push_back(0.3);
     density.push_back(0.4);

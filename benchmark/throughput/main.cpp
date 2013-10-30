@@ -413,6 +413,8 @@ BENCHMARK_OPTION(throughput_options)
     symbols.push_back(32);
     symbols.push_back(64);
     symbols.push_back(128);
+    symbols.push_back(256);
+    symbols.push_back(512);
 
     auto default_symbols =
         gauge::po::value<std::vector<uint32_t> >()->default_value(
@@ -445,25 +447,22 @@ BENCHMARK_OPTION(throughput_options)
     gauge::runner::instance().register_options(options);
 }
 
-BENCHMARK_OPTION(throughput_average_nonzero_symbols_options)
+BENCHMARK_OPTION(overhead_density_options)
 {
     gauge::po::options_description options;
 
-    std::vector<double> average_nonzero_symbols;
-    average_nonzero_symbols.push_back(1.0);
-    average_nonzero_symbols.push_back(2.0);
-    average_nonzero_symbols.push_back(3.0);
-    average_nonzero_symbols.push_back(4.0);
-    average_nonzero_symbols.push_back(5.0);
+    std::vector<double> density;
+    density.push_back(0.2);
+    density.push_back(0.3);
+    density.push_back(0.4);
+    density.push_back(0.5);
 
-    auto default_average_nonzero_symbols =
+    auto default_density =
         gauge::po::value<std::vector<double> >()->default_value(
-            average_nonzero_symbols, "")->multitoken();
+            density, "")->multitoken();
 
     options.add_options()
-        ("average_nonzero_symbols",
-         default_average_nonzero_symbols,
-         "Set the average number of nonzero symbols of the sparse codes");
+        ("density", default_density, "Set the density of the sparse codes");
 
     gauge::runner::instance().register_options(options);
 }
