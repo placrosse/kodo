@@ -1,20 +1,24 @@
 News for Kodo
 ============
 
-This file lists the major changes between versions. For a more detailed list
-of every change, see the Git log.
+This file lists the major changes between versions. For a more detailed list of
+every change, see the Git log.
 
 Latest
 ------
-* Minor: Adding the user_defined_generator layer, which allows users to
-  specify the coding coefficients to be used directly.
-* Major: Update the coefficient storage API. The previous naming
-  scheme caused some confusion about the API, the new naming scheme
-  hopefully makes the API easier to read and understand.
+* Minor: Adding the user_defined_generator layer, which allows users to specify
+  the coding coefficients to be used directly.
+* Major: Update the coefficient storage API. The previous naming scheme caused
+  some confusion about the API, the new naming scheme hopefully makes the API
+  easier to read and understand.
 * Major: Updating dependency to gauge version 6.x.y
 * Minor: Added tables dependency
-* Major: Modified output from decoding probability benchmark. The rank is
-  now printed as a 2D list.
+* Major: Modified output from decoding probability benchmark. The rank is now
+  printed as a 2D list.
+* Major: Changed the benchmark option for the throughput benchmark from
+  "throughput_average_nonzero_symbols" to "sparse_density_options", where the
+  first specified the number (integer) of average nonzero symbols and the latter
+  specify the ratio of nonzero symbols (float).
 
 15.0.0
 ------
