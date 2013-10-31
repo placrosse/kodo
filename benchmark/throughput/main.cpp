@@ -356,13 +356,12 @@ public:
         auto symbols = options["symbols"].as<std::vector<uint32_t> >();
         auto symbol_size = options["symbol_size"].as<std::vector<uint32_t> >();
         auto types = options["type"].as<std::vector<std::string> >();
-        auto average_nonzero_symbols =
-            options["average_nonzero_symbols"].as<std::vector<double> >();
+        auto density = options["density"].as<std::vector<double> >();
 
         assert(symbols.size() > 0);
         assert(symbol_size.size() > 0);
         assert(types.size() > 0);
-        assert(average_nonzero_symbols.size() > 0);
+        assert(density.size() > 0);
 
         for(const auto& s : symbols)
         {
@@ -370,16 +369,15 @@ public:
             {
                 for(const auto& t : types)
                 {
-                    for(const auto& n: average_nonzero_symbols)
+                    for(const auto& d: density)
                     {
                         gauge::config_set cs;
                         cs.set_value<uint32_t>("symbols", s);
                         cs.set_value<uint32_t>("symbol_size", p);
                         cs.set_value<std::string>("type", t);
-                        cs.set_value<double>("average_nonzero_symbols", n);
 
                         // Add the calculated density easier output usage
-                        cs.set_value<double>("density", n/s);
+                        cs.set_value<double>("density", d);
 
                         Super::add_configuration(cs);
                     }
@@ -393,8 +391,8 @@ public:
         Super::setup();
 
         gauge::config_set cs = Super::get_current_configuration();
-        double symbols = cs.get_value<double>("average_nonzero_symbols");
-        m_encoder->set_average_nonzero_symbols(symbols);
+        double symbols = cs.get_value<double>("density");
+        m_encoder->set_density(symbols);
     }
 
 };
@@ -447,7 +445,7 @@ BENCHMARK_OPTION(throughput_options)
     gauge::runner::instance().register_options(options);
 }
 
-BENCHMARK_OPTION(overhead_density_options)
+BENCHMARK_OPTION(sparse_density_options)
 {
     gauge::po::options_description options;
 
