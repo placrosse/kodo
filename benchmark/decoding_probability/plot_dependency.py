@@ -43,9 +43,9 @@ def plot(args):
 
     df['dependency'] = df['rank'].apply(sp.mean, axis=0)-1
 
-    sparse = df[df['testcase'] == "SparseFullRLNC"].groupby(by= ['buildername', 
+    sparse = df[df['testcase'] == "SparseFullRLNC"].groupby(by= ['buildername',
         'symbol_size','symbols'])
-    dense = df[df['testcase'] != "SparseFullRLNC"].groupby(by= ['buildername', 
+    dense = df[df['testcase'] != "SparseFullRLNC"].groupby(by= ['buildername',
         'symbol_size','symbols'])
 
     from matplotlib import pyplot as pl
@@ -60,17 +60,17 @@ def plot(args):
 
         pl.figure()
         ps.set_sparse_plot()
-        for (deps, field,density) in zip(group['dependency'], 
+        for (deps, field,density) in zip(group['dependency'],
             group['benchmark'], group['density']):
-            pl.plot(sp.arange(symbols), deps, marker = ps.markers(field), 
+            pl.plot(sp.arange(symbols), deps, marker = ps.markers(field),
                 label = "(" + field +", " + str(density) + ")")
 
-        pl.title(buildername, ha = "left", position = (.0,1.03), 
+        pl.title(buildername, ha = "left", position = (.0,1.03),
             fontsize = "medium")
         ps.set_legend()
         pl.xlabel("Rank Defeciency")
         pl.ylabel("Extra Packets")
-        pl.xticks( symbols-2**sp.arange(sp.log2(symbols))[::-1] , 
+        pl.xticks( symbols-2**sp.arange(sp.log2(symbols))[::-1] ,
             2**sp.arange(sp.log2(symbols),dtype=int)[::-1])
         pl.grid('on')
         pl.savefig(PATH + "sparse/" + buildername + str(symbols) + '.eps')
@@ -80,17 +80,17 @@ def plot(args):
 
         pl.figure()
         ps.set_dense_plot()
-        for (deps, field,testcase) in zip(group['dependency'], 
+        for (deps, field,testcase) in zip(group['dependency'],
             group['benchmark'], group['testcase']):
-            pl.plot(sp.arange(symbols), deps, marker = ps.markers(field), 
+            pl.plot(sp.arange(symbols), deps, marker = ps.markers(field),
                 label = "(" + field +", " + testcase + ")")
 
-        pl.title(buildername, ha = "left", position = (.0,1.03), 
+        pl.title(buildername, ha = "left", position = (.0,1.03),
             fontsize = "medium")
         ps.set_legend()
         pl.xlabel("Rank Defeciency")
         pl.ylabel("Extra Packets")
-        pl.xticks( symbols-2**sp.arange(sp.log2(symbols))[::-1], 
+        pl.xticks( symbols-2**sp.arange(sp.log2(symbols))[::-1],
             2**sp.arange(sp.log2(symbols),dtype=int)[::-1])
         pl.grid('on')
         pl.savefig(PATH + "dense/" + buildername + str(symbols) + '.eps')

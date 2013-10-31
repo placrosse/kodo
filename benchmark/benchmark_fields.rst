@@ -1,7 +1,25 @@
 Data indices
-=============
+============
 
-Description of the data "format" saved for each benchmark
+Description of the index keys in the benchmark data in the mongodb database, be
+aware that not all keys are present in all benchmarks.
+
+For an introduction to mongodb see these tutorials:
+
+ * http://api.mongodb.org/python/current/tutorial.html
+ * http://blog.pythonisito.com/2012/01/moving-along-with-pymongo.html
+
+Currently our mongoDB is runnings at 176.28.49.184 and you can access data with
+the user: "guest" and the password "none"
+
+the benchmaring database is named **benchmark** and currently contain the
+following **collections**
+
+ * kodo_count_operations
+ * kodo_decoding_probability
+ * kodo_overhead
+ * kodo_throughput
+
 
 benchmark
   (from gauge) The name of a the sub-testcase specific benchmark
@@ -10,7 +28,8 @@ branch
   (git related)
 
 buildername
-  (buildbot related) name of the buildslave, a concatenation project name, buildplatform and python version
+  (buildbot related) name of the buildslave, a concatenation project name,
+  buildplatform and python version
 
 buildnumber
   (buildbot) the build number
@@ -27,7 +46,7 @@ iterations
 platform
   (buildbot related) platform name on the buildslave
 
-run_number 
+run_number
   (buildbot related)
 
 scheduler

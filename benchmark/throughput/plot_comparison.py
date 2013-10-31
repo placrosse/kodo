@@ -104,7 +104,7 @@ for buildername, group in groups:
 
         for key, g in dense:
             ps.set_dense_plot()
-            p = g.pivot_table('gain',  rows='symbols', 
+            p = g.pivot_table('gain',  rows='symbols',
                 cols=['benchmark','testcase']).plot()
             ps.set_plot_details(p, buildername)
             pl.ylabel("Throughput gain [\%]")

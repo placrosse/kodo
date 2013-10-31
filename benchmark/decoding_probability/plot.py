@@ -43,9 +43,9 @@ def plot(args):
     df['mean'] = df['used'].apply(sp.mean) -df['symbols']
     df['std'] = df['used'].apply(sp.std)
 
-    sparse = df[df['testcase'] == "SparseFullRLNC"].groupby(by= ['buildername', 
+    sparse = df[df['testcase'] == "SparseFullRLNC"].groupby(by= ['buildername',
         'symbol_size'])
-    dense = df[df['testcase'] != "SparseFullRLNC"].groupby(by= ['buildername', 
+    dense = df[df['testcase'] != "SparseFullRLNC"].groupby(by= ['buildername',
         'symbol_size'])
 
     from matplotlib import pyplot as pl

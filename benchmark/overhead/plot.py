@@ -43,9 +43,9 @@ def plot(args):
     df['mean'] = (df['used'].apply(sp.mean) - df['coded'].apply(sp.mean) ) \
         / df['coded'].apply(sp.mean)
 
-    sparse = df[df['testcase'] == "SparseFullRLNC"].groupby(by= ['buildername', 
+    sparse = df[df['testcase'] == "SparseFullRLNC"].groupby(by= ['buildername',
         'symbol_size'])
-    dense = df[df['testcase'] != "SparseFullRLNC"].groupby(by= ['buildername', 
+    dense = df[df['testcase'] != "SparseFullRLNC"].groupby(by= ['buildername',
         'symbol_size'])
 
     from matplotlib import pyplot as pl
@@ -58,7 +58,7 @@ def plot(args):
 
     for (buildername,symbols), group in sparse:
         ps.set_sparse_plot()
-        p = group.pivot_table('mean', rows='symbols', 
+        p = group.pivot_table('mean', rows='symbols',
             cols=['benchmark','density']).plot()
         ps.set_plot_details(p, buildername)
         p.set_yscale('log')
@@ -69,7 +69,7 @@ def plot(args):
 
     for (buildername,symbols), group in dense:
         ps.set_dense_plot()
-        p = group.pivot_table('mean',  rows='symbols', 
+        p = group.pivot_table('mean',  rows='symbols',
             cols=['benchmark','testcase']).plot()
         ps.set_plot_details(p, buildername)
         p.set_yscale('log')
