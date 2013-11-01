@@ -40,9 +40,10 @@ def plot(args):
         mc = db.kodo_decoding_probability.find(query)
         df = pd.DataFrame.from_records( list(mc) )
 
-
+    # Calculate the expected number of extra pacekts depending on the rank
     df['dependency'] = df['rank'].apply(sp.mean, axis=0)-1
 
+    # Group by type of code; dense, sparse
     sparse = df[df['testcase'] == "SparseFullRLNC"].groupby(by= ['buildername',
         'symbol_size','symbols'])
     dense = df[df['testcase'] != "SparseFullRLNC"].groupby(by= ['buildername',
@@ -58,6 +59,7 @@ def plot(args):
 
     for (buildername, symbol_size, symbols), group in sparse:
 
+        #Verbose plotting since due to no pandas support for plotting of vectors
         pl.figure()
         ps.set_sparse_plot()
         for (deps, field,density) in zip(group['dependency'],
@@ -78,6 +80,7 @@ def plot(args):
 
     for (buildername, symbol_size, symbols), group in dense:
 
+        #Verbose plotting since due to no pandas support for plotting of vectors
         pl.figure()
         ps.set_dense_plot()
         for (deps, field,testcase) in zip(group['dependency'],

@@ -28,7 +28,7 @@ yesterday = today - timedelta(1)
 query_branches = {
 "type": "decoder",
 "scheduler": "kodo-force-benchmark",
-"utc_date" : {"$gte": now - timedelta(10)}
+"utc_date" : {"$gte": now - timedelta(3)}
 }
 
 query_master = {
@@ -42,7 +42,7 @@ db = ps.connect_database()
 cursor_master = db.kodo_throughput.find(query_master)
 cursor_branches = db.kodo_throughput.find(query_branches)
 
-df_all = pd.DataFrame.from_records( sp.hstack( [list(cursor_master),
+df_all = pd.DataFrame.from_records(sp.hstack( [list(cursor_master),
     list(cursor_branches)] ))
 df_all['mean'] = df_all['throughput'].apply(sp.mean)
 df_all['std'] = df_all['throughput'].apply(sp.std)
@@ -61,13 +61,14 @@ if len(branches) == 1:
 
 pdf = {}
 for branch in branches:
-	if branch != "master":
-		ps.mkdir_p(PATH + branch.replace("-","_") + "/sparse")
-		ps.mkdir_p(PATH  + branch.replace("-","_") + "/dense")
-		pdf[branch] = pp(PATH + branch.replace("-","_") + "/all.pdf")
+    if branch != "master":
+        ps.mkdir_p(PATH + branch.replace("-","_") + "/sparse")
+        ps.mkdir_p(PATH  + branch.replace("-","_") + "/dense")
+        pdf[branch] = pp(PATH + branch.replace("-","_") + "/all.pdf")
 
 for buildername, group in groups:
 
+    # Group all results from the most recent master build
     master_group = group[sp.array(group['branch'] == "master")]
     group[group['branch'] == "master"]
     if len(master_group) == 0:
@@ -77,25 +78,28 @@ for buildername, group in groups:
     master_group = master_group[master_group['buildnumber'] == \
         max(master_group['buildnumber'])]
 
+    # Group all other results by branch
     branches_group = group[group['branch'] != "master"].groupby(by = ['branch'])
 
     for branch, branch_group in branches_group:
         PATH_BRANCH  = PATH + (branch ).replace("-","_")
 
+        # Calculate the difference compared to master of the latest build
         branch_group = branch_group[branch_group["buildnumber"] \
             == max(branch_group['buildnumber'])]
         branch_group['gain'] = (sp.array(branch_group['mean']) - \
             sp.array(master_group['mean']) ) / sp.array(master_group['mean'])*100
 
-        sparse = branch_group[branch_group['testcase'] == \
-            "SparseFullRLNC"].groupby(by= ['symbol_size'])
+        # Group by type of code; dense, sparse
         dense = branch_group[branch_group['testcase'] != \
+            "SparseFullRLNC"].groupby(by= ['symbol_size'])
+        sparse = branch_group[branch_group['testcase'] == \
             "SparseFullRLNC"].groupby(by= ['symbol_size'])
 
         for key, g in sparse:
             ps.set_sparse_plot()
             p = g.pivot_table('gain',  rows='symbols', cols=['benchmark',
-                'average_nonzero_symbols']).plot()
+                'density']).plot()
             ps.set_plot_details(p, buildername)
             pl.ylabel("Throughput gain [\%]")
             pl.xticks(list(sp.unique(group['symbols'])))
@@ -113,4 +117,4 @@ for buildername, group in groups:
             pdf[branch].savefig(transparent=True)
 
 for p in pdf:
-	pdf[p].close()
+    pdf[p].close()

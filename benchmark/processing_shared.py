@@ -16,7 +16,7 @@ assert pymongo.version_tuple[:2] >= (2,5), "You need a newer version of pymongo"
 from pymongo import MongoClient
 
 import pandas as pd
-assert sp.any(sp.array(pd.version.version.split(".")) >= ['1','12',sp.inf]),
+assert sp.any(sp.array(pd.version.version.split(".")) >= ['1','12',sp.inf]), \
     "You need a newer version of pandas"
 
 address = "176.28.49.184"
