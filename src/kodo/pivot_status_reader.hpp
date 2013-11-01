@@ -42,7 +42,7 @@ namespace kodo
         template<class Factory>
         void initialize(Factory& the_factory)
         {
-            SuperCoder::initialize(the_factory);
+            Super::initialize(the_factory);
             m_remote_rank = 0;
         }
 
