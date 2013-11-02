@@ -49,7 +49,6 @@ def options(opt):
             git_repository = 'github.com/steinwurf/external-gtest.git',
             major_version = 2))
 
-
     bundle.add_dependency(opt,
         resolve.ResolveGitMajorVersion(
             name = 'gauge',
