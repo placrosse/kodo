@@ -6,13 +6,15 @@
 #include <ctime>
 #include <stack>
 
-#include <boost/shared_ptr.hpp>
 #include <boost/make_shared.hpp>
+#include <boost/shared_ptr.hpp>
 
-#include <gauge/gauge.hpp>
 #include <gauge/console_printer.hpp>
-#include <gauge/python_printer.hpp>
 #include <gauge/csv_printer.hpp>
+#include <gauge/gauge.hpp>
+#include <gauge/python_printer.hpp>
+
+#include <tables/table.hpp>
 
 #include "codes.hpp"
 
@@ -141,25 +143,39 @@ public:
         }
     }
 
-    void store_run(gauge::table& results)
+    void store_run(tables::table& results)
     {
-        results.set_value("dest[i] = dest[i] + src[i]",
-                          m_counter.m_add);
+        if(!results.has_column("dest[i] = dest[i] + src[i]"))
+            results.add_column("dest[i] = dest[i] + src[i]");
 
-        results.set_value("dest[i] = dest[i] - src[i]",
-                          m_counter.m_subtract);
+        results.set_value("dest[i] = dest[i] + src[i]", m_counter.m_add);
 
-        results.set_value("dest[i] = dest[i] * constant",
-                          m_counter.m_multiply);
+        if(!results.has_column("dest[i] = dest[i] - src[i]"))
+            results.add_column("dest[i] = dest[i] - src[i]");
+
+        results.set_value("dest[i] = dest[i] - src[i]", m_counter.m_subtract);
+
+        if(!results.has_column("dest[i] = dest[i] * constant"))
+            results.add_column("dest[i] = dest[i] * constant");
+
+        results.set_value("dest[i] = dest[i] * constant", m_counter.m_multiply);
+
+        if(!results.has_column("dest[i] = dest[i] + (constant * src[i])"))
+            results.add_column("dest[i] = dest[i] + (constant * src[i])");
 
         results.set_value("dest[i] = dest[i] + (constant * src[i])",
-                          m_counter.m_multiply_add);
+            m_counter.m_multiply_add);
+
+        if(!results.has_column("dest[i] = dest[i] - (constant * src[i])"))
+            results.add_column("dest[i] = dest[i] - (constant * src[i])");
 
         results.set_value("dest[i] = dest[i] - (constant * src[i])",
-                          m_counter.m_multiply_subtract);
+            m_counter.m_multiply_subtract);
 
-        results.set_value("invert(value)",
-                          m_counter.m_invert);
+        if(!results.has_column("invert(value)"))
+            results.add_column("invert(value)");
+
+        results.set_value("invert(value)", m_counter.m_invert);
     }
 
 
@@ -289,6 +305,8 @@ BENCHMARK_OPTION(count_operations_options)
     symbols.push_back(32);
     symbols.push_back(64);
     symbols.push_back(128);
+    symbols.push_back(256);
+    symbols.push_back(512);
 
     auto default_symbols =
         gauge::po::value<std::vector<uint32_t> >()->default_value(

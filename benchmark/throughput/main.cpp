@@ -11,10 +11,13 @@
 #include <gauge/console_printer.hpp>
 #include <gauge/python_printer.hpp>
 #include <gauge/csv_printer.hpp>
+#include <gauge/json_printer.hpp>
 
 #include <kodo/rlnc/full_vector_codes.hpp>
 #include <kodo/rlnc/seed_codes.hpp>
 #include <kodo/rs/reed_solomon_codes.hpp>
+
+#include <tables/table.hpp>
 
 #include "codes.hpp"
 
@@ -79,8 +82,11 @@ struct throughput_benchmark : public gauge::time_benchmark
         return bytes / time; // MB/s for each iteration
     }
 
-    void store_run(gauge::table& results)
+    void store_run(tables::table& results)
     {
+        if(!results.has_column("throughput"))
+            results.add_column("throughput");
+
         results.set_value("throughput", measurement());
     }
 
@@ -351,13 +357,12 @@ public:
         auto symbols = options["symbols"].as<std::vector<uint32_t> >();
         auto symbol_size = options["symbol_size"].as<std::vector<uint32_t> >();
         auto types = options["type"].as<std::vector<std::string> >();
-        auto average_nonzero_symbols =
-            options["average_nonzero_symbols"].as<std::vector<double> >();
+        auto density = options["density"].as<std::vector<double> >();
 
         assert(symbols.size() > 0);
         assert(symbol_size.size() > 0);
         assert(types.size() > 0);
-        assert(average_nonzero_symbols.size() > 0);
+        assert(density.size() > 0);
 
         for(const auto& s : symbols)
         {
@@ -365,16 +370,15 @@ public:
             {
                 for(const auto& t : types)
                 {
-                    for(const auto& n: average_nonzero_symbols)
+                    for(const auto& d: density)
                     {
                         gauge::config_set cs;
                         cs.set_value<uint32_t>("symbols", s);
                         cs.set_value<uint32_t>("symbol_size", p);
                         cs.set_value<std::string>("type", t);
-                        cs.set_value<double>("average_nonzero_symbols", n);
 
                         // Add the calculated density easier output usage
-                        cs.set_value<double>("density", n/s);
+                        cs.set_value<double>("density", d);
 
                         Super::add_configuration(cs);
                     }
@@ -388,8 +392,8 @@ public:
         Super::setup();
 
         gauge::config_set cs = Super::get_current_configuration();
-        double symbols = cs.get_value<double>("average_nonzero_symbols");
-        m_encoder->set_average_nonzero_symbols(symbols);
+        double symbols = cs.get_value<double>("density");
+        m_encoder->set_density(symbols);
     }
 
 };
@@ -408,6 +412,8 @@ BENCHMARK_OPTION(throughput_options)
     symbols.push_back(32);
     symbols.push_back(64);
     symbols.push_back(128);
+    symbols.push_back(256);
+    symbols.push_back(512);
 
     auto default_symbols =
         gauge::po::value<std::vector<uint32_t> >()->default_value(
@@ -440,25 +446,22 @@ BENCHMARK_OPTION(throughput_options)
     gauge::runner::instance().register_options(options);
 }
 
-BENCHMARK_OPTION(throughput_average_nonzero_symbols_options)
+BENCHMARK_OPTION(sparse_density_options)
 {
     gauge::po::options_description options;
 
-    std::vector<double> average_nonzero_symbols;
-    average_nonzero_symbols.push_back(1.0);
-    average_nonzero_symbols.push_back(2.0);
-    average_nonzero_symbols.push_back(3.0);
-    average_nonzero_symbols.push_back(4.0);
-    average_nonzero_symbols.push_back(5.0);
+    std::vector<double> density;
+    density.push_back(0.2);
+    density.push_back(0.3);
+    density.push_back(0.4);
+    density.push_back(0.5);
 
-    auto default_average_nonzero_symbols =
+    auto default_density =
         gauge::po::value<std::vector<double> >()->default_value(
-            average_nonzero_symbols, "")->multitoken();
+            density, "")->multitoken();
 
     options.add_options()
-        ("average_nonzero_symbols",
-         default_average_nonzero_symbols,
-         "Set the average number of nonzero symbols of the sparse codes");
+        ("density", default_density, "Set the density of the sparse codes");
 
     gauge::runner::instance().register_options(options);
 }
@@ -637,6 +640,9 @@ int main(int argc, const char* argv[])
 
     gauge::runner::instance().printers().push_back(
         std::make_shared<gauge::csv_printer>());
+
+    gauge::runner::instance().printers().push_back(
+        std::make_shared<gauge::json_printer>());
 
     gauge::runner::run_benchmarks(argc, argv);
 

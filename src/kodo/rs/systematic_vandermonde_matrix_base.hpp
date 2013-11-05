@@ -85,7 +85,7 @@ namespace kodo
             pivot = m_field->invert(pivot);
 
             fifi::multiply_constant(
-                *m_field, pivot, m->row(i), m->row_length());
+                *m_field, pivot, m->row_value(i), m->row_length());
 
             for(uint32_t j = 0; j < m->rows(); ++j)
             {
@@ -94,7 +94,7 @@ namespace kodo
 
                 value_type scale = m->element(j, i);
                 fifi::multiply_subtract(
-                    *m_field, scale, m->row(j), m->row(i),
+                    *m_field, scale, m->row_value(j), m->row_value(i),
                     &temp_row[0], m->row_length());
 
             }

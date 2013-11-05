@@ -6,18 +6,20 @@
 #include <ctime>
 
 #include <boost/make_shared.hpp>
-#include <boost/random/mersenne_twister.hpp>
 #include <boost/random/bernoulli_distribution.hpp>
+#include <boost/random/mersenne_twister.hpp>
 
-#include <gauge/gauge.hpp>
 #include <gauge/console_printer.hpp>
-#include <gauge/python_printer.hpp>
 #include <gauge/csv_printer.hpp>
+#include <gauge/gauge.hpp>
+#include <gauge/python_printer.hpp>
 
+#include <kodo/has_deep_symbol_storage.hpp>
 #include <kodo/rlnc/full_vector_codes.hpp>
 #include <kodo/rlnc/seed_codes.hpp>
 #include <kodo/rs/reed_solomon_codes.hpp>
-#include <kodo/has_deep_symbol_storage.hpp>
+
+#include <tables/table.hpp>
 
 #include "codes.hpp"
 
@@ -58,7 +60,7 @@ public:
     void stop()
     { }
 
-    void store_run(gauge::table& results)
+    void store_run(tables::table& results)
     {
         assert(m_encoder->block_size() ==
                m_decoder->block_size());
@@ -66,13 +68,15 @@ public:
         assert(m_symbols_used > 0);
         assert(m_symbols_used >= m_encoder->symbols());
 
+        if(!results.has_column("used"))
+            results.add_column("used");
+
         results.set_value("used", m_symbols_used);
 
-        for(uint32_t i = 0; i < m_rank_used.size(); ++i)
-        {
-            results.set_value("rank " + to_string(i), m_rank_used[i]);
-        }
+        if(!results.has_column("rank"))
+            results.add_column("rank");
 
+        results.set_value("rank", m_rank_used);
     }
 
     std::string unit_text() const
@@ -339,6 +343,8 @@ BENCHMARK_OPTION(overhead_options)
     symbols.push_back(32);
     symbols.push_back(64);
     symbols.push_back(128);
+    symbols.push_back(256);
+    symbols.push_back(512);
 
     options.add_options()
         ("symbols", gauge::po::value<std::vector<uint32_t> >()->default_value(
@@ -370,7 +376,6 @@ BENCHMARK_OPTION(overhead_density_options)
     gauge::po::options_description options;
 
     std::vector<double> density;
-    density.push_back(0.1);
     density.push_back(0.2);
     density.push_back(0.3);
     density.push_back(0.4);

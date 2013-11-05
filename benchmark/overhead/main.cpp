@@ -17,6 +17,8 @@
 #include <kodo/rs/reed_solomon_codes.hpp>
 #include <kodo/has_deep_symbol_storage.hpp>
 
+#include <tables/table.hpp>
+
 #include "codes.hpp"
 
 /// A test block represents an encoder and decoder pair
@@ -39,7 +41,7 @@ struct overhead_benchmark : public gauge::benchmark
     void stop()
     { }
 
-    void store_run(gauge::table& results)
+    void store_run(tables::table& results)
     {
         assert(m_encoder->block_size() ==
                m_decoder->block_size());
@@ -47,7 +49,12 @@ struct overhead_benchmark : public gauge::benchmark
         assert(m_bytes_used > 0);
         assert(m_bytes_used >= m_encoder->block_size());
 
+        if(!results.has_column("coded"))
+            results.add_column("coded");
         results.set_value("coded", m_encoder->block_size());
+
+        if(!results.has_column("used"))
+            results.add_column("used");
         results.set_value("used", m_bytes_used);
     }
 
@@ -180,6 +187,8 @@ BENCHMARK_OPTION(overhead_options)
     symbols.push_back(32);
     symbols.push_back(64);
     symbols.push_back(128);
+    symbols.push_back(256);
+    symbols.push_back(512);
 
     auto default_symbols =
         gauge::po::value<std::vector<uint32_t> >()->default_value(
