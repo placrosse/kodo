@@ -11,6 +11,7 @@
 namespace kodo
 {
 
+    /// @todo document this
     template<class SuperCoder>
     class storage_aware_systematic_phase : public SuperCoder
     {
@@ -22,7 +23,7 @@ namespace kodo
         {
             SuperCoder::construct(the_factory);
 
-            m_systematic_symbols_sent.resize(the_factory.max_symbols(), true);
+            m_systematic_symbols_sent.resize(the_factory.max_symbols(), false);
         }
 
         /// @copydoc layer::initialize(Factory&)
@@ -32,7 +33,7 @@ namespace kodo
             SuperCoder::initialize(the_factory);
 
             m_systematic_start = 0;
-            m_systematic_symbols_sent.resize(the_factory.symbols(), true);
+            m_systematic_symbols_sent.resize(the_factory.symbols(), false);
         }
 
         /// @copydoc layer::encode_symbol(uint8_t*,uint32_t)
@@ -42,7 +43,9 @@ namespace kodo
 
             SuperCoder::encode_symbol(symbol_data, symbol_index);
 
-            // If we have a zero bit the symbol has been sent as systematic
+            // If we have an one bit the symbol has been sent as systematic
+            // so if the symbol has not been sent before is_not_sent will be 1
+            // however if the symbol has been
             bool is_sent = !m_systematic_count.test(symbol_index);
             m_systematic_count += is_sent;
 
