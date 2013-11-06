@@ -28,6 +28,17 @@ TEST(TestReedSolomonCodes, test_construct)
         auto decoder = decoder_factory.build();
     }
 
+    {
+        // Here we just instantiate the factories to make sure the code
+        // compiles. The generator matrix for the 2^16 field quickly becomes
+        // very large so we use small maximum symbol values here
+        kodo::rs_encoder<fifi::binary16>::factory encoder_factory(2, 1600);
+        auto encoder = encoder_factory.build();
+
+        kodo::rs_decoder<fifi::binary16>::factory decoder_factory(2, 1600);
+        auto decoder = decoder_factory.build();
+    }
+
 }
 
 

@@ -343,6 +343,8 @@ BENCHMARK_OPTION(overhead_options)
     symbols.push_back(32);
     symbols.push_back(64);
     symbols.push_back(128);
+    symbols.push_back(256);
+    symbols.push_back(512);
 
     options.add_options()
         ("symbols", gauge::po::value<std::vector<uint32_t> >()->default_value(
@@ -374,7 +376,6 @@ BENCHMARK_OPTION(overhead_density_options)
     gauge::po::options_description options;
 
     std::vector<double> density;
-    density.push_back(0.1);
     density.push_back(0.2);
     density.push_back(0.3);
     density.push_back(0.4);
