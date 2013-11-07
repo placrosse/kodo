@@ -1741,7 +1741,7 @@ namespace
             EXPECT_TRUE(coder->is_symbol_initialized(3));
 
             coder->swap_segments(1, 3);
-            
+
             EXPECT_TRUE(coder->is_symbol_initialized(1));
             EXPECT_TRUE(coder->is_symbol_initialized(3));
 

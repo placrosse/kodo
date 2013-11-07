@@ -22,7 +22,7 @@ namespace kodo
     /// This is useful in cases where no decoding buffer exist and
     /// swapping symbols (segments) inside the the buffer is required.
     //  This is an advantage because symbols can be swapped simply by swapping
-    //  the symbol pointers 
+    //  the symbol pointers
     template<class SuperCoder>
     class segmented_symbol_storage : public SuperCoder
     {
