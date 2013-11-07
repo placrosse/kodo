@@ -1,4 +1,4 @@
-// Copyright Steinwurf ApS 2011-2012.
+// Copyright Steinwurf Apes 2011-2012.
 // Distributed under the "STEINWURF RESEARCH LICENSE 1.0".
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
@@ -12,6 +12,10 @@ namespace kodo
 {
 
     /// @todo document this
+    ///
+    /// @brief This class is used to detect whether the encoder is in
+    /// the systematic phase i.e. whether the next symbol to encode
+    /// should be a uncoded systematic symbol.
     template<class SuperCoder>
     class storage_aware_systematic_phase : public SuperCoder
     {
@@ -44,10 +48,11 @@ namespace kodo
             SuperCoder::encode_symbol(symbol_data, symbol_index);
 
             // If we have an one bit the symbol has been sent as systematic
-            // so if the symbol has not been sent before is_not_sent will be 1
-            // however if the symbol has been
-            bool is_sent = !m_systematic_count.test(symbol_index);
-            m_systematic_count += is_sent;
+            // so:
+            // 1) If the symbol has not been sent before is_not_sent will be 1
+            // 2) If the symbol has been sent before is_not_sent will be 0
+            bool is_not_sent = !m_systematic_count.test(symbol_index);
+            m_systematic_count += is_not_sent;
 
             m_systematic_count.reset(symbol_index);
         }
@@ -64,23 +69,42 @@ namespace kodo
         /// @return The index of the next symbol to be sent in a
         uint32_t next_systematic_symbol() const
         {
+            assert(is_systematic_phase());
 
-            /// @todo not correct yet but
+            uint32_t next_symbol = 0;
+
+            // Find which symbol should be the next to send systematically
             for(uint32_t i = m_systematic_start; i < SuperCoder::symbols(); ++i)
             {
-                bool is_sent = !m_systematic_count.test(i);
-                if(is_sent)
+                bool is_not_sent = !m_systematic_symbols_sent.test(i);
+                bool is_initialized = SuperCoder::is_symbol_initialized(i);
+
+                if(is_not_sent && is_initialized)
                 {
-                    m_systematic_start += 1;
+                    next_symbol = i;
+                    break;
+                }
+            }
+
+            m_systematic_symbols_sent.set(next_symbol, true);
+            ++m_systematic_count;
+
+            // Update the systematic_start
+            for(uint32_t i = m_systematic_start; i <= next_symbol; ++i)
+            {
+                bool is_sent = m_systematic_count.test(i);
+                bool is_initialized = SuperCoder::is_symbol_initialized(i);
+
+                if(is_sent && is_symbol_initialized)
+                {
+                    ++m_systematic_start;
                 }
                 else
                 {
-                    if(SuperCoder::is_symbol_initialized(i))
-                    {
-                        return i;
-                    }
+                    break;
                 }
             }
+
         }
 
     protected:
