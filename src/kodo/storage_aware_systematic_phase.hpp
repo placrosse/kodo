@@ -36,7 +36,12 @@ namespace kodo
         {
             SuperCoder::initialize(the_factory);
 
-            m_systematic_start = 0;
+            m_offset = 0;
+            m_systematic_count = 0;
+
+            // Resize here will not hurt performance since the
+            // layer::construct(Factory&) function will resize to the
+            // maximum size.
             m_systematic_symbols_sent.resize(the_factory.symbols(), false);
         }
 
@@ -52,17 +57,21 @@ namespace kodo
             // 1) If the symbol has not been sent before is_not_sent will be 1
             // 2) If the symbol has been sent before is_not_sent will be 0
             bool is_not_sent = !m_systematic_count.test(symbol_index);
+
+            // Increment the count if the symbol was not previously sent
             m_systematic_count += is_not_sent;
 
-            m_systematic_count.reset(symbol_index);
+            m_systematic_symbols_sent.set(symbol_index);
         }
-
-    protected:
 
         /// @return true if we are in the systematic phase (i.e. there
         /// are systematic packet to send) otherwise false
         bool in_systematic_phase() const
         {
+            // We know that there must be some systematic symbols to
+            // send if the rank (denotes the number of symbols
+            // available in the encoder matrix is larger than the
+            // number of systematic symbols we have sent
             return m_systematic_count < SuperCoder::rank();
         }
 
@@ -74,7 +83,7 @@ namespace kodo
             uint32_t next_symbol = 0;
 
             // Find which symbol should be the next to send systematically
-            for(uint32_t i = m_systematic_start; i < SuperCoder::symbols(); ++i)
+            for(uint32_t i = m_offset; i < SuperCoder::symbols(); ++i)
             {
                 bool is_not_sent = !m_systematic_symbols_sent.test(i);
                 bool is_initialized = SuperCoder::is_symbol_initialized(i);
@@ -86,18 +95,17 @@ namespace kodo
                 }
             }
 
-            m_systematic_symbols_sent.set(next_symbol, true);
-            ++m_systematic_count;
-
-            // Update the systematic_start
-            for(uint32_t i = m_systematic_start; i <= next_symbol; ++i)
+            // Update the offset when we can confirm that we have
+            // systematically sent all symbols with a lower or equal
+            // index than the next_symbol variable
+            for(uint32_t i = m_offset; i <= next_symbol; ++i)
             {
                 bool is_sent = m_systematic_count.test(i);
                 bool is_initialized = SuperCoder::is_symbol_initialized(i);
 
                 if(is_sent && is_symbol_initialized)
                 {
-                    ++m_systematic_start;
+                    ++m_offset;
                 }
                 else
                 {
@@ -105,11 +113,19 @@ namespace kodo
                 }
             }
 
+            return next_symbol;
+
         }
 
     protected:
 
-        /// Keeps track of which symbols that have been sent
+        /// When searching for the next symbol to send systematically
+        /// we do not have to start from the beginning every time
+        /// i.e. if we know that we have already sent the symbols with
+        /// index 0 and 2 the we can start the search for the next
+        /// symbol from index 1. The offset variable keeps track of
+        /// the progress.
+        uint32_t m_offset;
 
         /// Counts the number of systematic packets produced
         uint32_t m_systematic_count;
