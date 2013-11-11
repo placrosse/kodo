@@ -53,7 +53,7 @@ def plot(args):
     from matplotlib.backends.backend_pdf import PdfPages as pp
     pl.close('all')
 
-    PATH  = ("./figures_database/")
+    PATH  = ("./figures_database/" + args.coder + "/")
 
     branches = list(sp.unique(df_all['branch']))
     if len(branches) == 1:
