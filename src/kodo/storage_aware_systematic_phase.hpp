@@ -11,11 +11,12 @@
 namespace kodo
 {
 
-    /// @todo document this
-    ///
     /// @brief This class is used to detect whether the encoder is in
     /// the systematic phase i.e. whether the next symbol to encode
-    /// should be a uncoded systematic symbol.
+    /// should be a uncoded systematic symbol. This is done by
+    /// tracking which symbols has already been sent systematically
+    /// and which symbols are currently available in the storage
+    /// layers
     template<class SuperCoder>
     class storage_aware_systematic_phase : public SuperCoder
     {
@@ -48,20 +49,11 @@ namespace kodo
         /// @copydoc layer::encode_symbol(uint8_t*,uint32_t)
         void encode_symbol(uint8_t *symbol_data, uint32_t symbol_index)
         {
-            asssert(symbol_index < m_systematic_symbols_sent.size());
+            assert(symbol_index < m_systematic_symbols_sent.size());
 
             SuperCoder::encode_symbol(symbol_data, symbol_index);
 
-            // If we have an one bit the symbol has been sent as systematic
-            // so:
-            // 1) If the symbol has not been sent before is_not_sent will be 1
-            // 2) If the symbol has been sent before is_not_sent will be 0
-            bool is_not_sent = !m_systematic_count.test(symbol_index);
-
-            // Increment the count if the symbol was not previously sent
-            m_systematic_count += is_not_sent;
-
-            m_systematic_symbols_sent.set(symbol_index);
+            update_systematic_state(symbol_index);
         }
 
         /// @return true if we are in the systematic phase (i.e. there
@@ -78,7 +70,7 @@ namespace kodo
         /// @return The index of the next symbol to be sent in a
         uint32_t next_systematic_symbol() const
         {
-            assert(is_systematic_phase());
+            assert(in_systematic_phase());
 
             uint32_t next_symbol = 0;
 
@@ -95,15 +87,38 @@ namespace kodo
                 }
             }
 
+            return next_symbol;
+        }
+
+    protected:
+
+        /// This function updates the state of the layer to take into
+        /// account that one more symbol has been sent systematically.
+        /// @param symbol_index The symbol which has just been sent
+        /// systematically
+        void update_systematic_state(uint32_t symbol_index)
+        {
+
+            // If we have an one bit the symbol has been sent as systematic
+            // before so:
+            // 1) If the symbol has not been sent before is_not_sent will be 1
+            // 2) If the symbol has been sent before is_not_sent will be 0
+            bool is_not_sent = !m_systematic_symbols_sent.test(symbol_index);
+
+            // Increment the count if the symbol was not previously sent
+            m_systematic_count += is_not_sent;
+
+            m_systematic_symbols_sent.set(symbol_index);
+
             // Update the offset when we can confirm that we have
             // systematically sent all symbols with a lower or equal
             // index than the next_symbol variable
-            for(uint32_t i = m_offset; i <= next_symbol; ++i)
+            for(uint32_t i = m_offset; i <= symbol_index; ++i)
             {
-                bool is_sent = m_systematic_count.test(i);
+                bool is_sent = m_systematic_symbols_sent.test(i);
                 bool is_initialized = SuperCoder::is_symbol_initialized(i);
 
-                if(is_sent && is_symbol_initialized)
+                if(is_sent && is_initialized)
                 {
                     ++m_offset;
                 }
@@ -112,9 +127,6 @@ namespace kodo
                     break;
                 }
             }
-
-            return next_symbol;
-
         }
 
     protected:
