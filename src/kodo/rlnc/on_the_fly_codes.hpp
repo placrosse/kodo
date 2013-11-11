@@ -41,7 +41,7 @@ namespace kodo
                payload_rank_encoder<
                payload_encoder<
                // Codec Header API
-               systematic_encoder<
+               default_on_systematic_encoder<
                symbol_id_encoder<
                // Symbol ID API
                plain_symbol_id_writer<

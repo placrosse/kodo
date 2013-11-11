@@ -11,7 +11,7 @@
 #include <fifi/prime2325_binary_search.hpp>
 #include <fifi/prime2325_apply_prefix.hpp>
 
-#include <kodo/systematic_encoder.hpp>
+#include <kodo/default_on_systematic_encoder.hpp>
 
 /// @param max_value The maximum value to return
 /// @return a random number between 1 and max_value
