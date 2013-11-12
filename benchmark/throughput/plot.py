@@ -23,13 +23,13 @@ yesterday = today - timedelta(1)
 
 def plot(args):
     if args.jsonfile:
-        PATH  = ("figures_local/")
+        PATH  = ("figures_local/" + args.coder + "/")
         df = pd.read_json(args.jsonfile)
         df['buildername'] = "local"
     else:
-        PATH  = ("figures_database/")
+        PATH  = ("figures_database/" + args.coder + "/")
         query = {
-        "type": "decoder",
+        "type": args.coder,
         "branch" : "master",
         "scheduler": "kodo-nightly-benchmark",
         "utc_date" : {"$gte": yesterday, "$lt": today}
@@ -87,6 +87,11 @@ if __name__ == '__main__':
         help='the .json file written by gauge benchmark, if non provided plots \
         from the database',
         default="")
+    parser.add_argument(
+        '--coder', dest='coder', action='store', choices=['encoder','decoder'],
+        default='decoder',
+        help='Whether to consider the encoding or decoding performance')
+
 
     args = parser.parse_args()
     plot(args)
