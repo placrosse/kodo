@@ -16,6 +16,8 @@
 
 #include <tables/table.hpp>
 
+#include <kodo/set_systematic_off.hpp>
+
 #include "codes.hpp"
 
 std::vector<uint32_t> setup_symbols()
@@ -218,7 +220,7 @@ public:
 
         // We switch any systematic operations off so we code
         // symbols from the beginning
-        if(kodo::is_systematic_encoder(m_encoder))
+        if(kodo::has_systematic_encoder<Encoder>::value)
             kodo::set_systematic_off(m_encoder);
 
         RUN{

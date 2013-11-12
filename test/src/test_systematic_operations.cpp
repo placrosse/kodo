@@ -9,81 +9,83 @@
 
 #include <kodo/rlnc/full_vector_codes.hpp>
 
-namespace kodo
-{
+/// @todo remove this file
 
-    // Put dummy layers and tests classes in an anonymous namespace
-    // to avoid violations of ODF (one-definition-rule) in other
-    // translation units
-    namespace
-    {
+// namespace kodo
+// {
 
-        // We just create a version of the full rlnc vector code
-        // without the systematic layer
-        template<class Field>
-        class test_nonsystematic_stack
-            : public // Payload Codec API
-                     payload_encoder<
-                     // Codec Header API
-                     symbol_id_encoder<
-                     // Symbol ID API
-                     plain_symbol_id_writer<
-                     // Coefficient Generator API
-                     uniform_generator<
-                     // Codec API
-                     zero_symbol_encoder<
-                     linear_block_encoder<
-                     // Coefficient Storage API
-                     coefficient_info<
-                     // Symbol Storage API
-                     deep_symbol_storage<
-                     storage_bytes_used<
-                     storage_block_info<
-                     // Finite Field Math API
-                     finite_field_math<typename fifi::default_field<Field>::type,
-                     finite_field_info<Field,
-                     // Factory API
-                     final_coder_factory_pool<
-                     // Final type
-                     test_nonsystematic_stack<Field>
-                         > > > > > > > > > > > > >
-        { };
-    }
-}
+//     // Put dummy layers and tests classes in an anonymous namespace
+//     // to avoid violations of ODF (one-definition-rule) in other
+//     // translation units
+//     namespace
+//     {
 
-TEST(TestSystematicOperations, is_systematic_encoder)
-{
-    uint32_t symbols = 10;
-    uint32_t symbol_size = 16;
+//         // We just create a version of the full rlnc vector code
+//         // without the systematic layer
+//         template<class Field>
+//         class test_nonsystematic_stack
+//             : public // Payload Codec API
+//                      payload_encoder<
+//                      // Codec Header API
+//                      symbol_id_encoder<
+//                      // Symbol ID API
+//                      plain_symbol_id_writer<
+//                      // Coefficient Generator API
+//                      uniform_generator<
+//                      // Codec API
+//                      zero_symbol_encoder<
+//                      linear_block_encoder<
+//                      // Coefficient Storage API
+//                      coefficient_info<
+//                      // Symbol Storage API
+//                      deep_symbol_storage<
+//                      storage_bytes_used<
+//                      storage_block_info<
+//                      // Finite Field Math API
+//                      finite_field_math<typename fifi::default_field<Field>::type,
+//                      finite_field_info<Field,
+//                      // Factory API
+//                      final_coder_factory_pool<
+//                      // Final type
+//                      test_nonsystematic_stack<Field>
+//                          > > > > > > > > > > > > >
+//         { };
+//     }
+// }
 
-    {
-        typedef kodo::test_nonsystematic_stack<fifi::binary>::factory
-            encoder_factory;
+// TEST(TestSystematicOperations, is_systematic_encoder)
+// {
+//     uint32_t symbols = 10;
+//     uint32_t symbol_size = 16;
 
-        encoder_factory factory(symbols, symbol_size);
-        auto ptr = factory.build();
+//     {
+//         typedef kodo::test_nonsystematic_stack<fifi::binary>::factory
+//             encoder_factory;
 
-        EXPECT_FALSE(kodo::is_systematic_encoder(ptr));
-    }
+//         encoder_factory factory(symbols, symbol_size);
+//         auto ptr = factory.build();
 
-    {
-        typedef kodo::full_rlnc_encoder<fifi::binary>::factory encoder_factory;
+//         EXPECT_FALSE(kodo::is_systematic_encoder(ptr));
+//     }
 
-        encoder_factory factory(symbols, symbol_size);
-        auto ptr = factory.build();
+//     {
+//         typedef kodo::full_rlnc_encoder<fifi::binary>::factory encoder_factory;
 
-        EXPECT_TRUE(kodo::is_systematic_encoder(ptr));
-        EXPECT_TRUE(kodo::is_systematic_on(ptr));
+//         encoder_factory factory(symbols, symbol_size);
+//         auto ptr = factory.build();
 
-        kodo::set_systematic_off(ptr);
+//         EXPECT_TRUE(kodo::is_systematic_encoder(ptr));
+//         EXPECT_TRUE(kodo::is_systematic_on(ptr));
 
-        EXPECT_TRUE(kodo::is_systematic_encoder(ptr));
-        EXPECT_FALSE(kodo::is_systematic_on(ptr));
+//         kodo::set_systematic_off(ptr);
 
-        kodo::set_systematic_on(ptr);
+//         EXPECT_TRUE(kodo::is_systematic_encoder(ptr));
+//         EXPECT_FALSE(kodo::is_systematic_on(ptr));
 
-        EXPECT_TRUE(kodo::is_systematic_encoder(ptr));
-        EXPECT_TRUE(kodo::is_systematic_on(ptr));
-    }
-}
+//         kodo::set_systematic_on(ptr);
+
+//         EXPECT_TRUE(kodo::is_systematic_encoder(ptr));
+//         EXPECT_TRUE(kodo::is_systematic_on(ptr));
+//     }
+// }
 

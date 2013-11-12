@@ -22,7 +22,7 @@ inline void test_reuse_helper(Encoder encoder, Decoder decoder)
     encoder->set_symbols(storage_in);
 
     // Set the encoder non-systematic
-    if(kodo::is_systematic_encoder(encoder))
+    if(kodo::has_systematic_encoder<Encoder>::value)
         kodo::set_systematic_off(encoder);
 
     while( !decoder->is_complete() )

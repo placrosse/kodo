@@ -22,6 +22,11 @@ namespace kodo
     {
     public:
 
+        /// Make the encode_symbol overloads available
+        using SuperCoder::encode_symbol;
+
+    public:
+
         /// @copdydoc layer::construct(Factory&)
         template<class Factory>
         void construct(Factory& the_factory)
@@ -78,9 +83,9 @@ namespace kodo
             for(uint32_t i = m_offset; i < SuperCoder::symbols(); ++i)
             {
                 bool is_not_sent = !m_systematic_symbols_sent.test(i);
-                bool is_initialized = SuperCoder::is_symbol_initialized(i);
+                bool is_pivot = SuperCoder::is_symbol_pivot(i);
 
-                if(is_not_sent && is_initialized)
+                if(is_not_sent && is_pivot)
                 {
                     next_symbol = i;
                     break;
@@ -88,6 +93,13 @@ namespace kodo
             }
 
             return next_symbol;
+        }
+
+        /// @return The number of systematically encoded packets produced
+        ///         by this encoder
+        void systematic_count()
+        {
+            return m_systematic_count;
         }
 
     protected:
@@ -116,9 +128,9 @@ namespace kodo
             for(uint32_t i = m_offset; i <= symbol_index; ++i)
             {
                 bool is_sent = m_systematic_symbols_sent.test(i);
-                bool is_initialized = SuperCoder::is_symbol_initialized(i);
+                bool is_pivot = SuperCoder::is_symbol_pivot(i);
 
-                if(is_sent && is_initialized)
+                if(is_sent && is_pivot)
                 {
                     ++m_offset;
                 }

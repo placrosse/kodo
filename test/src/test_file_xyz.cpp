@@ -10,6 +10,7 @@
 #include <kodo/file_encoder.hpp>
 #include <kodo/object_decoder.hpp>
 #include <kodo/rlnc/full_vector_codes.hpp>
+#include <kodo/set_systematic_off.hpp>
 
 #include <boost/filesystem.hpp>
 
@@ -76,7 +77,7 @@ TEST(TestFileEncoder, test_file_encoder)
             EXPECT_EQ(encoder->bytes_used(), decoder->bytes_used());
 
             // Set the encoder non-systematic
-            if(kodo::is_systematic_encoder(encoder))
+            if(kodo::has_systematic_encoder<encoder_t>::value)
                 kodo::set_systematic_off(encoder);
 
             std::vector<uint8_t> payload(encoder->payload_size());

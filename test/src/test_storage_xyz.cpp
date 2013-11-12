@@ -15,6 +15,7 @@
 #include <kodo/rfc5052_partitioning_scheme.hpp>
 #include <kodo/rlnc/full_vector_codes.hpp>
 #include <kodo/partial_shallow_symbol_storage.hpp>
+#include <kodo/set_systematic_off.hpp>
 
 #include "basic_api_test_helper.hpp"
 
@@ -111,7 +112,7 @@ void invoke_shallow_decoder(uint32_t max_symbols,
         auto e = encoder.build(i);
         auto d = decoder.build(i);
 
-        if(kodo::is_systematic_encoder(e))
+        if(kodo::has_systematic_encoder<Encoder>::value)
             kodo::set_systematic_off(e);
 
         EXPECT_EQ(e->block_size(), d->block_size());
@@ -175,7 +176,7 @@ void invoke_deep_decoder(uint32_t max_symbols,
         auto e = encoder.build(i);
         auto d = decoder.build(i);
 
-        if(kodo::is_systematic_encoder(e))
+        if(kodo::has_systematic_encoder<Encoder>::value)
             kodo::set_systematic_off(e);
 
         EXPECT_EQ(e->block_size(), d->block_size());

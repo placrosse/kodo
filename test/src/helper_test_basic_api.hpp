@@ -7,6 +7,9 @@
 
 #include "basic_api_test_helper.hpp"
 
+#include <kodo/has_systematic_encoder.hpp>
+#include <kodo/set_systematic_off.hpp>
+
 template<class Encoder, class Decoder>
 inline void test_basic_api(uint32_t symbols, uint32_t symbol_size)
 {
@@ -77,7 +80,7 @@ inline void test_basic_api(uint32_t symbols, uint32_t symbol_size)
     encoder->set_symbols(storage_in_copy);
 
     // Set the encoder non-systematic
-    if(kodo::is_systematic_encoder(encoder))
+    if(kodo::has_systematic_encoder<Encoder>::value)
         kodo::set_systematic_off(encoder);
 
     while( !decoder->is_complete() )

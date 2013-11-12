@@ -35,7 +35,7 @@ namespace kodo
             void initialize(Factory& the_factory)
             {
                 m_symbols = the_factory.symbols();
-                m_is_symbol_initialized.resize(m_symbols, false);
+                m_is_symbol_pivot.resize(m_symbols, false);
             }
 
             void encode_symbol(uint8_t *symbol_data, uint32_t symbol_index)
@@ -49,7 +49,7 @@ namespace kodo
                 uint32_t rank = 0;
                 for(uint32_t i = 0; i < m_symbols; ++i)
                 {
-                    rank += m_is_symbol_initialized[i];
+                    rank += m_is_symbol_pivot[i];
                 }
                 return rank;
             }
@@ -59,14 +59,14 @@ namespace kodo
                 return m_symbols;
             }
 
-            bool is_symbol_initialized(uint32_t index) const
+            bool is_symbol_pivot(uint32_t index) const
             {
                 (void) index;
-                return m_is_symbol_initialized[index];
+                return m_is_symbol_pivot[index];
             }
 
             uint32_t m_symbols;
-            std::vector<bool> m_is_symbol_initialized;
+            std::vector<bool> m_is_symbol_pivot;
         };
 
         // Instantiate a stack containing the storage_aware_systematic_phase
@@ -107,42 +107,42 @@ TEST(TestStorageAwareSystematicPhase, api)
     stack.construct(factory);
     stack.initialize(factory);
 
-    stack.m_is_symbol_initialized[0] = true;
+    stack.m_is_symbol_pivot[0] = true;
 
     EXPECT_EQ(stack.symbols(), factory.symbols());
     EXPECT_EQ(stack.in_systematic_phase(), true);
-    EXPECT_EQ(stack.next_systematic_symbol(), 0);
+    EXPECT_EQ(stack.next_systematic_symbol(), 0U);
 
     uint8_t* symbol = 0;
 
-    EXPECT_EQ(stack.next_systematic_symbol(), 0);
+    EXPECT_EQ(stack.next_systematic_symbol(), 0U);
     stack.encode_symbol(symbol, 0);
     EXPECT_EQ(stack.in_systematic_phase(), false);
 
-    stack.m_is_symbol_initialized[2] = true;
-    stack.m_is_symbol_initialized[3] = true;
+    stack.m_is_symbol_pivot[2] = true;
+    stack.m_is_symbol_pivot[3] = true;
 
-    EXPECT_EQ(stack.rank(), 3);
+    EXPECT_EQ(stack.rank(), 3U);
     EXPECT_EQ(stack.in_systematic_phase(), true);
-    EXPECT_EQ(stack.next_systematic_symbol(), 2);
+    EXPECT_EQ(stack.next_systematic_symbol(), 2U);
 
     // We resend the first symbol nothing should change
     stack.encode_symbol(symbol, 0);
 
     EXPECT_EQ(stack.in_systematic_phase(), true);
-    EXPECT_EQ(stack.next_systematic_symbol(), 2);
+    EXPECT_EQ(stack.next_systematic_symbol(), 2U);
     stack.encode_symbol(symbol, 2);
 
     EXPECT_EQ(stack.in_systematic_phase(), true);
-    EXPECT_EQ(stack.next_systematic_symbol(), 3);
+    EXPECT_EQ(stack.next_systematic_symbol(), 3U);
     stack.encode_symbol(symbol, 3);
     EXPECT_EQ(stack.in_systematic_phase(), false);
 
-    stack.m_is_symbol_initialized[1] = true;
+    stack.m_is_symbol_pivot[1] = true;
 
-    EXPECT_EQ(stack.rank(), 4);
+    EXPECT_EQ(stack.rank(), 4U);
     EXPECT_EQ(stack.in_systematic_phase(), true);
-    EXPECT_EQ(stack.next_systematic_symbol(), 1);
+    EXPECT_EQ(stack.next_systematic_symbol(), 1U);
 
     stack.encode_symbol(symbol, 1);
     EXPECT_EQ(stack.in_systematic_phase(), false);

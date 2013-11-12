@@ -87,7 +87,7 @@ namespace kodo
                  payload_rank_recoder<
                  payload_encoder<
                  // Codec Header API
-                 non_systematic_encoder<
+                 default_off_systematic_encoder<
                  symbol_id_encoder<
                  // Symbol ID API
                  recoding_symbol_id<

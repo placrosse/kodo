@@ -4,14 +4,16 @@
 // http://www.steinwurf.com/licensing
 
 
-/// @file helper_on_the_fly_api.hpp Unit test helper for the on the fly API.
-///       on-the-fly referrers to the fact the we progressively will set symbols
-///       on the stack
+/// @file helper_on_the_fly_api.hpp Unit test helper for the on the
+///       fly API.  on-the-fly referrers to the fact the we
+///       progressively will set symbols on the stack
 
 #include <ctime>
 #include <gtest/gtest.h>
 
 #include <kodo/is_partial_complete.hpp>
+#include <kodo/has_systematic_encoder.hpp>
+#include <kodo/set_systematic_on.hpp>
 
 /// Tests that an encoder support progressively specifying the symbols
 template
@@ -36,7 +38,7 @@ inline void test_on_the_fly(uint32_t symbols, uint32_t symbol_size)
         sak::storage(data_in), symbol_size);
 
     // Set the encoder non-systematic
-    if(kodo::is_systematic_encoder(encoder))
+    if(kodo::has_systematic_encoder<Encoder>::value)
         kodo::set_systematic_off(encoder);
 
     EXPECT_EQ(encoder->rank(), 0U);
@@ -157,7 +159,7 @@ inline void test_on_the_fly_systematic(uint32_t symbols, uint32_t symbol_size)
         sak::storage(data_in), symbol_size);
 
     // Make sure the encoder is systematic
-    if(kodo::is_systematic_encoder(encoder))
+    if(kodo::has_systematic_encoder<Encoder>::value)
         kodo::set_systematic_on(encoder);
 
 
@@ -293,7 +295,7 @@ inline void test_on_the_fly_systematic_no_errors(uint32_t symbols,
         sak::storage(data_in), symbol_size);
 
     // Make sure the encoder is systematic
-    if(kodo::is_systematic_encoder(encoder))
+    if(kodo::has_systematic_encoder<Encoder>::value)
         kodo::set_systematic_on(encoder);
 
     while( !decoder->is_complete() )
@@ -419,7 +421,7 @@ inline void test_systematic_packets_decode()
     encoder->set_symbol(2, symbol_sequence[2]);
 
     // Make sure the encoder is systematic
-    if(kodo::is_systematic_encoder(encoder))
+    if(kodo::has_systematic_encoder<Encoder>::value)
         kodo::set_systematic_on(encoder);
 
     encoder->encode( &payload[0] );

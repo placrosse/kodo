@@ -9,6 +9,9 @@
 
 #include "basic_api_test_helper.hpp"
 
+#include <kodo/has_systematic_encoder.hpp>
+#include <kodo/set_systematic_off.hpp>
+
 /// Helper for the reuse test, ensures that all encoders and decoders
 /// produce valid data
 template<class Encoder, class Decoder>
@@ -22,7 +25,7 @@ inline void test_reuse_helper(Encoder encoder, Decoder decoder)
     encoder->set_symbols(storage_in);
 
     // Set the encoder non-systematic
-    if(kodo::is_systematic_encoder(encoder))
+    if(kodo::has_systematic_encoder<Encoder>::value)
         kodo::set_systematic_off(encoder);
 
     while( !decoder->is_complete() )

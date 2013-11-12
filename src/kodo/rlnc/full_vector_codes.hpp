@@ -16,6 +16,7 @@
 #include "../finite_field_info.hpp"
 #include "../zero_symbol_encoder.hpp"
 #include "../default_on_systematic_encoder.hpp"
+#include "../default_off_systematic_encoder.hpp"
 #include "../systematic_decoder.hpp"
 #include "../storage_bytes_used.hpp"
 #include "../storage_block_info.hpp"
@@ -108,7 +109,7 @@ namespace kodo
         : public // Payload API
                  payload_encoder<
                  // Codec Header API
-                 non_systematic_encoder<
+                 default_off_systematic_encoder<
                  symbol_id_encoder<
                  // Symbol ID API
                  recoding_symbol_id<

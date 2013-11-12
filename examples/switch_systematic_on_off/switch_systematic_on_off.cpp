@@ -4,6 +4,9 @@
 // http://www.steinwurf.com/licensing
 
 #include <kodo/rlnc/full_vector_codes.hpp>
+#include <kodo/set_systematic_on.hpp>
+#include <kodo/set_systematic_off.hpp>
+#include <kodo/is_systematic_on.hpp>
 
 /// @example switch_systematic_on_off.cpp
 ///
@@ -55,7 +58,7 @@ int main()
     while( !decoder->is_complete() )
     {
         // If the chosen codec stack supports systematic coding
-        if(kodo::is_systematic_encoder(encoder))
+        if(kodo::has_systematic_encoder<rlnc_encoder>::value)
         {
             // With 50% probability toggle systematic
             if((rand() % 2) == 0)
