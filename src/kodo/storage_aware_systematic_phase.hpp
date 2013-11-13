@@ -44,11 +44,7 @@ namespace kodo
 
             m_offset = 0;
             m_systematic_count = 0;
-
-            // Resize here will not hurt performance since the
-            // layer::construct(Factory&) function will resize to the
-            // maximum size.
-            m_systematic_symbols_sent.resize(the_factory.symbols(), false);
+            m_systematic_symbols_sent.reset();
         }
 
         /// @copydoc layer::encode_symbol(uint8_t*,uint32_t)
@@ -77,6 +73,7 @@ namespace kodo
         {
             assert(in_systematic_phase());
 
+            bool next_symbol_found = false;
             uint32_t next_symbol = 0;
 
             // Find which symbol should be the next to send systematically
@@ -87,11 +84,13 @@ namespace kodo
 
                 if(is_not_sent && is_pivot)
                 {
+                    next_symbol_found = true;
                     next_symbol = i;
                     break;
                 }
             }
 
+            assert(next_symbol_found);
             return next_symbol;
         }
 
@@ -110,6 +109,8 @@ namespace kodo
         /// systematically
         void update_systematic_state(uint32_t symbol_index)
         {
+            assert(symbol_index < SuperCoder::symbols());
+            assert(symbol_index < m_systematic_symbols_sent.size());
 
             // If we have an one bit the symbol has been sent as systematic
             // before so:
@@ -127,6 +128,7 @@ namespace kodo
             // index than the next_symbol variable
             for(uint32_t i = m_offset; i <= symbol_index; ++i)
             {
+
                 bool is_sent = m_systematic_symbols_sent.test(i);
                 bool is_pivot = SuperCoder::is_symbol_pivot(i);
 
@@ -139,6 +141,7 @@ namespace kodo
                     break;
                 }
             }
+
         }
 
     protected:

@@ -24,6 +24,7 @@ inline void test_reuse_helper(EncoderPointer encoder, DecoderPointer decoder)
 
     encoder->set_symbols(storage_in);
 
+    // We need the actual data type not the shared_ptr
     typedef typename EncoderPointer::element_type encoder_type;
 
     // Set the encoder non-systematic
@@ -195,16 +196,6 @@ inline void test_reuse_incomplete(uint32_t symbols, uint32_t symbol_size)
         // Start encoding/decoding
         while (!decoder->is_complete())
         {
-            std::cout << "in systematic : " << encoder->in_systematic_phase()
-                      << std::endl;
-            std::cout << "systeamtic on : " << encoder->is_systematic_on() <<
-                std::endl;
-
-            std::cout << "systematic count " << encoder->systematic_count() <<
-                std::endl;
-
-            std::cout << "rank " << encoder->rank() << std::endl;
-
             encoder->encode(&payload[0]);
 
             // Loose a packet with probability

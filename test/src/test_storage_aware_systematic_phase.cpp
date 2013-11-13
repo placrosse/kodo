@@ -160,6 +160,22 @@ TEST(TestStorageAwareSystematicPhase, api)
 
     EXPECT_EQ(stack.in_systematic_phase(), false);
     EXPECT_EQ(stack.systematic_count(), 4U);
+
+    // Initialize the stack again - we leave the m_is_symbol_pivot which will
+    // indicate that all symbols are available
+    stack.initialize(factory);
+
+    EXPECT_EQ(stack.systematic_count(), 0U);
+    EXPECT_EQ(stack.symbols(), factory.symbols());
+    EXPECT_EQ(stack.in_systematic_phase(), true);
+    EXPECT_EQ(stack.next_systematic_symbol(), 0U);
+
+    // uint8_t* symbol = 0;
+
+    // EXPECT_EQ(stack.next_systematic_symbol(), 0U);
+
+    // stack.encode_symbol(symbol, 0);
+
 }
 
 
