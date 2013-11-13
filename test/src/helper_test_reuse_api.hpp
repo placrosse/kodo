@@ -9,13 +9,13 @@
 
 #include "basic_api_test_helper.hpp"
 
-#include <kodo/has_systematic_encoder.hpp>
+#include <kodo/has_set_systematic_off.hpp>
 #include <kodo/set_systematic_off.hpp>
 
 /// Helper for the reuse test, ensures that all encoders and decoders
 /// produce valid data
-template<class Encoder, class Decoder>
-inline void test_reuse_helper(Encoder encoder, Decoder decoder)
+template<class EncoderPointer, class DecoderPointer>
+inline void test_reuse_helper(EncoderPointer encoder, DecoderPointer decoder)
 {
     std::vector<uint8_t> payload(encoder->payload_size());
 
@@ -24,8 +24,10 @@ inline void test_reuse_helper(Encoder encoder, Decoder decoder)
 
     encoder->set_symbols(storage_in);
 
+    typedef typename EncoderPointer::element_type encoder_type;
+
     // Set the encoder non-systematic
-    if(kodo::has_systematic_encoder<Encoder>::value)
+    if(kodo::has_set_systematic_off<encoder_type>::value)
         kodo::set_systematic_off(encoder);
 
     while( !decoder->is_complete() )
@@ -193,6 +195,16 @@ inline void test_reuse_incomplete(uint32_t symbols, uint32_t symbol_size)
         // Start encoding/decoding
         while (!decoder->is_complete())
         {
+            std::cout << "in systematic : " << encoder->in_systematic_phase()
+                      << std::endl;
+            std::cout << "systeamtic on : " << encoder->is_systematic_on() <<
+                std::endl;
+
+            std::cout << "systematic count " << encoder->systematic_count() <<
+                std::endl;
+
+            std::cout << "rank " << encoder->rank() << std::endl;
+
             encoder->encode(&payload[0]);
 
             // Loose a packet with probability
@@ -202,7 +214,8 @@ inline void test_reuse_incomplete(uint32_t symbols, uint32_t symbol_size)
             decoder->decode(&payload[0]);
 
             // Stop decoding after a while with probability
-            if (!do_complete && decoder->rank() == symbols - 2)
+            assert(symbols > 2);
+            if (!do_complete && decoder->rank() == (symbols - 2))
                 break;
         }
 
@@ -256,7 +269,7 @@ template
 >
 inline void test_reuse_incomplete()
 {
-    test_reuse_incomplete<Encoder, Decoder>(1, 1600);
+    test_reuse_incomplete<Encoder, Decoder>(4, 1600);
     test_reuse_incomplete<Encoder, Decoder>(32, 1600);
 
     uint32_t symbols = rand_symbols();

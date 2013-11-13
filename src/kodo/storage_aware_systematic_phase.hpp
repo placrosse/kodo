@@ -56,7 +56,6 @@ namespace kodo
         {
             assert(symbol_index < m_systematic_symbols_sent.size());
 
-            std::cout << "symbol_index " << symbol_index << std::endl;
             SuperCoder::encode_symbol(symbol_data, symbol_index);
 
             update_systematic_state(symbol_index);
