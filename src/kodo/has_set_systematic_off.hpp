@@ -12,27 +12,25 @@ namespace kodo
 
     /// @ingroup type_traits
     /// Type trait helper allows compile time detection of whether an
-    /// encoder contains the systematic_encoder layer
+    /// encoder contains a layer with the member function set_systematic_off()
     ///
     /// Example:
     ///
     /// typedef kodo::full_rlnc8_encoder encoder_t;
     ///
-    /// if(kodo::has_systematic_encoder<encoder_t>::value)
+    /// if(kodo::has_set_systematic_off<encoder_t>::value)
     /// {
     ///     // Do something here
     /// }
     ///
-    template<class T>
-    struct has_systematic_encoder
-    {
-        template<class U>
-        static uint8_t test(const kodo::systematic_encoder<U> *);
+    template<typename T, typename Sfinae = void>
+    struct has_set_systematic_off :
+        std::false_type {};
 
-        static uint32_t test(...);
-
-        static const bool value = sizeof(test(static_cast<T*>(0))) == 1;
-    };
+    template<typename T>
+    struct has_set_systematic_off<T,
+        decltype( std::declval<T&>().set_systematic_off() )> :
+        std::true_type {};
 
 }
 

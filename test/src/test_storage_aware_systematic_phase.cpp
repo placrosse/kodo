@@ -107,6 +107,8 @@ TEST(TestStorageAwareSystematicPhase, api)
     stack.construct(factory);
     stack.initialize(factory);
 
+    EXPECT_EQ(stack.systematic_count(), 0U);
+
     stack.m_is_symbol_pivot[0] = true;
 
     EXPECT_EQ(stack.symbols(), factory.symbols());
@@ -116,8 +118,11 @@ TEST(TestStorageAwareSystematicPhase, api)
     uint8_t* symbol = 0;
 
     EXPECT_EQ(stack.next_systematic_symbol(), 0U);
+
     stack.encode_symbol(symbol, 0);
+
     EXPECT_EQ(stack.in_systematic_phase(), false);
+    EXPECT_EQ(stack.systematic_count(), 1U);
 
     stack.m_is_symbol_pivot[2] = true;
     stack.m_is_symbol_pivot[3] = true;
@@ -131,22 +136,30 @@ TEST(TestStorageAwareSystematicPhase, api)
 
     EXPECT_EQ(stack.in_systematic_phase(), true);
     EXPECT_EQ(stack.next_systematic_symbol(), 2U);
+    EXPECT_EQ(stack.systematic_count(), 1U);
+
     stack.encode_symbol(symbol, 2);
 
     EXPECT_EQ(stack.in_systematic_phase(), true);
     EXPECT_EQ(stack.next_systematic_symbol(), 3U);
+    EXPECT_EQ(stack.systematic_count(), 2U);
+
     stack.encode_symbol(symbol, 3);
+
     EXPECT_EQ(stack.in_systematic_phase(), false);
+    EXPECT_EQ(stack.systematic_count(), 3U);
 
     stack.m_is_symbol_pivot[1] = true;
 
     EXPECT_EQ(stack.rank(), 4U);
     EXPECT_EQ(stack.in_systematic_phase(), true);
     EXPECT_EQ(stack.next_systematic_symbol(), 1U);
+    EXPECT_EQ(stack.systematic_count(), 3U);
 
     stack.encode_symbol(symbol, 1);
-    EXPECT_EQ(stack.in_systematic_phase(), false);
 
+    EXPECT_EQ(stack.in_systematic_phase(), false);
+    EXPECT_EQ(stack.systematic_count(), 4U);
 }
 
 

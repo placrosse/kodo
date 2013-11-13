@@ -56,6 +56,7 @@ namespace kodo
         {
             assert(symbol_index < m_systematic_symbols_sent.size());
 
+            std::cout << "symbol_index " << symbol_index << std::endl;
             SuperCoder::encode_symbol(symbol_data, symbol_index);
 
             update_systematic_state(symbol_index);
@@ -97,7 +98,7 @@ namespace kodo
 
         /// @return The number of systematically encoded packets produced
         ///         by this encoder
-        void systematic_count()
+        uint32_t systematic_count() const
         {
             return m_systematic_count;
         }

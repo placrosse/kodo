@@ -7,6 +7,7 @@
 
 #include "systematic_encoder.hpp"
 #include "storage_aware_systematic_phase.hpp"
+#include "default_systematic_phase.hpp"
 
 namespace kodo
 {
@@ -15,8 +16,9 @@ namespace kodo
     /// behavior is to produce systematic symbols if possible.
     template<class SuperCoder>
     class default_on_systematic_encoder :
-        public systematic_encoder<true,
-               storage_aware_systematic_phase<SuperCoder> >
+        public systematic_encoder<
+               default_systematic_phase<true,
+               storage_aware_systematic_phase<SuperCoder> > >
     { };
 
 }
