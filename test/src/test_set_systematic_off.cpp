@@ -22,7 +22,7 @@ namespace kodo
     namespace
     {
 
-        struct dummy
+        struct dummy_one
         {
             void set_systematic_off()
             {
@@ -32,6 +32,9 @@ namespace kodo
             bool m_systematic_off;
         };
 
+        struct dummy_two
+        { };
+
     }
 }
 
@@ -39,7 +42,8 @@ TEST(TestSetSystematicOff, set)
 {
 
     {
-        kodo::dummy d;
+        // Check with a standard object
+        kodo::dummy_one d;
         d.m_systematic_off = true;
 
         kodo::set_systematic_off(d);
@@ -47,6 +51,18 @@ TEST(TestSetSystematicOff, set)
     }
 
     {
+        // Check that the code compiles even with an object that
+        // does not have the set_systematic_off function
+        kodo::dummy_two d;
+
+        if(kodo::has_set_systematic_off<kodo::dummy_two>::value)
+        {
+            kodo::set_systematic_off(d);
+        }
+    }
+
+    {
+        // Check that the code compiles with a normal stack
         typedef kodo::full_rlnc_encoder<fifi::binary8> encoder_type;
 
         encoder_type::factory factory(10,10);
@@ -57,8 +73,6 @@ TEST(TestSetSystematicOff, set)
         kodo::set_systematic_off(encoder);
         EXPECT_FALSE(encoder->is_systematic_on());
     }
-
-
 
 }
 

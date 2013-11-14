@@ -14,7 +14,7 @@ namespace kodo
     /// @ingroup generic_api
     /// @copydoc set_systematic_off(const T&)
     template<bool what, class T>
-    inline void set_systematic_off_o(T& t, char (*)[what] = 0)
+    inline void set_systematic_off(T& t, char (*)[what] = 0)
     {
         // Explanation for the char (*)[what] here:
         // http://stackoverflow.com/a/6917354/1717320
@@ -24,7 +24,7 @@ namespace kodo
     /// @ingroup generic_api
     /// @copydoc set_systematic_off(const T&)
     template<bool what, class T>
-    inline void set_systematic_off_o(T& t, char (*)[!what] = 0)
+    inline void set_systematic_off(T& t, char (*)[!what] = 0)
     {
         (void)t;
 
@@ -35,7 +35,6 @@ namespace kodo
         assert(0);
     }
 
-
     /// @ingroup generic_api
     /// Generic function overload for cases where set_systematic_off is part
     /// of a stack. @see systematic_encoder::set_systematic_off() const
@@ -43,7 +42,7 @@ namespace kodo
     template<class T>
     inline void set_systematic_off(T& t)
     {
-        set_systematic_off_o<has_set_systematic_off<T>::value, T>(t);
+        set_systematic_off<has_set_systematic_off<T>::value, T>(t);
     }
 
     /// @ingroup generic_api
