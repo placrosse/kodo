@@ -6,6 +6,7 @@
 #pragma once
 
 #include <cstdint>
+#include <algorithm>
 #include <sak/convert_endian.hpp>
 
 namespace kodo

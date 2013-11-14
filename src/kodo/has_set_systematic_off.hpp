@@ -23,14 +23,32 @@ namespace kodo
     ///     // Do something here
     /// }
     ///
-    template<typename T, typename Sfinae = void>
-    struct has_set_systematic_off :
-        std::false_type {};
+    template <typename T>
+    class has_set_systematic_off
+    {
+    private:
+        template <typename U, U>
+        class check
+        { };
 
-    template<typename T>
-    struct has_set_systematic_off<T,
-        decltype( std::declval<T&>().set_systematic_off() )> :
-        std::true_type {};
+        template <typename C>
+        static char f(check<void (C::*)(), &C::set_systematic_off>*);
+
+        template <typename C>
+        static long f(...);
+
+    public:
+        static const bool value = (sizeof(f<T>(0)) == sizeof(char));
+    };
+
+    // template<typename T, typename Sfinae = void>
+    // struct has_set_systematic_off :
+    //     std::false_type {};
+
+    // template<typename T>
+    // struct has_set_systematic_off<T,
+    //     decltype( std::declval<T>().set_systematic_off() )> :
+    //     std::true_type {};
 
 }
 
