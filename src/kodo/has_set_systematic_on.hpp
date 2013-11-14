@@ -5,40 +5,36 @@
 
 #pragma once
 
-#include "systematic_encoder.hpp"
-
 namespace kodo
 {
 
     /// @ingroup type_traits
     /// Type trait helper allows compile time detection of whether an
-    /// encoder contains a layer with the member function set_systematic_off()
+    /// encoder contains a layer with the member function set_systematic_on()
     ///
     /// Example:
     ///
     /// typedef kodo::full_rlnc8_encoder encoder_t;
     ///
-    /// if(kodo::has_set_systematic_off<encoder_t>::value)
+    /// if(kodo::has_set_systematic_on<encoder_t>::value)
     /// {
     ///     // Do something here
     /// }
     ///
     template<typename T>
-    struct has_set_systematic_off
+    struct has_set_systematic_on
     {
     private:
-        typedef std::true_type yes;
-        typedef std::false_type no;
 
         template<typename U>
         static auto test(int) ->
-            decltype(std::declval<U>().set_systematic_off(), yes());
+            decltype(std::declval<U>().set_systematic_on(), uint32_t());
 
-        template<typename> static no test(...);
+        template<typename> static uint8_t test(...);
 
     public:
 
-        static const bool value = std::is_same<decltype(test<T>(0)),yes>::value;
+        static const bool value = sizeof(decltype(test<T>(0))) == 4;
     };
 
 }
