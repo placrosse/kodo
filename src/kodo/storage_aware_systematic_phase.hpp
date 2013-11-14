@@ -1,4 +1,4 @@
-// Copyright Steinwurf Apes 2011-2012.
+// Copyright Steinwurf Apes 2011-2013.
 // Distributed under the "STEINWURF RESEARCH LICENSE 1.0".
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
@@ -11,6 +11,8 @@
 namespace kodo
 {
 
+    /// @ingroup encoder_layers
+    ///
     /// @brief This class is used to detect whether the encoder is in
     /// the systematic phase i.e. whether the next symbol to encode
     /// should be a uncoded systematic symbol. This is done by

@@ -170,12 +170,6 @@ TEST(TestStorageAwareSystematicPhase, api)
     EXPECT_EQ(stack.in_systematic_phase(), true);
     EXPECT_EQ(stack.next_systematic_symbol(), 0U);
 
-    // uint8_t* symbol = 0;
-
-    // EXPECT_EQ(stack.next_systematic_symbol(), 0U);
-
-    // stack.encode_symbol(symbol, 0);
-
 }
 
 
