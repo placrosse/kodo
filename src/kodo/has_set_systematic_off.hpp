@@ -36,7 +36,7 @@ private:
 
 public:
 
-	static constexpr bool value = std::is_same<decltype(test<T>(0)),yes>::value;
+	static const bool value = std::is_same<decltype(test<T>(0)),yes>::value;
 };
 
     // template <typename T>
