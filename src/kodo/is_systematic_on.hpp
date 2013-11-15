@@ -6,28 +6,10 @@
 #pragma once
 
 #include "systematic_encoder.hpp"
-#include "has_systematic_encoder.hpp"
+#include "has_is_systematic_on.hpp"
 
 namespace kodo
 {
-
-    /// @ingroup generic_api
-    /// Generic function overload for cases where is_systematic_on is part
-    /// of a stack. @see systematic_encoder::is_systematic_on() const
-    /// @param t The stack to query
-    template<class T>
-    inline bool is_systematic_on(const T& t)
-    {
-        return is_systematic_on<has_systematic_encoder<T>::value>(t);
-    }
-
-    /// @ingroup generic_api
-    /// @copydoc is_systematic_on(const T&)
-    template<class T>
-    inline bool is_systematic_on(const boost::shared_ptr<T>& t)
-    {
-        return is_systematic_on(*t);
-    }
 
     /// @ingroup generic_api
     /// @copydoc is_systematic_on(const T&)
@@ -52,6 +34,24 @@ namespace kodo
         // be avoided by using the has_systematic_encoder
         assert(0);
         return false;
+    }
+
+    /// @ingroup generic_api
+    /// Generic function overload for cases where is_systematic_on is part
+    /// of a stack. @see systematic_encoder::is_systematic_on() const
+    /// @param t The stack to query
+    template<class T>
+    inline bool is_systematic_on(const T& t)
+    {
+        return is_systematic_on<has_is_systematic_on<T>::value>(t);
+    }
+
+    /// @ingroup generic_api
+    /// @copydoc is_systematic_on(const T&)
+    template<class T>
+    inline bool is_systematic_on(const boost::shared_ptr<T>& t)
+    {
+        return is_systematic_on(*t);
     }
 
 }
