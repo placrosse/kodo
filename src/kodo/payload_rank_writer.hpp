@@ -24,11 +24,6 @@ namespace kodo
     {
     public:
 
-        /// @copydoc layer::rank_type
-        typedef typename SuperCoder::rank_type rank_type;
-
-    public:
-
         /// The factory layer associated with this coder.
         /// In this case only needed to provide the max_payload_size()
         /// function.
@@ -45,34 +40,29 @@ namespace kodo
             uint32_t max_payload_size() const
             {
                 return SuperCoder::factory::max_payload_size() +
-                    sizeof(rank_type);
+                    SuperCoder::factory::max_rank_size();
             }
 
         };
 
     public:
 
-        /// Helper function which writes the rank of the encoder into
-        /// the payload buffer
-        /// @param payload The buffer where the rank should be written
-        /// @return The number of bytes written to the payload
-        uint32_t write_rank(uint8_t* payload)
+        /// @copydoc layer::encode(uint8_t*)
+        uint32_t encode(uint8_t* payload)
         {
             assert(payload != 0);
 
             // Write the encoder rank to the payload
-            uint32_t written = SuperCoder::write_rank(payload);
+            SuperCoder::write_rank(payload);
 
-            // If not true or payload_size() calculation will not work
-            assert(written == sizeof(rank_type));
-
-            return written;
+            uint32_t written = SuperCoder::rank_size();
+            return SuperCoder::encode(payload + written) + written;
         }
 
         /// @copydoc layer::payload_size() const
         uint32_t payload_size() const
         {
-            return SuperCoder::payload_size() + sizeof(rank_type);
+            return SuperCoder::payload_size() + SuperCoder::rank_size();
         }
 
     };

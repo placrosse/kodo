@@ -34,24 +34,7 @@ namespace kodo
     template<class SuperCoder>
     class payload_rank_encoder :
         public payload_rank_writer<rank_writer<SuperCoder> >
-    {
-    public:
-
-        /// The actual super type
-        typedef payload_rank_writer<rank_writer<SuperCoder> > Super;
-
-    public:
-
-        /// @copydoc layer::encode(uint8_t*)
-        uint32_t encode(uint8_t* payload)
-        {
-            assert(payload != 0);
-
-            // Write the encoder rank to the payload
-            uint32_t written = Super::write_rank(payload);
-            return Super::encode(payload + written) + written;
-        }
-    };
+    { };
 
 }
 

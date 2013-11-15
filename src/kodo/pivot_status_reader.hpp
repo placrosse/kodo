@@ -33,6 +33,9 @@ namespace kodo
         /// The actual super type
         typedef pivot_status_bitset<SuperCoder> Super;
 
+        /// @copydoc layer::rank_type
+        typedef typename Super::rank_type rank_type;
+
         /// Access the bitset
         using Super::m_pivot_status;
 
@@ -58,9 +61,9 @@ namespace kodo
         {
             assert(buffer);
 
-            const uint8_t* last = buffer + decoder_status_size();
-            boost::from_block_range(buffer, last, m_symbols_pivot);
-            m_remote_rank = m_symbols_pivot.count();
+            const uint8_t* last = buffer + Super::pivot_status_size();
+            boost::from_block_range(buffer, last, m_pivot_status);
+            m_remote_rank = m_pivot_status.count();
         }
 
         /// @return The number of symbols that the decoder has either "seen"
@@ -78,9 +81,14 @@ namespace kodo
         ///         False if the symbol is missing at the decoder.
         bool remote_is_symbol_pivot(uint32_t index) const
         {
-            assert(index < m_symbols_pivot.size());
-            return m_symbols_pivot.test(index);
+            assert(index < m_pivot_status.size());
+            return m_pivot_status.test(index);
         }
+
+    protected:
+
+        /// Keeps track of the remote rank which has been read
+        rank_type m_remote_rank;
 
     };
 

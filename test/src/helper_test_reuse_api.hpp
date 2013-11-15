@@ -263,7 +263,8 @@ inline void test_reuse_incomplete()
     test_reuse_incomplete<Encoder, Decoder>(4, 1600);
     test_reuse_incomplete<Encoder, Decoder>(32, 1600);
 
-    uint32_t symbols = rand_symbols();
+    // The test requires that we have at least two symbols
+    uint32_t symbols = rand_symbols() + 2;
     uint32_t symbol_size = rand_symbol_size();
 
     test_reuse_incomplete<Encoder, Decoder>(symbols, symbol_size);

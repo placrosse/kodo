@@ -38,7 +38,7 @@ namespace kodo
         /// @copydoc layer::set_symbol_missing(uint32_t)
         void set_symbol_missing(uint32_t index)
         {
-            assert(index < m_symbols_pivot.size());
+            assert(index < m_pivot_status.size());
             Super::set_symbol_missing(index);
             m_pivot_status.reset(index);
         }
@@ -46,7 +46,7 @@ namespace kodo
         /// @copydoc layer::set_symbol_seen(uint32_t)
         void set_symbol_seen(uint32_t index)
         {
-            assert(index < m_symbols_pivot.size());
+            assert(index < m_pivot_status.size());
             Super::set_symbol_seen(index);
             m_pivot_status.set(index);
         }
@@ -54,7 +54,7 @@ namespace kodo
         /// @copydoc layer::set_symbol_decoded(uint32_t)
         void set_symbol_decoded(uint32_t index)
         {
-            assert(index < m_symbols_pivot.size());
+            assert(index < m_pivot_status.size());
             Super::set_symbol_decoded(index);
             m_pivot_status.set(index);
         }

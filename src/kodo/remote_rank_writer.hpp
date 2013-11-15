@@ -24,17 +24,18 @@ namespace kodo
     public:
 
         /// Helper function which writes the rank of the encoder into
-        /// the payload buffer
+        /// the buffer
+        ///
+        /// @note The buffer used must have at least the size reported
+        /// by the rank_info::rank_size() function.
+        ///
         /// @param payload The buffer where the rank should be written
-        /// @return The number of bytes written to the payload
-        uint32_t write_rank(uint8_t* payload)
+        void write_rank(uint8_t* buffer)
         {
-            assert(payload != 0);
+            assert(buffer != 0);
 
             // Write the encoder rank to the payload
-            sak::big_endian::put<rank_type>(SuperCoder::remote_rank(), payload);
-
-            return sizeof(rank_type);
+            sak::big_endian::put<rank_type>(SuperCoder::remote_rank(), buffer);
         }
 
     };

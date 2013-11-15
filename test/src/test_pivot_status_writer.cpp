@@ -8,6 +8,7 @@
 
 #include <cstdint>
 #include <gtest/gtest.h>
+#include <fifi/fifi_utils.hpp>
 
 #include <kodo/pivot_status_writer.hpp>
 
@@ -25,6 +26,18 @@ namespace kodo
         struct dummy_layer
         {
 
+            template<class Factory>
+            void construct(Factory& the_factory)
+            {
+                (void) the_factory;
+            }
+
+            template<class Factory>
+            void initialize(Factory& the_factory)
+            {
+                (void) the_factory;
+            }
+
             void set_symbol_missing(uint32_t index)
             {
                 m_set_symbol_missing = index;
@@ -37,7 +50,7 @@ namespace kodo
 
             void set_symbol_decoded(uint32_t index)
             {
-
+                m_set_symbol_decoded = index;
             }
 
             uint32_t m_set_symbol_missing;
@@ -45,6 +58,25 @@ namespace kodo
             uint32_t m_set_symbol_decoded;
 
         };
+
+        struct dummy_factory
+        {
+
+            uint32_t max_symbols() const
+            {
+                return m_max_symbols;
+            }
+
+            uint32_t symbols() const
+            {
+                return m_symbols;
+            }
+
+            uint32_t m_max_symbols;
+            uint32_t m_symbols;
+
+        };
+
 
         // Instantiate a stack containing the pivot_status_writer
         class dummy_stack
@@ -62,22 +94,65 @@ TEST(TestPivotStatusWriter, api)
     kodo::dummy_factory factory;
 
     factory.m_max_symbols = 10;
-    factory.m_symbols = 5;
+    factory.m_symbols = 9;
 
     stack.construct(factory);
     stack.initialize(factory);
 
-    EXPECT_EQ(stack.pivot_status_size(), 1U);
-
-    factory.m_symbols = 7;
-    stack.initialize(factory);
-
-    EXPECT_EQ(stack.pivot_status_size(), 1U);
-
-    factory.m_symbols = 9;
-    stack.initialize(factory);
-
     EXPECT_EQ(stack.pivot_status_size(), 2U);
+
+    stack.set_symbol_decoded(1U);
+    EXPECT_EQ(stack.m_set_symbol_decoded, 1U);
+
+    stack.set_symbol_seen(5U);
+    EXPECT_EQ(stack.m_set_symbol_seen, 5U);
+
+    stack.set_symbol_missing(6U);
+    EXPECT_EQ(stack.m_set_symbol_missing, 6U);
+
+    stack.set_symbol_decoded(7U);
+    EXPECT_EQ(stack.m_set_symbol_decoded, 7U);
+
+    stack.set_symbol_decoded(8U);
+    EXPECT_EQ(stack.m_set_symbol_decoded, 8U);
+
+
+    std::vector<uint8_t> buffer(stack.pivot_status_size(), 0);
+
+    EXPECT_EQ(fifi::get_value<fifi::binary>(&buffer[0], 0), 0U);
+    EXPECT_EQ(fifi::get_value<fifi::binary>(&buffer[0], 1), 0U);
+    EXPECT_EQ(fifi::get_value<fifi::binary>(&buffer[0], 2), 0U);
+    EXPECT_EQ(fifi::get_value<fifi::binary>(&buffer[0], 3), 0U);
+    EXPECT_EQ(fifi::get_value<fifi::binary>(&buffer[0], 4), 0U);
+    EXPECT_EQ(fifi::get_value<fifi::binary>(&buffer[0], 5), 0U);
+    EXPECT_EQ(fifi::get_value<fifi::binary>(&buffer[0], 6), 0U);
+    EXPECT_EQ(fifi::get_value<fifi::binary>(&buffer[0], 7), 0U);
+    EXPECT_EQ(fifi::get_value<fifi::binary>(&buffer[0], 8), 0U);
+
+    stack.write_pivot_status(&buffer[0]);
+
+    EXPECT_EQ(fifi::get_value<fifi::binary>(&buffer[0], 0), 0U);
+    EXPECT_EQ(fifi::get_value<fifi::binary>(&buffer[0], 1), 1U);
+    EXPECT_EQ(fifi::get_value<fifi::binary>(&buffer[0], 2), 0U);
+    EXPECT_EQ(fifi::get_value<fifi::binary>(&buffer[0], 3), 0U);
+    EXPECT_EQ(fifi::get_value<fifi::binary>(&buffer[0], 4), 0U);
+    EXPECT_EQ(fifi::get_value<fifi::binary>(&buffer[0], 5), 1U);
+    EXPECT_EQ(fifi::get_value<fifi::binary>(&buffer[0], 6), 0U);
+    EXPECT_EQ(fifi::get_value<fifi::binary>(&buffer[0], 7), 1U);
+    EXPECT_EQ(fifi::get_value<fifi::binary>(&buffer[0], 8), 1U);
+
+    stack.initialize(factory);
+    stack.write_pivot_status(&buffer[0]);
+
+    EXPECT_EQ(fifi::get_value<fifi::binary>(&buffer[0], 0), 0U);
+    EXPECT_EQ(fifi::get_value<fifi::binary>(&buffer[0], 1), 0U);
+    EXPECT_EQ(fifi::get_value<fifi::binary>(&buffer[0], 2), 0U);
+    EXPECT_EQ(fifi::get_value<fifi::binary>(&buffer[0], 3), 0U);
+    EXPECT_EQ(fifi::get_value<fifi::binary>(&buffer[0], 4), 0U);
+    EXPECT_EQ(fifi::get_value<fifi::binary>(&buffer[0], 5), 0U);
+    EXPECT_EQ(fifi::get_value<fifi::binary>(&buffer[0], 6), 0U);
+    EXPECT_EQ(fifi::get_value<fifi::binary>(&buffer[0], 7), 0U);
+    EXPECT_EQ(fifi::get_value<fifi::binary>(&buffer[0], 8), 0U);
 
 }
 

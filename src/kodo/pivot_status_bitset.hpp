@@ -46,11 +46,8 @@ namespace kodo
         {
             SuperCoder::initialize(the_factory);
 
-            // It is ok to resize here since the dynamic_bitset will
-            // not actually shrink its capacity - since we have already
-            // ensured that the bitset has the maximum needed size in
-            // construct
-            m_pivot_status.resize(the_factory.symbols(), false);
+            m_pivot_status.resize(the_factory.symbols());
+            m_pivot_status.reset();
         }
 
         /// @return The size in bytes of decoder status vector
