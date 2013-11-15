@@ -8,17 +8,53 @@ In this document we will try to give a quick overview of Kodo to new users.
 Features
 --------
 
+Recoding
+    One of the most prominent features of Network Coding is the possibility to
+    use coding in the network and not only at the sender (encoding) and the
+    receiver (decoding) ...
+
+
+on-the-fly coding
+    description
+
+Partial decoding
+    description
+
+Variable symbol length (comming soon?)
+    description
+
+Real-time adjustable density
+    description
+
+Symbol pruning
+    dropping symbols at the encoder which have been decoded at the decoder
+    description
+
+File encoder
+    to directly encode files (unfortunately we don't have a file decoder yet)
+    description
+
+Zero copy api
+    (reducing memory footprint)
+
+active memory management
+    description
+
+hardware optimized (on select hardware)
+    description
+
+
 Kodo provides several different codes, primarily the basic Random Linear
 Network Code and multiple variants.
 
 Random Linear Network Coding (RLNC)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-One of the parameters we may tweak using Kodo is how the encoding vectors
-are constructed and represented. The encoding vectors describe which symbols
+One of the parameters we may tweak using Kodo is how the coding vectors
+are constructed and represented. The coding vectors describe which symbols
 are combined within a generation (a generation consists of a number of
 data packets also refereed to as symbols).
 
-Kodo allows the density / distribution of the encoding vectors to be change.
+Kodo allows the density / distribution of the coding vectors to be change.
 Some of the supported variants are:
 
 * Dense variant (purely uniform).
@@ -26,7 +62,7 @@ Some of the supported variants are:
 * Sparse variant with uniform density
 * Systematic variants
 
-The representation of the encoding vector affects the overhead on the wire
+The representation of the coding vector affects the overhead on the wire
 i.e. the number of bytes per coded packet containing meta data instead of
 application data. Here some of the variants supported are:
 
