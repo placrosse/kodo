@@ -10,28 +10,33 @@
 namespace kodo
 {
 
+    /// @todo update docs
     /// @ingroup coefficient_generator_layers
     /// @brief The storage aware generator will ensure that
     ///        layer::generate_partial(uint8_t*) is called whenever the encoder
     ///        indicates that it does not have full rank (i.e. not all symbols
     ///        have been specified).
     template<class SuperCoder>
-    class storage_aware_generator : public SuperCoder
+    class check_partial_generator : public SuperCoder
     {
     public:
 
-        /// @todo
-        bool can_generate() const
+        /// @copydoc layer::generate(uint8_t*)
+        void generate(uint8_t *coefficients)
         {
-            return SuperCoder::rank() == SuperCoder::symbols();
-        }
+            assert(coefficients != 0);
 
-        bool can_generate(uint32_t index) const
-        {
-            return SuperCoder::is_symbol_pivot(index);
+            if(SuperCoder::can_generate())
+            {
+                SuperCoder::generate(coefficients);
+            }
+            else
+            {
+                SuperCoder::generate_partial(coefficients);
+            }
         }
-
     };
+
 }
 
 

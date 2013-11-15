@@ -8,6 +8,7 @@
 #include <cstdint>
 
 #include "full_vector_codes.hpp"
+#include "on_the_fly_generator.hpp"
 #include "../storage_aware_generator.hpp"
 #include "../partial_decoding_tracker.hpp"
 #include "../rank_info.hpp"
@@ -46,8 +47,7 @@ namespace kodo
                // Symbol ID API
                plain_symbol_id_writer<
                // Coefficient Generator API
-               storage_aware_generator<
-               uniform_generator<
+               on_the_fly_generator<
                // Encoder API
                encode_symbol_tracker<
                zero_symbol_encoder<
@@ -68,7 +68,7 @@ namespace kodo
                final_coder_factory_pool<
                // Final type
                on_the_fly_encoder<Field>
-                   > > > > > > > > > > > > > > > > > > > >
+                   > > > > > > > > > > > > > > > > > > >
     { };
 
     /// Intermediate stack implementing the recoding functionality of
@@ -93,6 +93,7 @@ namespace kodo
                  recoding_symbol_id<
                  // Coefficient Generator API
                  uniform_generator<
+                 pivot_aware_generator<
                  // Encoder API
                  encode_symbol_tracker<
                  zero_symbol_encoder<
@@ -104,7 +105,7 @@ namespace kodo
                  proxy_remote_rank<
                  proxy_layer<
                  on_the_fly_recoding_stack<MainStack>,
-                 MainStack> > > > > > > > > > > > >
+                 MainStack> > > > > > > > > > > > > >
     { };
 
     /// @ingroup fec_stacks

@@ -71,39 +71,7 @@ namespace kodo
 
             for(uint32_t i = 0; i < symbols; ++i)
             {
-                if(!SuperCoder::is_symbol_pivot(i))
-                {
-                    continue;
-                }
-
-                value_type coefficient =
-                    m_value_distribution(m_random_generator);
-
-                fifi::set_value<field_type>(c, i, coefficient);
-            }
-        }
-
-        /// @copydoc layer::generate(uint8_t *)
-        void generate_status_vector_aware(uint8_t *coefficients)
-        {
-            assert(coefficients != 0);
-
-            std::fill_n(coefficients, SuperCoder::coefficient_vector_size(), 0);
-
-            auto c = reinterpret_cast<value_type*>(coefficients);
-            uint32_t symbols = SuperCoder::symbols();
-
-            for (uint32_t i = 0; i < symbols; ++i)
-            {
-                // Do not encode symbols that are already fully
-                // decoded by decoder side
-                if(SuperCoder::decoder_has_symbol(i))
-                {
-                    continue;
-                }
-
-                // Do not include symbols that are not added yet
-                if(!SuperCoder::is_symbol_pivot(i))
+                if(!SuperCoder::can_generate(i))
                 {
                     continue;
                 }

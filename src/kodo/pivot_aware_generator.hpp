@@ -16,7 +16,7 @@ namespace kodo
     ///        indicates that it does not have full rank (i.e. not all symbols
     ///        have been specified).
     template<class SuperCoder>
-    class storage_aware_generator : public SuperCoder
+    class pivot_aware_generator : public SuperCoder
     {
     public:
 

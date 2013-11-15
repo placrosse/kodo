@@ -29,9 +29,6 @@ namespace kodo
         /// The data used for the status vector
         typedef uint8_t status_block_type;
 
-        /// The bitset type
-        boost::dynamic_bitset<status_block_type> status_bitset_type;
-
     public:
 
         /// @copydoc layer::construct(Factory&)
@@ -69,7 +66,7 @@ namespace kodo
     protected:
 
         /// Tracks the symbols which have been marked as pivot
-        status_bitset_type m_pivot_status;
+        boost::dynamic_bitset<status_block_type> m_pivot_status;
 
     };
 

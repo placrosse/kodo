@@ -47,6 +47,7 @@
 #include "../forward_linear_block_decoder.hpp"
 #include "../linear_block_decoder_delayed.hpp"
 #include "../coefficient_value_access.hpp"
+#include "../pivot_aware_generator.hpp"
 
 namespace kodo
 {
@@ -115,6 +116,7 @@ namespace kodo
                  recoding_symbol_id<
                  // Coefficient Generator API
                  uniform_generator<
+                 pivot_aware_generator<
                  // Encoder API
                  encode_symbol_tracker<
                  zero_symbol_encoder<
@@ -124,7 +126,7 @@ namespace kodo
                  // Proxy
                  proxy_layer<
                  recoding_stack<MainStack>, MainStack>
-                     > > > > > > > > >
+                     > > > > > > > > > >
     { };
 
     /// @ingroup fec_stacks
