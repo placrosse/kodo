@@ -3,21 +3,22 @@ Overview
 
 .. _overview:
 
-Kodo includes many iteresting techniques and codes. THis document provides an
-overview of the most important features in Kodo and which codes Kodo support.
+Kodo supports many interesting techniques and codes. This document provides an
+overview of the most important features of Kodo and the supported codes.
 
 Features
 --------
 
 Recoding
     One of the most prominent features of Network Coding is the possibility to
-    use coding in the network (recoding) and not only at the sender (encoding)
-    and the receiver (decoding).
+    use coding at the intermediate network nodes (recoding) and not only at the 
+    sender (encoding) and the receiver (decoding).
 
 Systematic coding
-    The sender can send some or all of the symbols in the original data block
-    uncoded. This is useful in simple topologies as it increases the decoding
-    throughput.
+    The sender can send some or all of the original symbols within a given block
+    uncoded. Coded packets can be generated later to repair any packet losses. 
+    Systematic coding is useful in simple topologies as it increases the decoding
+    throughput and decreases the coding overhead.
 
 On-the-fly coding
     allows a sender to encode over a growing block of data. Useful for live
@@ -30,7 +31,7 @@ Partial decoding
     with error resiliant codecs (video, audio) as instead of receiving wither
     the whole data block or nothing, a partial data block can be received.
 
-Variable symbol length (comming soon)
+Variable symbol length (coming soon)
     The symbols in a block of coded data can have different lengths. This can e.g.
     be useful when coding over message type data, in order to allocate on symbol
     per message.
@@ -44,27 +45,24 @@ Symbol pruning
     description
 
 File encoder
-    Encode directly from a file at the sender, the data in the file is
-    automatically split into generations
-    Allows
-    to directly encode files (unfortunately we don't have a file decoder yet)
-    description
+    The sender can directly encode data files that are automatically split
+    into generations.
 
-Zero copy api
+Zero copy API
     Allows fast and memory efficient copying.
 
 Active memory management
     Description
 
-hardware optimized (on select hardware)
-    Optimization for varios CPU architectures, using SIMD instructinos and
+Hardware optimized (on select hardware)
+    Optimization for various CPU architectures, using SIMD instructions and
     various coding algorithms to provide the best performance.
 
 
 Random Linear Network Coding (RLNC) Variants
 ............................................
 
-Kodo provides several different codes, primarily standard Random Linear
+Kodo provides several different codes, primarily the standard Random Linear
 Network Code and multiple variants thereof.
 
 Standard RLNC
@@ -72,8 +70,7 @@ Standard RLNC
     coding is "dense" since the symbols in the data block is mixed as much as
     possible, note that for small field sizes this does not hold.
 
-
-Sparse RLNC with uniform densiy
+Sparse RLNC with uniform density
     With some probability a symbols is not used when encoding a symbol, for the
     remaining symbols coding is performed as in the standard RLNC case. This is
     typcally useful in cases where the block size is very high since the density
@@ -85,7 +82,7 @@ Sparse RLNC with fixed density
     cases where feedback from the decoder is possible which allows the coding at
     the encoder to be tuned to the state of the decoder.
 
-Seed RLNC
+Seed-based RLNC
     Instead of sending the full coding vector a small seed used to generate the
     coding vector can be sent. This reduces the overhead but makes recoding
     difficult and in some cases impossible, so this is typically used when
@@ -105,7 +102,7 @@ Carousel code
     robin fashion.
 
 Random Annex overlay code
-    Enables mixing of several generations. Through the use of multistage
+    Enables mixing of several generations. Through the use of multi-stage
     decoding this techniques can offer increased decoding throughput at the cost
     of increased decoding delay.
 
