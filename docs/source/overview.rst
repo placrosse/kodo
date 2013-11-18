@@ -3,83 +3,118 @@ Overview
 
 .. _overview:
 
-In this document we will try to give a quick overview of Kodo to new users.
+Kodo includes many iteresting techniques and codes. THis document provides an
+overview of the most important features in Kodo and which codes Kodo support.
 
 Features
 --------
 
 Recoding
     One of the most prominent features of Network Coding is the possibility to
-    use coding in the network and not only at the sender (encoding) and the
-    receiver (decoding) ...
+    use coding in the network (recoding) and not only at the sender (encoding)
+    and the receiver (decoding).
 
+Systematic coding
+    The sender can send some or all of the symbols in the original data block
+    uncoded. This is useful in simple topologies as it increases the decoding
+    throughput.
 
-on-the-fly coding
-    description
+On-the-fly coding
+    allows a sender to encode over a growing block of data. Useful for live
+    content where the data becomes available over time, but where coding is
+    applied when the first bit arrive.
 
 Partial decoding
-    description
+    Make it possible for a receiver to decode some of the data it is receiving
+    before the entire data block have been decoded. Makes coding more compatiable
+    with error resiliant codecs (video, audio) as instead of receiving wither
+    the whole data block or nothing, a partial data block can be received.
 
-Variable symbol length (comming soon?)
-    description
+Variable symbol length (comming soon)
+    The symbols in a block of coded data can have different lengths. This can e.g.
+    be useful when coding over message type data, in order to allocate on symbol
+    per message.
 
 Real-time adjustable density
-    description
+    The density at the sender can be adjusted realtime which permits adaptation
+    to chainging network conditions.
 
 Symbol pruning
     dropping symbols at the encoder which have been decoded at the decoder
     description
 
 File encoder
+    Encode directly from a file at the sender, the data in the file is
+    automatically split into generations
+    Allows
     to directly encode files (unfortunately we don't have a file decoder yet)
     description
 
 Zero copy api
-    (reducing memory footprint)
+    Allows fast and memory efficient copying.
 
-active memory management
-    description
+Active memory management
+    Description
 
 hardware optimized (on select hardware)
-    description
+    Optimization for varios CPU architectures, using SIMD instructinos and
+    various coding algorithms to provide the best performance.
 
 
-Kodo provides several different codes, primarily the basic Random Linear
-Network Code and multiple variants.
+Random Linear Network Coding (RLNC) Variants
+............................................
 
-Random Linear Network Coding (RLNC)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-One of the parameters we may tweak using Kodo is how the coding vectors
-are constructed and represented. The coding vectors describe which symbols
-are combined within a generation (a generation consists of a number of
-data packets also refereed to as symbols).
+Kodo provides several different codes, primarily standard Random Linear
+Network Code and multiple variants thereof.
 
-Kodo allows the density / distribution of the coding vectors to be change.
-Some of the supported variants are:
+Standard RLNC
+    All the symbols are combined uniformly at random. Generally this type of
+    coding is "dense" since the symbols in the data block is mixed as much as
+    possible, note that for small field sizes this does not hold.
 
-* Dense variant (purely uniform).
-* Sparse variant with fixed density
-* Sparse variant with uniform density
-* Systematic variants
 
-The representation of the coding vector affects the overhead on the wire
-i.e. the number of bytes per coded packet containing meta data instead of
-application data. Here some of the variants supported are:
+Sparse RLNC with uniform densiy
+    With some probability a symbols is not used when encoding a symbol, for the
+    remaining symbols coding is performed as in the standard RLNC case. This is
+    typcally useful in cases where the block size is very high since the density
+    can be reduced very significantly without any negative effect and at the
+    same time increase the decoding throughput significantly.
 
-* Variants where the coding vector is included (for recoding)
-* Variants where a seed is included
+Sparse RLNC with fixed density
+    A fixed number of symbols are combined at random. This is typically used in
+    cases where feedback from the decoder is possible which allows the coding at
+    the encoder to be tuned to the state of the decoder.
 
-Other Codes and Approaches
-~~~~~~~~~~~~~~~~~~~~~~~~~~
-We also support some other coding types:
+Seed RLNC
+    Instead of sending the full coding vector a small seed used to generate the
+    coding vector can be sent. This reduces the overhead but makes recoding
+    difficult and in some cases impossible, so this is typically used when
+    recoding is not necessary or used very sparingly.
 
-* Random Annex overlay code
-* Reed-Solomon code
-* Carousel code (round robin scheduling of symbols)
+
+Other Code Variants and Approaches
+..................................
+
+Other supported codes and approches:
+
+Reed-Solomon code
+    Traditional RS-code which does not support recoding.
+
+Carousel code
+    Also called a repetition code, the data is simply transmitted in a round
+    robin fashion.
+
+Random Annex overlay code
+    Enables mixing of several generations. Through the use of multistage
+    decoding this techniques can offer increased decoding throughput at the cost
+    of increased decoding delay.
+
+
 
 Platforms
 ---------
-Kodo is a plain C++ library so it is portable to a wide range of platforms.
+
+Kodo is written in C++ library so it is portable to a wide range of platforms.
 To ensure that we do not break compatibility with a supported platform we
 have a buildbot instance building the Kodo libraries. You can check the
 status on the `Steinwurf Buildbot`_ page.
@@ -94,7 +129,6 @@ platforms and compilers we are currently testing. If you have a specific
 platform or compiler which you would like to see Kodo support, `drop us a line`_.
 
 .. _drop us a line: http://steinwurf.com/contact-us/
-
 
 
 
