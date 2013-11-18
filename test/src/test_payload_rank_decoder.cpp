@@ -41,6 +41,11 @@ namespace kodo
                     return m_max_payload_size;
                 }
 
+                uint32_t max_rank_size() const
+                {
+                    return sizeof(rank_type);
+                }
+
                 uint32_t m_max_payload_size;
             };
 
@@ -60,6 +65,11 @@ namespace kodo
             uint32_t payload_size() const
             {
                 return m_payload_size;
+            }
+
+            uint32_t rank_size() const
+            {
+                return sizeof(rank_type);
             }
 
             uint8_t *m_payload;

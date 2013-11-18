@@ -35,24 +35,25 @@ namespace kodo
             m_remote_rank = 0;
         }
 
-        /// Reads the rank of the encoder from the payload buffer
-        /// @param payload The payload buffer
-        /// @return The amount of bytes read
-        uint32_t read_rank(uint8_t* payload)
+        /// Reads rank information from the provided buffer
+        ///
+        /// @note The buffer used must have at least the size reported
+        /// by the rank_info::rank_size() function.
+        ///
+        /// @param buffer The buffer containing the rank
+        void read_rank(const uint8_t* buffer)
         {
-            assert(payload != 0);
+            assert(buffer != 0);
 
-            // Write the encoder rank to the payload
+            // Read the rank from the payload
             rank_type remote_rank =
-                sak::big_endian::get<rank_type>(payload);
+                sak::big_endian::get<rank_type>(buffer);
 
             // We set the maximum rank of the previously seen and the
             // newly received. Re-ordering of packets might cause a
             // the remote rank to be lower than what has previously
             // been seen
             m_remote_rank = std::max(remote_rank, m_remote_rank);
-
-            return sizeof(rank_type);
         }
 
         /// @return The rank of the encoder as read from the packet

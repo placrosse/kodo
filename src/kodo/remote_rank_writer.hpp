@@ -29,7 +29,7 @@ namespace kodo
         /// @note The buffer used must have at least the size reported
         /// by the rank_info::rank_size() function.
         ///
-        /// @param payload The buffer where the rank should be written
+        /// @param buffer The buffer where the rank should be written
         void write_rank(uint8_t* buffer)
         {
             assert(buffer != 0);
