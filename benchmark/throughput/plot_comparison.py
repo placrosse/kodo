@@ -104,7 +104,7 @@ def plot(args):
                 ps.set_plot_details(p, buildername)
                 pl.ylabel("Throughput gain [\%]")
                 pl.xticks(list(sp.unique(group['symbols'])))
-                pl.savefig(PATH_BRANCH + "/sparse/" + buildername + '.eps')
+                pl.savefig(PATH_BRANCH + "/sparse/" + buildername + "." + args.format)
                 pdf[branch].savefig(transparent=True)
 
             for key, g in dense:
@@ -114,7 +114,7 @@ def plot(args):
                 ps.set_plot_details(p, buildername)
                 pl.ylabel("Throughput gain [\%]")
                 pl.xticks(list(sp.unique(group['symbols'])))
-                pl.savefig(PATH_BRANCH + "/dense/" + buildername + '.eps')
+                pl.savefig(PATH_BRANCH + "/dense/" + buildername + "." + args.format)
                 pdf[branch].savefig(transparent=True)
 
     for p in pdf:
@@ -130,6 +130,10 @@ if __name__ == '__main__':
     parser.add_argument(
         '--days', dest='days', type=int, action='store', default=3,
         help='How many days to look back in time when comparing')
+    parser.add_argument(
+        '--output-format', dest='format', action='store', default='eps',
+        help='The format of the generated figures, e.g. eps, pdf')
+
 
     args = parser.parse_args()
     plot(args)
