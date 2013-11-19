@@ -64,7 +64,7 @@ def plot(args):
         p.set_yscale('log')
         pl.ylabel("Overhead [\%]")
         pl.xticks(list(sp.unique(group['symbols'])))
-        pl.savefig(PATH + "sparse/" + buildername + '.eps')
+        pl.savefig(PATH + "sparse/" + buildername + "." + args.format)
         pdf.savefig(transparent=True)
 
     for (buildername,symbols), group in dense:
@@ -75,7 +75,7 @@ def plot(args):
         p.set_yscale('log')
         pl.ylabel("Overhead [\%]")
         pl.xticks(list(sp.unique(group['symbols'])))
-        pl.savefig(PATH + "sparse/" + buildername + '.eps')
+        pl.savefig(PATH + "sparse/" + buildername + "." + args.format)
         pdf.savefig(transparent=True)
 
     pdf.close()
@@ -90,6 +90,9 @@ if __name__ == '__main__':
         help='the .json file written by gauge benchmark, if non provided plots \
         from the database',
         default="")
+    parser.add_argument(
+        '--output-format', dest='format', action='store', default='eps',
+        help='The format of the generated figures, e.g. eps, pdf')
 
     args = parser.parse_args()
 
