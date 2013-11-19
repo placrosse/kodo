@@ -64,7 +64,7 @@ def plot(args):
         pl.ylabel("Throughput" + " [" + list(group['unit'])[0] + "]")
         pl.xticks(list(sp.unique(group['symbols'])))
         p.set_yscale('log')
-        pl.savefig(PATH + "sparse/" + buildername + '.eps')
+        pl.savefig(PATH + "sparse/" + buildername + "." + args.format)
         pdf.savefig(transparent=True)
 
     for (buildername,symbols), group in dense:
@@ -75,7 +75,7 @@ def plot(args):
         pl.ylabel("Throughput" + " [" + list(group['unit'])[0] + "]")
         pl.xticks(list(sp.unique(group['symbols'])))
         p.set_yscale('log')
-        pl.savefig(PATH + "dense/"+ buildername + '.eps')
+        pl.savefig(PATH + "dense/"+ buildername + "." + args.format)
         pdf.savefig(transparent=True)
 
     pdf.close()
@@ -91,6 +91,9 @@ if __name__ == '__main__':
         '--coder', dest='coder', action='store', choices=['encoder','decoder'],
         default='decoder',
         help='Whether to consider the encoding or decoding performance')
+    parser.add_argument(
+        '--output-format', dest='format', action='store', default='eps',
+        help='The format of the generated figures, e.g. eps, pdf')
 
 
     args = parser.parse_args()
