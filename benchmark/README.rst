@@ -3,7 +3,7 @@ Benchmarks
 This folder and it's sub-folders contain all necessary binaries and scripts to
 
 * run and plot benchmarks of Kodo on your local machine
-* plot benchmarks from Steinwurfs benchmark database
+* plot benchmarks from Steinwurf's benchmark database
 
 Scripts for plotting database results are located in their respective benchmark
 folders. E.g., to see plots related to throughput, go to ``throughput`` folder
