@@ -30,12 +30,6 @@ namespace kodo
     {
     public:
 
-        /// @copydoc layer::field_type
-        typedef typename SuperCoder::field_type field_type;
-
-        /// @copydoc layer::value_type
-        typedef typename SuperCoder::value_type value_type;
-
         /// The symbol count type
         typedef typename systematic_base_coder::counter_type
             counter_type;
@@ -116,7 +110,6 @@ namespace kodo
             sak::big_endian::put<counter_type>(
                 next_symbol, symbol_header + sizeof(flag_type));
 
-            /// @todo consider if the systematic packets are not added in-order
             SuperCoder::encode_symbol(symbol_data, next_symbol);
 
             return sizeof(flag_type) + sizeof(counter_type);
