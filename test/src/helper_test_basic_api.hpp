@@ -10,6 +10,9 @@
 #include <kodo/has_systematic_encoder.hpp>
 #include <kodo/set_systematic_off.hpp>
 
+#include <kodo/has_rank.hpp>
+#include <kodo/rank.hpp>
+
 template<class Encoder, class Decoder>
 inline void test_basic_api(uint32_t symbols, uint32_t symbol_size)
 {

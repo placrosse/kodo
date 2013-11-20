@@ -38,17 +38,28 @@ namespace kodo
     namespace
     {
 
+        template<class SuperCoder>
+        struct dummy_layer : public SuperCoder
+        {
+            uint32_t rank() const
+            {
+                return SuperCoder::symbols();
+            }
+        };
+
+
         template<class Field>
         class plain_uniform_stack
             : public plain_symbol_id_reader<
                      plain_symbol_id_writer<
                      uniform_generator<
                      coefficient_info<
+                     dummy_layer<
                      storage_block_info<
                      finite_field_info<Field,
                      final_coder_factory<
                      plain_uniform_stack<Field>
-                         > > > > > > >
+                         > > > > > > > >
         { };
 
         template<class Field>
@@ -57,13 +68,14 @@ namespace kodo
                      reed_solomon_symbol_id_writer<
                      vandermonde_matrix<
                      coefficient_info<
+                     dummy_layer<
                      storage_block_info<
                      encode_symbol_tracker<
                      finite_field_math<typename fifi::default_field<Field>::type,
                      finite_field_info<Field,
                      final_coder_factory<
                      rs_vandermond_nonsystematic_stack<Field>
-                         > > > > > > > > >
+                         > > > > > > > > > >
         { };
     }
 }

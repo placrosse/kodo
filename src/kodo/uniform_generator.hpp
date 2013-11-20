@@ -10,6 +10,8 @@
 #include <boost/random/mersenne_twister.hpp>
 #include <boost/random/uniform_int_distribution.hpp>
 
+#include <fifi/fifi_utils.hpp>
+
 namespace kodo
 {
 
@@ -46,8 +48,6 @@ namespace kodo
         void generate(uint8_t *coefficients)
         {
             assert(coefficients != 0);
-            /// @todo: Enable this
-            // assert(SuperCoder::rank() == SuperCoder::symbols());
 
             uint32_t size = SuperCoder::coefficient_vector_size();
             for(uint32_t i = 0; i < size; ++i)
