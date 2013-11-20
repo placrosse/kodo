@@ -55,3 +55,8 @@ local.properties
 *.opensdf
 *.log
 VSProjects
+
+# Benchmark output
+figures_database
+figures_database_detailed
+figures_local
