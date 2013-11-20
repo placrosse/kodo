@@ -218,7 +218,7 @@ As a developer you may choose to implement a Finite Field layer if you
 wish to:
 
 * Implement new algorithms for computations in finite fields (however
-you should consider whether this would fit better into the fifi library).
+  you should consider whether this would fit better into the fifi library).
 * Implement statistics of the number of finite field operations.
 
 Factory API

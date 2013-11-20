@@ -3,19 +3,17 @@ Kodo Dependencies
 
 .. _sourcecode:
 
-
-
 Obtain a License for Kodo
 -------------------------
 
-Before you download or use Kodo **you MUST obtain a valid license**. 
+Before you download or use Kodo **you MUST obtain a valid license**.
 This can be done by filling out the license request form_.
 
 .. _form: http://steinwurf.com/license/
 
 
 Download the Kodo Source Code
-----------------------------
+-----------------------------
 
 There are several ways in which you may get the Kodo library and its
 dependencies. Which approach you prefer might depend on your intended
@@ -27,7 +25,7 @@ use-case for Kodo.
 2. If you wish to use Kodo in a separate project, possibly your own build
    tools. You may wish to download Kodo's dependencies as separate git
    repositories. For more information about this see the
-   section :ref:`using-kodo-in-your-application`.
+   section :ref:`including-kodo-in-your-application`.
 
 In the following we will only describe option 1 (using the Kodo buildscripts).
 
@@ -37,7 +35,7 @@ this it is also possible to download the library as either zip or tar.gz
 archive. We will describe both approaches in the following:
 
 Recommended: Clone the Git Repository
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 1. Create a suitable directory for the projects (optional)
 
@@ -83,7 +81,7 @@ A Waf project contains two types of files:
 Quick Start (Building Kodo Examples and Unit Tests)
 ---------------------------------------------------
 
-.. _getting_started:
+.. _quick-start:
 
 If you are primarily interested in quickly trying some Kodo examples
 or building the unit-tests, we have tried to make that really easy.
@@ -92,7 +90,7 @@ Provided that you have the :ref:`tools-needed` installed.
 .. note:: We recommend trying to build and run the unit-tests, before
           using Kodo in your own project. However, if you want to skip
           this step you may jump directly to
-          :ref:`using-kodo-in-your-application`
+          :ref:`including-kodo-in-your-application`
 
 
 1. Navigate to the directory containing the Kodo sources:
@@ -147,4 +145,3 @@ common changes you may want for you build.
   ::
 
     CXX=clang++ python waf configure --bundle=ALL --bundle-path=~/dev/bundle_dependencies
-
