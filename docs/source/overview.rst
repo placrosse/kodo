@@ -48,8 +48,8 @@ File encoder
     into generations.
 
 Zero copy API
-    The encoder and decoder can operate without copying the symbols from the user,
-    hence need additional memory is allocated to hold coded data by Kodo.
+    The encoder and decoder can operate directly on user provided buffers,
+    eliminating the need for costly data copies.
 
 Object pooling
     The library can re-use existing encoder and decoder instances to facilitate
@@ -60,10 +60,10 @@ Hardware optimized (on select hardware)
     various coding algorithms to provide the best performance.
 
 
-Random Linear Network Coding variants
-.....................................
+Random Linear Network Coding codecs
+...................................
 
-Kodo provides several different codes, primarily the standard Random Linear
+Kodo provides several different codecs, primarily the standard Random Linear
 Network Code (RLNC) and multiple RLNC-variants.
 
 Standard RLNC
@@ -89,23 +89,39 @@ Seed-based RLNC
     difficult and in some cases impossible. This is typically used when
     recoding is not necessary or used very sparingly.
 
+On-the-fly RLNC
+    Symbols can be encoded as they are made available and data is released from
+    the decoder as decoding progresses. This is different from traditional block
+    codes where all data has to be available before encoding or decoding takes
+    place.
+    This codec is well suited for low-delay services such as messaging, voice
+    over IP or video streaming.
 
-Other code variants and approaches
-..................................
+
+Other codecs and approaches
+...........................
 
 Other supported codes and approaches:
 
 Reed-Solomon code
-    Traditional RS-code which does not support recoding.
+    Traditional Reed-Solomon (RS) code which does not support recoding. The
+    current implementation uses a systematic Vandermonde matrix as described in
+    `RFC 5510 <http://tools.ietf.org/html/rfc5510>`_.
 
 Carousel code
     Also called a repetition code, the data is simply transmitted in a
-    round-robin fashion.
+    round-robin fashion. This code is mostly useful for simulation purposes and
+    performance evaluations. Furthermore it can be used to provide the Compact
+    No-Code scheme described in
+    `RFC 5445 <http://tools.ietf.org/html/rfc5445>`_.
 
 Random Annex overlay code
     Enables mixing of several generations. By using multi-stage decoding,
-    this technique can offer increased decoding throughput at the cost
-    of increased decoding delay.
+    this technique can offer increased decoding throughput at the cost of
+    increased decoding delay.
+    The Random Annex code is useful in scenarios where large objects needs to be
+    transmitted in a feedback constrained system (feedback is expensive or
+    impossible) and where using a single large generation is not feasible.
 
 
 Platforms
@@ -117,7 +133,7 @@ our build system automatically builds and runs the unit tests from Kodo
 and the related libraries. You can check the status on the
 `Steinwurf Buildbot`_ page.
 
-.. _Steinwurf Buildbot: http://buildbot.steinwurf.dk:12344
+.. _Steinwurf Buildbot: http://buildbot.steinwurf.dk
 
 .. note:: The buildbot is used for several different projects. The
   Kodo project can be found in the overview on the main page.
