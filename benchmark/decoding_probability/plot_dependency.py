@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 """
 Copyright Steinwurf ApS 2011-2013.
 Distributed under the "STEINWURF RESEARCH LICENSE 1.0".
@@ -75,7 +76,7 @@ def plot(args):
         pl.xticks( symbols-2**sp.arange(sp.log2(symbols))[::-1] ,
             2**sp.arange(sp.log2(symbols),dtype=int)[::-1])
         pl.grid('on')
-        pl.savefig(PATH + "sparse/" + buildername + str(symbols) + '.eps')
+        pl.savefig(PATH + "sparse/" + buildername + str(symbols) + "." + args.format)
         pdf.savefig(transparent=True)
 
     for (buildername, symbol_size, symbols), group in dense:
@@ -96,7 +97,7 @@ def plot(args):
         pl.xticks( symbols-2**sp.arange(sp.log2(symbols))[::-1],
             2**sp.arange(sp.log2(symbols),dtype=int)[::-1])
         pl.grid('on')
-        pl.savefig(PATH + "dense/" + buildername + str(symbols) + '.eps')
+        pl.savefig(PATH + "dense/" + buildername + str(symbols) + "." + args.format)
         pdf.savefig(transparent=True)
 
     pdf.close()
@@ -111,6 +112,9 @@ if __name__ == '__main__':
         help='the .json file written by gauge benchmark, if non provided plots \
         from the database',
         default="")
+    parser.add_argument(
+        '--output-format', dest='format', action='store', default='eps',
+        help='The format of the generated figures, e.g. eps, pdf')
 
     args = parser.parse_args()
 

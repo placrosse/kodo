@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 """
 Copyright Steinwurf ApS 2011-2013.
 Distributed under the "STEINWURF RESEARCH LICENSE 1.0".
@@ -23,13 +24,13 @@ yesterday = today - timedelta(1)
 
 def plot(args):
     if args.jsonfile:
-        PATH  = ("figures_local/")
+        PATH  = ("figures_local/" + args.coder + "/")
         df = pd.read_json(args.jsonfile)
         df['buildername'] = "local"
     else:
-        PATH  = ("figures_database/")
+        PATH  = ("figures_database/" + args.coder + "/")
         query = {
-        "type": "decoder",
+        "type": args.coder,
         "branch" : "master",
         "scheduler": "kodo-nightly-benchmark",
         "utc_date" : {"$gte": yesterday, "$lt": today}
@@ -64,7 +65,7 @@ def plot(args):
         pl.ylabel("Throughput" + " [" + list(group['unit'])[0] + "]")
         pl.xticks(list(sp.unique(group['symbols'])))
         p.set_yscale('log')
-        pl.savefig(PATH + "sparse/" + buildername + '.eps')
+        pl.savefig(PATH + "sparse/" + buildername + "." + args.format)
         pdf.savefig(transparent=True)
 
     for (buildername,symbols), group in dense:
@@ -75,7 +76,7 @@ def plot(args):
         pl.ylabel("Throughput" + " [" + list(group['unit'])[0] + "]")
         pl.xticks(list(sp.unique(group['symbols'])))
         p.set_yscale('log')
-        pl.savefig(PATH + "dense/"+ buildername + '.eps')
+        pl.savefig(PATH + "dense/"+ buildername + "." + args.format)
         pdf.savefig(transparent=True)
 
     pdf.close()
@@ -87,6 +88,14 @@ if __name__ == '__main__':
         help='the .json file written by gauge benchmark, if non provided plots \
         from the database',
         default="")
+    parser.add_argument(
+        '--coder', dest='coder', action='store', choices=['encoder','decoder'],
+        default='decoder',
+        help='Whether to consider the encoding or decoding performance')
+    parser.add_argument(
+        '--output-format', dest='format', action='store', default='eps',
+        help='The format of the generated figures, e.g. eps, pdf')
+
 
     args = parser.parse_args()
     plot(args)
