@@ -1,7 +1,7 @@
 .. _including-kodo-in-your-application:
 
 Including Kodo in Your Application
-==============================
+==================================
 In the following we will describe what you need to do to include Kodo in your
 application / project.
 
