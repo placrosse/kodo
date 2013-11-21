@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 """
 Copyright Steinwurf ApS 2011-2013.
 Distributed under the "STEINWURF RESEARCH LICENSE 1.0".
@@ -57,8 +58,8 @@ def plot(args):
 
     branches = list(sp.unique(df_all['branch']))
     if len(branches) == 1:
-        print("Only recent benchmarks for the master branch in the database, no \
-            plots will be generated")
+        print("Only recent benchmarks for the master branch in the database, "
+              "no plots will be generated.")
 
     pdf = {}
     for branch in branches:
