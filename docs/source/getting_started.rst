@@ -6,7 +6,7 @@ Getting Started
 Obtain a License for Kodo
 -------------------------
 Before you download or use Kodo you **MUST** first obtain a valid license.
-Please note, you own all your changes, you just accept to only use the code
+Please note that you own all your changes; you just accept to only use the code
 for research and educational purposes.
 If you need to include Kodo in a commercial product you should obtain the
 commercial license instead. Both licenses can be aquired by filling out the
