@@ -20,8 +20,8 @@ protocols and systems and for research on implementation of Network Codes.
 * `API Specification`_
 
 .. _Kodo Source Code: https://github.com/steinwurf/kodo
-.. _Build and Test Status: http://176.28.49.184:12344
-.. _API Specification: http://176.28.49.184:12344/doxygen/kodo/
+.. _Build and Test Status: http://buildbot.steinwurf.dk
+.. _API Specification: http://buildbot.steinwurf.dk/doxygen/kodo/
 
 .. The library enables researchers to implement new codes and algorithms,
 .. perform simulations, and benchmark the coding operations on any platform
@@ -48,14 +48,4 @@ Documentation
    howto
    misc
    c_bindings
-
-
    contribution/contribution
-
-
-
-
-
-
-
-

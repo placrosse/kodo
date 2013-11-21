@@ -20,17 +20,17 @@ For receipt of which I acknowledge, I, |DEVELOPER_NAME|, hereby transfer to |ORG
 
 5. I understand and agree that this work and the contribution are public and that a record of the contribution (including all personal information I submit with it) is maintained indefinitely and may be redistributed consistent with this work or the license(s) involved.
 
-\
-\
-\
-\
+|
+|
+|
+|
 
 |DEVELOPER_NAME|
 
 ----
 
-\
-\
+|
+|
 
 For |ORGANIZATION_FULL|
 
@@ -38,4 +38,4 @@ CEO Janus Heide
 
 ----
 
-\
+|

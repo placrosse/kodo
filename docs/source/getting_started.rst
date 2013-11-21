@@ -3,6 +3,17 @@
 Getting Started
 ===============
 
+Obtain a License for Kodo
+-------------------------
+Before you download or use Kodo you **MUST** first obtain a valid license.
+Please note that you own all your changes; you just accept to only use the code
+for research and educational purposes.
+If you need to include Kodo in a commercial product you should obtain the
+commercial license instead. Both licenses can be aquired by filling out the
+license request form_.
+
+.. _form: http://steinwurf.com/license/
+
 .. _tools-needed:
 
 Tools Needed
@@ -22,7 +33,7 @@ that you also install the following:
    build system.
 
 .. _waf: https://code.google.com/p/waf/
-.. _Steinwurf Buildbot: http://176.28.49.184:12344
+.. _Steinwurf Buildbot: http://buildbot.steinwurf.dk
 
 
 In the following we will provide the links for installing the tools on
@@ -178,7 +189,7 @@ Provided that you have the `Tools Needed`_ installed.
 
 .. note:: We recommend trying to build and run the unit tests before
           using Kodo in your own project. However, if you want to skip
-          this step you may jump directly to :ref:`using-kodo-in-your-application`
+          this step you may jump directly to :ref:`including-kodo-in-your-application`
 
 
 1. Navigate to the directory where you have downloaded the Kodo source code:
@@ -214,7 +225,7 @@ Provided that you have the `Tools Needed`_ installed.
              the speed of your Internet connection. This would be a
              good time to grab a coffee or similar while the dependencies are
              downloaded. If you do not have an Internet connection you can see
-             the :ref:`using-kodo-in-your-application` section which shows how
+             the :ref:`including-kodo-in-your-application` section which shows how
              to manually download and specify the Kodo dependencies.
 
    .. note:: If you downloaded the library as a zip archive and you have not

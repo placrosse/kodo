@@ -12,7 +12,6 @@ We require this in order to maintain clear title to the Kodo code and prevent th
 
 See **ASSIGNEMENT.rst** or **SIGNOFF.rst**, and **LICENSE.rst** (all of which are appended at the end of this page) and the following description.
 
-
 Prepare Your Code
 -----------------
 
@@ -37,13 +36,9 @@ b. Whenever you make a pull request you must add a signoff line as the last line
 
 ::
 
-
    Signed-off-to-Steinwurf-by: Developer Name <developername@example.org>
 
-
 .. include:: SIGNOFF.rst
-
-
 
 Assignment
 ----------
@@ -60,9 +55,6 @@ The copyright assignment is the permanent solution if you which to contribute cu
 #. Email to copyright@steinwurf.com.
 #. Store the returned signed document for your records.
 
-
-
-
 .. include:: ASSIGNMENT.rst
 
 
@@ -71,6 +63,5 @@ The copyright assignment is the permanent solution if you which to contribute cu
 .. include:: ../../../LICENSE.rst
 
 ----
-
 
 .. include:: contributors.rst

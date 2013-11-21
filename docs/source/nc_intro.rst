@@ -1,5 +1,5 @@
 Introduction to Network Coding
-==========
+==============================
 
 .. _nc_intro:
 
@@ -17,7 +17,7 @@ input packets into one coded packet, instead of simple forwarding.
 
 
 Overview of Random Linear Network Coding (RLNC)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 The figure below gives a basic overview of the operations performed in a
 network coding system. If you intend to encode a large file then it should
 be split into several blocks, also called generations each consisting
