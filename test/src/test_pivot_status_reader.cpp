@@ -25,8 +25,37 @@ namespace kodo
         // pivot_status_reader layer.
         struct dummy_layer
         {
+        public:
 
             typedef uint32_t rank_type;
+
+        public:
+
+            struct factory
+            {
+
+                factory(uint32_t max_symbols, uint32_t max_symbol_size)
+                    : m_max_symbols(max_symbols),
+                      m_max_symbol_size(max_symbol_size)
+                { }
+
+                uint32_t max_symbols() const
+                {
+                    return m_max_symbols;
+                }
+
+                uint32_t symbols() const
+                {
+                    return m_symbols;
+                }
+
+                uint32_t m_max_symbols;
+                uint32_t m_max_symbol_size;
+                uint32_t m_symbols;
+
+            };
+
+        public:
 
             template<class Factory>
             void construct(Factory& the_factory)
@@ -41,25 +70,6 @@ namespace kodo
             }
         };
 
-        struct dummy_factory
-        {
-
-            uint32_t max_symbols() const
-            {
-                return m_max_symbols;
-            }
-
-            uint32_t symbols() const
-            {
-                return m_symbols;
-            }
-
-            uint32_t m_max_symbols;
-            uint32_t m_symbols;
-
-        };
-
-
         // Instantiate a stack containing the pivot_status_reader
         class dummy_stack
             : public pivot_status_reader<
@@ -73,9 +83,8 @@ TEST(TestPivotStatusReader, api)
 {
 
     kodo::dummy_stack stack;
-    kodo::dummy_factory factory;
+    kodo::dummy_stack::factory factory(10, 100);
 
-    factory.m_max_symbols = 10;
     factory.m_symbols = 9;
 
     stack.construct(factory);

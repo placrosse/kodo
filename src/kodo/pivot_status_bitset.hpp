@@ -10,6 +10,8 @@
 #include <functional>
 #include <boost/dynamic_bitset.hpp>
 
+#include <sak/ceil_division.hpp>
+
 namespace kodo
 {
 
@@ -31,6 +33,29 @@ namespace kodo
 
     public:
 
+        /// The factory layer
+        class factory : public SuperCoder::factory
+        {
+        public:
+
+            /// @copydoc layer::factory::factory(uint32_t,uint32_t)
+            factory(uint32_t max_symbols, uint32_t max_symbol_size)
+                : SuperCoder::factory(max_symbols, max_symbol_size)
+            { }
+
+            /// @todo test
+            /// @copydoc layer::factory::max_pivot_status_size() const
+            uint32_t max_pivot_status_size() const
+            {
+                // Assuming we will use one bit per pivot element here and that
+                // a byte is 8 bit :)
+                return sak::ceil_division(
+                    SuperCoder::factory::max_symbols(), 8);
+            }
+        };
+
+    public:
+
         /// @copydoc layer::construct(Factory&)
         template<class Factory>
         void construct(Factory& the_factory)
@@ -38,6 +63,8 @@ namespace kodo
             SuperCoder::construct(the_factory);
 
             m_pivot_status.resize(the_factory.max_symbols(), false);
+
+            assert(pivot_status_size() <= the_factory.max_pivot_status_size());
         }
 
         /// @copydoc layer::initialize(Factory&)
@@ -48,6 +75,8 @@ namespace kodo
 
             m_pivot_status.resize(the_factory.symbols());
             m_pivot_status.reset();
+
+            assert(pivot_status_size() <= the_factory.max_pivot_status_size());
         }
 
         /// @return The size in bytes of decoder status vector
