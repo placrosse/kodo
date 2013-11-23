@@ -41,10 +41,6 @@ namespace kodo
                // Symbol ID API
                plain_symbol_id_reader<
                // Decoder API
-                   debug_linear_block_decoder<
-                   debug_cached_symbol_decoder< // <-- Debug layer
-                   cached_symbol_decoder<       // <-- Access to decoding symbols
-
                aligned_coefficients_decoder<
                forward_linear_block_decoder<
                pivot_status_writer<
@@ -66,7 +62,7 @@ namespace kodo
                final_coder_factory_pool<
                // Final type
                sliding_window_decoder<Field>
-                   > > > > > > > > > > > > > > > > > > > > > > > > > > > >
+                   > > > > > > > > > > > > > > > > > > > > > > > > >
     { };
 
 }

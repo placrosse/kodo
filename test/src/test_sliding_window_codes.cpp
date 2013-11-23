@@ -1,8 +1,7 @@
-// Copyright Steinwurf ApS 2011-2012.
+// Copyright Steinwurf ApS 2011-2013.
 // Distributed under the "STEINWURF RESEARCH LICENSE 1.0".
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
-
 
 /// @file test_sliding_window_codes.cpp Unit tests for the full
 ///       vector codes (i.e. Network Coding encoders and decoders).
@@ -31,94 +30,52 @@ TEST(TestSlidingWindowCodes, test_basic_api)
         kodo::sliding_window_decoder>();
 }
 
+/// Test that the encoders and decoders initialize() function can be used
+/// to reset the state of an encoder and decoder and that they therefore
+/// can be safely reused.
+TEST(TestSlidingWindwoCodes, test_initialize)
+{
+    test_initialize<kodo::sliding_window_encoder,
+        kodo::sliding_window_decoder>();
+}
 
+/// Tests that an encoder producing systematic packets is handled
+/// correctly in the decoder.
+TEST(TestSlidingWindowCodes, test_systematic)
+{
+    test_systematic<kodo::sliding_window_encoder,
+        kodo::sliding_window_decoder>();
+}
 
-// /// Test that the encoders and decoders initialize() function can be used
-// /// to reset the state of an encoder and decoder and that they therefore
-// /// can be safely reused.
-// TEST(TestRlncFullVectorCodes, test_initialize)
-// {
-//     test_initialize<kodo::full_rlnc_encoder_shallow,
-//         kodo::full_rlnc_decoder>();
+/// Tests whether mixed un-coded and coded packets are correctly handled
+/// in the encoder and decoder.
+TEST(TestSlidingWindowCodes, mix_uncoded)
+{
+    test_mix_uncoded<kodo::sliding_window_encoder,
+        kodo::sliding_window_decoder>();
+}
 
-//     test_initialize<kodo::full_rlnc_encoder,
-//         kodo::full_rlnc_decoder>();
+/// The recoding
+TEST(TestSlidingWindowCodes, test_recoders_api)
+{
+    test_recoders<kodo::sliding_window_encoder,
+        kodo::sliding_window_decoder>();
+}
 
-//     // The delayed decoders
-//     test_initialize<kodo::full_rlnc_encoder,
-//         kodo::full_rlnc_decoder_delayed>();
-
-// }
-
-// /// Tests that an encoder producing systematic packets is handled
-// /// correctly in the decoder.
-// TEST(TestRlncFullVectorCodes, test_systematic)
-// {
-//     test_systematic<kodo::full_rlnc_encoder,
-//         kodo::full_rlnc_decoder>();
-
-//     test_systematic<kodo::full_rlnc_encoder,
-//         kodo::full_rlnc_decoder_delayed>();
-// }
-
-// /// Tests whether mixed un-coded and coded packets are correctly handled
-// /// in the encoder and decoder.
-// TEST(TestRlncFullVectorCodes, mix_uncoded)
-// {
-//     test_mix_uncoded<kodo::full_rlnc_encoder,
-//         kodo::full_rlnc_decoder>();
-
-//     test_mix_uncoded<kodo::full_rlnc_encoder,
-//         kodo::full_rlnc_decoder_delayed>();
-// }
-
-// /// The recoding
-// TEST(TestRlncFullVectorCodes, test_recoders_api)
-// {
-
-//     test_recoders<kodo::full_rlnc_encoder,
-//         kodo::full_rlnc_decoder>();
-
-//     test_recoders<kodo::full_rlnc_encoder,
-//         kodo::full_rlnc_decoder_delayed>();
-
-//     test_recoders<kodo::full_rlnc_encoder,
-//         kodo::full_rlnc_decoder_delayed_shallow>();
-
-// }
-
-// /// The recoding
-// TEST(TestRlncFullVectorCodes, test_recoding_relay)
-// {
-
-//     test_recoding_relay<kodo::full_rlnc_encoder,
-//         kodo::full_rlnc_decoder>();
-
-//     test_recoding_relay<kodo::full_rlnc_encoder,
-//         kodo::full_rlnc_decoder_delayed>();
-
-//     test_recoding_relay<kodo::full_rlnc_encoder,
-//         kodo::full_rlnc_decoder_delayed_shallow>();
-
-// }
+/// The recoding
+TEST(TestSlidingWindowCodes, test_recoding_relay)
+{
+    test_recoding_relay<kodo::sliding_window_encoder,
+        kodo::sliding_window_decoder>();
+}
 
 /// Tests the basic API functionality this mean basic encoding
 /// and decoding
-// TEST(TestRlncFullVectorCodes, test_reuse_api)
-// {
-//     test_reuse<
-//         kodo::full_rlnc_encoder_shallow,
-//         kodo::full_rlnc_decoder>();
-
-//     test_reuse<
-//         kodo::full_rlnc_encoder,
-//         kodo::full_rlnc_decoder>();
-
-//     // The delayed decoders
-//     test_reuse<
-//         kodo::full_rlnc_encoder,
-//         kodo::full_rlnc_decoder_delayed>();
-// }
+TEST(TestSlidingWindowCodes, test_reuse_api)
+{
+    test_reuse<kodo::sliding_window_encoder,
+        kodo::sliding_window_decoder>();
+}
 
 /// Tests the basic API functionality this mean basic encoding
 /// and decoding

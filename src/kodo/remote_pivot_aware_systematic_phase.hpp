@@ -31,12 +31,10 @@ namespace kodo
         {
             if(single_symbol_available())
             {
-                std::cout << "in: True" << std::endl;
                 return true;
             }
             else
             {
-                std::cout << "in: False" << std::endl;
                 return SuperCoder::in_systematic_phase();
             }
         }
@@ -46,7 +44,6 @@ namespace kodo
         {
             if(single_symbol_available())
             {
-                std::cout << "next: True" << std::endl;
                 uint32_t next_symbol = 0;
                 bool next_symbol_found = false;
 
@@ -71,7 +68,6 @@ namespace kodo
             }
             else
             {
-                std::cout << "next: False" << std::endl;
                 return SuperCoder::next_systematic_symbol();
             }
 
@@ -79,6 +75,7 @@ namespace kodo
 
     protected:
 
+        /// @todo docs
         bool single_symbol_available() const
         {
             return SuperCoder::remote_rank() + 1 == SuperCoder::rank();
