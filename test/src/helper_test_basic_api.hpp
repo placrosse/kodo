@@ -9,6 +9,18 @@
 
 #include <kodo/has_systematic_encoder.hpp>
 #include <kodo/set_systematic_off.hpp>
+#include <kodo/write_feedback.hpp>
+#include <kodo/read_feedback.hpp>
+#include <kodo/feedback_size.hpp>
+#include <kodo/set_systematic_off.hpp>
+
+#include <kodo/has_debug_linear_block_decoder.hpp>
+#include <kodo/print_decoder_state.hpp>
+
+#include <kodo/has_print_cached_symbol_coefficients.hpp>
+#include <kodo/print_cached_symbol_coefficients.hpp>
+
+
 
 #include <kodo/has_rank.hpp>
 #include <kodo/rank.hpp>
@@ -52,6 +64,22 @@ inline void test_basic_api(uint32_t symbols, uint32_t symbol_size)
     // Encode/decode operations
     EXPECT_EQ(encoder->payload_size(), decoder->payload_size());
 
+    EXPECT_EQ((uint32_t)kodo::has_write_feedback<Decoder>::value,
+              (uint32_t)kodo::has_read_feedback<Encoder>::value);
+
+    uint32_t feedback_size = 0;
+
+    if(kodo::has_write_feedback<Decoder>::value)
+    {
+        EXPECT_EQ(kodo::feedback_size(encoder),
+                  kodo::feedback_size(decoder));
+
+        feedback_size = kodo::feedback_size(encoder);
+        EXPECT_TRUE(feedback_size > 0);
+    }
+
+    std::vector<uint8_t> feedback(feedback_size);
+
     std::vector<uint8_t> payload(encoder->payload_size());
 
     std::vector<uint8_t> data_in = random_vector(encoder->block_size());
@@ -83,8 +111,8 @@ inline void test_basic_api(uint32_t symbols, uint32_t symbol_size)
     encoder->set_symbols(storage_in_copy);
 
     // Set the encoder non-systematic
-    if(kodo::has_systematic_encoder<Encoder>::value)
-        kodo::set_systematic_off(encoder);
+   if(kodo::has_systematic_encoder<Encoder>::value)
+       kodo::set_systematic_off(encoder);
 
     while( !decoder->is_complete() )
     {
@@ -92,6 +120,29 @@ inline void test_basic_api(uint32_t symbols, uint32_t symbol_size)
         EXPECT_TRUE(payload_used <= encoder->payload_size());
 
         decoder->decode( &payload[0] );
+
+        if(kodo::has_write_feedback<Decoder>::value)
+        {
+            uint32_t written = kodo::write_feedback(decoder, &feedback[0]);
+            EXPECT_TRUE(written > 0);
+
+            // Pass to the encoder
+            kodo::read_feedback(encoder, &feedback[0]);
+        }
+
+        // if(kodo::has_print_cached_symbol_coefficients<Decoder>::value)
+        // {
+        //     kodo::print_cached_symbol_coefficients(decoder, std::cout);
+        //     std::cout << std::endl;
+        // }
+
+        // if(kodo::has_debug_linear_block_decoder<Decoder>::value)
+        // {
+        //     kodo::print_decoder_state(decoder, std::cout);
+        //     std::cout << std::endl;
+        // }
+
+
     }
 
     std::vector<uint8_t> data_out(decoder->block_size(), '\0');

@@ -36,7 +36,7 @@ namespace kodo
 
     public:
 
-        static const bool value = std::is_same<decltype(test<T>(0)),yes>::value;
+        enum { value = std::is_same<decltype(test<T>(0)),yes>::value };
     };
 
 }

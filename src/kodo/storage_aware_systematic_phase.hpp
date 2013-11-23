@@ -54,6 +54,8 @@ namespace kodo
         {
             assert(symbol_index < m_systematic_symbols_sent.size());
 
+            std::cout << "encode symbol " << symbol_index << std::endl;
+
             SuperCoder::encode_symbol(symbol_data, symbol_index);
 
             update_systematic_state(symbol_index);
@@ -63,6 +65,9 @@ namespace kodo
         /// are systematic packet to send) otherwise false
         bool in_systematic_phase() const
         {
+            std::cout << "in storage " << m_systematic_count <<
+                " rank " << SuperCoder::rank() << std::endl;
+
             // We know that there must be some systematic symbols to
             // send if the rank (denotes the number of symbols
             // available in the encoder matrix is larger than the
@@ -73,6 +78,8 @@ namespace kodo
         /// @return The index of the next symbol to be sent in a
         uint32_t next_systematic_symbol() const
         {
+            std::cout << "next storage" << std::endl;
+
             assert(in_systematic_phase());
 
             bool next_symbol_found = false;
