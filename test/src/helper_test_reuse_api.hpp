@@ -216,17 +216,17 @@ inline void test_reuse_incomplete(uint32_t symbols, uint32_t symbol_size)
             if (!do_complete && decoder->rank() == (symbols - 2))
                 break;
 
-if(kodo::has_print_cached_symbol_coefficients<Decoder>::value)
-{
-      kodo::print_cached_symbol_coefficients(decoder, std::cout);
-      std::cout << std::endl;
-}
+            // if(kodo::has_print_cached_symbol_coefficients<Decoder>::value)
+            // {
+            //     kodo::print_cached_symbol_coefficients(decoder, std::cout);
+            //     std::cout << std::endl;
+            // }
 
-if(kodo::has_debug_linear_block_decoder<Decoder>::value)
-{
-    kodo::print_decoder_state(decoder, std::cout);
-    std::cout << std::endl;
-}
+            // if(kodo::has_debug_linear_block_decoder<Decoder>::value)
+            // {
+            //     kodo::print_decoder_state(decoder, std::cout);
+            //     std::cout << std::endl;
+            // }
 
         }
 

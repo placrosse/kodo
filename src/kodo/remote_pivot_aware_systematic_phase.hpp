@@ -73,12 +73,42 @@ namespace kodo
 
         }
 
-    protected:
-
-        /// @todo docs
+        /// This function returns whether the encoder only has a single symbol
+        /// available not already at the decoder. Initially this function was
+        /// implemented as:
+        ///
+        ///    return SuperCoder::remote_rank() + 1 == SuperCoder::rank();
+        ///
+        /// However this is not sufficient if the decoder also
+        /// receives packets from another source. This function
+        /// therefore loops over all the local pivots and checks
+        /// whether it only has one pivot not seen by the deocder if
+        /// this is the case it returns that a single symbol is
+        /// available.
+        /// @return true if a single symbol is available.
         bool single_symbol_available() const
         {
-            return SuperCoder::remote_rank() + 1 == SuperCoder::rank();
+            uint32_t difference = 0;
+            for(uint32_t i = 0; i < SuperCoder::symbols(); ++i)
+            {
+                bool is_remote_pivot =
+                    SuperCoder::remote_is_symbol_pivot(i);
+
+                bool is_pivot = SuperCoder::is_symbol_pivot(i);
+
+                if(!is_remote_pivot && is_pivot)
+                {
+                    ++difference;
+                }
+
+                if(difference > 1)
+                {
+                    break;
+                }
+            }
+
+            return difference == 1;
+
         }
 
     };
