@@ -344,8 +344,18 @@ TEST(TestSlidingWindowSystematicEncoder, api)
     EXPECT_EQ(stack.m_systematic_index, 2U);
     EXPECT_EQ(stack.systematic_count(), 4U);
 
+    stack.m_is_symbol_pivot[5] = true;
 
+    // We now got a packet already at the decoder so we continue trying
+    // to send symbol 2
+    stack.reset();
 
+    stack.encode(&symbol[0], &header[0]);
+
+    EXPECT_FALSE(stack.m_encode_full);
+    EXPECT_TRUE(stack.m_encode_systematic);
+    EXPECT_EQ(stack.m_systematic_index, 2U);
+    EXPECT_EQ(stack.systematic_count(), 4U);
 }
 
 
