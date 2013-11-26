@@ -2,49 +2,49 @@
 
 Including Kodo in Your Application
 ==================================
-In the following we will describe what you need to do to include Kodo in your
+Following  sections describe what you need to do to include Kodo in your
 application / project.
 
 .. _kodo-dependencies:
 
 Kodo Dependencies
 -----------------
-In Kodo we rely on a number of external libraries, these must be available
+Kodo relies on a number of external libraries, these must be available
 in order to successfully compile an application including Kodo.
 
-The functionality used from these libraries are **header-only** which
-means that you only have to specify the correct includes paths to use
+The functionality used from these libraries is **header-only** which
+means that you only have to specify the correct include paths to use
 them. The libraries are:
 
 1. **Fifi**: this library contains
    finite field arithmetics used in ECC (Error Correcting Code) algorithms.
 
-   * http://github.com/steinwurf/fifi
+   https://github.com/steinwurf/fifi
 
 2. **Sak**: this library contains a few
    utility functions used in Kodo such as endian conversion.
 
-   * http://github.com/steinwurf/sak
+   https://github.com/steinwurf/sak
 
-3. **Boost** C++ libraries: this library contains wide range
-   of C++ utilities. We use only a subset of these functionalities such as
-   smart-pointers.
+3. **Boost** C++ libraries: this library contains a wide range
+   of C++ utilities. We use only a subset of this functionality, such as
+   smart pointers.
 
-   * http://github.com/steinwurf/external-boost-light
+   https://github.com/steinwurf/external-boost-light
 
-If you have tried to use the Kodo build scripts you will notice that these
-download a number of additional libraries. These libraries are
-only needed when/if you want to compile the Kodo unit-tests, examples or
+If you try to use the Kodo build scripts, you will notice that these will
+download some additional libraries. These libraries are
+only needed when/if you want to compile the Kodo unit tests, examples or
 benchmarks.
 
 4. **Waf-tools**: This repository contains additional tools used by
    our build system. These tools add functionality to waf which are
-   used e.g. by our continuous-integration build system.
+   used e.g. by our continuous integration build system.
 
    * http://github.com/steinwurf/external-waf-tools
 
 5. **Gtest**: The Google C++ Unit Testing Framework is used by all the
-   Kodo unit tests to ensure the library functions correctly.
+   Kodo unit tests to ensure that the library functions correctly.
 
    * http://github.com/steinwurf/external-gtest
 
@@ -57,15 +57,13 @@ benchmarks.
 
 Selecting the Correct Versions
 ------------------------------
-If you use the automatic approach by letting the build scripts download the
-dependencies, they will select the latest compatible version. If you download
-the dependencies manually you will have to select a compatible version. This
+If you use the automatic approach, then the build scripts will download the
+latest compatible version of dependencies. If you download
+the dependencies manually, you will have to select a compatible version. This
 information is stored in the ``wscript`` file found in Kodo's root folder.
 
 Within that file you will find all Kodo's dependencies specified in the
-following way:
-
-::
+following way::
 
   bundle.add_dependency(opt,
         resolve.ResolveGitMajorVersion(
@@ -81,7 +79,7 @@ at github.com for the Fifi library:
 
 * https://github.com/steinwurf/fifi/releases
 
-We get a list of available versions. At the time of writing this would be
+We get a list of available versions. At the time of writing, this would be
 version ``9.1.0``. These version numbers are available as ``git tags`` if you
 choose to manually checkout the git repositories.
 
@@ -108,14 +106,14 @@ use-case for Kodo.
 3. You can also download the Kodo dependencies as zip or tar.gz archives
    from the dependencies corresponding github.com page.
 
-Before moving on it is important to stress that downloading all
+Before moving on, it is important to stress that downloading all
 dependencies is only necessary if you wish to build the Kodo unit tests
 and benchmarks using the Kodo build system. If you simply want to use Kodo
 in your application you only need to download the Fifi, Sak and Boost
 dependencies and you do not need to build the Kodo library (since it is
 header-only).
 If that is your goal you can skip to the `Example application using
-makefile`_ section after downloading the three required libraries..
+makefile`_ section after downloading the three required libraries.
 
 
 Download Using Git
@@ -247,14 +245,30 @@ Example Application Using Makefile
 -------------------------------------
 
 If you would like to see an example of building an application with
-Kodo without using any fancy build-system we provide a small makefile
+Kodo without using any fancy build system, we provide a small makefile
 which shows how to invoke the ``g++`` compiler. The example can be found
 in the ``examples/sample_makefile`` folder in the `Kodo repository`_.
 
 .. _`Kodo repository`: https://github.com/steinwurf/kodo
 
-In this case it only requires that you have Fifi, Sak and Boost downloaded.
+In this case, you only need to have Fifi, Sak and Boost downloaded.
+By default, the example makefile assumes that the required libraries are
+downloaded side-by-side with Kodo itself.
+To achieve this, you can clone the projects in the same directory::
 
+    git clone https://github.com/steinwurf/sak.git
+    git clone https://github.com/steinwurf/fifi.git
+    git clone https://github.com/steinwurf/external-boost-light.git
+    git clone https://github.com/steinwurf/kodo.git
+
+Then you can build this example::
+
+    cd kodo/examples/sample_makefile
+    make
+
+And execute the ``example`` binary::
+
+    ./example
 
 
 ..
