@@ -41,17 +41,17 @@ benchmarks.
    our build system. These tools add functionality to waf which are
    used e.g. by our continuous integration build system.
 
-   * http://github.com/steinwurf/external-waf-tools
+   https://github.com/steinwurf/external-waf-tools
 
 5. **Gtest**: The Google C++ Unit Testing Framework is used by all the
    Kodo unit tests to ensure that the library functions correctly.
 
-   * http://github.com/steinwurf/external-gtest
+   https://github.com/steinwurf/external-gtest
 
 6. **Gauge**: Gauge is a C++ benchmarking tool which we use in Kodo to
    profile the implemented algorithms.
 
-   * http://github.com/steinwurf/cxx-gauge
+   https://github.com/steinwurf/cxx-gauge
 
 .. _selecting-the-correct-versions:
 
@@ -119,28 +119,20 @@ makefile`_ section after downloading the three required libraries.
 Download Using Git
 ..................
 
-1. Create a suitable directory for the projects (optional)
-
-   ::
+1. Create a suitable directory for the projects (optional)::
 
      mkdir dev
      cd dev
 
-2. Clone or download the Fifi libraries by running:
-
-   ::
+2. Clone or download the Fifi libraries by running::
 
      git clone git://github.com/steinwurf/fifi.git
 
-3. Clone and download the Sak libraries by running:
-
-   ::
+3. Clone and download the Sak libraries by running::
 
      git clone git://github.com/steinwurf/sak.git
 
-4. Clone and download the Boost C++ libraries by running:
-
-   ::
+4. Clone and download the Boost C++ libraries by running::
 
      git clone git://github.com/steinwurf/external-boost.git
 
@@ -150,38 +142,28 @@ Download Using Git
             its own version control repositories, if you
             wish, you may also download Boost using those repositories.
 
-5. Clone and download the extra Waf-tools:
-
-   ::
+5. Clone and download the extra Waf-tools::
 
      git clone git://github.com/steinwurf/external-waf-tools.git
 
-6. Clone and download the Gtest library.
-
-   ::
+6. Clone and download the Gtest library::
 
      git clone git://github.com/steinwurf/external-gtest.git
 
-
-7. Clone and download the Gauge library.
-
-   ::
+7. Clone and download the Gauge library::
 
      git clone git://github.com/steinwurf/cxx-gauge.git
 
 Now we have to visit the downloaded repositories and select the correct
-versions e.g. for Fifi, first list the available tags:
-::
+versions e.g. for Fifi, first list the available tags::
 
-  cd fifi
-  git tag -l
+    cd fifi
+    git tag -l
 
 Using the information from the ``wscript`` (described in
-`Selecting the correct versions`_) we can checkout a tagged version:
+`Selecting the correct versions`_) we can checkout a tagged version::
 
-::
-
-  git checkout 9.1.0
+    git checkout 9.1.0
 
 We now do this for all the downloaded repositories.
 
@@ -209,34 +191,28 @@ versions`_):
 Configuring Kodo With Manually Downloaded Dependencies
 ------------------------------------------------------
 
-After downloading all the dependencies manually we have to inform the
+After downloading all the dependencies manually, we have to inform the
 Kodo build scripts to use those instead of trying to automatically
-downloading them. This is done using the following command:
-
-::
+downloading them. This is done using the following command::
 
   python waf configure --bundle=NONE --fifi-path=insert-path-to/fifi --sak-path=insert-path-to/sak/ --boost-path=insert-path-to/external-boost-light/ --waf-tools-path=insert-path-to/external-waf-tools/ --gtest-path=insert-path-to/external-gtest/ --gauge-path=insert-path-to/cxx-gauge/
 
-The bundle options supports a number of different use-cases. The following
+The bundle options supports a number of different use cases. The following
 will bundle all dependencies but the Fifi library which we have to
-manually specify a path for:
-::
+manually specify a path for::
 
   python waf configure --bundle=ALL,-fifi --fifi-path=insert-path-to/fifi
 
-Or we may bundle only Fifi:
-::
+Or we may bundle only Fifi::
 
   python waf configure --bundle=NONE,fifi --sak-path=insert-path-to/sak/ --boost-path=insert-path-to/external-boost-light/ --waf-tools-path=insert-path-to/external-waf-tools/ --gtest-path=insert-path-to/external-gtest/ --gauge-path=insert-path-to/cxx-gauge/
 
 More libraries may be added to the ``--bundle=`` option using commas e.g.
-bundle all but Fifi and Sak
-::
+bundle all, but Fifi and Sak::
 
-    python waf configure --bundle=ALL,-fifi,-sak --fifi-path=insert-path-to/fifi --sak-path=insert-path-to/sak
+  python waf configure --bundle=ALL,-fifi,-sak --fifi-path=insert-path-to/fifi --sak-path=insert-path-to/sak
 
-The bundle options can be seen by running:
-::
+The bundle options can be seen by running::
 
   python waf --help
 
