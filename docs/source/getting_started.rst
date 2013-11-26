@@ -117,7 +117,7 @@ easily get new updates whenever the library is updated. In addition to
 this, it is also possible to download the library as either zip or tar.gz
 archives. We will describe both approaches in the following sections.
 
-Recommended: Clone the git repository using the terminal (Linux and Mac OSX)
+Recommended: Clone the Git Repository Using the Terminal (Linux and Mac OSX)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 1. (Optional) Create a suitable directory (e.g. 'dev') for the projects using
@@ -212,18 +212,19 @@ Provided that you have the `Tools Needed`_ installed.
              the :ref:`including-kodo-in-your-application` section which shows
              how to manually download and specify the Kodo dependencies.
 
-   .. note:: You can specify the ``--bundle=ALL` option to instruct waf
+   .. note:: You can specify the ``--bundle=ALL`` option to instruct waf
              to download all dependencies. You can also use the
              ``--bundle-path`` option to specify the download location for the
              dependencies (if you want to change the default location).
+
              On Linux and Mac OSX::
 
                python waf configure --bundle-path=~/dev/bundle_dependencies
 
              On Windows, you can also specify the ``bundle-path`` as an absolute
-             path with a drive letter, e.g.::
+             path with a drive letter, for example::
 
-               python waf configure --bundle-path=C:\dev\bundle_dependencies
+                python waf configure --bundle-path=C:\dev\bundle_dependencies
 
    .. note:: If you downloaded the library as a zip archive and you have not
              setup git to automatically authenticate against github.com you
@@ -237,7 +238,7 @@ Provided that you have the `Tools Needed`_ installed.
              protocol for downloading the dependencies by adding the following
              option ``--git-protocol=https://`` to the ``configure`` command::
 
-               python waf configure --git-protocol=https://
+                python waf configure --git-protocol=https://
 
 
 3. Invoke ``waf`` to build the unit tests and examples::
@@ -266,7 +267,7 @@ Customize the Build
 You may also customize the build process. The list below describes the most
 common changes you may want for your build.
 
-* You may change the compiler.
+* Changing the compiler
 
   To change compiler, set the ``CXX`` variable to your preferred compiler.
   In case you want to use clang++, add ``CXX=clang++`` in front of
