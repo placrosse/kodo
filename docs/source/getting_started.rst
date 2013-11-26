@@ -187,10 +187,8 @@ or building the unit tests, we have tried to make that as easy as possible.
 Provided that you have the `Tools Needed`_ installed.
 
 .. note:: We recommend trying to build and run the unit tests before
-          using Kodo in your own project. However, if you want to skip
-          this step you may jump directly to
-          :ref:`including-kodo-in-your-application`
-
+          using Kodo in your own project. However, if you want to skip this step
+          you may jump directly to :ref:`including-kodo-in-your-application`
 
 1. Navigate to the directory where you have downloaded the Kodo source code::
 
