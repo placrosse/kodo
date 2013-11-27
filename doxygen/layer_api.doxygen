@@ -110,6 +110,14 @@ public:
         /// @return The maximum required coefficient vectors
         uint32_t max_coefficient_vectors() const;
 
+        /// @ingroup feedback_api
+        ///
+        /// @note If you implement this function you most likely also have
+        ///       to implement the layer::feedback_size() function.
+        ///
+        /// @return the maximum required feedback buffer size in bytes
+        uint32_t max_feedback_size() const;
+
     };
 
     //------------------------------------------------------------------
@@ -242,6 +250,17 @@ public:
     ///
     /// @param seed The seed value for the generator.
     void seed(seed_type seed_value);
+
+    /// @ingroup coefficient_generator_api
+    /// @return True if coefficients can be generated for all symbols
+    bool can_generate() const;
+
+    /// @ingroup coefficient_generator_api
+    /// @param symbol_index The symbol index we want to generate a coefficient
+    ///        for
+    /// @return True if a coefficient can be generated for a specific symbol
+    ///         index
+    bool can_generate(uint32_t symbol_index) const;
 
     //------------------------------------------------------------------
     // ENCODER API
@@ -735,6 +754,29 @@ public:
     ///
     /// @return the required payload buffer size in bytes
     uint32_t payload_size() const;
+
+    //------------------------------------------------------------------
+    // FEEDBACK API
+    //------------------------------------------------------------------
+
+    /// @ingroup feedback_api
+    /// Writes feedback into the provided buffer.
+    /// @param buffer The buffer which should contain the feedback data
+    /// @return the total bytes used from the buffer
+    uint32_t write_feedback(uint8_t *buffer) const;
+
+    /// @ingroup feedback_api
+    /// Reads feedback stored buffer.
+    /// @param buffer The buffer storing the feedback information.
+    void read_feedback(const uint8_t *buffer);
+
+    /// @ingroup feedback_api
+    ///
+    /// @note If you implement this function you most likely also have
+    ///       to implement the layer::factory::max_feedback_size() function.
+    ///
+    /// @return the required feedback buffer size in bytes
+    uint32_t feedback_size() const;
 
 };
 

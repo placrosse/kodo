@@ -12,10 +12,10 @@
 namespace kodo
 {
 
-    /// @todo document/test
+    /// @ingroup feedback_api
     ///
-    /// @ingroup status_api
-    ///
+    /// @brief This layer writes the pivot status information using the feedback
+    ///        convenience API
     template<class SuperCoder>
     class feedback_pivot_status_writer :
         public feedback_pivot_status<SuperCoder>
@@ -27,6 +27,7 @@ namespace kodo
 
     public:
 
+        /// @copydoc layer::write_feedback(uint8_t*) const
         uint32_t write_feedback(uint8_t* feedback) const
         {
             assert(feedback);

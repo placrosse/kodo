@@ -12,15 +12,16 @@
 namespace kodo
 {
 
-    /// @todo document/test
+    /// @ingroup feedback_api
     ///
-    /// @ingroup status_api
-    ///
+    /// @brief This layer terminates a series of
+    /// layer::read_feedback(const uint8_t*) function calls.
     template<class SuperCoder>
     class final_feedback_reader : public final_feedback_size<SuperCoder>
     {
     public:
 
+        /// @copydoc layer::read_feedback(const uint8_t*)
         void read_feedback(const uint8_t* feedback)
         {
             assert(feedback);

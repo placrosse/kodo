@@ -29,12 +29,12 @@ namespace kodo
                 return m_can_generate;
             }
 
-            void generate(uint8_t* coefficents)
+            void generate(uint8_t* /*coefficents*/)
             {
                 m_generate = true;
             }
 
-            void generate_partial(uint8_t* coefficents)
+            void generate_partial(uint8_t* /*coefficents*/)
             {
                 m_generate_partial = true;
             }

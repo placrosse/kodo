@@ -12,15 +12,16 @@
 namespace kodo
 {
 
-    /// @todo document/test
+    /// @ingroup feedback_api
     ///
-    /// @ingroup status_api
-    ///
+    /// @brief This layer terminates a series of
+    /// layer::write_feedback(uint8_t*) const function calls.
     template<class SuperCoder>
     class final_feedback_writer : public final_feedback_size<SuperCoder>
     {
     public:
 
+        /// @copydoc layer::write_feedback(uint8_t*) const
         uint32_t write_feedback(uint8_t* feedback) const
         {
             assert(feedback);

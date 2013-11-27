@@ -13,7 +13,6 @@
 #include <boost/type_traits/is_base_of.hpp>
 
 #include "systematic_base_coder.hpp"
-#include "systematic_operations.hpp"
 
 namespace kodo
 {

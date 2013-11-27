@@ -11,7 +11,6 @@
 #include "sliding_window_generator.hpp"
 #include "sliding_window_systematic_encoder.hpp"
 
-#include "../storage_aware_generator.hpp"
 #include "../partial_decoding_tracker.hpp"
 #include "../rank_info.hpp"
 #include "../payload_rank_encoder.hpp"
@@ -28,21 +27,16 @@
 namespace kodo
 {
 
-    /// @todo document
     /// @ingroup fec_stacks
-    /// @brief Complete stack implementing a full RLNC on-the-fly encoder.
+    /// @brief Implementation of a complete RLNC sliding window encoder
     ///
-    /// The on-the-fly encoder has the advantage that symbols can be
-    /// specified as they arrive at the encoder. This breaks with a
-    /// traditional block code where all the data has to be available
-    /// before encoding can start.
-    ///
-    /// Implementation of on the fly RLNC encoder uses a storage aware
-    /// generator and storage aware encoder.  The storage aware
-    /// generator makes sure that we do not generate non-zero
-    /// coefficients for the missing symbols, the storage aware
-    /// encoder provides the generator with information about how many
-    /// symbols have been specified.
+    /// This configuration extends the on_the_fly_encoder with the
+    /// possibility to read feedback from the sliding_window_decoder
+    /// which will remove packets which have already been (partially)
+    /// decoded from the encoding. To see an example of how to use
+    /// this feature there is an example in the
+    /// kodo/examples/sliding_window which demonstrates the use fo the
+    /// feedback API.
     template<class Field>
     class sliding_window_encoder :
         public // Feedback API

@@ -9,7 +9,6 @@
 
 #include "full_vector_codes.hpp"
 #include "on_the_fly_generator.hpp"
-#include "../storage_aware_generator.hpp"
 #include "../partial_decoding_tracker.hpp"
 #include "../rank_info.hpp"
 #include "../payload_rank_encoder.hpp"

@@ -12,10 +12,10 @@
 namespace kodo
 {
 
-    /// @todo document/test
+    /// @ingroup feedback_api
     ///
-    /// @ingroup status_api
-    ///
+    /// @brief This layer reads the pivot status information using the feedback
+    ///        convenience API
     template<class SuperCoder>
     class feedback_pivot_status_reader :
         public feedback_pivot_status<SuperCoder>
@@ -27,6 +27,7 @@ namespace kodo
 
     public:
 
+        /// @copydoc layer::read_feedback(const uint8_t*)
         void read_feedback(const uint8_t* feedback)
         {
             assert(feedback);

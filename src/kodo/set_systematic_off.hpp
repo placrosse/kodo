@@ -5,6 +5,8 @@
 
 #pragma once
 
+#include <boost/shared_ptr.hpp>
+
 #include "has_set_systematic_off.hpp"
 #include "has_systematic_encoder.hpp"
 

@@ -310,5 +310,16 @@
 ///        build programs that compile time can enable or disable call to
 ///        various functions.
 
+//------------------------------------------------------------------
+// FEEDBACK API
+//------------------------------------------------------------------
+
+/// @defgroup feedback_api Feedback API functions
+///
+/// @brief The Feedback API functions are functions implementing a
+/// convenience API for sending feedback e.g. state information
+/// between encoders and decoders. The feedback information may then
+/// by utilized to optimize different aspects of the coding.
+
 
 

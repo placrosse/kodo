@@ -10,7 +10,6 @@
 namespace kodo
 {
 
-    /// @todo update docs
     /// @ingroup coefficient_generator_layers
     /// @brief The storage aware generator will ensure that
     ///        layer::generate_partial(uint8_t*) is called whenever the encoder

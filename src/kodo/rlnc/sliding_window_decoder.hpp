@@ -16,14 +16,16 @@
 namespace kodo
 {
 
-    /// @todo document
     /// @ingroup fec_stacks
-    /// @brief Implementation of a complete RLNC decoder
+    /// @brief Implementation of a complete RLNC sliding window decoder
     ///
-    /// This configuration adds the following features (including those
-    /// described for the encoder):
-    /// - Recoding using the recoding_stack
-    /// - Linear block decoder using Gauss-Jordan elimination.
+    /// This configuration extends the on_the_fly_decoder with the
+    /// possibility to generate feedback to the sliding_window_encoder
+    /// which will remove packets which have already been (partially)
+    /// decoded from the encoding. To see an example of how to use
+    /// this feature there is an example in the
+    /// kodo/examples/sliding_window which demonstrates the use fo the
+    /// feedback API.
     template<class Field>
     class sliding_window_decoder :
         public // Feedback API

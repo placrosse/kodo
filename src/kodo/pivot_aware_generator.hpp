@@ -11,21 +11,20 @@ namespace kodo
 {
 
     /// @ingroup coefficient_generator_layers
-    /// @brief The storage aware generator will ensure that
-    ///        layer::generate_partial(uint8_t*) is called whenever the encoder
-    ///        indicates that it does not have full rank (i.e. not all symbols
-    ///        have been specified).
+    /// @brief The pivot aware generator will determine whether to use the
+    ///        layer::generate(uint8_t*) or layer::generate_partial(uint8_t*)
     template<class SuperCoder>
     class pivot_aware_generator : public SuperCoder
     {
     public:
 
-        /// @todo
+        /// @copydoc layer::can_generate() const
         bool can_generate() const
         {
             return SuperCoder::rank() == SuperCoder::symbols();
         }
 
+        /// @copydoc layer::can_generate(uint32_t) const
         bool can_generate(uint32_t index) const
         {
             return SuperCoder::is_symbol_pivot(index);
