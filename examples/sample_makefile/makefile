@@ -14,22 +14,41 @@
 # cd kodo/examples/sample_makefile
 # make
 
+
 # The include path to the kodo sources
-kodo_dir = ../../src
+KODO_DIR ?= ../../src
 
 # The include path to the sak sources
-sak_dir = ../../../sak/src
+SAK_DIR ?= ../../../sak/src
 
 # The include path to the fifi sources
-fifi_dir = ../../../fifi/src
+FIFI_DIR ?= ../../../fifi/src
 
 # The include path to the boost sources
-boost_dir = ../../../external-boost-light
+BOOST_DIR ?= ../../../external-boost-light
+
+# Set default flags
+INCLUDES = -I $(BOOST_DIR) -I $(SAK_DIR) -I $(FIFI_DIR) -I $(KODO_DIR)
+CXXFLAGS = -std=c++0x -O2 -ftree-vectorize
+
+# Choose default compiler based on the OS
+ifeq ($(CXX),)
+    UNAME_S := $(shell uname -s)
+    ifeq ($(UNAME_S),Linux)
+        CXX = g++
+    endif
+    ifeq ($(UNAME_S),Darwin)
+        CXX = clang++
+    endif
+endif
+
+ifeq ($(CXX),clang++)
+    ifeq ($(UNAME_S),Darwin)
+        CXXFLAGS = -std=c++0x -O2 -stdlib=libc++ -lc++
+    endif
+endif
+
 
 # Invoke the compiler
 all:
-	g++ main.cpp -o example -std=c++0x -I $(boost_dir) -I $(fifi_dir) -I $(kodo_dir) -I $(sak_dir)
-
-# Use the following command on Mac OSX to compile with clang++
-#all:
-#	clang++ main.cpp -o example -std=gnu++0x -stdlib=libc++ -lc++ -I $(boost_dir) -I $(fifi_dir) -I $(kodo_dir) -I $(sak_dir)
+	$(CXX) main.cpp -o example $(CXXFLAGS) $(INCLUDES)
