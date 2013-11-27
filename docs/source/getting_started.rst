@@ -223,10 +223,10 @@ Provided that you have the `Tools Needed`_ installed.
              On Windows, you can also specify the ``bundle-path`` as an absolute
              path with a drive letter, for example:
 
-             ::
+               ::
 
 
-                python waf configure --bundle-path=C:\dev\bundle_dependencies
+                 python waf configure --bundle-path=C:\dev\bundle_dependencies
 
 
    .. note:: If you downloaded the library as a zip archive and you have not
