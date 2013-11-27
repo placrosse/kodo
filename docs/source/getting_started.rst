@@ -219,10 +219,13 @@ Provided that you have the `Tools Needed`_ installed.
 
                python waf configure --bundle-path=~/dev/bundle_dependencies
 
+
              On Windows, you can also specify the ``bundle-path`` as an absolute
              path with a drive letter, for example::
 
+
                 python waf configure --bundle-path=C:\dev\bundle_dependencies
+
 
    .. note:: If you downloaded the library as a zip archive and you have not
              setup git to automatically authenticate against github.com you
@@ -232,9 +235,11 @@ Provided that you have the `Tools Needed`_ installed.
                bin\\git.exe', 'clone', 'git@github.com:steinwurf/sak.git',
                'C:\\dev\\bundle_dependencies\\sak-2baed8\\master'] returned 128
 
+
              In that case, you can instruct the waf tools to use the ``https``
              protocol for downloading the dependencies by adding the following
              option ``--git-protocol=https://`` to the ``configure`` command::
+
 
                 python waf configure --git-protocol=https://
 
