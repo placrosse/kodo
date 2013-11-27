@@ -215,16 +215,17 @@ Provided that you have the `Tools Needed`_ installed.
              ``--bundle-path`` option to specify the download location for the
              dependencies (if you want to change the default location).
 
-             On Linux and Mac OSX::
+             On Linux and Mac OSX:
 
-               python waf configure --bundle-path=~/dev/bundle_dependencies
+               ::
+
+                 python waf configure --bundle-path=~/dev/bundle_dependencies
 
 
              On Windows, you can also specify the ``bundle-path`` as an absolute
-             path with a drive letter, for example::
+             path with a drive letter, for example:
 
-
-
+               ::
 
                  python waf configure --bundle-path=C:\dev\bundle_dependencies
 
