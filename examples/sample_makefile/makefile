@@ -14,6 +14,7 @@
 # cd kodo/examples/sample_makefile
 # make
 
+UNAME_S := $(shell uname -s)
 
 # The include path to the kodo sources
 KODO_DIR ?= ../../src
@@ -33,7 +34,6 @@ CXXFLAGS = -std=c++0x -O2 -ftree-vectorize
 
 # Choose default compiler based on the OS
 ifeq ($(CXX),)
-    UNAME_S := $(shell uname -s)
     ifeq ($(UNAME_S),Linux)
         CXX = g++
     endif
@@ -42,11 +42,15 @@ ifeq ($(CXX),)
     endif
 endif
 
-ifeq ($(CXX),clang++)
-    ifeq ($(UNAME_S),Darwin)
+ifeq ($(UNAME_S),Darwin)
+    ifneq (,$(findstring clang++,$(CXX)))
+        CXXFLAGS = -std=c++0x -O2 -stdlib=libc++ -lc++
+    endif
+    ifneq (,$(findstring c++,$(CXX)))
         CXXFLAGS = -std=c++0x -O2 -stdlib=libc++ -lc++
     endif
 endif
+
 
 
 # Invoke the compiler
