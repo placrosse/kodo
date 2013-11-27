@@ -74,13 +74,17 @@ TEST(TestRemotePivotAwareSystematicPhase, api)
 {
     kodo::dummy_stack stack;
 
-    stack.m_in_systematic_phase = false;
     uint32_t symbols = 5;
+
+    stack.m_in_systematic_phase = false;
+    stack.m_symbols = symbols;
 
     stack.m_remote_is_symbol_pivot.resize(symbols, false);
     stack.m_is_symbol_pivot.resize(symbols, false);
 
     stack.m_next_systematic_symbol = 9;
+
+    EXPECT_EQ(stack.m_symbols, symbols);
 
     // The layer we are testing will check the differences between the
     // remote and local pivots. If there is only a single symbol
@@ -102,6 +106,7 @@ TEST(TestRemotePivotAwareSystematicPhase, api)
     EXPECT_TRUE(stack.single_symbol_available());
 
     stack.m_remote_is_symbol_pivot[0] = true;
+
     // There is still a single symbol difference between what the
     // source has and what the receiver has
 
@@ -110,6 +115,7 @@ TEST(TestRemotePivotAwareSystematicPhase, api)
     EXPECT_TRUE(stack.single_symbol_available());
 
     stack.m_remote_is_symbol_pivot[1] = true;
+
     // There is no difference anymore in symbols available (the
     // receiver actually knows more than the sender) however we are
     // still in systematic because the lower layer signals it
@@ -122,6 +128,8 @@ TEST(TestRemotePivotAwareSystematicPhase, api)
 
     EXPECT_FALSE(stack.in_systematic_phase());
     EXPECT_FALSE(stack.single_symbol_available());
+
+
 
 }
 
