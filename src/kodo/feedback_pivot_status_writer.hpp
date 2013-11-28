@@ -12,10 +12,10 @@
 namespace kodo
 {
 
-    /// @ingroup feedback_api
+    /// @ingroup feedback_layers
     ///
-    /// @brief This layer writes the pivot status information using the feedback
-    ///        convenience API
+    /// @brief This layer writes the pivot status information using
+    ///        the feedback convenience API
     template<class SuperCoder>
     class feedback_pivot_status_writer :
         public feedback_pivot_status<SuperCoder>

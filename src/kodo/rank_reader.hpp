@@ -12,9 +12,10 @@
 namespace kodo
 {
 
-    /// @ingroup state_reader
-    /// @brief The payload decoder splits the payload buffer into
-    ///        symbol header and symbol.
+    /// @ingroup remote_state_layers
+    ///
+    /// @brief Read the rank information from the provided buffer and
+    ///        makes it available in the stack.
     template<class SuperCoder>
     class rank_reader : public SuperCoder
     {
@@ -38,7 +39,7 @@ namespace kodo
         /// Reads rank information from the provided buffer
         ///
         /// @note The buffer used must have at least the size reported
-        /// by the rank_info::rank_size() function.
+        ///       by the rank_info::rank_size() function.
         ///
         /// @param buffer The buffer containing the rank
         void read_rank(const uint8_t* buffer)
@@ -56,7 +57,7 @@ namespace kodo
             m_remote_rank = std::max(remote_rank, m_remote_rank);
         }
 
-        /// @return The rank of the encoder as read from the packet
+        /// @copydoc layer::remote_rank() const
         rank_type remote_rank() const
         {
             return m_remote_rank;

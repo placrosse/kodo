@@ -311,15 +311,45 @@
 ///        various functions.
 
 //------------------------------------------------------------------
-// FEEDBACK API
+// FEEDBACK
 //------------------------------------------------------------------
 
-/// @defgroup feedback_api Feedback API functions
+/// @defgroup feedback Feedback
+/// @ingroup api_layer
 ///
 /// @brief The Feedback API functions are functions implementing a
-/// convenience API for sending feedback e.g. state information
-/// between encoders and decoders. The feedback information may then
-/// by utilized to optimize different aspects of the coding.
+///        convenience API for sending feedback e.g. state information
+///        between encoders and decoders. The feedback information may
+///        then by utilized to optimize different aspects of the
+///        coding.
 
+/// @defgroup feedback_api API
+/// @ingroup feedback
+/// @brief The API used by the feedback layers
+
+/// @defgroup feedback_layers Layers
+/// @ingroup feedback
+/// @brief Implementations of the feedback API.
+
+
+//------------------------------------------------------------------
+// REMOTE STATE
+//------------------------------------------------------------------
+
+/// @defgroup remote_state Remote State
+/// @ingroup api_layer
+///
+/// @brief The remote state API functions are functions provides information
+///        about the state of "remote" entities in the
+///        system. E.g. this could be the rank of a decoder or
+///        similar.
+
+/// @defgroup remote_state_api API
+/// @ingroup remote_state
+/// @brief The API used by the remote state layers
+
+/// @defgroup remote_state_layers Layers
+/// @ingroup remote_state
+/// @brief Implementations of the remote state API.
 
 

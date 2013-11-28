@@ -10,13 +10,13 @@
 namespace kodo
 {
 
-    /// @ingroup feedback_api
+    /// @ingroup feedback_layers
     ///
     /// @brief The feedback_pivot_status provides a building block for
-    /// the feedback_pivot_status_reader and
-    /// feedback_pivot_status_writer layers by implementing the part
-    /// of the feedback API which whould otherwise have to be
-    /// duplicated.
+    ///        the feedback_pivot_status_reader and
+    ///        feedback_pivot_status_writer layers by implementing the
+    ///        part of the feedback API which whould otherwise have to
+    ///        be duplicated.
     template<class SuperCoder>
     class feedback_pivot_status : public SuperCoder
     {

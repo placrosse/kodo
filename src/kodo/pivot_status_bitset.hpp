@@ -15,14 +15,11 @@
 namespace kodo
 {
 
-    /// @todo document/test
+    /// @ingroup remote_state_layers
     ///
-    /// @ingroup decoder_api status_api
-    ///
-    /// @brief The pivot status writer keeps track of which symbols
-    /// currently have been marked as pivot in the decoding
-    /// matrix. This information can then be written using the write
-    /// function.
+    /// @brief The pivot status bitset provides a building block for
+    ///        layers that wish to use a bitset to keep track of
+    ///        (partially) decoded symbols.
     template<class SuperCoder>
     class pivot_status_bitset : public SuperCoder
     {

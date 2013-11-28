@@ -14,17 +14,12 @@
 namespace kodo
 {
 
-    /// @todo Read doc
+    /// @ingroup remote_state_layers
     ///
-    /// @ingroup status_api
-    ///
-    /// @brief The encoder status vector stores information about
-    ///        the seen and/or decoded symbols at the decoder side.
-    ///        The user must provide this information by calling
-    ///        decoder_status_vector::get_decoder_status(uint8_t *)
-    ///        on the decoder, and then parse the resulting buffer
-    ///        to encoder_status_vector::set_decoder_status() on the
-    ///        encoder side.
+    /// @brief The pivot status reader provides the functionality
+    ///        needed to read information about pivot elements at a
+    ///        "remote" device. This information can then later be use
+    ///        to improve the performance of the encode / decoding.
     template<class SuperCoder>
     class pivot_status_reader : public pivot_status_bitset<SuperCoder>
     {
@@ -66,19 +61,13 @@ namespace kodo
             m_remote_rank = m_pivot_status.count();
         }
 
-        /// @return The number of symbols that the decoder has either "seen"
-        ///         or fully decoded.
+        /// @copydoc layer::remote_rank() const
         rank_type remote_rank() const
         {
             return m_remote_rank;
         }
 
-        /// Queries the decoding status vector to check whether a specific
-        /// symbols has been "seen" or fully decoded by the decoder
-        /// @param index The index of the symbol whos state which should be
-        ///        checked
-        /// @return True if the symbol has been "seen" or fully decoded and
-        ///         False if the symbol is missing at the decoder.
+        /// @copydoc layer::remote_is_symbol_pivot(uint32_t) const
         bool remote_is_symbol_pivot(uint32_t index) const
         {
             assert(index < m_pivot_status.size());

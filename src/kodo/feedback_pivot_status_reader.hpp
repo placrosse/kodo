@@ -12,7 +12,7 @@
 namespace kodo
 {
 
-    /// @ingroup feedback_api
+    /// @ingroup feedback_layers
     ///
     /// @brief This layer reads the pivot status information using the feedback
     ///        convenience API

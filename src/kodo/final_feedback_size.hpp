@@ -10,11 +10,11 @@
 namespace kodo
 {
 
-    /// @ingroup feedback_api
+    /// @ingroup feedback_layers
     ///
     /// @brief This layer terminates a series of
-    /// layer::factory::max_feedback_size() const and
-    /// layer::feedback_size() const calls.
+    ///        layer::factory::max_feedback_size() const and
+    ///        layer::feedback_size() const calls.
     template<class SuperCoder>
     class final_feedback_size : public SuperCoder
     {

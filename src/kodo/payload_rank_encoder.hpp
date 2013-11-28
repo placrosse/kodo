@@ -14,7 +14,7 @@
 namespace kodo
 {
 
-    /// @ingroup payload_codec_layers
+    /// @ingroup payload_codec_layers remote_state_layers
     /// @brief The payload rank encoder writes the rank of the encoder into
     ///        the payload buffer.
     ///

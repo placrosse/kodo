@@ -12,10 +12,10 @@
 namespace kodo
 {
 
-    /// @ingroup feedback_api
+    /// @ingroup feedback_layers
     ///
     /// @brief This layer terminates a series of
-    /// layer::write_feedback(uint8_t*) const function calls.
+    ///        layer::write_feedback(uint8_t*) const function calls.
     template<class SuperCoder>
     class final_feedback_writer : public final_feedback_size<SuperCoder>
     {

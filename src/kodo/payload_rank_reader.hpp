@@ -13,10 +13,11 @@
 namespace kodo
 {
 
-    /// @todo docs
     /// @ingroup payload_codec_layers
-    /// @brief The payload decoder splits the payload buffer into
-    ///        symbol header and symbol.
+    ///
+    /// @brief The payload rank reader is a building block for layers
+    ///        that read rank information from the buffer of an
+    ///        encoder/decoder payload.
     template<class SuperCoder>
     class payload_rank_reader : public SuperCoder
     {
