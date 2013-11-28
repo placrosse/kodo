@@ -5,8 +5,8 @@
 
 #include <kodo/rlnc/full_vector_codes.hpp>
 
-  int main()
-  {
+int main()
+{
     // Set the number of symbols (i.e. the generation size in RLNC
     // terminology) and the size of a symbol in bytes
     uint32_t symbols = 42;
@@ -27,14 +27,14 @@
     std::vector<uint8_t> data_in(encoder->block_size());
 
     // Just for fun - fill the data with random data
-    for(auto &e: data_in)
+    for (auto &e: data_in)
         e = rand() % 256;
 
     // Assign the data buffer to the encoder so that we may start
     // to produce encoded symbols from it
     encoder->set_symbols(sak::storage(data_in));
 
-    while( !decoder->is_complete() )
+    while (!decoder->is_complete())
     {
         // Encode a packet into the payload buffer
         encoder->encode( &payload[0] );
@@ -42,5 +42,19 @@
         // Pass that packet to the decoder
         decoder->decode( &payload[0] );
     }
-  }
 
+    // The decoder is complete, now copy the symbols from the decoder
+    std::vector<uint8_t> data_out(decoder->block_size());
+    decoder->copy_symbols(sak::storage(data_out));
+
+    // Check we properly decoded the data
+    if (std::equal(data_out.begin(), data_out.end(), data_in.begin()))
+    {
+        std::cout << "Data decoded correctly" << std::endl;
+    }
+    else
+    {
+        std::cout << "Unexpected failure to decode "
+                  << "please file a bug report :)" << std::endl;
+    }
+}
