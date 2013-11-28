@@ -15,10 +15,14 @@
 namespace kodo
 {
 
-    /// @todo docs
     /// @ingroup coefficient_generator_layers
-    /// @brief Generates an uniform random coefficient (from the chosen
-    /// Finite Field) for every symbol.
+    ///
+    /// @brief Generates an uniform random coefficient (from the
+    ///        chosen Finite Field) for every symbol. In addition this
+    ///        layer will use both information about the locally +
+    ///        remotely available symbols to introduce zeros in the
+    ///        coding coefficients where the symbols is either missing
+    ///        locally or has been received remotely.
     template<class SuperCoder>
     class sliding_window_generator :
         public check_partial_generator<

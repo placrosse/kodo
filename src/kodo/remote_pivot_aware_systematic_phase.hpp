@@ -11,22 +11,18 @@
 namespace kodo
 {
 
-    /// @todo docs
     /// @ingroup encoder_layers
     ///
-    /// @brief This class is used to detect whether the encoder is in
-    /// the systematic phase i.e. whether the next symbol to encode
-    /// should be a uncoded systematic symbol. This is done by
-    /// tracking which symbols has already been sent systematically
-    /// and which symbols are currently available in the storage
-    /// layers
+    /// @brief This class is used to detect whether the encoder should
+    ///        produce a systematic symbol based on the remote pivot
+    ///        status (i.e. the symbols marked as pivot at a remote)
     template<class SuperCoder>
     class remote_pivot_aware_systematic_phase : public SuperCoder
     {
     public:
 
         /// @return true if we are in the systematic phase (i.e. there
-        /// are systematic packet to send) otherwise false
+        ///         are systematic packet to send) otherwise false
         bool in_systematic_phase() const
         {
             if(single_symbol_available())
@@ -85,6 +81,7 @@ namespace kodo
         /// whether it only has one pivot not seen by the deocder if
         /// this is the case it returns that a single symbol is
         /// available.
+        ///
         /// @return true if a single symbol is available.
         bool single_symbol_available() const
         {

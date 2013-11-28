@@ -10,12 +10,10 @@
 namespace kodo
 {
 
-    /// @todo docs
     /// @ingroup coefficient_generator_layers
-    /// @brief The storage aware generator will ensure that
-    ///        layer::generate_partial(uint8_t*) is called whenever the encoder
-    ///        indicates that it does not have full rank (i.e. not all symbols
-    ///        have been specified).
+    ///
+    /// @brief The remote pivot aware generator allows us to "prune" out symbols
+    ///        in the encoding which are marked as remote pivot.
     template<class SuperCoder>
     class remote_pivot_aware_generator : public SuperCoder
     {
@@ -26,6 +24,7 @@ namespace kodo
         /// create the coding coefficients, since we will want to
         /// "prune" out the symbols which have already been received
         /// by the remote decoder.
+        ///
         /// @copydoc layer::can_generate() const
         bool can_generate() const
         {
@@ -44,6 +43,8 @@ namespace kodo
         /// If the symbol is already pivot at the remote, then we
         /// don't want to generate it. Otherwise we ask the
         /// SuperCoder.
+        ///
+        /// @copydoc layer::can_generate(uint32_t) const
         bool can_generate(uint32_t index) const
         {
             if(SuperCoder::remote_is_symbol_pivot(index))

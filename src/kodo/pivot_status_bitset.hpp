@@ -40,7 +40,6 @@ namespace kodo
                 : SuperCoder::factory(max_symbols, max_symbol_size)
             { }
 
-            /// @todo test
             /// @copydoc layer::factory::max_pivot_status_size() const
             uint32_t max_pivot_status_size() const
             {

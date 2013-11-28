@@ -11,6 +11,7 @@
 #include <gtest/gtest.h>
 
 #include <kodo/has_write_feedback.hpp>
+#include <kodo/rlnc/sliding_window_decoder.hpp>
 
 namespace kodo
 {
@@ -42,9 +43,8 @@ TEST(TestHasWriteFeedback, detect)
     EXPECT_TRUE(kodo::has_write_feedback<kodo::dummy>::value);
     EXPECT_TRUE(kodo::has_write_feedback<kodo::dummy_parent>::value);
 
-    /// @todo replace with on_the_fly once it supports the feedback scheme
-    // typedef kodo::full_rlnc_encoder<fifi::binary8> encoder_type;
-    // EXPECT_TRUE(kodo::has_rank<encoder_type>::value);
+    typedef kodo::sliding_window_decoder<fifi::binary8> decoder_type;
+    EXPECT_TRUE(kodo::has_write_feedback<decoder_type>::value);
 }
 
 

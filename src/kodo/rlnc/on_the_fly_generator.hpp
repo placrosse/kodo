@@ -15,8 +15,12 @@ namespace kodo
 {
 
     /// @ingroup coefficient_generator_layers
-    /// @brief Generates an uniform random coefficient (from the chosen
-    /// Finite Field) for every symbol.
+    ///
+    /// @brief Generates an uniform random coefficient (from the
+    ///        chosen Finite Field) for every symbol. In addition
+    ///        using the pivot_aware_generate means that we will only
+    ///        generate non-zero coefficients for symbols which are
+    ///        available locally.
     template<class SuperCoder>
     class on_the_fly_generator :
         public check_partial_generator<

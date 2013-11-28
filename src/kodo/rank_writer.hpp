@@ -1,4 +1,4 @@
-// Copyright Steinwurf ApS 2011-2012.
+// Copyright Steinwurf ApS 2011-2013.
 // Distributed under the "STEINWURF RESEARCH LICENSE 1.0".
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
@@ -11,8 +11,10 @@
 namespace kodo
 {
 
-    /// @ingroup state_api
-    /// @todo docs/tests
+    /// @ingroup state_layers
+    ///
+    /// @brief The rank writer externalizes the current rank into the
+    ///        provided buffer
     template<class SuperCoder>
     class rank_writer : public SuperCoder
     {
@@ -27,7 +29,7 @@ namespace kodo
         /// the payload buffer
         ///
         /// @note The buffer used must have at least the size reported
-        /// by the rank_info::rank_size() function.
+        ///        by the rank_info::rank_size() function.
         ///
         /// @param buffer The buffer where the rank should be written
         void write_rank(uint8_t* buffer)

@@ -11,7 +11,7 @@
 #include <gtest/gtest.h>
 
 #include <kodo/has_feedback_size.hpp>
-#include <kodo/rlnc/full_vector_codes.hpp>
+#include <kodo/rlnc/sliding_window_encoder.hpp>
 
 namespace kodo
 {
@@ -43,9 +43,8 @@ TEST(TestHasFeedbackSize, detect)
     EXPECT_TRUE(kodo::has_feedback_size<kodo::dummy>::value);
     EXPECT_TRUE(kodo::has_feedback_size<kodo::dummy_parent>::value);
 
-    /// @todo replace with on_the_fly once it supports the feedback scheme
-    // typedef kodo::full_rlnc_encoder<fifi::binary8> encoder_type;
-    // EXPECT_TRUE(kodo::has_rank<encoder_type>::value);
+    typedef kodo::sliding_window_encoder<fifi::binary8> encoder_type;
+    EXPECT_TRUE(kodo::has_feedback_size<encoder_type>::value);
 }
 
 

@@ -11,8 +11,12 @@
 namespace kodo
 {
 
-    /// @ingroup state_api
-    /// @todo docs/tests
+    /// @ingroup state_layers
+    ///
+    /// @brief The remote rank writer externalizes the current known
+    ///        remote rank into the provided buffer. This
+    ///        functionality can be used e.g. at a recoder in order to
+    ///        forward its known remote rank.
     template<class SuperCoder>
     class remote_rank_writer : public SuperCoder
     {
@@ -27,7 +31,7 @@ namespace kodo
         /// the buffer
         ///
         /// @note The buffer used must have at least the size reported
-        /// by the rank_info::rank_size() function.
+        ///       by the rank_info::rank_size() function.
         ///
         /// @param buffer The buffer where the rank should be written
         void write_rank(uint8_t* buffer)

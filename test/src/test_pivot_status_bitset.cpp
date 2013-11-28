@@ -87,6 +87,8 @@ TEST(TestPivotStatusBitset, api)
     stack.initialize(factory);
 
     EXPECT_EQ(stack.pivot_status_size(), 1U);
+    EXPECT_EQ(factory.max_pivot_status_size(), 2U);
+
 
     factory.m_symbols = 7;
     stack.initialize(factory);
