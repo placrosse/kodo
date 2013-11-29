@@ -12,6 +12,10 @@
 #include <kodo/has_set_systematic_off.hpp>
 #include <kodo/set_systematic_off.hpp>
 
+#include <kodo/write_feedback.hpp>
+#include <kodo/read_feedback.hpp>
+#include <kodo/feedback_size.hpp>
+
 #include <kodo/has_debug_linear_block_decoder.hpp>
 #include <kodo/print_decoder_state.hpp>
 
@@ -33,6 +37,21 @@ inline void test_reuse_helper(EncoderPointer encoder, DecoderPointer decoder)
 
     // We need the actual data type not the shared_ptr
     typedef typename EncoderPointer::element_type encoder_type;
+    typedef typename DecoderPointer::element_type decoder_type;
+
+    uint32_t feedback_size = 0;
+
+    if(kodo::has_write_feedback<decoder_type>::value)
+    {
+        EXPECT_EQ(kodo::feedback_size(encoder),
+                  kodo::feedback_size(decoder));
+
+        feedback_size = kodo::feedback_size(encoder);
+        EXPECT_TRUE(feedback_size > 0);
+    }
+
+    std::vector<uint8_t> feedback(feedback_size);
+
 
     // Set the encoder non-systematic
     if(kodo::has_set_systematic_off<encoder_type>::value)
@@ -44,6 +63,15 @@ inline void test_reuse_helper(EncoderPointer encoder, DecoderPointer decoder)
         EXPECT_TRUE(payload_used <= encoder->payload_size());
 
         decoder->decode( &payload[0] );
+
+        if(kodo::has_write_feedback<decoder_type>::value)
+        {
+            uint32_t written = kodo::write_feedback(decoder, &feedback[0]);
+            EXPECT_TRUE(written > 0);
+
+            // Pass to the encoder
+            kodo::read_feedback(encoder, &feedback[0]);
+        }
     }
 
     std::vector<uint8_t> data_out(decoder->block_size(), '\0');

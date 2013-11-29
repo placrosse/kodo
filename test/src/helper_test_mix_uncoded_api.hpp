@@ -24,6 +24,19 @@ inline void test_mix_uncoded(uint32_t symbols, uint32_t symbol_size)
     // Encode/decode operations
     EXPECT_TRUE(encoder->payload_size() == decoder->payload_size());
 
+   uint32_t feedback_size = 0;
+
+    if(kodo::has_write_feedback<Decoder>::value)
+    {
+        EXPECT_EQ(kodo::feedback_size(encoder),
+                  kodo::feedback_size(decoder));
+
+        feedback_size = kodo::feedback_size(encoder);
+        EXPECT_TRUE(feedback_size > 0);
+    }
+
+    std::vector<uint8_t> feedback(feedback_size);
+
     std::vector<uint8_t> payload(encoder->payload_size());
     std::vector<uint8_t> data_in = random_vector(encoder->block_size());
 
@@ -63,6 +76,15 @@ inline void test_mix_uncoded(uint32_t symbols, uint32_t symbol_size)
 
 
             decoder->decode_symbol(&payload[0], symbol_id);
+
+            if(kodo::has_write_feedback<Decoder>::value)
+            {
+                uint32_t written = kodo::write_feedback(decoder, &feedback[0]);
+                EXPECT_TRUE(written > 0);
+
+                // Pass to the encoder
+                kodo::read_feedback(encoder, &feedback[0]);
+            }
 
         }
     }
