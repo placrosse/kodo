@@ -6,6 +6,19 @@ every change, see the Git log.
 
 Latest
 ------
+* Minor: Added sliding window encoder and decoder. These codes extend
+  the functionality of the on the fly codes which allow encoding
+  before all symbols are available, by supporting feedback between the
+  decoder and encoder such that already seen symbols are not included
+  in the encoding again. See examples/sliding_window for an example.
+* Minor: Added feedback convenience API which allows state to be
+  communicated between codec stacks. As an example see the
+  examples/sliding_window example which demonstrates the use of
+  feedback. Generic functions are also available which allows compile
+  time checks of whether a codec stack supports feedback.
+* Major: Several optimizations to the systematic_encoder layer and
+  related layers which allows finer control over which packets should
+  be sent systematically and which should not.
 * Bug: Fix support for fifi::binary16 in the Reed-Solomon codes.
 * Minor: Adding the user_defined_generator layer, which allows users to
   specify the coding coefficients to be used directly.

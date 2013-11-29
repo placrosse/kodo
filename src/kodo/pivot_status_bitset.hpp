@@ -82,7 +82,10 @@ namespace kodo
                           "We assume that the block type is 1 byte in the "
                           "calculation here");
 
-            return m_pivot_status.num_blocks();
+            assert(std::numeric_limits<uint32_t>::max() <=
+                   m_pivot_status.num_blocks());
+
+            return (uint32_t) m_pivot_status.num_blocks();
         }
 
     protected:

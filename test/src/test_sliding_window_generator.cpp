@@ -26,7 +26,7 @@ namespace kodo
         {
 
             typedef fifi::binary field_type;
-            typedef typename field_type::value_type value_type;
+            typedef field_type::value_type value_type;
 
             uint32_t coefficient_vector_size() const
             {
