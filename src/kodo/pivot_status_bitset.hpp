@@ -15,7 +15,7 @@
 namespace kodo
 {
 
-    /// @ingroup remote_state_layers
+    /// @ingroup state_layers
     ///
     /// @brief The pivot status bitset provides a building block for
     ///        layers that wish to use a bitset to keep track of

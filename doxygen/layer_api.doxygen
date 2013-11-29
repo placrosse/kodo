@@ -779,13 +779,14 @@ public:
     uint32_t feedback_size() const;
 
     //------------------------------------------------------------------
-    // REMOTE STATE API
+    // STATE API
     //------------------------------------------------------------------
 
-    /// @ingroup remote_state_api
+    /// @ingroup state_api
     /// @return The rank of the "remote" entity e.g. a decoder
     rank_type remote_rank() const;
 
+    /// @ingroup state_api
     /// Queries the decoding status vector to check whether a specific
     /// symbols has been "seen" or fully decoded by the decoder
     /// @param index The index of the symbol whos state which should be

@@ -86,7 +86,7 @@ namespace kodo
             assert(m_file);
             assert(m_file->is_open());
 
-            uint32_t data_size = m_data.size();
+            auto data_size = m_data.size();
             assert(size <= data_size);
 
             uint32_t remaining_bytes = m_file_size - offset;

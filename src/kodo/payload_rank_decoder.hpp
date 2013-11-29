@@ -13,7 +13,7 @@
 namespace kodo
 {
 
-    /// @ingroup payload_codec_layers remote_state_layers
+    /// @ingroup payload_codec_layers state_layers
     ///
     /// @brief The payload rank decoder combines the
     ///        payload_rank_reader and the rank_reader layers which

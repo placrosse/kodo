@@ -14,7 +14,7 @@
 namespace kodo
 {
 
-    /// @ingroup remote_state_layers
+    /// @ingroup state_layers
     ///
     /// @brief The pivot status writer keeps track of which symbols
     ///        currently have been marked as pivot in the decoding

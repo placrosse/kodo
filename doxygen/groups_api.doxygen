@@ -333,23 +333,23 @@
 
 
 //------------------------------------------------------------------
-// REMOTE STATE
+// STATE
 //------------------------------------------------------------------
 
-/// @defgroup remote_state Remote State
+/// @defgroup state State
 /// @ingroup api_layer
 ///
-/// @brief The remote state API functions are functions provides information
+/// @brief The state API functions are functions provides information
 ///        about the state of "remote" entities in the
 ///        system. E.g. this could be the rank of a decoder or
 ///        similar.
 
-/// @defgroup remote_state_api API
-/// @ingroup remote_state
-/// @brief The API used by the remote state layers
+/// @defgroup state_api API
+/// @ingroup state
+/// @brief The API used by the state layers
 
-/// @defgroup remote_state_layers Layers
-/// @ingroup remote_state
-/// @brief Implementations of the remote state API.
+/// @defgroup state_layers Layers
+/// @ingroup state
+/// @brief Implementations of the state API.
 
 

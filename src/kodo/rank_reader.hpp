@@ -12,7 +12,7 @@
 namespace kodo
 {
 
-    /// @ingroup remote_state_layers
+    /// @ingroup state_layers
     ///
     /// @brief Read the rank information from the provided buffer and
     ///        makes it available in the stack.

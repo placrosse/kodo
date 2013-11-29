@@ -14,7 +14,7 @@
 namespace kodo
 {
 
-    /// @ingroup remote_state_layers
+    /// @ingroup state_layers
     ///
     /// @brief The pivot status reader provides the functionality
     ///        needed to read information about pivot elements at a
