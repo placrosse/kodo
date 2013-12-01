@@ -42,6 +42,7 @@ ifeq ($(CXX),)
     endif
 endif
 
+# Set C++ flags for clang on Mac OSX
 ifeq ($(UNAME_S),Darwin)
     ifneq (,$(findstring clang++,$(CXX)))
         CXXFLAGS = -std=c++0x -O2 -stdlib=libc++ -lc++
@@ -51,7 +52,7 @@ ifeq ($(UNAME_S),Darwin)
     endif
 endif
 
-# Set extra flags for Android cross-compiler (required for cstdint and boost)
+# Set C++ flags for Android cross-compiler (required for cstdint and boost)
 ifneq (,$(findstring android,$(CXX)))
     CXXFLAGS = -std=gnu++0x -s -O2 -ftree-vectorize \
                -DANDROID -DBOOST_ALL_NO_LIB=1 -D__GLIBC__ \

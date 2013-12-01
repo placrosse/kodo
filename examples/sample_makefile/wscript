@@ -59,6 +59,7 @@ def build(bld):
         bld(rule     = invoke_make,
             name     = 'sample_makefile',
             always   = True,
-            source   = 'main.cpp',
-            target   = 'example_make')
+            source   = 'main.cpp makefile',
+            target   = 'example_make',
+            after    = 'example_waf')
 
