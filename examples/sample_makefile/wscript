@@ -46,7 +46,9 @@ def build(bld):
 
         # Set special flags for boost on android
         if bld.is_mkspec_platform('android'):
-            defines = ['-D__GLIBC__', '-D_GLIBCXX_USE_WCHAR_T',
+            defines = ['-DBOOST_ALL_NO_LIB=1',
+                       '-D__GLIBC__',
+                       '-D_GLIBCXX_USE_WCHAR_T',
                        '-D_GLIBCXX_USE_C99_STDINT_TR1']
             args += ['EXTRA_FLAGS="{}"'.format(' '.join(defines))]
 
