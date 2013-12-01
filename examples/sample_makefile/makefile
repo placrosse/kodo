@@ -30,7 +30,7 @@ BOOST_DIR ?= ../../../external-boost-light
 
 # Set default flags
 INCLUDES = -I $(BOOST_DIR) -I $(SAK_DIR) -I $(FIFI_DIR) -I $(KODO_DIR)
-CXXFLAGS = -std=c++0x -O2 -ftree-vectorize
+CXXFLAGS = -std=c++0x -s -O2 -ftree-vectorize
 
 # Choose default compiler based on the OS
 ifeq ($(CXX),)
@@ -51,8 +51,8 @@ ifeq ($(UNAME_S),Darwin)
     endif
 endif
 
-
+TARGET ?= example
 
 # Invoke the compiler
 all:
-	$(CXX) main.cpp -o example $(CXXFLAGS) $(INCLUDES)
+	$(CXX) main.cpp -o $(TARGET) $(CXXFLAGS) $(INCLUDES)

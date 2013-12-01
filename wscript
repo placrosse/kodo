@@ -85,6 +85,8 @@ def configure(conf):
         recurse_helper(conf, 'gauge')
         recurse_helper(conf, 'tables')
 
+        conf.recurse('examples/sample_makefile')
+
 def build(bld):
 
     if bld.is_toplevel():
