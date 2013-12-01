@@ -44,14 +44,6 @@ def build(bld):
         boost_dir = bld.dependency_path('boost')
         args += ['BOOST_DIR=' + boost_dir]
 
-        # Set special flags for boost on android
-        if bld.is_mkspec_platform('android'):
-            defines = ['-DBOOST_ALL_NO_LIB=1',
-                       '-D__GLIBC__',
-                       '-D_GLIBCXX_USE_WCHAR_T',
-                       '-D_GLIBCXX_USE_C99_STDINT_TR1']
-            args += ['EXTRA_FLAGS="{}"'.format(' '.join(defines))]
-
         # Get the current directory
         current_dir = task.generator.path.abspath()
 
