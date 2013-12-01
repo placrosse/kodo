@@ -55,4 +55,4 @@ TARGET ?= example
 
 # Invoke the compiler
 all:
-	$(CXX) main.cpp -o $(TARGET) $(CXXFLAGS) $(INCLUDES)
+	$(CXX) main.cpp -o $(TARGET) $(CXXFLAGS) $(EXTRA_FLAGS) $(INCLUDES)

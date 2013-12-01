@@ -31,18 +31,24 @@ def build(bld):
 
         # Set the target path
         tgt = task.outputs[0].abspath()
-        args += ['TARGET='+tgt]
+        args += ['TARGET=' + tgt]
 
         # Set the C++ compiler
-        args += ['CXX='+bld.env.get_flat('CXX')]
+        args += ['CXX=' + bld.env.get_flat('CXX')]
 
         # Set the path for the dependencies
         sak_dir = os.path.join(bld.dependency_path('sak'),'src')
-        args += ['SAK_DIR='+sak_dir]
+        args += ['SAK_DIR=' + sak_dir]
         fifi_dir = os.path.join(bld.dependency_path('fifi'),'src')
-        args += ['FIFI_DIR='+fifi_dir]
+        args += ['FIFI_DIR=' + fifi_dir]
         boost_dir = bld.dependency_path('boost')
-        args += ['BOOST_DIR='+boost_dir]
+        args += ['BOOST_DIR=' + boost_dir]
+
+        # Set special flags for boost on android
+        if bld.is_mkspec_platform('android'):
+            defines = ['-D__GLIBC__', '-D_GLIBCXX_USE_WCHAR_T',
+                       '-D_GLIBCXX_USE_C99_STDINT_TR1']
+            args += ['EXTRA_FLAGS="{}"'.format(' '.join(defines))
 
         # Get the current directory
         current_dir = task.generator.path.abspath()
