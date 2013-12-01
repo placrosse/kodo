@@ -53,7 +53,8 @@ endif
 
 # Set extra flags for Android cross-compiler (required by boost)
 ifneq (,$(findstring android,$(CXX)))
-    CXXFLAGS += -DBOOST_ALL_NO_LIB=1 -D__GLIBC__ -D_GLIBCXX_USE_WCHAR_T -D_GLIBCXX_USE_C99_STDINT_TR1
+    CXXFLAGS += -DANDROID -DBOOST_ALL_NO_LIB=1 -D__GLIBC__ \
+                -D_GLIBCXX_USE_WCHAR_T -D_GLIBCXX_USE_C99_STDINT_TR1
 endif
 
 TARGET ?= example
