@@ -48,7 +48,7 @@ def build(bld):
         if bld.is_mkspec_platform('android'):
             defines = ['-D__GLIBC__', '-D_GLIBCXX_USE_WCHAR_T',
                        '-D_GLIBCXX_USE_C99_STDINT_TR1']
-            args += ['EXTRA_FLAGS="{}"'.format(' '.join(defines))
+            args += ['EXTRA_FLAGS="{}"'.format(' '.join(defines))]
 
         # Get the current directory
         current_dir = task.generator.path.abspath()
