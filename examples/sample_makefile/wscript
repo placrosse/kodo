@@ -1,0 +1,92 @@
+#! /usr/bin/env python
+# encoding: utf-8
+
+# Note that this file is not needed for building the example with make
+# The only purpose of this file is to ensure that the make works as intended
+
+import os
+import types
+
+from waflib import Task
+
+def configure(conf):
+    # Check if make is installed on the system
+    try:
+        conf.find_program('make')
+        conf.env.MAKE_INSTALLED = True
+    except conf.errors.ConfigurationError as e:
+        conf.env.MAKE_INSTALLED = False
+
+def build(bld):
+
+    # Build the example with waf to test if the source compiles
+    bld.program(features = 'cxx',
+                source   = 'main.cpp',
+                target   = 'example_waf',
+                use      = ['kodo_includes', 'boost_includes',
+                            'fifi_includes', 'sak_includes'])
+
+    # Add a manual dependency to rebuild the example if the makefile changes
+    bld.add_manual_dependency(
+        bld.path.find_node('main.cpp'),
+        bld.path.find_node('makefile'))
+
+    # Call make with special arguments
+    def invoke_make(task):
+
+        args = []
+        bld = task.generator.bld
+
+        # Set the target path
+        tgt = task.outputs[0].abspath()
+        args += ['TARGET=' + tgt]
+
+        # Set the C++ compiler
+        args += ['CXX=' + bld.env.get_flat('CXX')]
+
+        # Set the path for the dependencies
+        sak_dir = os.path.join(bld.dependency_path('sak'),'src')
+        args += ['SAK_DIR=' + sak_dir]
+        fifi_dir = os.path.join(bld.dependency_path('fifi'),'src')
+        args += ['FIFI_DIR=' + fifi_dir]
+        boost_dir = bld.dependency_path('boost')
+        args += ['BOOST_DIR=' + boost_dir]
+
+        # Get the current directory
+        current_dir = task.generator.path.abspath()
+
+        ret = bld.exec_command(['make'] + args, cwd=current_dir)
+
+        if ret:
+            bld.fatal('make returned %r' % ret)
+
+        return ret
+
+    # Run the make task if the waf task was executed
+    # Waf will detect changes in the included headers, but make cannot do that
+    def runnable_status(self):
+        tg = bld.get_tgen_by_name('example_waf')
+        waf_task = tg.link_task
+        if not waf_task.hasrun:
+            return Task.ASK_LATER
+        if waf_task.hasrun == Task.SUCCESS:
+            return Task.RUN_ME
+        return Task.SKIP_ME
+
+    # Build the example with make (only if make is installed)
+    if bld.env.MAKE_INSTALLED:
+        # Get the task generator
+        tgen = bld(rule     = invoke_make,
+                   name     = 'sample_makefile',
+                   #always   = True,
+                   source   = 'main.cpp',
+                   target   = 'example_make',
+                   after    = 'example_waf')
+        # Make sure that the tasks are generated
+        tgen.post()
+        # Get the first task
+        tsk = tgen.tasks[0]
+        # Redefine the runnable_status method for that task
+        tsk.runnable_status = types.MethodType(runnable_status, tsk)
+
+

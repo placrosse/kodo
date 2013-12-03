@@ -30,7 +30,7 @@ BOOST_DIR ?= ../../../external-boost-light
 
 # Set default flags
 INCLUDES = -I $(BOOST_DIR) -I $(SAK_DIR) -I $(FIFI_DIR) -I $(KODO_DIR)
-CXXFLAGS = -std=c++0x -O2 -ftree-vectorize
+CXXFLAGS = -std=c++0x -s -O2 -ftree-vectorize
 
 # Choose default compiler based on the OS
 ifeq ($(CXX),)
@@ -42,6 +42,7 @@ ifeq ($(CXX),)
     endif
 endif
 
+# Set C++ flags for clang on Mac OSX
 ifeq ($(UNAME_S),Darwin)
     ifneq (,$(findstring clang++,$(CXX)))
         CXXFLAGS = -std=c++0x -O2 -stdlib=libc++ -lc++
@@ -51,8 +52,15 @@ ifeq ($(UNAME_S),Darwin)
     endif
 endif
 
+# Set C++ flags for Android cross-compiler (required for cstdint and boost)
+ifneq (,$(findstring android,$(CXX)))
+    CXXFLAGS = -std=gnu++0x -s -O2 -ftree-vectorize \
+               -DANDROID -DBOOST_ALL_NO_LIB=1 -D__GLIBC__ \
+               -D_GLIBCXX_USE_WCHAR_T -D_GLIBCXX_USE_C99_STDINT_TR1
+endif
 
+TARGET ?= example
 
 # Invoke the compiler
 all:
-	$(CXX) main.cpp -o example $(CXXFLAGS) $(INCLUDES)
+	$(CXX) main.cpp -o $(TARGET) $(CXXFLAGS) $(INCLUDES)
