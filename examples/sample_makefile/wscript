@@ -80,8 +80,7 @@ def build(bld):
                    name     = 'sample_makefile',
                    #always   = True,
                    source   = 'main.cpp',
-                   target   = 'example_make',
-                   after    = 'example_waf')
+                   target   = 'example_make')
         # Make sure that the tasks are generated
         tgen.post()
         # Get the first task
