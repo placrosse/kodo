@@ -36,6 +36,13 @@ namespace kodo
             return SuperCoder::is_symbol_initialized(index);
         }
 
+        /// @copydoc layer::is_symbol_decoded(uint32_t) const
+        bool is_symbol_decoded(uint32_t index) const
+        {
+            assert(index < SuperCoder::symbols());
+            return SuperCoder::is_symbol_initialized(index);
+        }
+
     };
 
 }

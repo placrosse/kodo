@@ -492,6 +492,13 @@ namespace kodo
             return m_proxy->is_symbol_pivot(index);
         }
 
+        /// @copydoc layer::is_symbol_decoded(uint32_t) const
+        bool is_symbol_decoded(uint32_t index) const
+        {
+            assert(m_proxy);
+            return m_proxy->is_symbol_decoded(index);
+        }
+
     protected:
 
         /// Pointer to the main stack

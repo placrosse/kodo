@@ -35,7 +35,7 @@ namespace kodo
             void initialize(Factory& the_factory)
             {
                 m_symbols = the_factory.symbols();
-                m_is_symbol_pivot.resize(m_symbols, false);
+                m_is_symbol_decoded.resize(m_symbols, false);
             }
 
             void encode_symbol(uint8_t *symbol_data, uint32_t symbol_index)
@@ -49,7 +49,7 @@ namespace kodo
                 uint32_t rank = 0;
                 for(uint32_t i = 0; i < m_symbols; ++i)
                 {
-                    rank += m_is_symbol_pivot[i];
+                    rank += m_is_symbol_decoded[i];
                 }
                 return rank;
             }
@@ -59,14 +59,14 @@ namespace kodo
                 return m_symbols;
             }
 
-            bool is_symbol_pivot(uint32_t index) const
+            bool is_symbol_decoded(uint32_t index) const
             {
                 (void) index;
-                return m_is_symbol_pivot[index];
+                return m_is_symbol_decoded[index];
             }
 
             uint32_t m_symbols;
-            std::vector<bool> m_is_symbol_pivot;
+            std::vector<bool> m_is_symbol_decoded;
         };
 
         // Instantiate a stack containing the storage_aware_systematic_phase
@@ -109,7 +109,7 @@ TEST(TestStorageAwareSystematicPhase, api)
 
     EXPECT_EQ(stack.systematic_count(), 0U);
 
-    stack.m_is_symbol_pivot[0] = true;
+    stack.m_is_symbol_decoded[0] = true;
 
     EXPECT_EQ(stack.symbols(), factory.symbols());
     EXPECT_EQ(stack.in_systematic_phase(), true);
@@ -124,8 +124,8 @@ TEST(TestStorageAwareSystematicPhase, api)
     EXPECT_EQ(stack.in_systematic_phase(), false);
     EXPECT_EQ(stack.systematic_count(), 1U);
 
-    stack.m_is_symbol_pivot[2] = true;
-    stack.m_is_symbol_pivot[3] = true;
+    stack.m_is_symbol_decoded[2] = true;
+    stack.m_is_symbol_decoded[3] = true;
 
     EXPECT_EQ(stack.rank(), 3U);
     EXPECT_EQ(stack.in_systematic_phase(), true);
@@ -149,7 +149,7 @@ TEST(TestStorageAwareSystematicPhase, api)
     EXPECT_EQ(stack.in_systematic_phase(), false);
     EXPECT_EQ(stack.systematic_count(), 3U);
 
-    stack.m_is_symbol_pivot[1] = true;
+    stack.m_is_symbol_decoded[1] = true;
 
     EXPECT_EQ(stack.rank(), 4U);
     EXPECT_EQ(stack.in_systematic_phase(), true);
@@ -161,7 +161,7 @@ TEST(TestStorageAwareSystematicPhase, api)
     EXPECT_EQ(stack.in_systematic_phase(), false);
     EXPECT_EQ(stack.systematic_count(), 4U);
 
-    // Initialize the stack again - we leave the m_is_symbol_pivot which will
+    // Initialize the stack again - we leave the m_is_symbol_decoded which will
     // indicate that all symbols are available
     stack.initialize(factory);
 

@@ -48,9 +48,9 @@ namespace kodo
                     bool is_remote_pivot =
                         SuperCoder::remote_is_symbol_pivot(i);
 
-                    bool is_pivot = SuperCoder::is_symbol_pivot(i);
+                    bool is_decoded = SuperCoder::is_symbol_decoded(i);
 
-                    if(!is_remote_pivot && is_pivot)
+                    if(!is_remote_pivot && is_decoded)
                     {
                         next_symbol_found = true;
                         next_symbol = i;
@@ -77,8 +77,8 @@ namespace kodo
         ///
         /// However this is not sufficient if the decoder also
         /// receives packets from another source. This function
-        /// therefore loops over all the local pivots and checks
-        /// whether it only has one pivot not seen by the deocder if
+        /// therefore loops over all the local decoded symbols and checks
+        /// whether it only has one symbol not seen by the decoder if
         /// this is the case it returns that a single symbol is
         /// available.
         ///
@@ -91,9 +91,9 @@ namespace kodo
                 bool is_remote_pivot =
                     SuperCoder::remote_is_symbol_pivot(i);
 
-                bool is_pivot = SuperCoder::is_symbol_pivot(i);
+                bool is_decoded = SuperCoder::is_symbol_decoded(i);
 
-                if(!is_remote_pivot && is_pivot)
+                if(!is_remote_pivot && is_decoded)
                 {
                     ++difference;
                 }

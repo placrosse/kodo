@@ -41,9 +41,9 @@ namespace kodo
                 return m_remote_is_symbol_pivot[index];
             }
 
-            bool is_symbol_pivot(uint32_t index) const
+            bool is_symbol_decoded(uint32_t index) const
             {
-                return m_is_symbol_pivot[index];
+                return m_is_symbol_decoded[index];
             }
 
             uint32_t next_systematic_symbol() const
@@ -55,7 +55,7 @@ namespace kodo
             uint32_t m_symbols;
 
             std::vector<bool> m_remote_is_symbol_pivot;
-            std::vector<bool> m_is_symbol_pivot;
+            std::vector<bool> m_is_symbol_decoded;
 
             uint32_t m_next_systematic_symbol;
         };
@@ -80,7 +80,7 @@ TEST(TestRemotePivotAwareSystematicPhase, api)
     stack.m_symbols = symbols;
 
     stack.m_remote_is_symbol_pivot.resize(symbols, false);
-    stack.m_is_symbol_pivot.resize(symbols, false);
+    stack.m_is_symbol_decoded.resize(symbols, false);
 
     stack.m_next_systematic_symbol = 9;
 
@@ -99,7 +99,7 @@ TEST(TestRemotePivotAwareSystematicPhase, api)
     EXPECT_EQ(stack.next_systematic_symbol(), 9U);
     EXPECT_FALSE(stack.single_symbol_available());
 
-    stack.m_is_symbol_pivot[1] = true;
+    stack.m_is_symbol_decoded[1] = true;
 
     EXPECT_TRUE(stack.in_systematic_phase());
     EXPECT_EQ(stack.next_systematic_symbol(), 1U);

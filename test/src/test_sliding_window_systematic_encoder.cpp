@@ -67,7 +67,7 @@ namespace kodo
             {
                 m_symbols = the_factory.symbols();
                 m_symbol_size = the_factory.max_symbol_size();
-                m_is_symbol_pivot.resize(m_symbols, false);
+                m_is_symbol_decoded.resize(m_symbols, false);
                 m_remote_is_symbol_pivot.resize(m_symbols, false);
             }
 
@@ -94,10 +94,10 @@ namespace kodo
                 return m_symbols;
             }
 
-            bool is_symbol_pivot(uint32_t index) const
+            bool is_symbol_decoded(uint32_t index) const
             {
                 (void) index;
-                return m_is_symbol_pivot[index];
+                return m_is_symbol_decoded[index];
             }
 
             uint32_t rank() const
@@ -105,7 +105,7 @@ namespace kodo
                 uint32_t rank = 0;
                 for(uint32_t i = 0; i < m_symbols; ++i)
                 {
-                    rank += m_is_symbol_pivot[i];
+                    rank += m_is_symbol_decoded[i];
                 }
                 return rank;
             }
@@ -147,7 +147,7 @@ namespace kodo
             uint32_t m_symbols;
             uint32_t m_symbol_size;
 
-            std::vector<bool> m_is_symbol_pivot;
+            std::vector<bool> m_is_symbol_decoded;
             std::vector<bool> m_remote_is_symbol_pivot;
 
 
@@ -199,7 +199,7 @@ TEST(TestSlidingWindowSystematicEncoder, api)
     stack.reset();
 
     // Simulate that we have one packet available
-    stack.m_is_symbol_pivot[1] = true;
+    stack.m_is_symbol_decoded[1] = true;
 
     EXPECT_EQ(stack.rank(), 1U);
 
@@ -225,7 +225,7 @@ TEST(TestSlidingWindowSystematicEncoder, api)
 
     stack.reset();
 
-    stack.m_is_symbol_pivot[0] = true;
+    stack.m_is_symbol_decoded[0] = true;
 
     // We have added one more packet so the rank difference is now 2 but
     // we have not yet sent index 0 so it should go out systematically now
@@ -293,8 +293,8 @@ TEST(TestSlidingWindowSystematicEncoder, api)
 
     stack.reset();
 
-    stack.m_is_symbol_pivot[2] = true;
-    stack.m_is_symbol_pivot[3] = true;
+    stack.m_is_symbol_decoded[2] = true;
+    stack.m_is_symbol_decoded[3] = true;
 
     EXPECT_EQ(stack.rank(), 4U);
     EXPECT_EQ(stack.remote_rank(), 3U);
@@ -344,7 +344,7 @@ TEST(TestSlidingWindowSystematicEncoder, api)
     EXPECT_EQ(stack.m_systematic_index, 2U);
     EXPECT_EQ(stack.systematic_count(), 4U);
 
-    stack.m_is_symbol_pivot[5] = true;
+    stack.m_is_symbol_decoded[5] = true;
 
     // We now got a packet already at the decoder so we continue trying
     // to send symbol 2

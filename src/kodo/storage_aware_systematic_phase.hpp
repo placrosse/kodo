@@ -82,9 +82,9 @@ namespace kodo
             for(uint32_t i = m_offset; i < SuperCoder::symbols(); ++i)
             {
                 bool is_not_sent = !m_systematic_symbols_sent.test(i);
-                bool is_pivot = SuperCoder::is_symbol_pivot(i);
+                bool is_decoded = SuperCoder::is_symbol_decoded(i);
 
-                if(is_not_sent && is_pivot)
+                if(is_not_sent && is_decoded)
                 {
                     next_symbol_found = true;
                     next_symbol = i;
@@ -132,9 +132,9 @@ namespace kodo
             {
 
                 bool is_sent = m_systematic_symbols_sent.test(i);
-                bool is_pivot = SuperCoder::is_symbol_pivot(i);
+                bool is_decoded = SuperCoder::is_symbol_decoded(i);
 
-                if(is_sent && is_pivot)
+                if(is_sent && is_decoded)
                 {
                     ++m_offset;
                 }
