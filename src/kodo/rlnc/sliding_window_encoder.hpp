@@ -46,12 +46,18 @@ namespace kodo
                payload_rank_encoder<
                payload_encoder<
                // Codec Header API
-               sliding_window_systematic_encoder<
+               systematic_encoder<
+               default_systematic_phase<true,
+               remote_pivot_aware_systematic_phase<
+               storage_aware_systematic_phase<
                symbol_id_encoder<
                // Symbol ID API
                plain_symbol_id_writer<
                // Coefficient Generator API
-               sliding_window_generator<
+               check_partial_generator<
+               uniform_generator<
+               remote_pivot_aware_generator<
+               pivot_aware_generator<
                // Encoder API
                encode_symbol_tracker<
                zero_symbol_encoder<
@@ -73,7 +79,7 @@ namespace kodo
                final_coder_factory_pool<
                // Final type
                sliding_window_encoder<Field>
-                   > > > > > > > > > > > > > > > > > > > > > >
+                   > > > > > > > > > > > > > > > > > > > > > > > > > > > >
     { };
 
 }
