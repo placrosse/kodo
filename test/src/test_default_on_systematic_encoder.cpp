@@ -110,6 +110,11 @@ namespace kodo
                 return rank;
             }
 
+            uint32_t symbols_decoded() const
+            {
+                return rank();
+            }
+
             uint32_t header_size() const
             {
                 return 10;

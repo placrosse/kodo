@@ -29,6 +29,12 @@ namespace kodo
             return SuperCoder::symbols_initialized();
         }
 
+        /// @copydoc layer::symbols_decoded() const
+        uint32_t symbols_decoded() const
+        {
+            return SuperCoder::symbols_initialized();
+        }
+
         /// @copydoc layer::is_symbol_pivot(uint32_t) const
         bool is_symbol_pivot(uint32_t index) const
         {

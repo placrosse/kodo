@@ -110,6 +110,11 @@ namespace kodo
                 return rank;
             }
 
+            uint32_t symbols_decoded() const
+            {
+                return rank();
+            }
+
             bool remote_is_symbol_pivot(uint32_t index) const
             {
                 (void) index;

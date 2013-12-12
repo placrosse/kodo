@@ -67,7 +67,7 @@ namespace kodo
             // send if the rank (denotes the number of symbols
             // available in the encoder matrix is larger than the
             // number of systematic symbols we have sent
-            return m_systematic_count < SuperCoder::rank();
+            return m_systematic_count < SuperCoder::symbols_decoded();
         }
 
         /// @return The index of the next symbol to be sent in a

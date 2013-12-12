@@ -121,6 +121,18 @@ namespace kodo
                             m_recode_stack->payload_size());
         }
 
+        void read_feedback(const uint8_t* buffer)
+        {
+            assert(m_recode_stack);
+            m_recode_stack->read_feedback(buffer);
+        }
+
+        bool in_systematic_phase() const
+        {
+            assert(m_recode_stack);
+            return m_recode_stack->in_systematic_phase();
+        }
+
     private:
 
         /// Sets the recoding stack on the coder
