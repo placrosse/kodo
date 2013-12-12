@@ -43,7 +43,7 @@ namespace kodo
                 return rank;
             }
 
-            uint32_t remote_rank() const
+            uint32_t remote_decoder_rank() const
             {
                 uint32_t rank = 0;
                 for(uint32_t i = 0; i < m_symbols; ++i)

@@ -28,7 +28,7 @@ namespace kodo
         /// @copydoc layer::can_generate() const
         bool can_generate() const
         {
-            if(SuperCoder::remote_rank() == 0)
+            if(SuperCoder::remote_decoder_rank() == 0)
             {
                 // Let the SuperCoder layer determine whether to use the
                 // layer::generate(uint8_t*) function

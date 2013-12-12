@@ -26,7 +26,7 @@ namespace kodo
         {
             typedef uint32_t rank_type;
 
-            rank_type remote_rank() const
+            rank_type remote_decoder_rank() const
             {
                 rank_type rank = 0;
                 for(uint32_t i = 0; i < m_remote_is_symbol_pivot.size(); ++i)
@@ -90,7 +90,7 @@ TEST(TestRemotePivotAwareGenerator, api)
 
     EXPECT_EQ(stack.can_generate(3), false);
 
-    EXPECT_EQ(stack.remote_rank(), 1U);
+    EXPECT_EQ(stack.remote_decoder_rank(), 1U);
     EXPECT_EQ(stack.can_generate(), false);
     stack.m_can_generate = false;
 

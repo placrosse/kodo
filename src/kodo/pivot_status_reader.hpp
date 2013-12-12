@@ -62,7 +62,7 @@ namespace kodo
         }
 
         /// @copydoc layer::remote_rank() const
-        rank_type remote_rank() const
+        rank_type remote_decoder_rank() const
         {
             return m_remote_rank;
         }

@@ -92,7 +92,7 @@ TEST(TestPivotStatusReader, api)
 
     EXPECT_EQ(stack.pivot_status_size(), 2U);
 
-    EXPECT_EQ(stack.remote_rank(), 0U);
+    EXPECT_EQ(stack.remote_decoder_rank(), 0U);
 
     EXPECT_EQ(stack.remote_is_symbol_pivot(0), 0U);
     EXPECT_EQ(stack.remote_is_symbol_pivot(1), 0U);
@@ -119,7 +119,7 @@ TEST(TestPivotStatusReader, api)
 
     stack.read_pivot_status(&buffer[0]);
 
-    EXPECT_EQ(stack.remote_rank(), 4U);
+    EXPECT_EQ(stack.remote_decoder_rank(), 4U);
 
     EXPECT_EQ(stack.remote_is_symbol_pivot(0), 0U);
     EXPECT_EQ(stack.remote_is_symbol_pivot(1), 1U);
@@ -133,7 +133,7 @@ TEST(TestPivotStatusReader, api)
 
     stack.initialize(factory);
 
-    EXPECT_EQ(stack.remote_rank(), 0U);
+    EXPECT_EQ(stack.remote_decoder_rank(), 0U);
 
     EXPECT_EQ(stack.remote_is_symbol_pivot(0), 0U);
     EXPECT_EQ(stack.remote_is_symbol_pivot(1), 0U);
