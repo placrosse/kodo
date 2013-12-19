@@ -38,7 +38,6 @@ namespace kodo
         uint32_t m_count;
     };
 
-
     /// @ingroup fec_stacks
     /// @brief Complete stack implementing a RLNC encoder.
     ///
@@ -85,7 +84,6 @@ namespace kodo
     { };
 
 }
-
 
 int main()
 {
@@ -155,4 +153,3 @@ int main()
     return 0;
 
 }
-

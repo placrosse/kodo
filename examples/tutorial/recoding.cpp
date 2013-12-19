@@ -4,7 +4,6 @@
 // http://www.steinwurf.com/licensing
 
 #include <kodo/rlnc/full_vector_codes.hpp>
-#include <kodo/rlnc/seed_codes.hpp>
 
 int main()
 {
@@ -82,4 +81,3 @@ int main()
     return 0;
 
 }
-
