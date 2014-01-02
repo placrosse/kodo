@@ -9,7 +9,18 @@ Include tutorial here...
 Adding code samples
 -------------------
 
-To add code samples, to like so:
+To add code samples, to like so
+
+one
+
+.. code-block:: c++
+
+    .. include:: ../../examples/tutorial/basic.cpp
+        :start-after: main()
+        :end-before: return 0
+
+two
+
 .. include:: ../../examples/tutorial/basic.cpp
     :code: c++
 
@@ -18,20 +29,29 @@ first occurence of main() and until the first occurrence of return0;. Maybe we
 should add some comments so that we can search for when including tutorial
 files.
 
+three
+
 .. include:: ../../examples/tutorial/basic.cpp
    :start-after: main()
    :end-before: return 0
 
+four
 
 .. include:: ../../examples/tutorial/basic.cpp
    :code: c++
    :start-after: main()
    :end-before: return 0
 
+five
 
 .. code-block:: c++
 .. include:: ../../examples/tutorial/basic.cpp
    :start-after: main()
    :end-before: return 0
+
+six
+
+.. include:: ../../examples/tutorial/basic.cpp
+   :code: xml
 
 .. source: http://docutils.sourceforge.net/docs/ref/rst/directives.html#including-an-external-document-fragment
