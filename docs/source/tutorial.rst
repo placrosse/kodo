@@ -36,10 +36,7 @@ three
 
 four
 
-.. include:: ../../examples/tutorial/basic.cpp
-   :code: c++
-   :start-after: main()
-   :end-before: return 0
+.. literalinclude:: ../../examples/tutorial/basic.cpp
 
 five
 
