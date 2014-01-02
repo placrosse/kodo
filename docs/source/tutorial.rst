@@ -18,12 +18,12 @@ one
 two
 
 .. literalinclude:: ../../examples/tutorial/basic.cpp
-    :language:cpp
+    :language: cpp
 
 three
 
 .. literalinclude:: ../../examples/tutorial/basic.cpp
-    :language:c++
+    :language: c++
 
 four
 
