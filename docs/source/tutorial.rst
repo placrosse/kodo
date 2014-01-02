@@ -31,9 +31,8 @@ files.
 
 three
 
-.. include:: ../../examples/tutorial/basic.cpp
-   :start-after: main()
-   :end-before: return 0
+.. literalinclude:: ../../examples/tutorial/basic.cpp
+   :language:c++
 
 four
 
