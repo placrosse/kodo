@@ -20,6 +20,9 @@ Latest
   "throughput_average_nonzero_symbols" to "sparse_density_options", where the
   first specified the number (integer) of average nonzero symbols and the latter
   specify the ratio of nonzero symbols (float).
+* Minor: Switched to using gauge::runner::add_default_printers() in
+  kodo benchmarks this means most printers (the way results are saved)
+  are enabled by default.
 
 15.0.0
 ------
