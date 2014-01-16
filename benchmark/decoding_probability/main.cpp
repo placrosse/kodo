@@ -186,7 +186,9 @@ public:
 
         std::vector<uint8_t> payload(m_encoder->payload_size());
 
-        m_encoder->seed((uint32_t)time(0));
+        // Ensure the encoding vectors generated are randomized between
+        // runs
+        m_encoder->seed(rand());
 
         // The clock is running
         RUN{
