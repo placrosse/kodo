@@ -6,13 +6,14 @@ every change, see the Git log.
 
 Latest
 ------
+* Major: Updating dependency to fifi version 10.x.y
 * Bug: Fix support for fifi::binary16 in the Reed-Solomon codes.
 * Minor: Adding the user_defined_generator layer, which allows users to
   specify the coding coefficients to be used directly.
 * Major: Update the coefficient storage API. The previous naming
   scheme caused some confusion about the API, the new naming scheme
   hopefully makes the API easier to read and understand.
-* Major: Updating dependency to gauge version 6.x.y
+* Major: Updating dependency to gauge version 7.x.y
 * Minor: Added tables dependency
 * Major: Modified output from decoding probability benchmark. The rank is now
   printed as a 2D list.
