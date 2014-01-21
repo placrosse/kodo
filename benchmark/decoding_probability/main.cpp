@@ -23,16 +23,6 @@
 
 #include "codes.hpp"
 
-// Helper function to convert to string
-template<class T>
-inline std::string to_string(T t)
-{
-    std::stringstream ss;
-    ss << t;
-    return ss.str();
-}
-
-
 /// A test block represents an encoder and decoder pair
 template<class Encoder, class Decoder>
 struct decoding_probability_benchmark : public gauge::benchmark
