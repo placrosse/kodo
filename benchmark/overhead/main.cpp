@@ -215,7 +215,7 @@ BENCHMARK_OPTION(overhead_options)
         ("symbol_size", default_symbol_size, "Set the symbol size in bytes");
 
     options.add_options()
-        ("symbol erasure probability", default_erasure,
+        ("erasure", default_erasure,
          "Set the symbol erasure probability");
 
     gauge::runner::instance().register_options(options);

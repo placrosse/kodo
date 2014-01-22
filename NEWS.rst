@@ -7,6 +7,8 @@ every change, see the Git log.
 Latest
 ------
 * Major: Updating dependency to fifi version 10.x.y
+* Bug: Fix kodo overhead parameter ``symbol erasure probability`` to
+  ``erasure``.
 * Bug: Fix support for fifi::binary16 in the Reed-Solomon codes.
 * Minor: Adding the user_defined_generator layer, which allows users to
   specify the coding coefficients to be used directly.
