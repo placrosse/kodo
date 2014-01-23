@@ -1,10 +1,10 @@
 News for Kodo
-============
+=============
 
 This file lists the major changes between versions. For a more detailed list of
 every change, see the Git log.
 
-Latest
+16.0.0
 ------
 * Major: Updating dependency to fifi version 10.x.y
 * Bug: Fix kodo overhead parameter ``symbol erasure probability`` to
