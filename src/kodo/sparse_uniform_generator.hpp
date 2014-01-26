@@ -135,14 +135,15 @@ namespace kodo
         /// @param symbols the average number of nonzero symbols
         void set_average_nonzero_symbols(double symbols)
         {
-            // If binary, check that symbols are less than
-            // the total number of symbols
-            assert(fifi::is_binary<field_type>::value ||
+            // If binary, check that symbols are less than the total
+            // number of symbols. Note, that the second part of the or
+            // is only exectuted if the first part is false
+            assert(!fifi::is_binary<field_type>::value ||
                 symbols < SuperCoder::symbols());
 
             // If not binary, check that symbols are less than or equal the
             // total number of symbols
-            assert(!fifi::is_binary<field_type>::value ||
+            assert(fifi::is_binary<field_type>::value ||
                 symbols <= SuperCoder::symbols());
 
             assert(symbols > 0.0);
