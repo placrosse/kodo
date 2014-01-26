@@ -137,12 +137,12 @@ namespace kodo
         {
             // If binary, check that symbols are less than
             // the total number of symbols
-            assert(!fifi::is_binary<field_type>::value ||
+            assert(fifi::is_binary<field_type>::value ||
                 symbols < SuperCoder::symbols());
 
             // If not binary, check that symbols are less than or equal the
             // total number of symbols
-            assert(fifi::is_binary<field_type>::value ||
+            assert(!fifi::is_binary<field_type>::value ||
                 symbols <= SuperCoder::symbols());
 
             assert(symbols > 0.0);
