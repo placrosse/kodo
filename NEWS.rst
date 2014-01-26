@@ -4,6 +4,13 @@ News for Kodo
 This file lists the major changes between versions. For a more detailed list of
 every change, see the Git log.
 
+Latest
+------
+* Minor: Added an elimination decoder, this type of decoder can be
+  used to "remove" unwanted symbols included in the encoding. It is
+  the building block for e.g. layered decoders where only a subset of
+  the layers are wanted.
+
 16.0.0
 ------
 * Major: Updating dependency to fifi version 10.x.y
