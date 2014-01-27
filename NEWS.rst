@@ -4,7 +4,7 @@ News for Kodo
 This file lists the major changes between versions. For a more detailed list of
 every change, see the Git log.
 
-Latest
+16.1.0
 ------
 * Minor: Added an elimination decoder, this type of decoder can be
   used to "remove" unwanted symbols included in the encoding. It is
