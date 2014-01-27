@@ -81,7 +81,7 @@ TEST(TestEliminationCoefficientOffset, api)
     EXPECT_EQ(factory.symbols(), symbols);
 
     uint32_t elimination_offset = 6;
-    factory.set_elimintation_offset(elimination_offset);
+    factory.set_elimination_offset(elimination_offset);
 
     EXPECT_EQ(factory.elimination_offset(), elimination_offset);
 
@@ -90,7 +90,7 @@ TEST(TestEliminationCoefficientOffset, api)
 
     EXPECT_EQ(stack.elimination_offset(), elimination_offset);
 
-    factory.set_elimintation_offset(0);
+    factory.set_elimination_offset(0);
     stack.initialize(factory);
 
     EXPECT_EQ(factory.elimination_offset(), 0U);

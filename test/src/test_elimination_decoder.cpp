@@ -34,7 +34,7 @@ inline void run_test()
     uint32_t symbols_offset = 2;
 
     factory.set_symbols(symbols);
-    factory.set_elimintation_offset(symbols_offset);
+    factory.set_elimination_offset(symbols_offset);
 
     auto d = factory.build();
 
