@@ -41,7 +41,7 @@ namespace kodo
             /// should be skipped when iterating through the
             /// coefficient vector
             /// @param offset The offset in coding coefficients
-            void set_elimintation_offset(uint32_t offset)
+            void set_elimination_offset(uint32_t offset)
             {
                 assert(offset < SuperCoder::factory::max_symbols());
                 m_offset = offset;
