@@ -5,10 +5,19 @@
 
 #pragma once
 
+#include <fifi/is_prime2325.hpp>
+#include <fifi/prime2325_binary_search.hpp>
+#include <fifi/prime2325_apply_prefix.hpp>
+
+#include <kodo/systematic_encoder.hpp>
+
 #include "basic_api_test_helper.hpp"
 
+/// Helper function which will invoke a number of checks on an encoder
+/// and decoder pair
 template<class Encoder, class Decoder>
-inline void test_basic_api(uint32_t symbols, uint32_t symbol_size)
+inline void test_basic_api(typename Encoder::pointer encoder,
+                           typename Decoder::pointer decoder)
 {
 
     // Common setting
@@ -18,15 +27,6 @@ inline void test_basic_api(uint32_t symbols, uint32_t symbol_size)
     typename Decoder::factory decoder_factory(symbols, symbol_size);
     auto decoder = decoder_factory.build();
 
-    EXPECT_TRUE(symbols == encoder_factory.max_symbols());
-    EXPECT_TRUE(symbol_size == encoder_factory.max_symbol_size());
-    EXPECT_TRUE(symbols == encoder->symbols());
-    EXPECT_TRUE(symbol_size == encoder->symbol_size());
-
-    EXPECT_TRUE(symbols == decoder_factory.max_symbols());
-    EXPECT_TRUE(symbol_size == decoder_factory.max_symbol_size());
-    EXPECT_TRUE(symbols == decoder->symbols());
-    EXPECT_TRUE(symbol_size == decoder->symbol_size());
 
     EXPECT_TRUE(encoder->symbol_length() > 0);
     EXPECT_TRUE(decoder->symbol_length() > 0);
@@ -102,6 +102,35 @@ inline void test_basic_api(uint32_t symbols, uint32_t symbol_size)
                            data_in.begin()));
 }
 
+/// Helper function which will invoke a number of checks on an encoder
+/// and decoder pair
+template<class Encoder, class Decoder>
+inline void test_basic_api(uint32_t symbols, uint32_t symbol_size)
+{
+
+    // Common setting
+    typename Encoder::factory encoder_factory(symbols, symbol_size);
+    auto encoder = encoder_factory.build();
+
+    typename Decoder::factory decoder_factory(symbols, symbol_size);
+    auto decoder = decoder_factory.build();
+
+    EXPECT_TRUE(symbols == encoder_factory.max_symbols());
+    EXPECT_TRUE(symbol_size == encoder_factory.max_symbol_size());
+    EXPECT_TRUE(symbols == encoder->symbols());
+    EXPECT_TRUE(symbol_size == encoder->symbol_size());
+
+    EXPECT_TRUE(symbols == decoder_factory.max_symbols());
+    EXPECT_TRUE(symbol_size == decoder_factory.max_symbol_size());
+    EXPECT_TRUE(symbols == decoder->symbols());
+    EXPECT_TRUE(symbol_size == decoder->symbol_size());
+
+    test_basic_api<Encoder, Decoder>(encoder, decoder);
+
+}
+
+/// Helper function that invokes the test_basic_api using a number of
+/// different finite fields
 template
 <
     template <class> class Encoder,
@@ -134,6 +163,8 @@ inline void test_basic_api(uint32_t symbols, uint32_t symbol_size)
         >(symbols, symbol_size);
 }
 
+/// Helper function that invokes the test_basic_api functions using a
+/// set of symbols and symbol sizes
 template
 <
     template <class> class Encoder,

@@ -12,7 +12,7 @@
 #include <kodo/rlnc/full_vector_codes.hpp>
 #include <kodo/proxy_layer.hpp>
 
-#include "basic_api_test_helper.hpp"
+#include "kodo_unit_test/basic_api_test_helper.hpp"
 
 // Put dummy layers and tests classes in an anonymous namespace
 // to avoid violations of ODF (one-definition-rule) in other

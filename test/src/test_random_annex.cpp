@@ -13,7 +13,7 @@
 #include <kodo/rfc5052_partitioning_scheme.hpp>
 #include <kodo/rlnc/full_vector_codes.hpp>
 
-#include "basic_api_test_helper.hpp"
+#include "kodo_unit_test/basic_api_test_helper.hpp"
 
 /// @file test_random_annex.cpp Unit tests for the Random Annex coding
 ///       scheme

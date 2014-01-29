@@ -127,6 +127,14 @@ def build(bld):
         export_includes = './src',
         name = 'kodo_includes')
 
+    # Export unit test includes, these files are useful for testing
+    # the correctness of encoders and decoders. Since users of kodo
+    # may define custom encoders and decoders in their own libraries
+    # or applications we expose the unittest headers here to make them
+    # easily available
+    bld(export_includes = './test/src',
+        name = 'kodo_unit_test_includes')
+
 
 
 

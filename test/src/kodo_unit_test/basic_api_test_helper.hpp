@@ -1,4 +1,4 @@
-// Copyright Steinwurf ApS 2011-2012.
+// Copyright Steinwurf ApS 2011-2014.
 // Distributed under the "STEINWURF RESEARCH LICENSE 1.0".
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
@@ -6,12 +6,8 @@
 #pragma once
 
 #include <gtest/gtest.h>
-
-#include <fifi/is_prime2325.hpp>
-#include <fifi/prime2325_binary_search.hpp>
-#include <fifi/prime2325_apply_prefix.hpp>
-
-#include <kodo/systematic_encoder.hpp>
+#include <random>
+#include <fifi/field_types.hpp>
 
 /// @param max_value The maximum value to return
 /// @return a random number between 1 and max_value

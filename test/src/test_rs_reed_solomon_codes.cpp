@@ -8,7 +8,7 @@
 
 #include <kodo/rs/reed_solomon_codes.hpp>
 
-#include "basic_api_test_helper.hpp"
+#include "kodo_unit_test/basic_api_test_helper.hpp"
 
 
 TEST(TestReedSolomonCodes, test_construct)

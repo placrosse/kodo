@@ -6,7 +6,7 @@
 /// @file coefficient_generator.hpp Unit tests for the uniform coefficient
 ///       generators
 
-#include "coefficient_generator_helper.hpp"
+#include "kodo_unit_test/coefficient_generator_helper.hpp"
 
 namespace kodo
 {

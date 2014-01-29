@@ -13,7 +13,7 @@
 #include <kodo/object_encoder.hpp>
 #include <kodo/rfc5052_partitioning_scheme.hpp>
 
-#include "basic_api_test_helper.hpp"
+#include "kodo_unit_test/basic_api_test_helper.hpp"
 
 // Put dummy layers and tests classes in an anonymous namespace
 // to avoid violations of ODF (one-definition-rule) in other

@@ -15,7 +15,7 @@
 #include <kodo/operations_counter.hpp>
 #include <kodo/finite_field_counter.hpp>
 
-#include "operations_counter_helper.hpp"
+#include "kodo_unit_test/operations_counter_helper.hpp"
 
 namespace kodo
 {

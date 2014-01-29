@@ -16,7 +16,7 @@
 #include <kodo/rlnc/full_vector_codes.hpp>
 #include <kodo/partial_shallow_symbol_storage.hpp>
 
-#include "basic_api_test_helper.hpp"
+#include "kodo_unit_test/basic_api_test_helper.hpp"
 
 namespace kodo
 {

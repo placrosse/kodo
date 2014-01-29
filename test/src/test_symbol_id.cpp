@@ -26,7 +26,7 @@
 #include <kodo/rs/reed_solomon_symbol_id_reader.hpp>
 #include <kodo/rs/vandermonde_matrix.hpp>
 
-#include "basic_api_test_helper.hpp"
+#include "kodo_unit_test/basic_api_test_helper.hpp"
 
 /// Here we define the stacks which should be tested.
 namespace kodo

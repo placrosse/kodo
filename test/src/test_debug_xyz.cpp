@@ -12,7 +12,7 @@
 #include <kodo/rlnc/full_vector_codes.hpp>
 #include <kodo/debug_linear_block_decoder.hpp>
 
-#include "helper_test_basic_api.hpp"
+#include "kodo_unit_test/helper_test_basic_api.hpp"
 
 /// Here we define the stacks which should be tested.
 namespace kodo
