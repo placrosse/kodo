@@ -4,7 +4,7 @@ News for Kodo
 This file lists the major changes between versions. For a more
 detailed list of every change, see the Git log.
 
-Latest
+16.2.0
 ------
 * Minor: Reorganized the unit test files in the test folder so that
   all .hpp helper files are located in the test/src/kodo_unit_test
