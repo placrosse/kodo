@@ -5,7 +5,9 @@
 
 #pragma once
 
+#include <algorithm>
 #include <cstdint>
+
 #include <sak/convert_endian.hpp>
 
 namespace kodo
@@ -108,5 +110,3 @@ namespace kodo
     };
 
 }
-
-

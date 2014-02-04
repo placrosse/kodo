@@ -293,5 +293,3 @@ detailed list of every change, see the Git log.
 * Updated the Waf build system to handle dependencies better. The new
   tools used are not compatible with the old versions so we have to
   bump the major version.
-
-
