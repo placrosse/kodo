@@ -79,7 +79,7 @@ def plot(args):
 #~ #~
         for branch, branch_group in branches_group:
             plotter = ph.plotter()
-            plotter.set_base_path("./figures_database/" + args.coder + "/" + (branch ).replace("-","_") )
+            plotter.set_base_path("./figures_database/" + args.coder + "/" + (branch ).replace("-","_") + "/")
 
             #~ PATH_BRANCH  = PATH + (branch ).replace("-","_")
 #~ #~
@@ -96,9 +96,8 @@ def plot(args):
                 "SparseFullRLNC"].groupby(by= ['symbol_size'])
 #~ #~
 
-            plotter.set_extra_path("/sparse/")
+            plotter.set_type("sparse")
             for key, g in sparse:
-                ph.set_sparse_plot()
                 p = g.pivot_table('gain',  rows='symbols', cols=['benchmark',
                     'density']).plot()
                 ph.set_plot_details(p, buildername)
@@ -108,9 +107,8 @@ def plot(args):
                 #~ pl.savefig(PATH_BRANCH + "/sparse/" + buildername + "." + args.format)
                 #~ pdf[branch].savefig(transparent=True)
 #~ #~
-            plotter.set_extra_path("/dense/")
+            plotter.set_type("dense")
             for key, g in dense:
-                ph.set_dense_plot()
                 p = g.pivot_table('gain',  rows='symbols',
                     cols=['benchmark','testcase']).plot()
                 ph.set_plot_details(p, buildername)

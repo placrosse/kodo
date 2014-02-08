@@ -78,20 +78,18 @@ def set_markers(plot):
         l.set_marker(markers(field))
 
 def set_common_params():
-    pl.rcParams.update(
-        {'legend.frameon' : False,
-        'legend.loc' : 'center right'
-        })
+        pl.rcParams.update(
+            {'legend.frameon' : False,
+            'legend.loc' : 'center right'
+            })
 
 def set_sparse_params():
-    set_common_params()
     pl.rcParams.update(
         {'figure.subplot.right': .7 ,
             'figure.subplot.left': .1
         })
 
 def set_dense_params():
-    set_common_params()
     pl.rcParams.update(
         {'figure.subplot.right': .48 ,
         'figure.subplot.left': .1
@@ -100,37 +98,59 @@ def set_dense_params():
 def set_legend():
     pl.legend(bbox_to_anchor=(1., -0.01), loc=3, ncol=1)
 
-def set_plot_details(p, title):
-    p.set_title(title, ha = "left", position = (.0,1.03), fontsize = "medium")
-    set_markers(p)
-    set_legend()
-
 class plotter:
     '''
     for convenient plotting
     '''
 
     def __init__(self):
+        self.plot = False
         self.base_path = "."
         self.extra_path = ""
         self.pdf = ""
+        set_common_params()
         pl.close('all')
+
+    def __del__(self):
+        self.pdf.close()
+
+    def set_plot(self, plot):
+        self.plot = plot
 
     def set_base_path(self, path):
             self.base_path = path
             mkdir_p(path)
             self.pdf = pp(self.base_path + "all.pdf")
 
+    def append_to_base_path(self, path):
+        set_base_path(self.base_path + path)
+
     def set_extra_path(self, path):
             self.extra_path = path
             mkdir_p(self.base_path + self.extra_path)
 
+    def set_type(self, type):
+        self.set_extra_path(type + "/")
+        if type == "sparse":
+            set_sparse_params()
+        elif type == "dense":
+            set_dense_params()
+        else:
+            assert(0)
+
+    def set_plot_details(self, title):
+        assert(self.plot)
+        self.plot.set_title(title, ha = "left", position = (.0,1.03), fontsize = "medium")
+        set_markers(self.plot)
+        set_legend()
+
+
     def write(self, plot, filename):
+        assert(self.plot)
         pl.savefig(self.base_path + self.extra_path + filename)
         self.pdf.savefig(transparent=True)
+        self.plot = False
 
-    def __del__(self):
-        self.pdf.close()
 
 def mkdir_p(path):
     try:

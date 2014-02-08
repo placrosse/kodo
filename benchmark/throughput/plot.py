@@ -49,22 +49,22 @@ def plot(args):
         pl.xticks(list(sp.unique(group['symbols'])))
         p.set_yscale('log')
 
-    plotter.set_extra_path("sparse/")
-    ph.set_sparse_params()
+    plotter.set_type("sparse")
     for (buildername,symbols), group in sparse:
         p = group.pivot_table('mean',  rows='symbols', cols=['benchmark',
         'density']).plot()
+        plotter.set_plot(p)
         set_throughput_details(p)
-        ph.set_plot_details(p, buildername)
+        plotter.set_plot_details(buildername)
         plotter.write(p, buildername + "." + args.format)
 
-    plotter.set_extra_path("dense/")
-    ph.set_dense_params()
+    plotter.set_type("dense")
     for (buildername,symbols), group in dense:
         p = group.pivot_table('mean',  rows='symbols', cols=['benchmark',
         'testcase']).plot()
+        plotter.set_plot(p)
         set_throughput_details(p)
-        ph.set_plot_details(p, buildername)
+        plotter.set_plot_details(buildername)
         plotter.write(p, buildername + "." + args.format)
 
 
