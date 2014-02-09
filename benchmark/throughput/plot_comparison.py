@@ -61,7 +61,6 @@ def plot(args):
             #~ pdf[branch] = pp(PATH + branch.replace("-","_") + "/all.pdf")
 #~
 
-
     for buildername, group in groups:
 #~ #~
         # Group all results from the most recent master build
