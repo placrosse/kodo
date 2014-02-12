@@ -15,6 +15,7 @@ relevant benchmark run on our buildslaves: http://176.28.49.184:12344/buildslave
 import argparse
 import pandas as pd
 import scipy as sp
+from matplotlib import pyplot as pl
 
 import sys
 sys.path.insert(0, "../")
@@ -41,28 +42,14 @@ def plot(args):
     df_all['mean'] = df_all['throughput'].apply(sp.mean)
     df_all['std'] = df_all['throughput'].apply(sp.std)
     groups = df_all.groupby(['buildername'])
-#~
-    #~ from matplotlib import pyplot as pl
-    #~ from matplotlib.backends.backend_pdf import PdfPages as pp
-    #~ pl.close('all')
-#~
-    #~ PATH  = ("./figures_database/" + args.coder + "/")
-#~
+
     branches = list(sp.unique(df_all['branch']))
     if len(branches) == 1:
         print("Only recent benchmarks for the master branch in the database, "
               "no plots will be generated.")
-#~
-    #~ pdf = {}
-    #~ for branch in branches:
-        #~ if branch != "master":
-            #~ ps.mkdir_p(PATH + branch.replace("-","_") + "/sparse")
-            #~ ps.mkdir_p(PATH  + branch.replace("-","_") + "/dense")
-            #~ pdf[branch] = pp(PATH + branch.replace("-","_") + "/all.pdf")
-#~
 
     for buildername, group in groups:
-#~ #~
+
         # Group all results from the most recent master build
         master_group = group[sp.array(group['branch'] == "master")]
         group[group['branch'] == "master"]
@@ -72,53 +59,46 @@ def plot(args):
             continue
         master_group = master_group[master_group['buildnumber'] == \
             max(master_group['buildnumber'])]
-#~ #~
+
         # Group all other results by branch
         branches_group = group[group['branch'] != "master"].groupby(by = ['branch'])
-#~ #~
+
         for branch, branch_group in branches_group:
             plotter = ph.plotter()
             plotter.set_base_path("./figures_database/" + args.coder + "/" + (branch ).replace("-","_") + "/")
 
-            #~ PATH_BRANCH  = PATH + (branch ).replace("-","_")
-#~ #~
             # Calculate the difference compared to master of the latest build
             branch_group = branch_group[branch_group["buildnumber"] \
                 == max(branch_group['buildnumber'])]
             branch_group['gain'] = (sp.array(branch_group['mean']) - \
                 sp.array(master_group['mean']) ) / sp.array(master_group['mean'])*100
-#~ #~
+
             # Group by type of code; dense, sparse
             dense = branch_group[branch_group['testcase'] != \
                 "SparseFullRLNC"].groupby(by= ['symbol_size'])
             sparse = branch_group[branch_group['testcase'] == \
                 "SparseFullRLNC"].groupby(by= ['symbol_size'])
-#~ #~
+
+            def set_comparison_plot(p):
+                plotter.set_plot_details(buildername)
+                pl.ylabel("Throughput gain [\%]")
+                pl.xticks(list(sp.unique(group['symbols'])))
 
             plotter.set_type("sparse")
             for key, g in sparse:
                 p = g.pivot_table('gain',  rows='symbols', cols=['benchmark',
                     'density']).plot()
-                ph.set_plot_details(p, buildername)
-                pl.ylabel("Throughput gain [\%]")
-                pl.xticks(list(sp.unique(group['symbols'])))
-                plotter.write(p, buildername + "." + args.format)
-                #~ pl.savefig(PATH_BRANCH + "/sparse/" + buildername + "." + args.format)
-                #~ pdf[branch].savefig(transparent=True)
-#~ #~
+                plotter.set_plot(p)
+                set_comparison_plot(p)
+                plotter.write(buildername + "." + args.format)
+
             plotter.set_type("dense")
             for key, g in dense:
                 p = g.pivot_table('gain',  rows='symbols',
                     cols=['benchmark','testcase']).plot()
-                ph.set_plot_details(p, buildername)
-                pl.ylabel("Throughput gain [\%]")
-                pl.xticks(list(sp.unique(group['symbols'])))
-                plotter.write(p, buildername + "." + args.format)
-                #~ pl.savefig(PATH_BRANCH + "/dense/" + buildername + "." + args.format)
-                #~ pdf[branch].savefig(transparent=True)
-#~
-    #~ for p in pdf:
-        #~ pdf[p].close()
+                plotter.set_plot(p)
+                set_comparison_plot(p)
+                plotter.write(buildername + "." + args.format)
 
 if __name__ == '__main__':
     args = ph.add_arguments(["--coder", "--days", "--output-format"])

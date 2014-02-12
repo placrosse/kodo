@@ -117,9 +117,6 @@ class plotter:
     def set_plot(self, plot):
         self.plot = plot
 
-    def set_configurations(self, function_list):
-        self.configuration_functions = function_list
-
     def set_base_path(self, path):
             self.base_path = path
             mkdir_p(path)

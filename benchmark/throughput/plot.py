@@ -48,13 +48,13 @@ def plot(args):
         p.set_yscale('log')
         plotter.set_plot_details(buildername)
 
+
     plotter.set_type("sparse")
     for (buildername,symbols), group in sparse:
         p = group.pivot_table('mean',  rows='symbols', cols=['benchmark',
         'density']).plot()
         plotter.set_plot(p)
         set_throughput_configuration(p)
-        #~plotter.set_plot_details(buildername)
         plotter.write(buildername + "." + args.format)
 
     plotter.set_type("dense")
@@ -63,7 +63,6 @@ def plot(args):
         'testcase']).plot()
         plotter.set_plot(p)
         set_throughput_configuration(p)
-        #~plotter.set_plot_details(buildername)
         plotter.write(buildername + "." + args.format)
 
 if __name__ == '__main__':
