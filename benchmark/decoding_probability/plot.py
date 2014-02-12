@@ -29,7 +29,7 @@ def plot(args):
         "scheduler": "kodo-nightly-benchmark",
         "utc_date" : {"$gte": ph.yesterday(), "$lt": ph.today()}
         }
-        df = ph.get_kodo_decoding_probability_dataframe(query)
+        df = ph.get_dataframe(kodo_decoding_probability, query)
 
     df['mean'] = df['used'].apply(sp.mean) -df['symbols']
     df['std'] = df['used'].apply(sp.std)
@@ -49,14 +49,14 @@ def plot(args):
         p = group.pivot_table('mean',  rows='symbols', cols=['benchmark',
             'density']).plot()
         set_decoding_proability_configuratation(p)
-        plotter.write(p, buildername)
+        plotter.write(buildername)
 
     plotter.set_type("dense")
     for (buildername,symbols), group in dense:
         p = group.pivot_table('mean',  rows='symbols', cols=['benchmark',
             'testcase']).plot()
         set_decoding_proability_configuratation(p)
-        plotter.write(p, buildername)
+        plotter.write(buildername)
 
 if __name__ == '__main__':
     args = ph.add_arguments(["--json", "--output-format"])

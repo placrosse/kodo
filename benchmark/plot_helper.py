@@ -52,21 +52,16 @@ def connect_database():
     db.authenticate(username, password)
     return db
 
-def get_kodo_throughput_dataframe(query):
+def get_dataframe(collection, query):
     db = connect_database()
-    mc = db.kodo_throughput.find(query)
-    df = pd.DataFrame.from_records( list(mc) )
-    return df
 
-def get_kodo_decoding_probability_dataframe(query):
-    db = connect_database()
-    mc = db.kodo_decoding_probability.find(query)
-    df = pd.DataFrame.from_records( list(mc) )
-    return df
+    if collection == "kodo_throughput":
+        mc = db.kodo_throughput.find(query)
+    elif collection == "kodo_decoding_probability":
+        mc = db.kodo_decoding_probability.find(query)
+    elif collection == "kodo_overhead":
+        mc = db.kodo_overhead.find(query)
 
-def get_kodo_overhead_dataframe(query):
-    db = connect_database()
-    mc = db.kodo_overhead.find(query)
     df = pd.DataFrame.from_records( list(mc) )
     return df
 
@@ -89,11 +84,15 @@ def set_markers(plot):
         field = l.get_label()
         l.set_marker(markers(field))
 
+def set_legend():
+    pl.legend(bbox_to_anchor=(1., -0.01), loc=3, ncol=1)
+
 def set_common_params():
         pl.rcParams.update(
             {'legend.frameon' : False,
             'legend.loc' : 'center right'
             })
+        set_legend()
 
 def set_sparse_params():
     pl.rcParams.update(
@@ -107,9 +106,6 @@ def set_dense_params():
         'figure.subplot.left': .1
         })
 
-def set_legend():
-    pl.legend(bbox_to_anchor=(1., -0.01), loc=3, ncol=1)
-
 class plotter:
     '''
     for convenient plotting
@@ -119,7 +115,6 @@ class plotter:
         self.args = args
         self.type = False
         self.branch = False
-        set_common_params()
         pl.close('all')
         self.pdf = False
 
@@ -148,6 +143,7 @@ class plotter:
         return PATH + FILENAME
 
     def set_type(self, type):
+        set_common_params()
         self.type = type
         if type == "sparse":
             set_sparse_params()
@@ -165,9 +161,9 @@ class plotter:
     def set_plot_details(self, plot, title):
         plot.set_title(title, ha = "left", position = (.0,1.03), fontsize = "medium")
         set_markers(plot)
-        set_legend()
 
-    def write(self, plot, filename):
+
+    def write(self, filename):
         pl.savefig(self.get_full_path(filename))
 
         if not self.pdf:
@@ -179,10 +175,6 @@ def mkdir_p(path):
         os.makedirs(path)
     except OSError as exc:
         pass
-
-def mkdirs(paths):
-    for path in paths:
-        mkdir_p(path)
 
 def add_arguments(argument_list):
     '''

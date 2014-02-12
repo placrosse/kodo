@@ -42,7 +42,7 @@ def plot(args):
         #~ db = ps.connect_database()
         #~ mc = db.kodo_decoding_probability.find(query)
         #~ df = pd.DataFrame.from_records( list(mc) )
-        df = ph.get_kodo_decoding_probability_dataframe(query)
+        df = ph.get_dataframe(kodo_decoding_probability, query)
 
     # Calculate the expected number of extra pacekts depending on the rank
     df['dependency'] = df['rank'].apply(sp.mean, axis=0)-1
@@ -63,7 +63,7 @@ def plot(args):
 
 
 
-    def set_comparison_plot(p):
+    def set_comparison_plot():
         plotter.set_plot_title(buildername)
         pl.xlabel("Rank Deficiency")
         pl.ylabel("Extra Packets")
@@ -72,13 +72,14 @@ def plot(args):
         pl.grid('on')
 
 
+
     for (buildername, symbol_size, symbols), group in sparse:
 
         #Verbose plotting since due to no pandas support for plotting of vectors
         #~ pl.figure()
         #~ ps.set_sparse_plot()
+        pl.figure()
         plotter.set_type("sparse")
-        p = pl.figure()
         for (deps, field,density) in zip(group['dependency'],
             group['benchmark'], group['density']):
             pl.plot(sp.arange(symbols), deps, marker = ph.markers(field),
@@ -94,16 +95,18 @@ def plot(args):
         #~ pl.grid('on')
         #~ pl.savefig(PATH + "sparse/" + buildername + str(symbols) + "." + args.format)
         #~ pdf.savefig(transparent=True)
-        set_comparison_plot(p)
-        plotter.write(p, buildername)
+        #~set_comparison_plot(p)
+        plotter.write(buildername)
+
 
     for (buildername, symbol_size, symbols), group in dense:
 
         #Verbose plotting since due to no pandas support for plotting of vectors
         #~ pl.figure()
         #~ ps.set_dense_plot()
+
+        pl.figure()
         plotter.set_type("dense")
-        p = pl.figure()
         for (deps, field,testcase) in zip(group['dependency'],
             group['benchmark'], group['testcase']):
             pl.plot(sp.arange(symbols), deps, marker = ph.markers(field),
@@ -119,10 +122,10 @@ def plot(args):
         #~ pl.grid('on')
         #~ pl.savefig(PATH + "dense/" + buildername + str(symbols) + "." + args.format)
         #~ pdf.savefig(transparent=True)
-        set_comparison_plot(p)
-        plotter.write(p, buildername)
+        #~set_comparison_plot(p)
+        plotter.write(buildername)
 
-    pdf.close()
+    #~pdf.close()
 
 
 if __name__ == '__main__':

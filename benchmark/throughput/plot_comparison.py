@@ -36,8 +36,8 @@ def plot(args):
     "utc_date" : {"$gte": ph.yesterday(), "$lt": ph.today()}
     }
 
-    df_master = ph.get_dataframe_from_database(query_master)
-    df_branches = ph.get_dataframe_from_database(query_branches)
+    df_master = ph.get_dataframe(kodo_throughput, query_master)
+    df_branches = ph.get_dataframe(kodo_throughput, query_branches)
     df_all = df_master.append(df_branches)
 
     df_all['mean'] = df_all['throughput'].apply(sp.mean)
@@ -90,14 +90,14 @@ def plot(args):
                 p = g.pivot_table('gain',  rows='symbols', cols=['benchmark',
                     'density']).plot()
                 set_comparison_plot(p)
-                plotter.write(p, buildername)
+                plotter.write(buildername)
 
             plotter.set_type("dense")
             for key, g in dense:
                 p = g.pivot_table('gain',  rows='symbols',
                     cols=['benchmark','testcase']).plot()
                 set_comparison_plot(p)
-                plotter.write(p, buildername)
+                plotter.write(buildername)
 
 if __name__ == '__main__':
     args = ph.add_arguments(["--coder", "--days", "--output-format"])
