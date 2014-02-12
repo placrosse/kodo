@@ -10,7 +10,8 @@ Plot the throughput for all benchmarked Kodo platforms
 
 import pandas as pd
 import scipy as sp
-from matplotlib import pyplot as pl
+import pylab as pl
+#~ from matplotlib import pyplot as pl
 
 import sys
 sys.path.insert(0, "../")

@@ -52,9 +52,21 @@ def connect_database():
     db.authenticate(username, password)
     return db
 
-def get_dataframe_from_database(query):
+def get_kodo_throughput_dataframe(query):
     db = connect_database()
     mc = db.kodo_throughput.find(query)
+    df = pd.DataFrame.from_records( list(mc) )
+    return df
+
+def get_kodo_decoding_probability_dataframe(query):
+    db = connect_database()
+    mc = db.kodo_decoding_probability.find(query)
+    df = pd.DataFrame.from_records( list(mc) )
+    return df
+
+def get_kodo_overhead_dataframe(query):
+    db = connect_database()
+    mc = db.kodo_overhead.find(query)
     df = pd.DataFrame.from_records( list(mc) )
     return df
 
@@ -147,6 +159,8 @@ class plotter:
     def set_branch(self, branch):
         self.branch = (branch).replace("-","_")
 
+    def set_plot_title(self, title):
+        pl.title(title, ha = "left", position = (.0,1.03), fontsize = "medium")
 
     def set_plot_details(self, plot, title):
         plot.set_title(title, ha = "left", position = (.0,1.03), fontsize = "medium")
