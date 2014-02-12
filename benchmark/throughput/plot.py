@@ -17,14 +17,12 @@ sys.path.insert(0, "../")
 import plot_helper as ph
 
 def plot(args):
-    plotter = ph.plotter()
+    plotter = ph.plotter(args)
 
     if args.jsonfile:
-        plotter.set_base_path("figures_local/" + args.coder + "/")
         df = pd.read_json(args.jsonfile)
         df['buildername'] = "local"
     else:
-        plotter.set_base_path("figures_database/" + args.coder + "/")
         query = {
         "type": args.coder,
         "branch" : "master",
@@ -46,24 +44,21 @@ def plot(args):
         pl.ylabel("Throughput" + " [" + list(group['unit'])[0] + "]")
         pl.xticks(list(sp.unique(group['symbols'])))
         p.set_yscale('log')
-        plotter.set_plot_details(buildername)
-
+        plotter.set_plot_details(p, buildername)
 
     plotter.set_type("sparse")
     for (buildername,symbols), group in sparse:
         p = group.pivot_table('mean',  rows='symbols', cols=['benchmark',
         'density']).plot()
-        plotter.set_plot(p)
         set_throughput_configuration(p)
-        plotter.write(buildername + "." + args.format)
+        plotter.write(p, buildername)
 
     plotter.set_type("dense")
     for (buildername,symbols), group in dense:
         p = group.pivot_table('mean',  rows='symbols', cols=['benchmark',
         'testcase']).plot()
-        plotter.set_plot(p)
         set_throughput_configuration(p)
-        plotter.write(buildername + "." + args.format)
+        plotter.write(p, buildername)
 
 if __name__ == '__main__':
 

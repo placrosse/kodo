@@ -103,34 +103,40 @@ class plotter:
     for convenient plotting
     '''
 
-    def __init__(self):
-        self.plot = False
-        self.base_path = "."
-        self.extra_path = ""
-        self.pdf = ""
+    def __init__(self, args):
+        self.args = args
+        self.type = False
+        self.branch = False
         set_common_params()
         pl.close('all')
+        self.pdf = False
 
     def __del__(self):
         self.pdf.close()
 
-    def set_plot(self, plot):
-        self.plot = plot
+    def get_base_path(self):
+        if hasattr(self.args, "jsonfile"):
+            PATH = "./local/"
+        else:
+            PATH = "./database/"
 
-    def set_base_path(self, path):
-            self.base_path = path
-            mkdir_p(path)
-            self.pdf = pp(self.base_path + "all.pdf")
+        if hasattr(self.args, "coder"):
+            PATH = PATH + self.args.coder + "/"
 
-    def append_to_base_path(self, path):
-        set_base_path(self.base_path + path)
+        if self.branch:
+            PATH + self.branch + "/"
 
-    def set_extra_path(self, path):
-            self.extra_path = path
-            mkdir_p(self.base_path + self.extra_path)
+        mkdir_p(PATH)
+        return PATH
+
+    def get_full_path(self, filename):
+        PATH = self.get_base_path() + self.type + "/"
+        FILENAME = filename + "." + self.args.format
+        mkdir_p(PATH)
+        return PATH + FILENAME
 
     def set_type(self, type):
-        self.set_extra_path(type + "/")
+        self.type = type
         if type == "sparse":
             set_sparse_params()
         elif type == "dense":
@@ -138,18 +144,21 @@ class plotter:
         else:
             assert(0)
 
-    def set_plot_details(self, title):
-        assert(self.plot)
-        self.plot.set_title(title, ha = "left", position = (.0,1.03), fontsize = "medium")
-        set_markers(self.plot)
+    def set_branch(self, branch):
+        self.branch = (branch).replace("-","_")
+
+
+    def set_plot_details(self, plot, title):
+        plot.set_title(title, ha = "left", position = (.0,1.03), fontsize = "medium")
+        set_markers(plot)
         set_legend()
 
-    def write(self, filename):
-        assert(self.plot)
-        pl.savefig(self.base_path + self.extra_path + filename)
-        self.pdf.savefig(transparent=True)
-        self.plot = False
+    def write(self, plot, filename):
+        pl.savefig(self.get_full_path(filename))
 
+        if not self.pdf:
+            self.pdf = pp(self.get_base_path() + "all.pdf")
+        self.pdf.savefig(transparent=True)
 
 def mkdir_p(path):
     try:
@@ -202,4 +211,3 @@ def add_argument_days(parser):
     parser.add_argument(
         '--days', dest='days', type=int, action='store', default=3,
         help='How many days to look back in time when comparing')
-

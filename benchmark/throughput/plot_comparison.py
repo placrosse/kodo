@@ -64,8 +64,8 @@ def plot(args):
         branches_group = group[group['branch'] != "master"].groupby(by = ['branch'])
 
         for branch, branch_group in branches_group:
-            plotter = ph.plotter()
-            plotter.set_base_path("./figures_database/" + args.coder + "/" + (branch ).replace("-","_") + "/")
+            plotter = ph.plotter(args)
+            plotter.set_branch(branch)
 
             # Calculate the difference compared to master of the latest build
             branch_group = branch_group[branch_group["buildnumber"] \
@@ -80,7 +80,7 @@ def plot(args):
                 "SparseFullRLNC"].groupby(by= ['symbol_size'])
 
             def set_comparison_plot(p):
-                plotter.set_plot_details(buildername)
+                plotter.set_plot_details(p, buildername)
                 pl.ylabel("Throughput gain [\%]")
                 pl.xticks(list(sp.unique(group['symbols'])))
 
@@ -88,17 +88,15 @@ def plot(args):
             for key, g in sparse:
                 p = g.pivot_table('gain',  rows='symbols', cols=['benchmark',
                     'density']).plot()
-                plotter.set_plot(p)
                 set_comparison_plot(p)
-                plotter.write(buildername + "." + args.format)
+                plotter.write(p, buildername)
 
             plotter.set_type("dense")
             for key, g in dense:
                 p = g.pivot_table('gain',  rows='symbols',
                     cols=['benchmark','testcase']).plot()
-                plotter.set_plot(p)
                 set_comparison_plot(p)
-                plotter.write(buildername + "." + args.format)
+                plotter.write(p, buildername)
 
 if __name__ == '__main__':
     args = ph.add_arguments(["--coder", "--days", "--output-format"])
