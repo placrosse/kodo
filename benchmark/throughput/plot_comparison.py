@@ -35,8 +35,8 @@ def plot(args):
     "utc_date" : {"$gte": ph.yesterday(), "$lt": ph.today()}
     }
 
-    df_master = ph.get_dataframe("kodo_throughput", query_master)
-    df_branches = ph.get_dataframe("kodo_throughput", query_branches)
+    df_master = plotter.get_dataframe(query_master, "kodo_throughput")
+    df_branches = plotter.get_dataframe(query_branches, "kodo_throughput")
     df_all = df_master.append(df_branches)
 
     df_all['mean'] = df_all['throughput'].apply(sp.mean)

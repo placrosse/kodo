@@ -19,17 +19,12 @@ import plot_helper as ph
 def plot(args):
     plotter = ph.plotter(args)
 
-    if args.json:
-        df = pd.read_json(args.jsonfile)
-        df['buildername'] = "local"
-
-    else:
-        query = {
-        "branch" : "master",
-        "scheduler": "kodo-nightly-benchmark",
-        "utc_date" : {"$gte": ph.yesterday(), "$lt": ph.today()}
-        }
-        df = ph.get_dataframe("kodo_decoding_probability", query)
+    query = {
+    "branch" : "master",
+    "scheduler": "kodo-nightly-benchmark",
+    "utc_date" : {"$gte": ph.yesterday(), "$lt": ph.today()}
+    }
+    df = plotter.get_dataframe(query, "kodo_decoding_probability")
 
     df['mean'] = df['used'].apply(sp.mean) -df['symbols']
     df['std'] = df['used'].apply(sp.std)

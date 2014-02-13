@@ -52,19 +52,6 @@ def connect_database():
     db.authenticate(username, password)
     return db
 
-def get_dataframe(collection, query):
-    db = connect_database()
-
-    if collection == "kodo_throughput":
-        mc = db.kodo_throughput.find(query)
-    elif collection == "kodo_decoding_probability":
-        mc = db.kodo_decoding_probability.find(query)
-    elif collection == "kodo_overhead":
-        mc = db.kodo_overhead.find(query)
-
-    df = pd.DataFrame.from_records( list(mc) )
-    return df
-
 def markers(label):
         if "Binary8" in label:
             return "v"
@@ -117,6 +104,22 @@ class plotter:
     def __del__(self):
         self.pdf.close()
 
+    def get_dataframe(self, query, collection="none"):
+        if self.args.json:
+            df = pd.read_json(self.args.json)
+            df['buildername'] = "local"
+        else:
+            db = connect_database()
+            if collection == "kodo_throughput":
+                mc = db.kodo_throughput.find(query)
+            elif collection == "kodo_decoding_probability":
+                mc = db.kodo_decoding_probability.find(query)
+            elif collection == "kodo_overhead":
+                mc = db.kodo_overhead.find(query)
+            df = pd.DataFrame.from_records( list(mc) )
+
+        return df
+
     def get_base_path(self):
         if hasattr(self.args, "json"):
             path = os.path.basename("local")
@@ -165,7 +168,7 @@ class plotter:
     def write(self, filename):
         set_legend()
         if not self.pdf:
-            self.pdf = pp(self.get_base_path() + "all.pdf")
+            self.pdf = pp(os.path.join(self.get_base_path(), "all.pdf"))
         self.pdf.savefig(transparent=True)
 
         pl.savefig(self.get_full_path(filename))
