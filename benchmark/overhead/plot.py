@@ -8,38 +8,23 @@ http://www.steinwurf.com/licensing
 Plot the number of extra symbols needed to decode
 """
 
-import argparse
 import pandas as pd
 import scipy as sp
+import pylab as pl
 
 import sys
 sys.path.insert(0, "../")
-import processing_shared as ps
-
-from datetime import datetime, timedelta
-now = datetime.utcnow()
-today = now.date()
-today = datetime(today.year, today.month, today.day)
-yesterday = today - timedelta(1)
+import plot_helper as ph
 
 def plot(args):
+    plotter = ph.plotter(args)
 
-    if args.jsonfile:
-        PATH  = ("figures_local/")
-        df = pd.read_json(args.jsonfile)
-        df['buildername'] = "local"
-
-    else:
-        PATH  = ("figures_database/")
-        query = {
-        "branch" : "master",
-        "scheduler": "kodo-nightly-benchmark",
-        "utc_date" : {"$gte": yesterday, "$lt": today}
-        }
-
-        db = ps.connect_database()
-        mc = db.kodo_overhead.find(query)
-        df = pd.DataFrame.from_records( list(mc) )
+    query = {
+    "branch" : "master",
+    "scheduler": "kodo-nightly-benchmark",
+    "utc_date" : {"$gte": ph.yesterday(), "$lt": ph.today()}
+    }
+    df = plotter.get_dataframe(query, "kodo_overhead")
 
     df['mean'] = (df['used'].apply(sp.mean) - df['coded'].apply(sp.mean) ) \
         / df['coded'].apply(sp.mean)
@@ -49,52 +34,27 @@ def plot(args):
     dense = df[df['testcase'] != "SparseFullRLNC"].groupby(by= ['buildername',
         'symbol_size'])
 
-    from matplotlib import pyplot as pl
-    from matplotlib.backends.backend_pdf import PdfPages as pp
-    pl.close('all')
+    def plot_setup(p):
+        p.set_yscale('log')
+        pl.ylabel("Overhead [\%]")
+        pl.xticks(list(sp.unique(group['symbols'])))
+        plotter.set_title(buildername)
+        plotter.set_markers(p)
 
-    ps.mkdir_p(PATH + "sparse")
-    ps.mkdir_p(PATH + "dense")
-    pdf = pp(PATH + "all.pdf")
-
+    plotter.set_type("sparse")
     for (buildername,symbols), group in sparse:
-        ps.set_sparse_plot()
         p = group.pivot_table('mean', rows='symbols',
             cols=['benchmark','density']).plot()
-        ps.set_plot_details(p, buildername)
-        p.set_yscale('log')
-        pl.ylabel("Overhead [\%]")
-        pl.xticks(list(sp.unique(group['symbols'])))
-        pl.savefig(PATH + "sparse/" + buildername + "." + args.format)
-        pdf.savefig(transparent=True)
+        plot_setup(p)
+        plotter.write(buildername)
 
+    plotter.set_type("dense")
     for (buildername,symbols), group in dense:
-        ps.set_dense_plot()
         p = group.pivot_table('mean',  rows='symbols',
             cols=['benchmark','testcase']).plot()
-        ps.set_plot_details(p, buildername)
-        p.set_yscale('log')
-        pl.ylabel("Overhead [\%]")
-        pl.xticks(list(sp.unique(group['symbols'])))
-        pl.savefig(PATH + "sparse/" + buildername + "." + args.format)
-        pdf.savefig(transparent=True)
-
-    pdf.close()
-
+        plot_setup(p)
+        plotter.write(buildername)
 
 if __name__ == '__main__':
-
-    parser = argparse.ArgumentParser()
-
-    parser.add_argument(
-        '--json', dest='jsonfile', action='store',
-        help='the .json file written by gauge benchmark, if non provided plots \
-        from the database',
-        default="")
-    parser.add_argument(
-        '--output-format', dest='format', action='store', default='eps',
-        help='The format of the generated figures, e.g. eps, pdf')
-
-    args = parser.parse_args()
-
+    args = ph.add_arguments(["json", "output-format"])
     plot(args)
