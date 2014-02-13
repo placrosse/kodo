@@ -118,25 +118,24 @@ class plotter:
         self.pdf.close()
 
     def get_base_path(self):
-        if hasattr(self.args, "jsonfile"):
-            PATH = "./local/"
+        if hasattr(self.args, "json"):
+            path = os.path.basename("local")
         else:
-            PATH = "./database/"
+            path = os.path.basename("database")
 
         if hasattr(self.args, "coder"):
-            PATH = PATH + self.args.coder + "/"
+            path = os.path.join(path, self.args.coder)
 
         if self.branch:
-            PATH + self.branch + "/"
+            path = os.path.join(path, self.branch)
 
-        mkdir_p(PATH)
-        return PATH
+        mkdir_p(path)
+        return path
 
     def get_full_path(self, filename):
-        PATH = self.get_base_path() + self.type + "/"
-        FILENAME = filename + "." + self.args.format
-        mkdir_p(PATH)
-        return PATH + FILENAME
+        path = os.path.join(self.get_base_path(), self.type)
+        mkdir_p(path)
+        return os.path.join(path, filename + "." + self.args.output_format)
 
     def set_type(self, type):
         set_common_params()
@@ -149,7 +148,7 @@ class plotter:
             assert(0)
 
     def set_branch(self, branch):
-        self.branch = (branch).replace("-","_")
+        self.branch = branch.replace("-","_")
 
     def set_title(self, title):
         pl.title(title, ha = "left", position = (.0,1.03), fontsize = "medium")
@@ -180,10 +179,10 @@ def add_arguments(argument_list):
     parser = argparse.ArgumentParser()
 
     arguments = {
-        "--json" : add_argument_json,
-        "--coder" : add_argument_coder,
-        "--output-format" : add_argument_format,
-        "--days" : add_argument_days,
+        "json" : add_argument_json,
+        "coder" : add_argument_coder,
+        "output-format" : add_argument_output_format,
+        "days" : add_argument_days,
         }
 
     for argument in argument_list:
@@ -194,7 +193,7 @@ def add_arguments(argument_list):
 
 def add_argument_json(parser):
     parser.add_argument(
-    '--json', dest='jsonfile', action='store',
+    '--json', dest='json', action='store',
     help='the .json file written by gauge benchmark, if non provided\
     plots from the database', default="")
 
@@ -204,9 +203,9 @@ def add_argument_coder(parser):
     default='decoder',
     help='Whether to consider the encoding or decoding performance')
 
-def add_argument_format(parser):
+def add_argument_output_format(parser):
     parser.add_argument(
-        '--output-format', dest='format', action='store', default='eps',
+        '--output-format', dest='output_format', action='store', default='eps',
         help='The format of the generated figures, e.g. eps, pdf')
 
 def add_argument_days(parser):

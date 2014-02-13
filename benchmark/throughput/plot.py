@@ -19,7 +19,7 @@ import plot_helper as ph
 def plot(args):
     plotter = ph.plotter(args)
 
-    if args.jsonfile:
+    if args.json:
         df = pd.read_json(args.jsonfile)
         df['buildername'] = "local"
     else:
@@ -63,5 +63,5 @@ def plot(args):
 
 if __name__ == '__main__':
 
-    args = ph.add_arguments(["--json", "--coder", "--output-format"])
+    args = ph.add_arguments(["json", "coder", "output-format"])
     plot(args)

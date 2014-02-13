@@ -101,5 +101,5 @@ def plot(args):
                 plotter.write(buildername)
 
 if __name__ == '__main__':
-    args = ph.add_arguments(["--coder", "--days", "--output-format"])
+    args = ph.add_arguments(["coder", "days", "output-format"])
     plot(args)
