@@ -29,7 +29,7 @@ def plot(args):
         "scheduler": "kodo-nightly-benchmark",
         "utc_date" : {"$gte": ph.yesterday(), "$lt": ph.today()}
         }
-        df = ph.get_dataframe(kodo_decoding_probability, query)
+        df = ph.get_dataframe("kodo_decoding_probability", query)
 
     df['mean'] = df['used'].apply(sp.mean) -df['symbols']
     df['std'] = df['used'].apply(sp.std)
@@ -39,23 +39,25 @@ def plot(args):
     dense = df[df['testcase'] != "SparseFullRLNC"].groupby(by= ['buildername',
         'symbol_size'])
 
-    def set_decoding_proability_configuratation(p):
-        plotter.set_plot_details(p, buildername)
+    def plot_setup(p):
         pl.ylabel("Extra symbols" + " [" + list(group['unit'])[0] + "]")
         pl.xticks(list(sp.unique(group['symbols'])))
+        plotter.set_title(buildername)
+        plotter.set_markers(p)
+
 
     plotter.set_type("sparse")
     for (buildername,symbols), group in sparse:
         p = group.pivot_table('mean',  rows='symbols', cols=['benchmark',
             'density']).plot()
-        set_decoding_proability_configuratation(p)
+        plot_setup(p)
         plotter.write(buildername)
 
     plotter.set_type("dense")
     for (buildername,symbols), group in dense:
         p = group.pivot_table('mean',  rows='symbols', cols=['benchmark',
             'testcase']).plot()
-        set_decoding_proability_configuratation(p)
+        plot_setup(p)
         plotter.write(buildername)
 
 if __name__ == '__main__':

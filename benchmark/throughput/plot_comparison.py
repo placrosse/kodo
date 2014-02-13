@@ -16,7 +16,6 @@ import argparse
 import pandas as pd
 import scipy as sp
 import pylab as pl
-#~ from matplotlib import pyplot as pl
 
 import sys
 sys.path.insert(0, "../")
@@ -36,8 +35,8 @@ def plot(args):
     "utc_date" : {"$gte": ph.yesterday(), "$lt": ph.today()}
     }
 
-    df_master = ph.get_dataframe(kodo_throughput, query_master)
-    df_branches = ph.get_dataframe(kodo_throughput, query_branches)
+    df_master = ph.get_dataframe("kodo_throughput", query_master)
+    df_branches = ph.get_dataframe("kodo_throughput", query_branches)
     df_all = df_master.append(df_branches)
 
     df_all['mean'] = df_all['throughput'].apply(sp.mean)
@@ -80,23 +79,25 @@ def plot(args):
             sparse = branch_group[branch_group['testcase'] == \
                 "SparseFullRLNC"].groupby(by= ['symbol_size'])
 
-            def set_comparison_plot(p):
-                plotter.set_plot_details(p, buildername)
+            def plot_setup(p):
                 pl.ylabel("Throughput gain [\%]")
                 pl.xticks(list(sp.unique(group['symbols'])))
+                plotter.set_title(buildername)
+                plotter.set_markers(p)
+
 
             plotter.set_type("sparse")
             for key, g in sparse:
                 p = g.pivot_table('gain',  rows='symbols', cols=['benchmark',
                     'density']).plot()
-                set_comparison_plot(p)
+                plot_setup(p)
                 plotter.write(buildername)
 
             plotter.set_type("dense")
             for key, g in dense:
                 p = g.pivot_table('gain',  rows='symbols',
                     cols=['benchmark','testcase']).plot()
-                set_comparison_plot(p)
+                plot_setup(p)
                 plotter.write(buildername)
 
 if __name__ == '__main__':

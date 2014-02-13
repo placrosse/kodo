@@ -75,15 +75,6 @@ def markers(label):
         if "Prime2325" in label:
             return "*"
 
-def set_markers(plot):
-    """
-    Set markers depending on the field
-    @param plot a pylab plot
-    """
-    for l in plot.lines:
-        field = l.get_label()
-        l.set_marker(markers(field))
-
 def set_legend():
     pl.legend(bbox_to_anchor=(1., -0.01), loc=3, ncol=1)
 
@@ -92,7 +83,6 @@ def set_common_params():
             {'legend.frameon' : False,
             'legend.loc' : 'center right'
             })
-        set_legend()
 
 def set_sparse_params():
     pl.rcParams.update(
@@ -106,10 +96,16 @@ def set_dense_params():
         'figure.subplot.left': .1
         })
 
+def mkdir_p(path):
+    try:
+        os.makedirs(path)
+    except OSError as exc:
+        pass
+
 class plotter:
-    '''
+    """
     for convenient plotting
-    '''
+    """
 
     def __init__(self, args):
         self.args = args
@@ -155,31 +151,31 @@ class plotter:
     def set_branch(self, branch):
         self.branch = (branch).replace("-","_")
 
-    def set_plot_title(self, title):
+    def set_title(self, title):
         pl.title(title, ha = "left", position = (.0,1.03), fontsize = "medium")
 
-    def set_plot_details(self, plot, title):
-        plot.set_title(title, ha = "left", position = (.0,1.03), fontsize = "medium")
-        set_markers(plot)
-
+    def set_markers(self, plot):
+        """
+        Set markers depending on the field
+        @param plot a pylab plot
+        """
+        for l in plot.lines:
+            field = l.get_label()
+            l.set_marker(markers(field))
 
     def write(self, filename):
-        pl.savefig(self.get_full_path(filename))
-
+        set_legend()
         if not self.pdf:
             self.pdf = pp(self.get_base_path() + "all.pdf")
         self.pdf.savefig(transparent=True)
 
-def mkdir_p(path):
-    try:
-        os.makedirs(path)
-    except OSError as exc:
-        pass
+        pl.savefig(self.get_full_path(filename))
+        pl.close('all')
 
 def add_arguments(argument_list):
-    '''
+    """
     add arguments to the runtime
-    '''
+    """
 
     parser = argparse.ArgumentParser()
 

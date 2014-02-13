@@ -11,7 +11,6 @@ Plot the throughput for all benchmarked Kodo platforms
 import pandas as pd
 import scipy as sp
 import pylab as pl
-#~ from matplotlib import pyplot as pl
 
 import sys
 sys.path.insert(0, "../")
@@ -30,7 +29,7 @@ def plot(args):
         "scheduler": "kodo-nightly-benchmark",
         "utc_date" : {"$gte": ph.yesterday(), "$lt": ph.today()}
         }
-        df = ph.get_dataframe(kodo_throughput, query)
+        df = ph.get_dataframe("kodo_throughput", query)
 
     df['mean'] = df['throughput'].apply(sp.mean)
     df['std'] = df['throughput'].apply(sp.std)
@@ -41,24 +40,25 @@ def plot(args):
     sparse = df[df['testcase'] == "SparseFullRLNC"].groupby(by=
         ['buildername', 'symbol_size'])
 
-    def set_throughput_configuration(p):
+    def plot_setup(p):
         pl.ylabel("Throughput" + " [" + list(group['unit'])[0] + "]")
         pl.xticks(list(sp.unique(group['symbols'])))
         p.set_yscale('log')
-        plotter.set_plot_details(p, buildername)
+        plotter.set_title(buildername)
+        plotter.set_markers(p)
 
     plotter.set_type("sparse")
     for (buildername,symbols), group in sparse:
         p = group.pivot_table('mean',  rows='symbols', cols=['benchmark',
         'density']).plot()
-        set_throughput_configuration(p)
+        plot_setup(p)
         plotter.write(buildername)
 
     plotter.set_type("dense")
     for (buildername,symbols), group in dense:
         p = group.pivot_table('mean',  rows='symbols', cols=['benchmark',
         'testcase']).plot()
-        set_throughput_configuration(p)
+        plot_setup(p)
         plotter.write(buildername)
 
 if __name__ == '__main__':
