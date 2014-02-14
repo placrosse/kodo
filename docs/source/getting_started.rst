@@ -6,11 +6,16 @@ Getting Started
 Obtain a License for Kodo
 -------------------------
 Before you download or use Kodo you **MUST** first obtain a valid license.
-Please note that you own all your changes; you just accept to only use the code
-for research and educational purposes.
-If you need to include Kodo in a commercial product you should obtain the
-commercial license instead. Both licenses can be aquired by filling out the
-license request form_.
+
+* If you will use Kodo for **research and educational** purposes, please 
+  fill out this form_ to obtain a research license.
+
+* If you will **evaluate or test** Kodo in a commercial context you can 
+  obtain a 30 days trial license by filling out this form_ or contact us 
+  at sales@steinwurf.com.
+
+* For a general **commercial license** contact us at sales@steinwurf.com
+
 
 .. _form: http://steinwurf.com/license/
 
