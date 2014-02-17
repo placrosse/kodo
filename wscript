@@ -61,6 +61,12 @@ def options(opt):
             git_repository = 'github.com/steinwurf/tables.git',
             major_version = 4))
 
+    bundle.add_dependency(opt,
+        resolve.ResolveGitMajorVersion(
+            name = 'cpuid',
+            git_repository = 'github.com/steinwurf/cpuid.git',
+            major_version = 2))
+
     opt.load('wurf_dependency_resolve')
     opt.load('wurf_dependency_bundle')
     opt.load('wurf_tools')
@@ -84,6 +90,7 @@ def configure(conf):
         recurse_helper(conf, 'fifi')
         recurse_helper(conf, 'gauge')
         recurse_helper(conf, 'tables')
+        recurse_helper(conf, 'cpuid')
 
         conf.recurse('examples/sample_makefile')
 
@@ -99,6 +106,7 @@ def build(bld):
         recurse_helper(bld, 'fifi')
         recurse_helper(bld, 'gauge')
         recurse_helper(bld, 'tables')
+        recurse_helper(bld, 'cpuid')
 
         # Only build test when executed from the
         # top-level wscript i.e. not when included as a dependency
@@ -111,7 +119,7 @@ def build(bld):
         bld.recurse('examples/encode_decode_storage')
         bld.recurse('examples/encode_on_the_fly')
         bld.recurse('examples/encode_recode_decode_simple')
-        bld.recurse('examples/sample_makefile')
+        #bld.recurse('examples/sample_makefile')
         bld.recurse('examples/switch_systematic_on_off')
         bld.recurse('examples/rank_callback')
         bld.recurse('examples/use_cached_symbol_decoder')
@@ -123,9 +131,10 @@ def build(bld):
         bld.recurse('benchmark/decoding_probability')
 
     # Export own includes
-    bld(includes = './src',
+    bld(name = 'kodo_includes',
+        includes = './src',
         export_includes = './src',
-        name = 'kodo_includes')
+        use = ['cpuid', 'fifi'])
 
     # Export unit test includes, these files are useful for testing
     # the correctness of encoders and decoders. Since users of kodo

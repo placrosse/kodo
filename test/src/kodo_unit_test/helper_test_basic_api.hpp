@@ -5,6 +5,11 @@
 
 #pragma once
 
+#include <fifi/binary.hpp>
+#include <fifi/binary4.hpp>
+#include <fifi/binary8.hpp>
+#include <fifi/binary16.hpp>
+#include <fifi/prime2325.hpp>
 #include <fifi/is_prime2325.hpp>
 #include <fifi/prime2325_binary_search.hpp>
 #include <fifi/prime2325_apply_prefix.hpp>
@@ -123,6 +128,12 @@ inline void test_basic_api(uint32_t symbols, uint32_t symbol_size)
         <
             Encoder<fifi::binary>,
             Decoder<fifi::binary>
+        >(symbols, symbol_size);
+
+    test_basic_api
+        <
+            Encoder<fifi::binary4>,
+            Decoder<fifi::binary4>
         >(symbols, symbol_size);
 
     test_basic_api
