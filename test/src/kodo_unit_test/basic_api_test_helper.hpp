@@ -7,7 +7,9 @@
 
 #include <gtest/gtest.h>
 #include <random>
-#include <fifi/field_types.hpp>
+#include <fifi/binary.hpp>
+#include <fifi/binary8.hpp>
+#include <fifi/binary16.hpp>
 
 /// @param max_value The maximum value to return
 /// @return a random number between 1 and max_value

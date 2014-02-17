@@ -10,7 +10,7 @@
 
 #include <gtest/gtest.h>
 
-#include <fifi/field_types.hpp>
+#include <fifi/binary.hpp>
 
 #include <kodo/operations_counter.hpp>
 #include <kodo/finite_field_counter.hpp>
