@@ -63,25 +63,31 @@ def markers(label):
             return "*"
 
 def set_legend():
-    pl.legend(bbox_to_anchor=(1., -0.01), loc=3, ncol=1)
+    pl.legend(loc="upper left", fontsize="x-small", ncol=4, mode="expand")
+
+def fields(string):
+        if "Binary8" in string:
+            return "$2^8$"
+        if "Binary16" in string:
+            return "$2^{16}$"
+        if "Binary" in string:
+            return "$2$"
+        if "Prime2325" in string:
+            return "$2^{32}-5$"
+
+def algorithms(string):
+        if "BackwardFullRLNC" in string:
+            return "Backwards"
+        if "FullDelayedRLNC" in string:
+            return "Delayed"
+        if "FullRLNC" in string:
+            return "Standard"
 
 def set_common_params():
         pl.rcParams.update(
-            {'legend.frameon' : False,
-            'legend.loc' : 'center right'
+            {'figure.autolayout' : True,
+            'text.usetex' : True,
             })
-
-def set_sparse_params():
-    pl.rcParams.update(
-        {'figure.subplot.right': .7 ,
-            'figure.subplot.left': .1
-        })
-
-def set_dense_params():
-    pl.rcParams.update(
-        {'figure.subplot.right': .48 ,
-        'figure.subplot.left': .1
-        })
 
 def mkdir_p(path):
     try:
@@ -143,12 +149,6 @@ class plotter:
     def set_type(self, type):
         set_common_params()
         self.type = type
-        if type == "sparse":
-            set_sparse_params()
-        elif type == "dense":
-            set_dense_params()
-        else:
-            assert(0)
 
     def set_branch(self, branch):
         self.branch = branch.replace("-","_")
@@ -185,6 +185,7 @@ def add_arguments(argument_list):
         "json" : add_argument_json,
         "coder" : add_argument_coder,
         "output-format" : add_argument_output_format,
+        "date" : add_argument_date,
         "days" : add_argument_days,
         }
 
@@ -208,10 +209,15 @@ def add_argument_coder(parser):
 
 def add_argument_output_format(parser):
     parser.add_argument(
-        '--output-format', dest='output_format', action='store', default='eps',
-        help='The format of the generated figures, e.g. eps, pdf')
+    '--output-format', dest='output_format', action='store', default='eps',
+    help='The format of the generated figures, e.g. eps, pdf')
+
+def add_argument_date(parser):
+    parser.add_argument(
+    '--date', dest='date', type=int, action='store', default=today(),
+    help='What data to use when accessing the database')
 
 def add_argument_days(parser):
     parser.add_argument(
-        '--days', dest='days', type=int, action='store', default=3,
-        help='How many days to look back in time when comparing')
+    '--days', dest='days', type=int, action='store', default=3,
+    help='How many days to look back in time when comparing')

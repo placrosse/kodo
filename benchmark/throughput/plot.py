@@ -29,6 +29,8 @@ def plot(args):
 
     df['mean'] = df['throughput'].apply(sp.mean)
     df['std'] = df['throughput'].apply(sp.std)
+    df['fields'] = df['benchmark'].apply(ph.fields)
+    df['algorithms'] = df['testcase'].apply(ph.algorithms)
 
     # Group by type of code; dense, sparse
     dense = df[df['testcase'] != "SparseFullRLNC"].groupby(by=
@@ -38,23 +40,24 @@ def plot(args):
 
     def plot_setup(p):
         pl.ylabel("Throughput" + " [" + list(group['unit'])[0] + "]")
-        pl.xticks(list(sp.unique(group['symbols'])))
-        p.set_yscale('log')
-        plotter.set_title(buildername)
+        pl.yscale('log')
+        pl.xscale('log', basex=2)
+        pl.xticks(list(sp.unique(group['symbols'])),list(sp.unique(group['symbols'])))
+        #~plotter.set_title(buildername)
         plotter.set_markers(p)
 
     plotter.set_type("sparse")
     for (buildername,symbols), group in sparse:
-        p = group.pivot_table('mean',  rows='symbols', cols=['benchmark',
+        p = group.pivot_table('mean',  rows='symbols', cols=['fields',
         'density']).plot()
         plot_setup(p)
         plotter.write(buildername)
 
     plotter.set_type("dense")
     for (buildername,symbols), group in dense:
-        p = group.pivot_table('mean',  rows='symbols', cols=['benchmark',
-        'testcase']).plot()
-        plot_setup(p)
+        p = group.pivot_table('mean',  rows='symbols', cols=['fields',
+        'algorithms']).plot()
+        plot_setup( p)
         plotter.write(buildername)
 
 if __name__ == '__main__':
