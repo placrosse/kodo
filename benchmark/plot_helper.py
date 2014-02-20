@@ -32,39 +32,40 @@ def today():
     TODAY = now().date()
     return datetime.datetime(TODAY.year, TODAY.month, TODAY.day)
 
-def yesterday():
-    return today() - datetime.timedelta(1)
-
 def timedelta(arg):
     return datetime.timedelta(arg)
 
-def markers(label):
-    if label == "$2^8$":
-        return "v"
-    if label == "$2^{16}$":
-        return"^"
-    if label == "$2$":
-        return "o"
-    if label == "$2^{32}-5$":
-        return "*"
+marker = {
+    "$2^8$" : "v",
+    "$2^{16}$" : "^",
+    "$2$" : "o",
+    "$2^{32}-5$" : "*",
+    }
+
+def markers(string):
+    if markers.has_key(string):
+        return markers[string]
+
+field = {
+    "Binary8" : "$2^8$",
+    "Binary16" : "$2^{16}$",
+    "Binary" : "$2$",
+    "Prime2325" : "$2^{32}-5$",
+    }
 
 def fields(string):
-    if "Binary8" in string:
-        return "$2^8$"
-    if "Binary16" in string:
-        return "$2^{16}$"
-    if "Binary" in string:
-        return "$2$"
-    if "Prime2325" in string:
-        return "$2^{32}-5$"
+    if field.has_key(string):
+        return field[string]
+
+algorithm = {
+    "BackwardFullRLNC" : "Backwards",
+    "FullDelayedRLNC" : "Delayed",
+    "FullRLNC" : "Standard",
+    }
 
 def algorithms(string):
-    if "BackwardFullRLNC" in string:
-        return "Backwards"
-    if "FullDelayedRLNC" in string:
-        return "Delayed"
-    if "FullRLNC" in string:
-        return "Standard"
+    if algorithm.has_key(string):
+        return algorithm[string]
 
 slaves = {
     "debian0" : {"OS": "", "CPU" : ""},
@@ -218,7 +219,6 @@ def add_arguments(argument_list):
     """
 
     parser = argparse.ArgumentParser()
-
     arguments = {
         "json" : add_argument_json,
         "coder" : add_argument_coder,
