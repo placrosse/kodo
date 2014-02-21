@@ -29,8 +29,8 @@ def now():
     return datetime.datetime.utcnow()
 
 def today():
-    TODAY = now().date()
-    return datetime.datetime(TODAY.year, TODAY.month, TODAY.day)
+    today = now().date()
+    return datetime.datetime(today.year, today.month, today.day)
 
 def timedelta(arg):
     return datetime.timedelta(arg)
@@ -130,8 +130,6 @@ class plotter:
             self.from_json = bool(self.args.json)
         else:
             self.from_json = False
-
-        #self.type = False
         self.legend_title = False
         self.branch = False
         pl.close('all')
@@ -160,7 +158,7 @@ class plotter:
 
     def get_base_path(self):
         if self.from_json:
-                path = os.path.basename("local")
+            path = os.path.basename("local")
         else:
             path = os.path.basename("database")
 
