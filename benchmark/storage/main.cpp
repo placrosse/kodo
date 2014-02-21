@@ -452,9 +452,9 @@ BENCHMARK_OPTION(throughput_options)
 
     std::vector<uint32_t> symbols;
     symbols.push_back(9);
-    //symbols.push_back(18);
-    //symbols.push_back(45);
-    //symbols.push_back(90);
+    symbols.push_back(18);
+    symbols.push_back(45);
+    symbols.push_back(90);
 
     auto default_symbols =
         gauge::po::value<std::vector<uint32_t>>()->default_value(
@@ -469,7 +469,7 @@ BENCHMARK_OPTION(throughput_options)
 
     std::vector<uint32_t> symbol_size;
     symbol_size.push_back(1000000);
-    //symbol_size.push_back(10000000);
+    symbol_size.push_back(10000000);
 
     auto default_symbol_size =
         gauge::po::value<std::vector<uint32_t>>()->default_value(
@@ -484,9 +484,9 @@ BENCHMARK_OPTION(throughput_options)
             types, "")->multitoken();
 
     std::vector<double> erasure_rate;
-        //erasure_rate.push_back(0.0);
-        //erasure_rate.push_back(1.0/9.0);
-        //erasure_rate.push_back(2.0/9.0);
+        erasure_rate.push_back(0.0);
+        erasure_rate.push_back(1.0/9.0);
+        erasure_rate.push_back(2.0/9.0);
         erasure_rate.push_back(3.0/9.0);
 
     auto default_erasure_rate =

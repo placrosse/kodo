@@ -31,15 +31,15 @@ def plot(args):
     df['std'] = df['throughput'].apply(sp.std)
 
     # Group by type of code; dense, sparse
-    dense = df[df['testcase'] != "SparseFullRLNC"].groupby(by=
+    dense = df[df['testcase'] != "FullDelayedRLNC"].groupby(by=
         ['buildername', 'symbol_size'])
-    sparse = df[df['testcase'] == "SparseFullRLNC"].groupby(by=
+    sparse = df[df['testcase'] == "SparseDelayedRLNC"].groupby(by=
         ['buildername', 'symbol_size'])
 
     def plot_setup(p):
         pl.ylabel("Throughput" + " [" + list(group['unit'])[0] + "]")
         pl.xticks(list(sp.unique(group['erasure_rate'])))
-        p.set_yscale('log')
+        #p.set_yscale('log')
         plotter.set_title(buildername)
         plotter.set_markers(p)
 
@@ -57,8 +57,9 @@ def plot(args):
         plot_setup(p)
         plotter.write(buildername)
 
+    return df
+
 if __name__ == '__main__':
 
     args = ph.add_arguments(["json", "coder", "output-format"])
-    args = ph.add_arguments(["json", "coder", "output-format"])
-    plot(args)
+    df = plot(args)
