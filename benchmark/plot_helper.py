@@ -43,8 +43,8 @@ marker = {
     }
 
 def markers(string):
-    if markers.has_key(string):
-        return markers[string]
+    if marker.has_key(string):
+        return marker[string]
 
 field = {
     "Binary8" : "$2^8$",
