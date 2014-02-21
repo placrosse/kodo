@@ -22,39 +22,45 @@ def plot(args):
     query = {
     "branch" : "master",
     "scheduler": "kodo-nightly-benchmark",
-    "utc_date" : {"$gte": ph.yesterday(), "$lt": ph.today()}
+    "utc_date" : {"$gte": args.date - ph.timedelta(1), "$lt": args.date},
     }
     df = plotter.get_dataframe(query, "kodo_overhead")
 
     df['mean'] = (df['used'].apply(sp.mean) - df['coded'].apply(sp.mean) ) \
         / df['coded'].apply(sp.mean)
+    df['field'] = df['benchmark'].apply(ph.fields)
+    df['algorithm'] = df['testcase'].apply(ph.algorithms)
 
-    sparse = df[df['testcase'] == "SparseFullRLNC"].groupby(by= ['buildername',
+
+    sparse = df[df['testcase'] == "SparseFullRLNC"].groupby(by= ['slavename',
         'symbol_size'])
-    dense = df[df['testcase'] != "SparseFullRLNC"].groupby(by= ['buildername',
+    dense = df[df['testcase'] != "SparseFullRLNC"].groupby(by= ['slavename',
         'symbol_size'])
 
     def plot_setup(p):
-        p.set_yscale('log')
         pl.ylabel("Overhead [\%]")
-        pl.xticks(list(sp.unique(group['symbols'])))
-        plotter.set_title(buildername)
+        pl.yscale('log')
+        pl.xscale('log', basex=2)
+        pl.xticks(list(sp.unique(group['symbols'])),list(sp.unique(group['symbols'])))
+        plotter.set_slave_info(slavename)
         plotter.set_markers(p)
 
-    plotter.set_type("sparse")
-    for (buildername,symbols), group in sparse:
+    for (slavename,symbols), group in sparse:
         p = group.pivot_table('mean', rows='symbols',
-            cols=['benchmark','density']).plot()
+            cols=['field','density']).plot()
         plot_setup(p)
-        plotter.write(buildername)
+        plotter.set_legend_title("(Field, Density)")
+        plotter.write("sparse", slavename)
 
-    plotter.set_type("dense")
-    for (buildername,symbols), group in dense:
+    for (slavename,symbols), group in dense:
         p = group.pivot_table('mean',  rows='symbols',
-            cols=['benchmark','testcase']).plot()
+            cols=['field','algorithm']).plot()
         plot_setup(p)
-        plotter.write(buildername)
+        plotter.set_legend_title("(Field, Algorithm)")
+        plotter.write("dense", slavename)
+
+    return df
 
 if __name__ == '__main__':
-    args = ph.add_arguments(["json", "output-format"])
-    plot(args)
+    args = ph.add_arguments(["json", "date", "output-format"])
+    df = plot(args)
