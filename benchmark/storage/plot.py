@@ -23,43 +23,42 @@ def plot(args):
     "type": args.coder,
     "branch" : "master",
     "scheduler": "kodo-nightly-benchmark",
-    "utc_date" : {"$gte": ph.yesterday(), "$lt": ph.today()}
+    "utc_date" : {"$gte": args.date - ph.timedelta(1), "$lt": args.date},
     }
     df = plotter.get_dataframe(query)
 
     df['mean'] = df['throughput'].apply(sp.mean)
     df['std'] = df['throughput'].apply(sp.std)
+    df['erasures'] = df['erasure_rate']
 
     # Group by type of code; dense, sparse
-    dense = df[df['testcase'] != "FullDelayedRLNC"].groupby(by=
-        ['buildername', 'symbol_size'])
+    dense = df[df['testcase'] == "FullDelayedRLNC"].groupby(by=
+        ['slavename'])
     sparse = df[df['testcase'] == "SparseDelayedRLNC"].groupby(by=
-        ['buildername', 'symbol_size'])
+        ['slavename'])
 
     def plot_setup(p):
         pl.ylabel("Throughput" + " [" + list(group['unit'])[0] + "]")
-        pl.xticks(list(sp.unique(group['erasure_rate'])))
-        #p.set_yscale('log')
-        plotter.set_title(buildername)
+        pl.xticks(list(sp.unique(group['erasures'])))
         plotter.set_markers(p)
+        plotter.set_slave_info(slavename)
 
-    plotter.set_type("sparse")
-    for (buildername,symbols), group in sparse:
-        p = group.pivot_table('mean',  rows='erasure_rate', cols=['symbols',
+    for (slavename), group in dense:
+        p = group.pivot_table('mean',  rows='erasures', cols=['symbols',
         'symbol_size']).plot()
         plot_setup(p)
-        plotter.write(buildername)
+        plotter.write("dense", slavename)
 
-    plotter.set_type("dense")
-    for (buildername,symbols), group in dense:
-        p = group.pivot_table('mean',  rows='erasure_rate', cols=['symbols',
+    for (slavename), group in sparse:
+        p = group.pivot_table('mean',  rows='erasures', cols=['symbols',
         'symbol_size']).plot()
         plot_setup(p)
-        plotter.write(buildername)
+        plotter.write("sparse", slavename)
 
     return df
 
 if __name__ == '__main__':
 
-    args = ph.add_arguments(["json", "coder", "output-format"])
+
+    args = ph.add_arguments(["json", "coder", "output-format", "date"])
     df = plot(args)
