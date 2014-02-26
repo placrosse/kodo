@@ -34,7 +34,7 @@ struct throughput_benchmark : public gauge::time_benchmark
 
     void init()
     {
-        m_factor = 2;
+        m_factor = 1;
         gauge::time_benchmark::init();
     }
 
@@ -62,11 +62,11 @@ struct throughput_benchmark : public gauge::time_benchmark
         // The number of bytes {en|de}coded
         uint64_t total_bytes = 0;
 
-        if(type == "decoder")
+        if (type == "decoder")
         {
             total_bytes = m_decoded_symbols * symbol_size;
         }
-        else if(type == "encoder")
+        else if (type == "encoder")
         {
             total_bytes = m_encoded_symbols * symbol_size;
         }
@@ -84,7 +84,7 @@ struct throughput_benchmark : public gauge::time_benchmark
 
     void store_run(tables::table& results)
     {
-        if(!results.has_column("throughput"))
+        if (!results.has_column("throughput"))
             results.add_column("throughput");
 
         results.set_value("throughput", measurement());
@@ -96,15 +96,15 @@ struct throughput_benchmark : public gauge::time_benchmark
 
         std::string type = cs.get_value<std::string>("type");
 
-        if(type == "decoder")
+        if (type == "decoder")
         {
             // If we are benchmarking a decoder we only accept
             // the measurement if the decoding was successful
-            if(!m_decoder->is_complete())
+            if (!m_decoder->is_complete())
             {
                 // We did not generate enough payloads to decode successfully,
                 // so we will generate more payloads for next run
-                m_factor++;
+                //m_factor++;
 
                 return false;
             }
@@ -128,11 +128,11 @@ struct throughput_benchmark : public gauge::time_benchmark
         assert(symbol_size.size() > 0);
         assert(types.size() > 0);
 
-        for(uint32_t i = 0; i < symbols.size(); ++i)
+        for (uint32_t i = 0; i < symbols.size(); ++i)
         {
-            for(uint32_t j = 0; j < symbol_size.size(); ++j)
+            for (uint32_t j = 0; j < symbol_size.size(); ++j)
             {
-                for(uint32_t u = 0; u < types.size(); ++u)
+                for (uint32_t u = 0; u < types.size(); ++u)
                 {
                     gauge::config_set cs;
                     cs.set_value<uint32_t>("symbols", symbols[i]);
@@ -173,7 +173,7 @@ struct throughput_benchmark : public gauge::time_benchmark
         // Prepare the data to be encoded
         m_encoded_data.resize(m_encoder->block_size());
 
-        for(uint8_t &e : m_encoded_data)
+        for (uint8_t &e : m_encoded_data)
         {
             e = rand() % 256;
         }
@@ -184,12 +184,12 @@ struct throughput_benchmark : public gauge::time_benchmark
         uint32_t payload_count = symbols * m_factor;
 
         m_payloads.resize(payload_count);
-        for(uint32_t i = 0; i < payload_count; ++i)
+        for (uint32_t i = 0; i < payload_count; ++i)
         {
-            m_payloads[i].resize( m_encoder->payload_size() );
+            m_payloads[i].resize(m_encoder->payload_size());
         }
 
-        m_temp_payload.resize( m_encoder->payload_size() );
+        m_temp_payload.resize(m_encoder->payload_size());
     }
 
     void encode_payloads()
@@ -198,12 +198,12 @@ struct throughput_benchmark : public gauge::time_benchmark
 
         // We switch any systematic operations off so we code
         // symbols from the beginning
-        if(kodo::is_systematic_encoder(m_encoder))
+        if (kodo::is_systematic_encoder(m_encoder))
             kodo::set_systematic_off(m_encoder);
 
         uint32_t payload_count = m_payloads.size();
 
-        for(uint32_t i = 0; i < payload_count; ++i)
+        for (uint32_t i = 0; i < payload_count; ++i)
         {
             std::vector<uint8_t> &payload = m_payloads[i];
             m_encoder->encode(&payload[0]);
@@ -216,17 +216,13 @@ struct throughput_benchmark : public gauge::time_benchmark
     {
         uint32_t payload_count = m_payloads.size();
 
-        for(uint32_t i = 0; i < payload_count; ++i)
+        for (uint32_t i = 0; i < payload_count; ++i)
         {
-            std::copy(m_payloads[i].begin(),
-                      m_payloads[i].end(),
-                      m_temp_payload.begin());
-
-            m_decoder->decode(&m_temp_payload[0]);
+            m_decoder->decode(&m_payloads[i][0]);
 
             ++m_decoded_symbols;
 
-            if(m_decoder->is_complete())
+            if (m_decoder->is_complete())
             {
                 return;
             }
@@ -245,7 +241,8 @@ struct throughput_benchmark : public gauge::time_benchmark
         m_encoder_factory->set_symbol_size(symbol_size);
 
         // The clock is running
-        RUN{
+        RUN
+        {
             // We have to make sure the encoder is in a "clean" state
             m_encoder->initialize(*m_encoder_factory);
 
@@ -268,7 +265,8 @@ struct throughput_benchmark : public gauge::time_benchmark
         m_decoder_factory->set_symbol_size(symbol_size);
 
         // The clock is running
-        RUN{
+        RUN
+        {
             // We have to make sure the decoder is in a "clean" state
             // i.e. no symbols already decoded.
             m_decoder->initialize(*m_decoder_factory);
@@ -278,18 +276,17 @@ struct throughput_benchmark : public gauge::time_benchmark
         }
     }
 
-
     void run_benchmark()
     {
         gauge::config_set cs = get_current_configuration();
 
         std::string type = cs.get_value<std::string>("type");
 
-        if(type == "encoder")
+        if (type == "encoder")
         {
             run_encode();
         }
-        else if(type == "decoder")
+        else if (type == "decoder")
         {
             run_decode();
         }
@@ -297,7 +294,6 @@ struct throughput_benchmark : public gauge::time_benchmark
         {
             assert(0);
         }
-
     }
 
 protected:
@@ -364,13 +360,13 @@ public:
         assert(types.size() > 0);
         assert(density.size() > 0);
 
-        for(const auto& s : symbols)
+        for (const auto& s : symbols)
         {
-            for(const auto& p : symbol_size)
+            for (const auto& p : symbol_size)
             {
-                for(const auto& t : types)
+                for (const auto& t : types)
                 {
-                    for(const auto& d: density)
+                    for (const auto& d: density)
                     {
                         gauge::config_set cs;
                         cs.set_value<uint32_t>("symbols", s);
@@ -395,7 +391,6 @@ public:
         double symbols = cs.get_value<double>("density");
         m_encoder->set_density(symbols);
     }
-
 };
 
 
@@ -471,8 +466,8 @@ BENCHMARK_OPTION(sparse_density_options)
 //------------------------------------------------------------------
 
 typedef throughput_benchmark<
-    kodo::full_rlnc_encoder<fifi::binary>,
-    kodo::full_rlnc_decoder<fifi::binary> > setup_rlnc_throughput;
+    kodo::full_rlnc_encoder_shallow<fifi::binary>,
+    kodo::full_rlnc_decoder_shallow<fifi::binary> > setup_rlnc_throughput;
 
 BENCHMARK_F(setup_rlnc_throughput, FullRLNC, Binary, 5)
 {
@@ -480,8 +475,8 @@ BENCHMARK_F(setup_rlnc_throughput, FullRLNC, Binary, 5)
 }
 
 typedef throughput_benchmark<
-    kodo::full_rlnc_encoder<fifi::binary8>,
-    kodo::full_rlnc_decoder<fifi::binary8> > setup_rlnc_throughput8;
+    kodo::full_rlnc_encoder_shallow<fifi::binary8>,
+    kodo::full_rlnc_decoder_shallow<fifi::binary8> > setup_rlnc_throughput8;
 
 BENCHMARK_F(setup_rlnc_throughput8, FullRLNC, Binary8, 5)
 {
@@ -489,8 +484,8 @@ BENCHMARK_F(setup_rlnc_throughput8, FullRLNC, Binary8, 5)
 }
 
 typedef throughput_benchmark<
-    kodo::full_rlnc_encoder<fifi::binary16>,
-    kodo::full_rlnc_decoder<fifi::binary16> > setup_rlnc_throughput16;
+    kodo::full_rlnc_encoder_shallow<fifi::binary16>,
+    kodo::full_rlnc_decoder_shallow<fifi::binary16> > setup_rlnc_throughput16;
 
 BENCHMARK_F(setup_rlnc_throughput16, FullRLNC, Binary16, 5)
 {
@@ -498,8 +493,8 @@ BENCHMARK_F(setup_rlnc_throughput16, FullRLNC, Binary16, 5)
 }
 
 typedef throughput_benchmark<
-    kodo::full_rlnc_encoder<fifi::prime2325>,
-    kodo::full_rlnc_decoder<fifi::prime2325> > setup_rlnc_throughput2325;
+    kodo::full_rlnc_encoder_shallow<fifi::prime2325>,
+    kodo::full_rlnc_decoder_shallow<fifi::prime2325> > setup_rlnc_throughput2325;
 
 BENCHMARK_F(setup_rlnc_throughput2325, FullRLNC, Prime2325, 5)
 {
@@ -550,7 +545,6 @@ BENCHMARK_F(setup_backward_rlnc_throughput2325, BackwardFullRLNC, Prime2325, 5)
     run_benchmark();
 }
 
-
 //------------------------------------------------------------------
 // FullDelayedRLNC
 //------------------------------------------------------------------
@@ -599,7 +593,8 @@ BENCHMARK_F(setup_delayed_rlnc_throughput2325, FullDelayedRLNC, Prime2325, 5)
 
 typedef sparse_throughput_benchmark<
     kodo::sparse_full_rlnc_encoder<fifi::binary>,
-    kodo::full_rlnc_decoder<fifi::binary> > setup_sparse_rlnc_throughput;
+    kodo::full_rlnc_decoder_shallow<fifi::binary>>
+    setup_sparse_rlnc_throughput;
 
 BENCHMARK_F(setup_sparse_rlnc_throughput, SparseFullRLNC, Binary, 5)
 {
@@ -608,7 +603,8 @@ BENCHMARK_F(setup_sparse_rlnc_throughput, SparseFullRLNC, Binary, 5)
 
 typedef sparse_throughput_benchmark<
     kodo::sparse_full_rlnc_encoder<fifi::binary8>,
-    kodo::full_rlnc_decoder<fifi::binary8> > setup_sparse_rlnc_throughput8;
+    kodo::full_rlnc_decoder_shallow<fifi::binary8>>
+    setup_sparse_rlnc_throughput8;
 
 BENCHMARK_F(setup_sparse_rlnc_throughput8, SparseFullRLNC, Binary8, 5)
 {
@@ -617,19 +613,16 @@ BENCHMARK_F(setup_sparse_rlnc_throughput8, SparseFullRLNC, Binary8, 5)
 
 typedef sparse_throughput_benchmark<
     kodo::sparse_full_rlnc_encoder<fifi::binary16>,
-    kodo::full_rlnc_decoder<fifi::binary16> > setup_sparse_rlnc_throughput16;
+    kodo::full_rlnc_decoder_shallow<fifi::binary16>>
+    setup_sparse_rlnc_throughput16;
 
 BENCHMARK_F(setup_sparse_rlnc_throughput16, SparseFullRLNC, Binary16, 5)
 {
     run_benchmark();
 }
 
-
-
-
 int main(int argc, const char* argv[])
 {
-
     srand(static_cast<uint32_t>(time(0)));
 
     gauge::runner::add_default_printers();
@@ -637,4 +630,3 @@ int main(int argc, const char* argv[])
 
     return 0;
 }
-
