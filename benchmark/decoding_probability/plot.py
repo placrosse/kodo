@@ -22,39 +22,43 @@ def plot(args):
     query = {
     "branch" : "master",
     "scheduler": "kodo-nightly-benchmark",
-    "utc_date" : {"$gte": ph.yesterday(), "$lt": ph.today()}
+    "utc_date" : {"$gte": args.date - ph.timedelta(1), "$lt": args.date},
     }
     df = plotter.get_dataframe(query, "kodo_decoding_probability")
 
     df['mean'] = df['used'].apply(sp.mean) -df['symbols']
     df['std'] = df['used'].apply(sp.std)
+    df['field'] = df['benchmark'].apply(ph.fields)
+    df['algorithm'] = df['testcase'].apply(ph.algorithms)
 
-    sparse = df[df['testcase'] == "SparseFullRLNC"].groupby(by= ['buildername',
+    sparse = df[df['testcase'] == "SparseFullRLNC"].groupby(by= ['slavename',
         'symbol_size'])
-    dense = df[df['testcase'] != "SparseFullRLNC"].groupby(by= ['buildername',
+    dense = df[df['testcase'] != "SparseFullRLNC"].groupby(by= ['slavename',
         'symbol_size'])
 
     def plot_setup(p):
         pl.ylabel("Extra symbols" + " [" + list(group['unit'])[0] + "]")
+        pl.xscale('log', basex=2)
         pl.xticks(list(sp.unique(group['symbols'])))
-        plotter.set_title(buildername)
+        plotter.set_slave_info(slavename)
         plotter.set_markers(p)
 
-
-    plotter.set_type("sparse")
-    for (buildername,symbols), group in sparse:
-        p = group.pivot_table('mean',  rows='symbols', cols=['benchmark',
+    for (slavename,symbols), group in sparse:
+        p = group.pivot_table('mean',  rows='symbols', cols=['field',
             'density']).plot()
         plot_setup(p)
-        plotter.write(buildername)
+        plotter.set_legend_title("(Field, Density)")
+        plotter.write("sparse", slavename)
 
-    plotter.set_type("dense")
-    for (buildername,symbols), group in dense:
-        p = group.pivot_table('mean',  rows='symbols', cols=['benchmark',
-            'testcase']).plot()
+    for (slavename,symbols), group in dense:
+        p = group.pivot_table('mean',  rows='symbols', cols=['field',
+            'algorithm']).plot()
         plot_setup(p)
-        plotter.write(buildername)
+        plotter.set_legend_title("(Field, Algorithm)")
+        plotter.write("dense", slavename)
+
+    return df
 
 if __name__ == '__main__':
-    args = ph.add_arguments(["json", "output-format"])
-    plot(args)
+    args = ph.add_arguments(["json", "date", "output-format"])
+    df = plot(args)

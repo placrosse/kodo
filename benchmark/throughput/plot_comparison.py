@@ -22,17 +22,19 @@ sys.path.insert(0, "../")
 import plot_helper as ph
 
 def plot(args):
+    plotter = ph.plotter(args)
+
     query_branches = {
     "type": args.coder,
     "scheduler": "kodo-force-benchmark",
-    "utc_date" : {"$gte": ph.now() - ph.timedelta(args.days)}
+    "utc_date" : {"$gte": args.date - ph.timedelta(1), "$lt": args.date}
     }
 
     query_master = {
     "type": args.coder,
     "branch" : "master",
     "scheduler": "kodo-nightly-benchmark",
-    "utc_date" : {"$gte": ph.yesterday(), "$lt": ph.today()}
+    "utc_date" : {"$gte": args.date - ph.timedelta(1), "$lt": args.date}
     }
 
     df_master = plotter.get_dataframe(query_master, "kodo_throughput")
@@ -41,20 +43,20 @@ def plot(args):
 
     df_all['mean'] = df_all['throughput'].apply(sp.mean)
     df_all['std'] = df_all['throughput'].apply(sp.std)
-    groups = df_all.groupby(['buildername'])
+    groups = df_all.groupby(['slavename'])
 
     branches = list(sp.unique(df_all['branch']))
     if len(branches) == 1:
         print("Only recent benchmarks for the master branch in the database, "
               "no plots will be generated.")
 
-    for buildername, group in groups:
+    for slavename, group in groups:
 
         # Group all results from the most recent master build
         master_group = group[sp.array(group['branch'] == "master")]
         group[group['branch'] == "master"]
         if len(master_group) == 0:
-            print "Skipping " + buildername + " as no nightly benchmark results \
+            print "Skipping " + slavename + " as no nightly benchmark results \
                 exists for the master for this buider yet"
             continue
         master_group = master_group[master_group['buildnumber'] == \
@@ -82,24 +84,24 @@ def plot(args):
             def plot_setup(p):
                 pl.ylabel("Throughput gain [\%]")
                 pl.xticks(list(sp.unique(group['symbols'])))
-                plotter.set_title(buildername)
+                plotter.set_title(slavename)
                 plotter.set_markers(p)
+                plotter.set_slave_info(slavename)
 
-
-            plotter.set_type("sparse")
             for key, g in sparse:
                 p = g.pivot_table('gain',  rows='symbols', cols=['benchmark',
                     'density']).plot()
                 plot_setup(p)
-                plotter.write(buildername)
+                plotter.write("spare", slavename)
 
-            plotter.set_type("dense")
             for key, g in dense:
                 p = g.pivot_table('gain',  rows='symbols',
                     cols=['benchmark','testcase']).plot()
                 plot_setup(p)
-                plotter.write(buildername)
+                plotter.write("dense", slavename)
+
+    return df_all
 
 if __name__ == '__main__':
-    args = ph.add_arguments(["coder", "days", "output-format"])
-    plot(args)
+    args = ph.add_arguments(["coder", "date", "days", "output-format"])
+    df = plot(args)
