@@ -47,6 +47,7 @@ namespace kodo
         void generate(uint8_t *coefficients)
         {
             assert(coefficients != 0);
+            m_pivot_distribution = boost::random::uniform_int_distribution<uint32_t>(0, SuperCoder::symbols());
 
             // Ensure all coefficients are initially zero
             std::fill_n( coefficients, SuperCoder::coefficient_vector_size(), 0);
@@ -67,6 +68,7 @@ namespace kodo
         void generate_partial(uint8_t *coefficients)
         {
             assert(coefficients != 0);
+            m_pivot_distribution = boost::random::uniform_int_distribution<uint32_t>(0, SuperCoder::symbols());
 
             // Ensure all coefficients are initially zero
             std::fill_n( coefficients, SuperCoder::coefficient_vector_size(), 0);
