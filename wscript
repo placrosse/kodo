@@ -65,7 +65,13 @@ def options(opt):
         resolve.ResolveGitMajorVersion(
             name = 'cpuid',
             git_repository = 'github.com/steinwurf/cpuid.git',
-            major_version = 2))
+            major_version = 3))
+
+    bundle.add_dependency(opt,
+        resolve.ResolveGitMajorVersion(
+            name = 'platform',
+            git_repository = 'github.com/steinwurf/platform.git',
+            major_version = 1))
 
     opt.load('wurf_dependency_resolve')
     opt.load('wurf_dependency_bundle')
@@ -91,6 +97,7 @@ def configure(conf):
         recurse_helper(conf, 'gauge')
         recurse_helper(conf, 'tables')
         recurse_helper(conf, 'cpuid')
+        recurse_helper(conf, 'platform')
 
         conf.recurse('examples/sample_makefile')
 
@@ -107,6 +114,7 @@ def build(bld):
         recurse_helper(bld, 'gauge')
         recurse_helper(bld, 'tables')
         recurse_helper(bld, 'cpuid')
+        recurse_helper(bld, 'platform')
 
         # Only build test when executed from the
         # top-level wscript i.e. not when included as a dependency
