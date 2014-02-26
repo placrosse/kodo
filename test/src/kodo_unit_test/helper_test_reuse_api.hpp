@@ -9,6 +9,9 @@
 
 #include "basic_api_test_helper.hpp"
 
+#include <sak/storage.hpp>
+#include "../../../src/kodo/systematic_operations.hpp"
+
 /// Helper for the reuse test, ensures that all encoders and decoders
 /// produce valid data
 template<class Encoder, class Decoder>
