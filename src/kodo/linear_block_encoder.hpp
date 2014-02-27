@@ -60,37 +60,45 @@ namespace kodo
             const value_type *c =
                 reinterpret_cast<const value_type*>(coefficients);
 
-            for(uint32_t i = 0; i < SuperCoder::symbols(); ++i)
+            uint32_t steps = 50;
+            uint32_t step_length = SuperCoder::symbol_length() / steps;
+            assert(step_length > 0);
+
+            for(uint32_t j = 0; j < steps; ++j)
             {
-                value_type value = SuperCoder::coefficient_value(c, i);
 
-                if(!value)
+                uint32_t offset_length = j*step_length;
+
+                for(uint32_t i = 0; i < SuperCoder::symbols(); ++i)
                 {
-                    continue;
-                }
+                    value_type value = SuperCoder::coefficient_value(c, i);
 
-                const value_type *symbol_i = SuperCoder::symbol_value( i );
+                    if(!value)
+                    {
+                        continue;
+                    }
 
-                // Did you forget to set the data on the encoder?
-                assert(symbol_i != 0);
+                    const value_type *symbol_i = SuperCoder::symbol_value( i );
 
-                assert(SuperCoder::is_symbol_pivot(i));
+                    // Did you forget to set the data on the encoder?
+                    assert(symbol_i != 0);
 
-                if(fifi::is_binary<field_type>::value)
-                {
-                    SuperCoder::add(symbol, symbol_i,
-                                    SuperCoder::symbol_length());
-                }
-                else
-                {
-                    SuperCoder::multiply_add(symbol, symbol_i, value,
-                        SuperCoder::symbol_length());
+                    assert(SuperCoder::is_symbol_pivot(i));
+
+                    if(fifi::is_binary<field_type>::value)
+                    {
+                        SuperCoder::add(symbol + offset_length, symbol_i + offset_length,
+                                        step_length);
+                    }
+                    else
+                    {
+                        SuperCoder::multiply_add(symbol + offset_length, symbol_i + offset_length, value,
+                                                 step_length);
+                    }
                 }
             }
         }
-
     };
-
 }
 
 
