@@ -452,9 +452,9 @@ BENCHMARK_OPTION(throughput_options)
 
     std::vector<uint32_t> symbols;
     symbols.push_back(9);
-    symbols.push_back(18);
-    symbols.push_back(45);
-    symbols.push_back(90);
+    //symbols.push_back(18);
+    //symbols.push_back(45);
+    //symbols.push_back(90);
 
     auto default_symbols =
         gauge::po::value<std::vector<uint32_t>>()->default_value(
@@ -484,9 +484,9 @@ BENCHMARK_OPTION(throughput_options)
             types, "")->multitoken();
 
     std::vector<double> erasure_rate;
-        erasure_rate.push_back(0.0);
-        erasure_rate.push_back(1.0/9.0);
-        erasure_rate.push_back(2.0/9.0);
+        //erasure_rate.push_back(0.0);
+        //erasure_rate.push_back(1.0/9.0);
+        //erasure_rate.push_back(2.0/9.0);
         erasure_rate.push_back(3.0/9.0);
 
     auto default_erasure_rate =
@@ -544,15 +544,15 @@ BENCHMARK_OPTION(sparse_density_options)
     //~ run_benchmark();
 //~ }
 
-// typedef throughput_benchmark<
-//     kodo::full_rlnc_encoder<fifi::binary8>,
-//     kodo::full_rlnc_decoder<fifi::binary8>>
-//     setup_rlnc_throughput8;
-//
-// BENCHMARK_F(setup_rlnc_throughput8, FullRLNC, Binary8, 5)
-// {
-//     run_benchmark();
-// }
+typedef throughput_benchmark<
+    kodo::full_rlnc_encoder<fifi::binary8>,
+    kodo::full_rlnc_decoder<fifi::binary8>>
+    setup_rlnc_throughput8;
+
+BENCHMARK_F(setup_rlnc_throughput8, FullRLNC, Binary8, 5)
+{
+    run_benchmark();
+}
 
 //------------------------------------------------------------------
 // BackwardFullRLNC
@@ -592,15 +592,15 @@ BENCHMARK_OPTION(sparse_density_options)
    //~ run_benchmark();
 //~ }
 
-typedef throughput_benchmark<
-   kodo::full_rlnc_encoder<fifi::binary8>,
-   kodo::full_delayed_rlnc_decoder<fifi::binary8>>
-   setup_delayed_rlnc_throughput8;
-
-BENCHMARK_F(setup_delayed_rlnc_throughput8, FullDelayedRLNC, Binary8, 5)
-{
-   run_benchmark();
-}
+// typedef throughput_benchmark<
+//    kodo::full_rlnc_encoder<fifi::binary8>,
+//    kodo::full_delayed_rlnc_decoder<fifi::binary8>>
+//    setup_delayed_rlnc_throughput8;
+//
+// BENCHMARK_F(setup_delayed_rlnc_throughput8, FullDelayedRLNC, Binary8, 5)
+// {
+//    run_benchmark();
+// }
 
 /// Sparse
 
@@ -613,27 +613,27 @@ BENCHMARK_F(setup_delayed_rlnc_throughput8, FullDelayedRLNC, Binary8, 5)
     //~ run_benchmark();
 //~ }
 
-// typedef sparse_throughput_benchmark<
-//     kodo::sparse_full_rlnc_encoder<fifi::binary8>,
-//     kodo::full_rlnc_decoder<fifi::binary8>>
-//     setup_sparse_rlnc_throughput8;
-//
-// BENCHMARK_F(setup_sparse_rlnc_throughput8, SparseFullRLNC, Binary8, 5)
-// {
-//     run_benchmark();
-// }
-
-/// Sparse delayed
-
 typedef sparse_throughput_benchmark<
     kodo::sparse_full_rlnc_encoder<fifi::binary8>,
-    kodo::full_delayed_rlnc_decoder<fifi::binary8>>
-    setup_sparse_delayed_rlnc_throughput8;
+    kodo::full_rlnc_decoder<fifi::binary8>>
+    setup_sparse_rlnc_throughput8;
 
-BENCHMARK_F(setup_sparse_delayed_rlnc_throughput8, SparseDelayedRLNC, Binary8, 5)
+BENCHMARK_F(setup_sparse_rlnc_throughput8, SparseFullRLNC, Binary8, 5)
 {
     run_benchmark();
 }
+
+/// Sparse delayed
+
+// typedef sparse_throughput_benchmark<
+//     kodo::sparse_full_rlnc_encoder<fifi::binary8>,
+//     kodo::full_delayed_rlnc_decoder<fifi::binary8>>
+//     setup_sparse_delayed_rlnc_throughput8;
+//
+// BENCHMARK_F(setup_sparse_delayed_rlnc_throughput8, SparseDelayedRLNC, Binary8, 5)
+// {
+//     run_benchmark();
+// }
 
 int main(int argc, const char* argv[])
 {
