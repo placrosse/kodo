@@ -17,7 +17,7 @@
 #include <kodo/partial_shallow_symbol_storage.hpp>
 #include <kodo/set_systematic_off.hpp>
 
-#include "basic_api_test_helper.hpp"
+#include "kodo_unit_test/basic_api_test_helper.hpp"
 
 namespace kodo
 {

@@ -5,6 +5,12 @@
 
 #pragma once
 
+#include <fifi/is_prime2325.hpp>
+#include <fifi/prime2325_binary_search.hpp>
+#include <fifi/prime2325_apply_prefix.hpp>
+
+#include <kodo/systematic_encoder.hpp>
+
 #include "basic_api_test_helper.hpp"
 
 #include <kodo/has_systematic_encoder.hpp>
@@ -20,11 +26,11 @@
 #include <kodo/has_print_cached_symbol_coefficients.hpp>
 #include <kodo/print_cached_symbol_coefficients.hpp>
 
-
-
 #include <kodo/has_rank.hpp>
 #include <kodo/rank.hpp>
 
+/// Helper function which will invoke a number of checks on an encoder
+/// and decoder pair
 template<class Encoder, class Decoder>
 inline void test_basic_api(uint32_t symbols, uint32_t symbol_size)
 {
@@ -159,6 +165,8 @@ inline void test_basic_api(uint32_t symbols, uint32_t symbol_size)
                            data_in.begin()));
 }
 
+/// Helper function that invokes the test_basic_api using a number of
+/// different finite fields
 template
 <
     template <class> class Encoder,
@@ -191,6 +199,8 @@ inline void test_basic_api(uint32_t symbols, uint32_t symbol_size)
         >(symbols, symbol_size);
 }
 
+/// Helper function that invokes the test_basic_api functions using a
+/// set of symbols and symbol sizes
 template
 <
     template <class> class Encoder,

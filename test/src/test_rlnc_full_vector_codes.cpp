@@ -20,15 +20,15 @@
 #include <kodo/shallow_symbol_storage.hpp>
 #include <kodo/has_shallow_symbol_storage.hpp>
 
-#include "basic_api_test_helper.hpp"
+#include "kodo_unit_test/basic_api_test_helper.hpp"
 
-#include "helper_test_reuse_api.hpp"
-#include "helper_test_recoding_api.hpp"
-#include "helper_test_on_the_fly_api.hpp"
-#include "helper_test_basic_api.hpp"
-#include "helper_test_initialize_api.hpp"
-#include "helper_test_systematic_api.hpp"
-#include "helper_test_mix_uncoded_api.hpp"
+#include "kodo_unit_test/helper_test_reuse_api.hpp"
+#include "kodo_unit_test/helper_test_recoding_api.hpp"
+#include "kodo_unit_test/helper_test_on_the_fly_api.hpp"
+#include "kodo_unit_test/helper_test_basic_api.hpp"
+#include "kodo_unit_test/helper_test_initialize_api.hpp"
+#include "kodo_unit_test/helper_test_systematic_api.hpp"
+#include "kodo_unit_test/helper_test_mix_uncoded_api.hpp"
 
 namespace kodo
 {

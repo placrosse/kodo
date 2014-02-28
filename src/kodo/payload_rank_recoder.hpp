@@ -24,9 +24,8 @@ namespace kodo
     /// recoder would forward its own rank another decoder might falsely
     /// detect is_partially_complete as it also sees rank 1.
     template<class SuperCoder>
-    class payload_rank_recoder :
-        public payload_rank_writer<remote_rank_writer<SuperCoder> >
-    { };
+    using payload_rank_recoder =
+        payload_rank_writer<remote_rank_writer<SuperCoder> >;
 
 }
 

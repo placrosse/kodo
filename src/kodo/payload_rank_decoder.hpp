@@ -5,6 +5,7 @@
 
 #pragma once
 
+#include <algorithm>
 #include <cstdint>
 
 #include "rank_reader.hpp"
@@ -20,10 +21,6 @@ namespace kodo
     ///        will expose the read rank using the
     ///        layer::remote_rank() const function.
     template<class SuperCoder>
-    class payload_rank_decoder :
-        public payload_rank_reader<rank_reader<SuperCoder> >
-    { };
+    using payload_rank_decoder = payload_rank_reader<rank_reader<SuperCoder>>;
 
 }
-
-

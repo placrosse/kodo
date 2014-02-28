@@ -20,92 +20,6 @@
 
 #include "codes.hpp"
 
-std::vector<uint32_t> setup_symbols()
-{
-    std::vector<uint32_t> symbols;
-    symbols.push_back(16);
-    symbols.push_back(32);
-    symbols.push_back(64);
-    symbols.push_back(128);
-    symbols.push_back(1024);
-    return symbols;
-}
-
-std::vector<uint32_t> setup_symbol_size()
-{
-    std::vector<uint32_t> symbol_size;
-    symbol_size.push_back(1600);
-
-    return symbol_size;
-}
-
-/// Returns which operation to measure
-std::vector<std::string> setup_operations()
-{
-    std::vector<std::string> operations;
-    operations.push_back("dest[i] = dest[i] + src[i]");
-    operations.push_back("dest[i] = dest[i] - src[i]");
-    operations.push_back("dest[i] = dest[i] * constant");
-    operations.push_back("dest[i] = dest[i] + (constant * src[i])");
-    operations.push_back("dest[i] = dest[i] - (constant * src[i])");
-    operations.push_back("invert(value)");
-
-    return operations;
-}
-
-/// Returns which operation to measure
-std::vector<std::string> setup_types()
-{
-    std::vector<std::string> types;
-    types.push_back("encoder");
-    types.push_back("decoder");
-
-    return types;
-}
-
-
-struct config_less_than :
-    public std::binary_function<gauge::config_set, gauge::config_set, bool>
-{
-    bool operator()(const gauge::config_set &n1,
-                    const gauge::config_set &n2) const
-    {
-        if(n1.get_value<uint32_t>("symbols") <
-           n2.get_value<uint32_t>("symbols"))
-            return true;
-
-        if(n1.get_value<uint32_t>("symbols") >
-           n2.get_value<uint32_t>("symbols"))
-            return false;
-
-        if(n1.get_value<uint32_t>("symbol_size") <
-           n2.get_value<uint32_t>("symbol_size"))
-            return true;
-
-        if(n1.get_value<uint32_t>("symbol_size") >
-           n2.get_value<uint32_t>("symbol_size"))
-            return false;
-
-        if(n1.get_value<std::string>("operation") <
-           n2.get_value<std::string>("operation"))
-            return true;
-
-        if(n1.get_value<std::string>("operation") >
-           n2.get_value<std::string>("operation"))
-            return false;
-
-        if(n1.get_value<std::string>("type") <
-           n2.get_value<std::string>("type"))
-            return true;
-
-        if(n1.get_value<std::string>("type") >
-           n2.get_value<std::string>("type"))
-            return false;
-
-        return false;
-    }
-};
-
 template<class Encoder, class Decoder>
 class operations_benchmark : public gauge::benchmark
 {
@@ -405,15 +319,7 @@ int main(int argc, const char* argv[])
 
     srand(static_cast<uint32_t>(time(0)));
 
-    gauge::runner::instance().printers().push_back(
-        std::make_shared<gauge::console_printer>());
-
-    gauge::runner::instance().printers().push_back(
-        std::make_shared<gauge::python_printer>());
-
-    gauge::runner::instance().printers().push_back(
-        std::make_shared<gauge::csv_printer>());
-
+    gauge::runner::add_default_printers();
     gauge::runner::run_benchmarks(argc, argv);
 
     return 0;

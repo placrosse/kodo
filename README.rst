@@ -26,5 +26,5 @@ To get started see the manual here:
 http://readthedocs.org/docs/kodo/en/latest/
 
 The API documentation (doxygen) is available here:
-http://176.28.49.184:12344/doxygen/kodo/
+http://buildbot.steinwurf.com/doxygen/kodo/
 

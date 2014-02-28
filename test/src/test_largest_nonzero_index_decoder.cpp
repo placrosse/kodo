@@ -16,7 +16,7 @@
 
 #include <kodo/debug_linear_block_decoder.hpp>
 
-#include "basic_api_test_helper.hpp"
+#include "kodo_unit_test/basic_api_test_helper.hpp"
 
 namespace kodo
 {

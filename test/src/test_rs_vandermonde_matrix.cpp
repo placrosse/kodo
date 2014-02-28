@@ -19,7 +19,7 @@
 #include <kodo/finite_field_info.hpp>
 #include <kodo/final_coder_factory.hpp>
 
-#include "basic_api_test_helper.hpp"
+#include "kodo_unit_test/basic_api_test_helper.hpp"
 
 // Test function for printing the matrix
 // template<class Field>

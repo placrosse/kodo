@@ -20,7 +20,7 @@
 #include <kodo/has_deep_symbol_storage.hpp>
 #include <kodo/fake_symbol_storage.hpp>
 
-#include "basic_api_test_helper.hpp"
+#include "kodo_unit_test/basic_api_test_helper.hpp"
 
 /// Defines a number test stacks which contains the layers we wish to
 /// test.

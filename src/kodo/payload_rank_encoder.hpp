@@ -32,9 +32,8 @@ namespace kodo
     /// substitution on every symbols as it is being received to use this
     /// feature.
     template<class SuperCoder>
-    class payload_rank_encoder :
-        public payload_rank_writer<rank_writer<SuperCoder> >
-    { };
+    using payload_rank_encoder =
+        payload_rank_writer<rank_writer<SuperCoder> >;
 
 }
 

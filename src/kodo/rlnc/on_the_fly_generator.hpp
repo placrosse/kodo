@@ -22,12 +22,11 @@ namespace kodo
     ///        generate non-zero coefficients for symbols which are
     ///        available locally.
     template<class SuperCoder>
-    class on_the_fly_generator :
-        public check_partial_generator<
-               uniform_generator<
-               pivot_aware_generator<
-               SuperCoder> > >
-    { };
+    using on_the_fly_generator =
+        check_partial_generator<
+        uniform_generator<
+        pivot_aware_generator<
+        SuperCoder> > >;
 
 }
 

@@ -15,11 +15,10 @@ namespace kodo
     /// @brief Implements a systematic encoder where the default
     /// behavior is not to produce and systematic symbols
     template<class SuperCoder>
-    class default_off_systematic_encoder :
-        public systematic_encoder<
-               default_systematic_phase<false,
-               storage_aware_systematic_phase<SuperCoder> > >
-    { };
+    using default_off_systematic_encoder =
+        systematic_encoder<
+        default_systematic_phase<false,
+        storage_aware_systematic_phase<SuperCoder>>>;
 
 }
 

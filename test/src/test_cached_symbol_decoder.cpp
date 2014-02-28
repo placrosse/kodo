@@ -6,7 +6,7 @@
 /// @file test_cached_symbol_decoder.cpp Unit tests for the
 ///       cached_symbol_decoder layer
 
-#include "basic_api_test_helper.hpp"
+#include "kodo_unit_test/basic_api_test_helper.hpp"
 
 #include <kodo/cached_symbol_decoder.hpp>
 #include <kodo/empty_decoder.hpp>

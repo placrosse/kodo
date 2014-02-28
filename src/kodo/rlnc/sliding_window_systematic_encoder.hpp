@@ -21,12 +21,11 @@ namespace kodo
     ///        systematically before 2) There is only one symbol which
     ///        has not yet been received at the remote receiver.
     template<class SuperCoder>
-    class sliding_window_systematic_encoder :
-        public systematic_encoder<
-               default_systematic_phase<true,
-               remote_pivot_aware_systematic_phase<
-               storage_aware_systematic_phase<SuperCoder> > > >
-    { };
+    using sliding_window_systematic_encoder =
+        systematic_encoder<
+        default_systematic_phase<true,
+        remote_pivot_aware_systematic_phase<
+        storage_aware_systematic_phase<SuperCoder> > > >;
 
 }
 

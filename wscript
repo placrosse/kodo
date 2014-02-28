@@ -4,7 +4,7 @@
 import os
 
 APPNAME = 'kodo'
-VERSION = '15.0.0'
+VERSION = '16.2.0'
 
 def recurse_helper(ctx, name):
     if not ctx.has_dependency_path(name):
@@ -23,7 +23,7 @@ def options(opt):
         resolve.ResolveGitMajorVersion(
             name = 'fifi',
             git_repository = 'github.com/steinwurf/fifi.git',
-            major_version = 9))
+            major_version = 10))
 
     bundle.add_dependency(opt,
         resolve.ResolveGitMajorVersion(
@@ -53,7 +53,7 @@ def options(opt):
         resolve.ResolveGitMajorVersion(
             name = 'gauge',
             git_repository = 'github.com/steinwurf/cxx-gauge.git',
-            major_version = 6))
+            major_version = 7))
 
     bundle.add_dependency(opt,
         resolve.ResolveGitMajorVersion(
@@ -84,6 +84,8 @@ def configure(conf):
         recurse_helper(conf, 'fifi')
         recurse_helper(conf, 'gauge')
         recurse_helper(conf, 'tables')
+
+        conf.recurse('examples/sample_makefile')
 
 def build(bld):
 
@@ -125,6 +127,14 @@ def build(bld):
     bld(includes = './src',
         export_includes = './src',
         name = 'kodo_includes')
+
+    # Export unit test includes, these files are useful for testing
+    # the correctness of encoders and decoders. Since users of kodo
+    # may define custom encoders and decoders in their own libraries
+    # or applications we expose the unittest headers here to make them
+    # easily available
+    bld(export_includes = './test/src',
+        name = 'kodo_unit_test_includes')
 
 
 

@@ -11,7 +11,7 @@
 
 #include <kodo/nocode/carousel_codes.hpp>
 
-#include "helper_test_basic_api.hpp"
+#include "kodo_unit_test/helper_test_basic_api.hpp"
 
 static void test_coders(uint32_t symbols, uint32_t symbol_size)
 {

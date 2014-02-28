@@ -24,16 +24,6 @@
 
 #include "codes.hpp"
 
-// Helper function to convert to string
-template<class T>
-inline std::string to_string(T t)
-{
-    std::stringstream ss;
-    ss << t;
-    return ss.str();
-}
-
-
 /// A test block represents an encoder and decoder pair
 template<class Encoder, class Decoder>
 struct decoding_probability_benchmark : public gauge::benchmark
@@ -187,7 +177,9 @@ public:
 
         std::vector<uint8_t> payload(m_encoder->payload_size());
 
-        m_encoder->seed((uint32_t)time(0));
+        // Ensure the encoding vectors generated are randomized between
+        // runs
+        m_encoder->seed(rand());
 
         // The clock is running
         RUN{
@@ -520,15 +512,7 @@ int main(int argc, const char* argv[])
 
     srand(static_cast<uint32_t>(time(0)));
 
-    gauge::runner::instance().printers().push_back(
-        std::make_shared<gauge::console_printer>());
-
-    gauge::runner::instance().printers().push_back(
-        std::make_shared<gauge::python_printer>());
-
-    gauge::runner::instance().printers().push_back(
-        std::make_shared<gauge::csv_printer>());
-
+    gauge::runner::add_default_printers();
     gauge::runner::run_benchmarks(argc, argv);
 
     return 0;

@@ -24,13 +24,12 @@ namespace kodo
     ///        coding coefficients where the symbols is either missing
     ///        locally or has been received remotely.
     template<class SuperCoder>
-    class sliding_window_generator :
-        public check_partial_generator<
-               uniform_generator<
-               remote_pivot_aware_generator<
-               pivot_aware_generator<
-               SuperCoder> > > >
-    { };
+    using sliding_window_generator =
+        check_partial_generator<
+        uniform_generator<
+        remote_pivot_aware_generator<
+        pivot_aware_generator<
+        SuperCoder> > > >;
 
 }
 

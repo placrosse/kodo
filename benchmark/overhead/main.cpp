@@ -215,7 +215,7 @@ BENCHMARK_OPTION(overhead_options)
         ("symbol_size", default_symbol_size, "Set the symbol size in bytes");
 
     options.add_options()
-        ("symbol erasure probability", default_erasure,
+        ("erasure", default_erasure,
          "Set the symbol erasure probability");
 
     gauge::runner::instance().register_options(options);
@@ -319,15 +319,7 @@ int main(int argc, const char* argv[])
 
     srand(static_cast<uint32_t>(time(0)));
 
-    gauge::runner::instance().printers().push_back(
-        std::make_shared<gauge::console_printer>());
-
-    gauge::runner::instance().printers().push_back(
-        std::make_shared<gauge::python_printer>());
-
-    gauge::runner::instance().printers().push_back(
-        std::make_shared<gauge::csv_printer>());
-
+    gauge::runner::add_default_printers();
     gauge::runner::run_benchmarks(argc, argv);
 
     return 0;
