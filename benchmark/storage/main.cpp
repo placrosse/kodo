@@ -4,6 +4,8 @@
 // http://www.steinwurf.com/licensing
 
 #include <ctime>
+#include <set>
+#include <algorithm>
 
 #include <boost/make_shared.hpp>
 
@@ -38,8 +40,8 @@ struct throughput_benchmark : public gauge::time_benchmark
 
     void start()
     {
-        m_encoded_symbols = 0;
-        m_decoded_symbols = 0;
+        //m_encoded_symbols = 0;
+        //m_decoded_symbols = 0;
         gauge::time_benchmark::start();
     }
 
@@ -56,17 +58,18 @@ struct throughput_benchmark : public gauge::time_benchmark
         gauge::config_set cs = get_current_configuration();
         std::string type = cs.get_value<std::string>("type");
         uint32_t symbol_size = cs.get_value<uint32_t>("symbol_size");
+        uint32_t encoded_symbols = cs.get_value<uint32_t>("encoded_symbols");
 
         // The number of bytes {en|de}coded
         uint64_t total_bytes = 0;
 
         if(type == "decoder")
         {
-            total_bytes = m_decoded_symbols * symbol_size;
+            total_bytes = encoded_symbols * symbol_size;
         }
         else if(type == "encoder")
         {
-            total_bytes = m_encoded_symbols * symbol_size;
+            total_bytes = encoded_symbols * symbol_size;
         }
         else
         {
@@ -123,37 +126,30 @@ struct throughput_benchmark : public gauge::time_benchmark
         auto redundancy = options["redundancy"].as<std::vector<double>>();
         auto symbol_size = options["symbol_size"].as<std::vector<uint32_t>>();
         auto types = options["type"].as<std::vector<std::string>>();
-        auto erasure_rate = options["erasure_rate"].as<std::vector<double>>();
 
         assert(symbols.size() > 0);
         assert(redundancy.size() > 0);
         assert(symbol_size.size() > 0);
         assert(types.size() > 0);
-        assert(erasure_rate.size() > 0);
 
         for (const auto& s : symbols)
         {
-            for (const auto& r : redundancy)
+            for (const auto& p : symbol_size)
             {
-                for (const auto& p : symbol_size)
+                for (const auto& r : redundancy)
                 {
-                    for (const auto& e : erasure_rate)
+                    for (const auto& t : types)
                     {
-                        for (const auto& t : types)
-                        {
-                            // Ignore cases where decoding is guaranteed to fail
-                            if (r >= e)
-                            {
-                                gauge::config_set cs;
-                                cs.set_value<uint32_t>("symbols", s);
-                                cs.set_value<double>("redundancy", r);
-                                cs.set_value<uint32_t>("symbol_size", p);
-                                cs.set_value<double>("erasure_rate", e);
-                                cs.set_value<std::string>("type", t);
+                        gauge::config_set cs;
+                        cs.set_value<uint32_t>("symbols", s);
+                        cs.set_value<uint32_t>("symbol_size", p);
+                        cs.set_value<double>("redundancy", r);
+                        cs.set_value<std::string>("type", t);
 
-                                add_configuration(cs);
-                            }
-                        }
+                        uint32_t encoded = (uint32_t)std::ceil(s * r);
+                        cs.set_value<uint32_t>("encoded_symbols", encoded);
+
+                        add_configuration(cs);
                     }
                 }
             }
@@ -166,7 +162,7 @@ struct throughput_benchmark : public gauge::time_benchmark
 
         uint32_t symbols = cs.get_value<uint32_t>("symbols");
         uint32_t symbol_size = cs.get_value<uint32_t>("symbol_size");
-        double redundancy = cs.get_value<double>("redundancy");
+        uint32_t encoded_symbols = cs.get_value<uint32_t>("encoded_symbols");
 
         // Make the factories fit perfectly otherwise there seems to
         // be problems with memory access i.e. when using a factory
@@ -189,6 +185,7 @@ struct throughput_benchmark : public gauge::time_benchmark
         // Prepare the data buffers
         m_data_in.resize(m_encoder->block_size());
         m_data_out.resize(m_encoder->block_size());
+        std::fill_n(m_data_out.begin(), m_data_out.size(), 0);
 
         for (uint8_t &e : m_data_in)
         {
@@ -197,26 +194,26 @@ struct throughput_benchmark : public gauge::time_benchmark
 
         m_encoder->set_symbols(sak::storage(m_data_in));
 
-        // Prepare storage to the encoded payloads
-        uint32_t payload_count =
-            (uint32_t)std::ceil(symbols * (1.0 + redundancy));
+        m_decoder->set_symbols(sak::storage(m_data_out));
+
+        // Prepare storage for the encoded payloads
+        uint32_t payload_count = encoded_symbols;
 
         m_payloads.resize(payload_count);
         for (uint32_t i = 0; i < payload_count; ++i)
         {
             m_payloads[i].resize(m_encoder->payload_size());
         }
-
-        m_temp_payload.resize(m_encoder->payload_size());
     }
 
     void encode_payloads()
     {
         m_encoder->set_symbols(sak::storage(m_data_in));
 
-        // Systematic on
+        // We switch any systematic operations off, because we are only
+        // interested in producing coded symbols
         if (kodo::is_systematic_encoder(m_encoder))
-            kodo::set_systematic_on(m_encoder);
+            kodo::set_systematic_off(m_encoder);
 
         uint32_t payload_count = m_payloads.size();
 
@@ -225,18 +222,7 @@ struct throughput_benchmark : public gauge::time_benchmark
             std::vector<uint8_t> &payload = m_payloads[i];
             m_encoder->encode(&payload[0]);
 
-            ++m_encoded_symbols;
-        }
-    }
-
-    void delete_payloads(uint32_t erasures)
-    {
-        assert(erasures < m_payloads.size());
-
-        for (uint32_t i = 0; i < erasures; ++i)
-        {
-            uint32_t random_symbol = rand() % m_payloads.size();
-            m_payloads.erase(m_payloads.begin() + random_symbol);
+            //++m_encoded_symbols;
         }
     }
 
@@ -246,18 +232,12 @@ struct throughput_benchmark : public gauge::time_benchmark
 
         for (uint32_t i = 0; i < payload_count; ++i)
         {
-            std::copy(m_payloads[i].begin(),
-                      m_payloads[i].end(),
-                      m_temp_payload.begin());
+            m_decoder->decode(&m_payloads[i][0]);
 
-            m_decoder->decode(&m_temp_payload[0]);
-
-            ++m_decoded_symbols;
+            //++m_decoded_symbols;
 
             if (m_decoder->is_complete())
             {
-                // We need to copy the decoded data
-                m_decoder->copy_symbols(sak::storage(m_data_out));
                 return;
             }
         }
@@ -291,11 +271,25 @@ struct throughput_benchmark : public gauge::time_benchmark
         encode_payloads();
 
         gauge::config_set cs = get_current_configuration();
-        double erasure_rate = cs.get_value<double>("erasure_rate");
+        uint32_t encoded_symbols = cs.get_value<uint32_t>("encoded_symbols");
         uint32_t symbols = cs.get_value<uint32_t>("symbols");
         uint32_t symbol_size = cs.get_value<uint32_t>("symbol_size");
 
-        delete_payloads((uint32_t)std::ceil(symbols * erasure_rate));
+        // Prepare the data buffer for the decoder
+        std::copy(m_data_in.begin(), m_data_in.end(), m_data_out.begin());
+        // Randomly delete original symbols that will be restored by processing
+        // the encoded symbols
+        std::set<uint32_t> erased;
+        while (erased.size() < encoded_symbols)
+        {
+            uint32_t random_symbol = rand() % symbols;
+            auto ret = erased.insert(random_symbol);
+            // Skip this symbol if it was already included in the erased set
+            if (ret.second==false) continue;
+            // Zero the symbol
+            std::fill_n(m_data_out.begin() + random_symbol * symbol_size,
+                symbol_size, 0);
+        }
 
         m_decoder_factory->set_symbols(symbols);
         m_decoder_factory->set_symbol_size(symbol_size);
@@ -306,6 +300,16 @@ struct throughput_benchmark : public gauge::time_benchmark
             // We have to make sure the decoder is in a "clean" state
             // i.e. no symbols already decoded.
             m_decoder->initialize(*m_decoder_factory);
+
+            m_decoder->set_symbols(sak::storage(m_data_out));
+
+            // Set the existing original symbols
+            for (uint32_t i = 0; i < symbols; ++i)
+            {
+                // Skip the erased symbols
+                if (erased.count(i) == 0)
+                    m_decoder->decode_symbol(&m_data_out[i * symbol_size], i);
+            }
 
             // Decode the payloads
             decode_payloads();
@@ -344,13 +348,13 @@ protected:
     encoder_ptr m_encoder;
 
     /// The number of symbols encoded
-    uint32_t m_encoded_symbols;
+    //uint32_t m_encoded_symbols;
 
     /// The encoder to use
     decoder_ptr m_decoder;
 
     /// The number of symbols decoded
-    uint32_t m_decoded_symbols;
+    //uint32_t m_decoded_symbols;
 
     /// The input data
     std::vector<uint8_t> m_data_in;
@@ -358,13 +362,8 @@ protected:
     /// The output data
     std::vector<uint8_t> m_data_out;
 
-    /// Temporary payload to not destroy the already encoded payloads
-    /// when decoding
-    std::vector<uint8_t> m_temp_payload;
-
     /// Storage for encoded symbols
     std::vector< std::vector<uint8_t> > m_payloads;
-
 };
 
 
@@ -389,14 +388,12 @@ public:
         auto symbols = options["symbols"].as<std::vector<uint32_t> >();
         auto redundancy = options["redundancy"].as<std::vector<double> >();
         auto symbol_size = options["symbol_size"].as<std::vector<uint32_t> >();
-        auto erasure_rate = options["erasure_rate"].as<std::vector<double> >();
         auto types = options["type"].as<std::vector<std::string> >();
         auto density = options["density"].as<std::vector<double> >();
 
         assert(symbols.size() > 0);
         assert(redundancy.size() > 0);
         assert(symbol_size.size() > 0);
-        assert(erasure_rate.size() > 0);
         assert(types.size() > 0);
         assert(density.size() > 0);
 
@@ -406,24 +403,23 @@ public:
             {
                 for (const auto& p : symbol_size)
                 {
-                    for (const auto& e : erasure_rate)
+                    for (const auto& t : types)
                     {
-                        for (const auto& t : types)
+                        for (const auto& d: density)
                         {
-                            for (const auto& d: density)
-                            {
-                                gauge::config_set cs;
-                                cs.set_value<uint32_t>("symbols", s);
-                                cs.set_value<double>("redundancy", r);
-                                cs.set_value<uint32_t>("symbol_size", p);
-                                cs.set_value<double>("erasure_rate", e);
-                                cs.set_value<std::string>("type", t);
+                            gauge::config_set cs;
+                            cs.set_value<uint32_t>("symbols", s);
+                            cs.set_value<uint32_t>("symbol_size", p);
+                            cs.set_value<double>("redundancy", r);
+                            cs.set_value<std::string>("type", t);
 
-                                // Add the calculated density
-                                cs.set_value<double>("density", d);
+                            uint32_t encoded = (uint32_t)std::ceil(s * r);
+                            cs.set_value<uint32_t>("encoded_symbols", encoded);
 
-                                Super::add_configuration(cs);
-                            }
+                            // Add the calculated density
+                            cs.set_value<double>("density", d);
+
+                            Super::add_configuration(cs);
                         }
                     }
                 }
@@ -451,7 +447,7 @@ BENCHMARK_OPTION(throughput_options)
     gauge::po::options_description options;
 
     std::vector<uint32_t> symbols;
-    symbols.push_back(9);
+    symbols.push_back(16);
     //symbols.push_back(18);
     //symbols.push_back(45);
     //symbols.push_back(90);
@@ -461,7 +457,7 @@ BENCHMARK_OPTION(throughput_options)
             symbols, "")->multitoken();
 
     std::vector<double> redundancy;
-    redundancy.push_back(3.0/9.0);
+    redundancy.push_back(1.0/3.0);
 
     auto default_redundancy =
         gauge::po::value<std::vector<double>>()->default_value(
@@ -469,7 +465,7 @@ BENCHMARK_OPTION(throughput_options)
 
     std::vector<uint32_t> symbol_size;
     symbol_size.push_back(1000000);
-    symbol_size.push_back(10000000);
+    //symbol_size.push_back(10000000);
 
     auto default_symbol_size =
         gauge::po::value<std::vector<uint32_t>>()->default_value(
@@ -483,24 +479,11 @@ BENCHMARK_OPTION(throughput_options)
         gauge::po::value<std::vector<std::string> >()->default_value(
             types, "")->multitoken();
 
-    std::vector<double> erasure_rate;
-        //erasure_rate.push_back(0.0);
-        //erasure_rate.push_back(1.0/9.0);
-        //erasure_rate.push_back(2.0/9.0);
-        erasure_rate.push_back(3.0/9.0);
-
-    auto default_erasure_rate =
-        gauge::po::value<std::vector<double> >()->default_value(
-            erasure_rate, "")->multitoken();
-
     options.add_options()
         ("symbols", default_symbols, "Set the number of symbols");
 
     options.add_options()
-        ("redundancy", default_redundancy, "Set the level of redundancy");
-
-    options.add_options()
-        ("erasure_rate", default_erasure_rate, "Set the level of erasures");
+        ("redundancy", default_redundancy, "Set the ratio of repair symbols");
 
     options.add_options()
         ("symbol_size", default_symbol_size, "Set the symbol size in bytes");
@@ -516,9 +499,9 @@ BENCHMARK_OPTION(sparse_density_options)
     gauge::po::options_description options;
 
     std::vector<double> density;
-    //~ density.push_back(0.2);
-    //~ density.push_back(0.3);
-    //~ density.push_back(0.4);
+    // density.push_back(0.2);
+    // density.push_back(0.3);
+    // density.push_back(0.4);
     density.push_back(0.5);
 
     auto default_density =
@@ -535,18 +518,18 @@ BENCHMARK_OPTION(sparse_density_options)
 // FullRLNC
 //------------------------------------------------------------------
 
-//~ typedef throughput_benchmark<
-    //~ kodo::full_rlnc_encoder<fifi::binary>,
-    //~ kodo::full_rlnc_decoder<fifi::binary> > setup_rlnc_throughput;
-//~
-//~ BENCHMARK_F(setup_rlnc_throughput, FullRLNC, Binary, 5)
-//~ {
-    //~ run_benchmark();
-//~ }
+// typedef throughput_benchmark<
+//     kodo::full_rlnc_encoder<fifi::binary>,
+//     kodo::full_rlnc_decoder<fifi::binary> > setup_rlnc_throughput;
+//
+// BENCHMARK_F(setup_rlnc_throughput, FullRLNC, Binary, 5)
+// {
+//     run_benchmark();
+// }
 
 typedef throughput_benchmark<
-    kodo::full_rlnc_encoder<fifi::binary8>,
-    kodo::full_rlnc_decoder<fifi::binary8>>
+    kodo::full_rlnc_encoder_shallow<fifi::binary8>,
+    kodo::full_rlnc_decoder_shallow<fifi::binary8>>
     setup_rlnc_throughput8;
 
 BENCHMARK_F(setup_rlnc_throughput8, FullRLNC, Binary8, 5)
@@ -558,39 +541,39 @@ BENCHMARK_F(setup_rlnc_throughput8, FullRLNC, Binary8, 5)
 // BackwardFullRLNC
 //------------------------------------------------------------------
 
-//~ typedef throughput_benchmark<
-    //~ kodo::full_rlnc_encoder<fifi::binary>,
-    //~ kodo::backward_full_rlnc_decoder<fifi::binary> >
-    //~ setup_backward_rlnc_throughput;
-//~
-//~ BENCHMARK_F(setup_backward_rlnc_throughput, BackwardFullRLNC, Binary, 5)
-//~ {
-    //~ run_benchmark();
-//~ }
+// typedef throughput_benchmark<
+//     kodo::full_rlnc_encoder<fifi::binary>,
+//     kodo::backward_full_rlnc_decoder<fifi::binary> >
+//     setup_backward_rlnc_throughput;
+//
+// BENCHMARK_F(setup_backward_rlnc_throughput, BackwardFullRLNC, Binary, 5)
+// {
+//     run_benchmark();
+// }
 
-//~ typedef throughput_benchmark<
-    //~ kodo::full_rlnc_encoder<fifi::binary8>,
-    //~ kodo::backward_full_rlnc_decoder<fifi::binary8> >
-    //~ setup_backward_rlnc_throughput8;
-//~
-//~ BENCHMARK_F(setup_backward_rlnc_throughput8, BackwardFullRLNC, Binary8, 5)
-//~ {
-    //~ run_benchmark();
-//~ }
+// typedef throughput_benchmark<
+//     kodo::full_rlnc_encoder<fifi::binary8>,
+//     kodo::backward_full_rlnc_decoder<fifi::binary8> >
+//     setup_backward_rlnc_throughput8;
+//
+// BENCHMARK_F(setup_backward_rlnc_throughput8, BackwardFullRLNC, Binary8, 5)
+// {
+//     run_benchmark();
+// }
 
 //------------------------------------------------------------------
 // FullDelayedRLNC
 //------------------------------------------------------------------
 
-//~ typedef throughput_benchmark<
-   //~ kodo::full_rlnc_encoder<fifi::binary>,
-   //~ kodo::full_delayed_rlnc_decoder<fifi::binary> >
-   //~ setup_delayed_rlnc_throughput;
-//~
-//~ BENCHMARK_F(setup_delayed_rlnc_throughput, FullDelayedRLNC, Binary, 5)
-//~ {
-   //~ run_benchmark();
-//~ }
+// typedef throughput_benchmark<
+   // kodo::full_rlnc_encoder<fifi::binary>,
+   // kodo::full_delayed_rlnc_decoder<fifi::binary> >
+   // setup_delayed_rlnc_throughput;
+//
+// BENCHMARK_F(setup_delayed_rlnc_throughput, FullDelayedRLNC, Binary, 5)
+// {
+   // run_benchmark();
+// }
 
 // typedef throughput_benchmark<
 //    kodo::full_rlnc_encoder<fifi::binary8>,
@@ -604,18 +587,18 @@ BENCHMARK_F(setup_rlnc_throughput8, FullRLNC, Binary8, 5)
 
 /// Sparse
 
-//~ typedef sparse_throughput_benchmark<
-    //~ kodo::sparse_full_rlnc_encoder<fifi::binary>,
-    //~ kodo::full_rlnc_decoder<fifi::binary> > setup_sparse_rlnc_throughput;
-//~
-//~ BENCHMARK_F(setup_sparse_rlnc_throughput, SparseFullRLNC, Binary, 5)
-//~ {
-    //~ run_benchmark();
-//~ }
+// typedef sparse_throughput_benchmark<
+//     kodo::sparse_full_rlnc_encoder<fifi::binary>,
+//     kodo::full_rlnc_decoder<fifi::binary> > setup_sparse_rlnc_throughput;
+//
+// BENCHMARK_F(setup_sparse_rlnc_throughput, SparseFullRLNC, Binary, 5)
+// {
+//     run_benchmark();
+// }
 
 typedef sparse_throughput_benchmark<
     kodo::sparse_full_rlnc_encoder<fifi::binary8>,
-    kodo::full_rlnc_decoder<fifi::binary8>>
+    kodo::full_rlnc_decoder_shallow<fifi::binary8>>
     setup_sparse_rlnc_throughput8;
 
 BENCHMARK_F(setup_sparse_rlnc_throughput8, SparseFullRLNC, Binary8, 5)
