@@ -29,6 +29,7 @@
 #include "../coefficient_info.hpp"
 #include "../plain_symbol_id_reader.hpp"
 #include "../plain_symbol_id_writer.hpp"
+//~ #include "../uniform_generator.hpp"
 //~ #include "../recoding_symbol_id.hpp"
 #include "../proxy_layer.hpp"
 #include "../storage_aware_encoder.hpp"
@@ -47,7 +48,7 @@
 #include "../coefficient_value_access.hpp"
 
 #include "../perpetual/perpetual_generator.hpp"
-//#include "../perpetual/perpetual_decoder.hpp"
+#include "../perpetual/delayed_perpetual_decoder.hpp"
 
 
 namespace kodo
@@ -95,6 +96,89 @@ namespace kodo
                // Final type
                perpetual_encoder<Field
                    > > > > > > > > > > > > > > > > > >
+    { };
+
+        //~ /// @ingroup fec_stacks
+    //~ /// @brief Implementation of a complete perpetual decoder
+    //~ ///
+    //~ /// This configuration adds the following features (including those
+    //~ /// described for the encoder):
+    //~ /// - Recoding using the recoding_stack
+    //~ /// - Linear block decoder using Gauss-Jordan elimination.
+    template<class Field>
+    class standard_perpetual_decoder
+        : public // Payload API
+                 payload_decoder<
+                 // Codec Header API
+                 systematic_decoder<
+                 symbol_id_decoder<
+                 // Symbol ID API
+                 plain_symbol_id_reader<
+                 // Decoder API
+                 aligned_coefficients_decoder<
+                 delayed_perpetual_decoder<
+                 forward_linear_block_decoder<
+                 symbol_decoding_status_counter<
+                 symbol_decoding_status_tracker<
+                 // Coefficient Storage API
+                 coefficient_value_access<
+                 coefficient_storage<
+                 coefficient_info<
+                 // Storage API
+                 deep_symbol_storage<
+                 storage_bytes_used<
+                 storage_block_info<
+                 // Finite Field API
+                 finite_field_math<typename fifi::default_field<Field>::type,
+                 finite_field_info<Field,
+                 // Factory API
+                 final_coder_factory_pool<
+                 // Final type
+                 standard_perpetual_decoder<Field>
+                     > > > > > > > > > > > > > > > > > >
+    { };
+
+
+
+    //~ /// @ingroup fec_stacks
+    //~ /// @brief Implementation of a perpetual_decoder, but with addded debug layer
+    //~ ///
+    //~ /// @copydoc perpetual_decoder
+    template<class Field>
+    class debug_standard_perpetual_decoder
+        : public // Payload API
+                 payload_decoder<
+                 // Codec Header API
+                 systematic_decoder<
+                 symbol_id_decoder<
+                 // Symbol ID API
+                 plain_symbol_id_reader<
+                 // Decoder API
+                 aligned_coefficients_decoder<
+                 debug_linear_block_decoder<  // <-- Debug layer
+                 debug_cached_symbol_decoder< // <-- Debug layer
+                 cached_symbol_decoder<       // <-- Access to decoding symbols
+                 delayed_perpetual_decoder<
+                 forward_linear_block_decoder<
+                 rank_info<
+                 symbol_decoding_status_counter<
+                 symbol_decoding_status_tracker<
+                 // Coefficient Storage API
+                 coefficient_value_access<
+                 coefficient_storage<
+                 coefficient_info<
+                 // Storage API
+                 deep_symbol_storage<
+                 storage_bytes_used<
+                 storage_block_info<
+                 // Finite Field API
+                 finite_field_math<typename fifi::default_field<Field>::type,
+                 finite_field_info<Field,
+                 // Factory API
+                 final_coder_factory_pool<
+                 // Final type
+                 debug_standard_perpetual_decoder<Field>
+                     > > > > > > > > > > > > > > > > > > > > > >
     { };
 
 }

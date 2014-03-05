@@ -28,6 +28,7 @@
 TEST(TestPerpetualCodes, test_basic_api)
 {
     test_basic_api<kodo::perpetual_encoder, kodo::full_rlnc_decoder>();
+    test_basic_api<kodo::perpetual_encoder, kodo::debug_standard_perpetual_decoder>();
 }
 
 /// Test that the encoders and decoders initialize() function can be used
