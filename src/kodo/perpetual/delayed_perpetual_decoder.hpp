@@ -195,19 +195,17 @@ namespace kodo
 
                 // See if we can find a pivot
                 boost::optional<uint32_t> pivot_id
-                    = SuperCoder::forward_substitute_to_pivot(vector_data, symbol_data);
+                    = SuperCoder::forward_substitute_to_pivot(symbol_data, vector_data);
 //~ //
                 if(!pivot_id)
                 {
                     return;
-                    //~ pivot_id
-                        //~ = SuperCoder::forward_substitute_from_pivot(vector_data, symbol_data);
+                    //~pivot_id = SuperCoder::forward_substitute_from_pivot(vector_data, symbol_data, pivot_id);
 //~ //~
                     if(!pivot_id)
                         return;
                 }
 
-                std::cout << "found pivot" << *pivot_id << std::endl;
 //~ //~
                 if(!fifi::is_binary<field_type>::value)
                 {
@@ -237,7 +235,6 @@ namespace kodo
                 if(SuperCoder::is_complete())
                 {
                     final_backward_substitute();
-                    std::cout << "decoding complete" <<  std::endl;
                 }
 
             }
@@ -312,6 +309,7 @@ namespace kodo
                                 //~ m_coded[col] = false;
 
                                 SuperCoder::set_symbol_missing(col);
+
                             }
 
 //~ //~
@@ -319,28 +317,41 @@ namespace kodo
                         }
 //~ //~
                         // A pivot was found
-                        // If the row is not on the row which its pivot indicate we need to // swap the row up to the correct position if necessary
-                        if(col != i)
+
+                        // If we found the pivot on a row with a higher
+                        // index than the pivot we are looking for, we swap it up
+                        if(i > col)
                         {
-                            if(SuperCoder::is_symbol_decoded(col))
-                            {
-                                std::fill_n(vector_i, SuperCoder::coefficient_vector_length(), 0);
-                                SuperCoder::set_symbol_missing(i);
-                            }
-                            else
-                            {
-                            //@TODO
-                            assert(0);
-                            //~ swap(col,i);
-                            }
+                            value_type *vector_col = SuperCoder::coefficient_vector_values(col);
+                            value_type *symbol_col = SuperCoder::symbol_value(col);
+
+                            value_type *vector_i = SuperCoder::coefficient_vector_values(i);
+                            value_type *symbol_i = SuperCoder::symbol_value(i);
+
+                            SuperCoder::add(vector_i, vector_col,
+                                SuperCoder::coefficient_vector_length());
+
+                            SuperCoder::add(symbol_i, symbol_col,
+                                            SuperCoder::symbol_length());
+
+                            SuperCoder::add(vector_col, vector_i,
+                                SuperCoder::coefficient_vector_length());
+
+                            SuperCoder::add(symbol_col, symbol_i,
+                                            SuperCoder::symbol_length());
+
+                            SuperCoder::add(vector_i, vector_col,
+                                SuperCoder::coefficient_vector_length());
+
+                            SuperCoder::add(symbol_i, symbol_col,
+                                            SuperCoder::symbol_length());
                         }
-//~ //~
+
                         //~ value_type *vector_col = SuperCoder::vector( col );
                         //~ value_type *symbol_col = SuperCoder::symbol( col );
                         value_type *vector_col = SuperCoder::coefficient_vector_values( col );
                         value_type *symbol_col = SuperCoder::symbol_value( col );
 
-//~ //~
                         if(!fifi::is_binary<field_type>::value)
                         {
                             SuperCoder::normalize(symbol_col, vector_col, col);
@@ -355,17 +366,17 @@ namespace kodo
                         {
                             //~ value_type *vector_j = SuperCoder::vector( j );
                             //~ value_type *symbol_j = SuperCoder::symbol( j );
-                            value_type *vector_j = SuperCoder::coefficient_vector_values( j );
-                            value_type *symbol_j = SuperCoder::symbol_value( j );
+                            value_type *vector_j = SuperCoder::coefficient_vector_values(j);
+                            value_type *symbol_j = SuperCoder::symbol_value(j);
 //~ //~
                             //~ value_type coefficient_j
                                 //~ = SuperCoder::coefficient( col, vector_j );
                             value_type coefficient_j
-                                = SuperCoder::coefficient_value(vector_j, col );
+                                = SuperCoder::coefficient_value(vector_j, col);
 
 //~ //~
                             // If symbol exists
-                            if( coefficient_j )
+                            if( coefficient_j)
                             {
                                 if(fifi::is_binary<field_type>::value)
                                 {
@@ -401,8 +412,6 @@ namespace kodo
             }
 
 
-
-
         //~ /// Final backwards substitution
         void final_backward_substitute()
             {
@@ -419,7 +428,6 @@ namespace kodo
 
                     backward_substitute(symbol_i, vector_i, i);
                 }
-//~ //~
             }
 //~
 //~
