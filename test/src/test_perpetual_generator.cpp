@@ -48,7 +48,7 @@ namespace kodo
 }
 
 /// Run the tests typical coefficients stack
-TEST(TestCoefficientGenerator, test_perpetual_generator_stack)
+TEST(TestPerpetualGenerator, test_perpetual_generator_stack)
 {
     uint32_t symbols = rand_symbols();
     uint32_t symbol_size = rand_symbol_size();
