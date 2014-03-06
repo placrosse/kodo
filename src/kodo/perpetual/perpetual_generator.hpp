@@ -41,11 +41,22 @@ namespace kodo
             : m_symbol_distribution(field_type::min_value, field_type::max_value),
               m_pivot_distribution(0, SuperCoder::symbols()),
               m_width(SuperCoder::symbols()/2)
-            { }
+            {}
+
+        /// @copydoc layer::initialize(Factory&)
+        template<class Factory>
+        void initialize(Factory &the_factory)
+        {
+            SuperCoder::initialize(the_factory);
+
+            m_width = SuperCoder::symbols()/2;
+        }
+
 
         /// @copydoc layer::generate(uint8_t*)
         void generate(uint8_t *coefficients)
         {
+            //~std::cout << "m_width " << m_width << std::endl;
             assert(coefficients != 0);
             m_pivot_distribution = boost::random::uniform_int_distribution<uint32_t>(0, SuperCoder::symbols());
 
