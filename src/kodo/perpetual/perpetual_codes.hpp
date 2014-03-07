@@ -21,7 +21,7 @@
 #include "../storage_block_info.hpp"
 #include "../deep_symbol_storage.hpp"
 #include "../payload_encoder.hpp"
-//~ #include "../payload_recoder.hpp"
+// #include "../payload_recoder.hpp"
 #include "../payload_decoder.hpp"
 #include "../symbol_id_encoder.hpp"
 #include "../symbol_id_decoder.hpp"
@@ -29,8 +29,6 @@
 #include "../coefficient_info.hpp"
 #include "../plain_symbol_id_reader.hpp"
 #include "../plain_symbol_id_writer.hpp"
-//~ #include "../uniform_generator.hpp"
-//~ #include "../recoding_symbol_id.hpp"
 #include "../proxy_layer.hpp"
 #include "../storage_aware_encoder.hpp"
 #include "../encode_symbol_tracker.hpp"
@@ -41,7 +39,6 @@
 #include "../symbol_decoding_status_tracker.hpp"
 #include "../symbol_decoding_status_counter.hpp"
 
-
 #include "../linear_block_encoder.hpp"
 #include "../forward_linear_block_decoder.hpp"
 #include "../linear_block_decoder_delayed.hpp"
@@ -50,10 +47,8 @@
 #include "../perpetual/perpetual_generator.hpp"
 #include "../perpetual/delayed_perpetual_decoder.hpp"
 
-
 namespace kodo
 {
-
     /// @ingroup fec_stacks
     /// @brief Complete stack implementing a perpetual encoder.
     ///
@@ -138,8 +133,6 @@ namespace kodo
                      > > > > > > > > > > > > > > > > > >
     { };
 
-
-
     //~ /// @ingroup fec_stacks
     //~ /// @brief Implementation of a perpetual_decoder, but with addded debug layer
     //~ ///
@@ -182,4 +175,3 @@ namespace kodo
     { };
 
 }
-

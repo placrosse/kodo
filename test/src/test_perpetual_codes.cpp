@@ -28,7 +28,7 @@
 TEST(TestPerpetualCodes, test_basic_api)
 {
     test_basic_api<kodo::perpetual_encoder, kodo::full_rlnc_decoder>();
-    test_basic_api<kodo::perpetual_encoder, kodo::debug_standard_perpetual_decoder>();
+    test_basic_api<kodo::perpetual_encoder, kodo::standard_perpetual_decoder>();
 }
 
 /// Test that the encoders and decoders initialize() function can be used
@@ -37,7 +37,7 @@ TEST(TestPerpetualCodes, test_basic_api)
 TEST(TestPerpetualCodes, test_initialize)
 {
     test_initialize<kodo::perpetual_encoder, kodo::full_rlnc_decoder>();
-    test_initialize<kodo::perpetual_encoder, kodo::debug_standard_perpetual_decoder>();
+    test_initialize<kodo::perpetual_encoder, kodo::standard_perpetual_decoder>();
 }
 
 /// Tests that an encoder producing systematic packets is handled
@@ -45,7 +45,7 @@ TEST(TestPerpetualCodes, test_initialize)
 TEST(TestPerpetualCodes, test_systematic)
 {
     test_systematic<kodo::perpetual_encoder, kodo::full_rlnc_decoder>();
-    test_systematic<kodo::perpetual_encoder, kodo::debug_standard_perpetual_decoder>();
+    test_systematic<kodo::perpetual_encoder, kodo::standard_perpetual_decoder>();
 }
 
 /// Tests whether mixed un-coded and coded packets are correctly handled
@@ -53,7 +53,7 @@ TEST(TestPerpetualCodes, test_systematic)
 TEST(TestPerpetualCodes, mix_uncoded)
 {
     test_mix_uncoded<kodo::perpetual_encoder, kodo::full_rlnc_decoder>();
-    test_mix_uncoded<kodo::perpetual_encoder, kodo::debug_standard_perpetual_decoder>();
+    test_mix_uncoded<kodo::perpetual_encoder, kodo::standard_perpetual_decoder>();
 }
 
 /// The recoding
@@ -73,7 +73,7 @@ TEST(TestPerpetualCodes, mix_uncoded)
 TEST(TestPerpetualCodes, test_reuse_api)
 {
     test_reuse<kodo::perpetual_encoder, kodo::full_rlnc_decoder>();
-    test_reuse<kodo::perpetual_encoder, kodo::debug_standard_perpetual_decoder>();
+    test_reuse<kodo::perpetual_encoder, kodo::standard_perpetual_decoder>();
 }
 
 /// Tests the basic API functionality this mean basic encoding
@@ -81,5 +81,5 @@ TEST(TestPerpetualCodes, test_reuse_api)
 TEST(TestPerpetualCodes, test_reuse_incomplete_api)
 {
     test_reuse_incomplete<kodo::perpetual_encoder, kodo::full_rlnc_decoder>();
-    test_reuse_incomplete<kodo::perpetual_encoder, kodo::debug_standard_perpetual_decoder>();
+    test_reuse_incomplete<kodo::perpetual_encoder, kodo::standard_perpetual_decoder>();
 }
