@@ -15,8 +15,7 @@
 namespace kodo
 {
     /// @ingroup coefficient_generator_layers
-    /// @brief Generate perpetual coefficients with a specific
-    /// width
+    /// @brief Generate perpetual coefficients with a specific width
     template<class SuperCoder>
     class perpetual_generator : public SuperCoder
     {
@@ -39,7 +38,7 @@ namespace kodo
         /// Constructor
         perpetual_generator()
             : m_symbol_distribution(field_type::min_value, field_type::max_value),
-              m_pivot_distribution(0, SuperCoder::symbols()),
+              m_pivot_distribution(0, SuperCoder::symbols()-1),
               m_width(SuperCoder::symbols()/2)
             {}
 
@@ -48,17 +47,17 @@ namespace kodo
         void initialize(Factory &the_factory)
         {
             SuperCoder::initialize(the_factory);
-
+            m_pivot_distribution = boost::random::uniform_int_distribution
+                <uint32_t>(0, SuperCoder::symbols()-1);
             m_width = SuperCoder::symbols()/2;
-        }
 
+            assert(m_width < SuperCoder::symbols());
+        }
 
         /// @copydoc layer::generate(uint8_t*)
         void generate(uint8_t *coefficients)
         {
-            //~std::cout << "m_width " << m_width << std::endl;
             assert(coefficients != 0);
-            m_pivot_distribution = boost::random::uniform_int_distribution<uint32_t>(0, SuperCoder::symbols());
 
             // Ensure all coefficients are initially zero
             std::fill_n( coefficients, SuperCoder::coefficient_vector_size(), 0);
@@ -71,7 +70,8 @@ namespace kodo
             for(uint32_t i = 1; i <= m_width; ++i)
             {
                 uint32_t index = (pivot + i) % symbols;
-                coefficients[index] = m_symbol_distribution(m_random_generator);
+                value_type coefficient = m_symbol_distribution(m_random_generator);
+                fifi::set_value<field_type>(c, index, coefficient);
             }
         }
 
@@ -79,14 +79,14 @@ namespace kodo
         void generate_partial(uint8_t *coefficients)
         {
             assert(coefficients != 0);
-            m_pivot_distribution = boost::random::uniform_int_distribution<uint32_t>(0, SuperCoder::symbols());
+            m_pivot_distribution = boost::random::uniform_int_distribution<uint32_t>(0, SuperCoder::symbols()-1);
 
             // Ensure all coefficients are initially zero
             std::fill_n( coefficients, SuperCoder::coefficient_vector_size(), 0);
 
             uint32_t symbols = SuperCoder::symbols();
 
-            //attempt to draw a valid pivot
+            //attempt to draw a valid pivot, we try at most symbols time
             uint32_t pivot = m_pivot_distribution(m_random_generator);
             uint32_t trials = 1;
             while((SuperCoder::is_symbol_pivot(pivot)) and (trials <= symbols))
@@ -128,7 +128,7 @@ namespace kodo
 
         /// Set the width
         /// @param width the number of non-zero coefficients after the pivot
-        void set_width(uint32_t width)
+        void set_width(double width)
             {
                 assert(width <= SuperCoder::symbols());
                 m_width = width;
