@@ -250,27 +250,22 @@ namespace kodo
             // substitution must already have been done.
         }
 
-        /// Iterates the encoding vector from where a pivot has been
-        /// identified and subtracts existing symbols
+        /// Normalize the encoding vector by dividing all elements in
+        /// the vector with the value at the provided index
         /// @param symbol_data the data of the encoded symbol
         /// @param symbol_id the data constituting the encoding vector
-        /// @param pivot_index the index of the found pivot element
+        /// @param index the index of the found pivot element
         void normalize(value_type *symbol_data,
                        value_type *symbol_id,
-                       uint32_t pivot_index)
+                       uint32_t index)
         {
-
             assert(symbol_id != 0);
             assert(symbol_data != 0);
 
-            assert(pivot_index < SuperCoder::symbols());
-
-            assert(!SuperCoder::is_symbol_seen(pivot_index));
-            assert(!SuperCoder::is_symbol_decoded(pivot_index));
-            assert(SuperCoder::is_symbol_missing(pivot_index));
+            assert(index < SuperCoder::symbols());
 
             value_type coefficient =
-                SuperCoder::coefficient_value(symbol_id, pivot_index);
+                SuperCoder::coefficient_value(symbol_id, index);
 
             assert(coefficient > 0);
 
@@ -283,7 +278,6 @@ namespace kodo
 
             SuperCoder::multiply(symbol_data, inverted_coefficient,
                                  SuperCoder::symbol_length());
-
         }
 
         /// Iterates the encoding vector and subtracts existing symbols
