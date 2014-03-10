@@ -5,6 +5,8 @@
 
 #pragma once
 
+#include <algorithm>
+
 #include <stdint.h>
 #include <boost/shared_ptr.hpp>
 #include <boost/noncopyable.hpp>
@@ -28,29 +30,8 @@ namespace kodo
         /// @copydoc layer::value_type
         typedef typename field_type::value_type value_type;
 
-        /// @copydoc layer::factory
-        //~ typedef typename SuperCoder::factory factory;
-
-        /// The encoding vector
-        //~ typedef typename SuperCoder::vector_type vector_type;
-
-        /// The seed_id type
-        //~ typedef uint32_t seed_id;
-
-        /// The pivot type
-        //~ typedef perpetual_base::pivot_type pivot_type;
-
-        /// The width type
-        //~ typedef perpetual_base::width_type width_type;
-
     protected:
 
-        //~ using SuperCoder::m_rank;
-        //~ using SuperCoder::m_coded;
-        //~ using SuperCoder::m_uncoded;
-        //~ uint32_t m_maximum_pivot;
-
-        /// Keeps track of the largest seen width
         uint32_t m_max_seen_width;
 
     //~ public:
@@ -103,22 +84,11 @@ namespace kodo
             m_max_seen_width = SuperCoder::symbols()-1;
         }
 
-
-        /// @see final_coder_factory(...)
-        //~ void construct(uint32_t max_symbols, uint32_t max_symbol_size)
-            //~ {
-                //~ SuperCoder::construct(max_symbols, max_symbol_size);
-
-                //~ uint32_t max_symbol_id_full_length =
-                    //~ vector_type::length(max_symbols);
-//~
-                //~ m_symbol_id_full.resize(max_symbol_id_full_length);
-                //~ m_symbol.resize(max_symbol_size);
-
-                //~ m_max_seen_width = 0;
-            //~ }
-
-
+        /// @copydoc layer::decode_symbol(uint8_t*, uint32_t)
+        void decode_symbol(uint8_t *symbol_data, uint32_t symbol_index)
+        {
+            SuperCoder::decode_symbol(symbol_data, symbol_index);
+        }
 
         /// @copydoc layer::decode_symbol(uint8_t*,uint8_t*)
         void decode_symbol(uint8_t *symbol_data, uint8_t *coefficients)
@@ -135,54 +105,141 @@ namespace kodo
             decode_coefficients(s, c);
         }
 
-        /// @copydoc layer::decode_symbol(uint8_t*, uint32_t)
-        void decode_symbol(uint8_t *symbol_data, uint32_t symbol_index)
-        {
-            SuperCoder::decode_symbol(symbol_data, symbol_index);
-        }
-
-
-        //~ /// @copydoc layer::is_complete() const
-        //~ bool is_complete() const
-        //~ {
-            //~ return rank() == SuperCoder::symbols();
-        //~ }
-//~
-        //~ /// @copydoc layer::rank() const
-        //~ uint32_t rank() const
-        //~ {
-            //~ return SuperCoder::symbols_seen() + SuperCoder::symbols_decoded();
-        //~ }
-//~
-        //~ /// @copydoc layer::is_symbol_pivot(uint32_t) const
-        //~ bool is_symbol_pivot(uint32_t index) const
-        //~ {
-            //~ assert(index < SuperCoder::symbols());
-            //~ return SuperCoder::is_symbol_seen(index) ||
-                //~ SuperCoder::is_symbol_decoded(index);
-        //~ }
-
-
     protected:
 
-        //~ uint32_t find_pivot(value_type *coefficients)
-        //~ {
-            //~ uint32_t max_zero_streak = 0;
-            //~ uint32_t current_zero_streak = 0;
-            //~ uint32_t pivot = 0;
-            //~ uint32_t backside = 0;
-//~
-            //~ for(uint32_t i=0; i < SuperCoder::symbols() + backside; ++i)
-            //~ {
-                //~ if(coefficient[i])
-                //~
-            //~ }
-//~
-//~
-//~
-            //~ return pivot
-        //~ }
+        bool sort_streaks(const std::pair<uint32_t, uint32_t> &i,
+                          const std::pair<uint32_t, uint32_t> &j)
+        {
+            if( i.first > j.first ) return false;
+            if( j.first > i.first ) return true;
+            return j.second < i.second;
+        }
 
+        /// Find the intended pivot index in a perpetual coding vector, which is
+        /// the index following the longest streak of zeros in the vector
+        /// @param symbol_id the coding vector
+        /// @return a pivot candidate if found
+        boost::optional<uint32_t> find_pivot(value_type *symbol_id)
+        {
+                        // Look for all zero streaks in the coding vector
+            uint32_t symbols = SuperCoder::symbols();
+            bool streak = false;
+            uint32_t zeros = 0;
+            std::vector<std::pair<uint32_t, uint32_t>> zero_streaks;
+
+            for(uint32_t i=0; i < symbols; ++i)
+            {
+                value_type current_coefficient =
+                    SuperCoder::coefficient_value(symbol_id, i);
+
+                if(!current_coefficient)
+                {
+                    if(streak) //continue zero streak
+                    {
+                        zeros ++;
+                    }
+                    else //new zero streak
+                    {
+                        zeros = 1;
+                        streak = true;
+                    }
+                }
+                else
+                {
+                    if(streak or i == (symbols-1) ) //end of zero streak
+                    {
+                        std::pair<uint32_t, uint32_t> zero_streak(zeros,i);
+                        zero_streaks.push_back(zero_streak);
+
+                        zeros = 0;
+                        streak = false;
+                    }
+                }
+            }
+
+            // if all values in the vector was zeros
+            if(zero_streaks.size() == 1)
+                return boost::none;
+
+            //~ std::sort(zero_streaks.begin(), zero_streaks.end(), sort_streaks);
+
+            /*
+            look for the two largest zero ranges
+
+            case 1
+            if neighter terminates at the end index, we do not have wrap around
+                -> use pivot +1 after the longest zero ends.
+
+            case 2
+            else we have wrap around
+                -> use the smallest end index of the two zero range +1
+            */
+
+            if (zero_streaks[0].second == symbols-1 or
+                zero_streaks[1].second == symbols-1)
+            {
+                return std::min(zero_streaks[0].second,
+                                zero_streaks[1].second);
+            }
+            else
+            {
+                return zero_streaks[0].second;
+            }
+        }
+
+        boost::optional<uint32_t> forward_substitute_to_pivot(
+            value_type *symbol_data,
+            value_type *symbol_id)
+        {
+            assert(symbol_id != 0);
+            assert(symbol_data != 0);
+
+            boost::optional<uint32_t> pivot = find_pivot(symbol_id);
+
+            if(!pivot)
+                return boost::none;
+
+            for(uint32_t j=0; j < SuperCoder::symbols(); ++j)
+            {
+                uint32_t index = (*pivot+j) % SuperCoder::symbols();
+
+                value_type current_coefficient =
+                    SuperCoder::coefficient_value(symbol_id, index);
+
+                if(!current_coefficient)
+                    continue;
+
+                if(!SuperCoder::is_symbol_pivot(index))
+                    return boost::optional<uint32_t>(index);
+
+                value_type *vector_index =
+                    SuperCoder::coefficient_vector_values(index);
+
+                value_type *symbol_index =
+                    SuperCoder::symbol_value(index);
+
+                if(fifi::is_binary<field_type>::value)
+                {
+                    SuperCoder::subtract(symbol_id, vector_index,
+                        SuperCoder::coefficient_vector_length());
+
+                    SuperCoder::subtract(symbol_data, symbol_index,
+                        SuperCoder::symbol_length());
+                }
+                else
+                {
+                    SuperCoder::multiply_subtract(
+                        symbol_id, vector_index,
+                        current_coefficient,
+                        SuperCoder::coefficient_vector_length());
+
+                    SuperCoder::multiply_subtract(symbol_data, symbol_index,
+                        current_coefficient, SuperCoder::symbol_length());
+                }
+            }
+
+            return boost::none;
+        }
 
         /// Decodes a symbol based on the vector
         /// @param symbol_data buffer containing the encoding symbol
@@ -194,49 +251,33 @@ namespace kodo
                 assert(vector_data != 0);
 
                 // See if we can find a pivot
+                // @TODO find the pivot after the longest streak of zeros and not just the first one
                 boost::optional<uint32_t> pivot_id
-                    = SuperCoder::forward_substitute_to_pivot(symbol_data, vector_data);
-//~ //
+                    = forward_substitute_to_pivot(symbol_data, vector_data);
+
                 if(!pivot_id)
                 {
                     return;
-                    //~pivot_id = SuperCoder::forward_substitute_from_pivot(vector_data, symbol_data, pivot_id);
-//~ //~
-                    if(!pivot_id)
-                        return;
                 }
 
-//~ //~
                 if(!fifi::is_binary<field_type>::value)
                 {
                     // Normalize symbol and vector
                     SuperCoder::normalize(symbol_data, vector_data, *pivot_id);
                 }
-                //~ std::cout << "normalized 1" <<  std::endl;
-//~ //~
-                // Now save the received symbol
+
+                // Save the received symbol
                 SuperCoder::store_coded_symbol(symbol_data, vector_data, *pivot_id);
 
-//~ //~
-                // We have increased the rank
-                //~ ++m_rank;
-                //~ m_coded[ *pivot_id ] = true;
-//~ //~
-                //~ if(*pivot_id > m_maximum_pivot)
-                //~ {
-                    //~ m_maximum_pivot = *pivot_id;
-                //~ }
-//~ //~
                 if(SuperCoder::is_complete())
                 {
                     final_forward();
                 }
-//~ //~
+
                 if(SuperCoder::is_complete())
                 {
                     final_backward_substitute();
                 }
-
             }
 
         /// Final forward substitution to put the decoding matrix on echelon form
@@ -246,29 +287,21 @@ namespace kodo
                 {
                     for(uint32_t i = col; i < SuperCoder::symbols(); ++i)
                     {
-                        //~ value_type *vector_i = SuperCoder::vector( i );
-//~
-                        //~ value_type coefficient_i
-                            //~ = SuperCoder::coefficient( col, vector_i );
-
                         value_type *vector_i =
                             SuperCoder::coefficient_vector_values(i);
 
                         value_type value =
                             SuperCoder::coefficient_value(vector_i, col);
-                        //~ //~
-                        //~ if(coefficient_i == 0)
+
                         if(value == 0)
                         {
                             // If we reached the end of the coding coefficients
                             //we did not find a pivot
                             if(i+1 == SuperCoder::symbols())
                             {
-                                //~ value_type *vector_col = SuperCoder::vector( col );
-                                //~ value_type *symbol_col = SuperCoder::symbol( col );
                                 value_type *vector_col = SuperCoder::coefficient_vector_values( col );
                                 value_type *symbol_col = SuperCoder::symbol_value( col );
-//~ //~
+
                                 // Unless we are looking for the last pivot we
                                 // check if the row below is identical if not we
                                 // add it to the row below in order to conserve
@@ -277,47 +310,37 @@ namespace kodo
                                 {
                                     value_type *vector_col_1 =
                                         SuperCoder::coefficient_vector_values( col+1 );
-//~ //~
+
                                     value_type *symbol_col_1 =
                                         SuperCoder::symbol_value( col+1 );
-//~ //~
+
                                     bool same;
                                     same = std::equal(vector_col,
-                                                      //~ vector_col + SuperCoder::vector_length(),
+
                                                       vector_col + SuperCoder::coefficient_vector_length(),
                                                       vector_col_1 );
-//~ //~
-                                    //~ if(not same && (m_coded[col] || m_uncoded[col]))
+
                                     if(not same && SuperCoder::is_symbol_seen(col))
                                     {
                                         SuperCoder::add(
                                             vector_col, vector_col_1,
-                                            //~ SuperCoder::vector_length());
                                             SuperCoder::coefficient_vector_length());
 
-//~ //~
                                         SuperCoder::add(
                                             symbol_col, symbol_col_1,
                                             SuperCoder::symbol_length());
                                     }
                                 }
                                 // Delete the row as we have no pivot for it
-                                //~ std::fill_n(vector_col, SuperCoder::vector_length(), 0);
                                 std::fill_n(vector_col, SuperCoder::coefficient_vector_length(), 0);
-                                //~ --m_rank;
-                                //~ m_uncoded[col] = false;
-                                //~ m_coded[col] = false;
-
                                 SuperCoder::set_symbol_missing(col);
-
                             }
 
-//~ //~
+
                             continue;
                         }
-//~ //~
-                        // A pivot was found
 
+                        // A pivot was found
                         // If we found the pivot on a row with a higher
                         // index than the pivot we are looking for, we swap it up
                         if(i > col)
