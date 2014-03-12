@@ -35,7 +35,7 @@ namespace kodo
             }
         }
 
-        /// @return The index of the next symbol to be sent in a
+        /// @return The index of the next symbol to be sent systematically
         uint32_t next_systematic_symbol() const
         {
             if(single_symbol_available())
