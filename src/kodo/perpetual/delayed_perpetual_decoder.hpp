@@ -34,30 +34,6 @@ namespace kodo
 
         uint32_t m_max_seen_width;
 
-    //~ public:
-//~
-        //~ /// The factory layer associated with this coder.
-        //~ /// In this case only needed to provide the max_payload_size()
-        //~ /// function.
-        //~ class factory : public SuperCoder::factory
-        //~ {
-        //~ public:
-//~
-            //~ /// @see final_coder_factory::factory(...)
-            //~ factory(uint32_t max_symbols, uint32_t max_symbol_size)
-                //~ : SuperCoder::factory(max_symbols, max_symbol_size)
-                //~ {
-                //~ }
-//~
-            //~ /// Find the minimum buffer size needed to store a coding vector,
-            //~ /// @return the minimum buffer size for a coding vector in bytes
-            //~ uint32_t max_symbol_id_size() const
-                //~ {
-                    //~ return perpetual_base::symbol_id_size<field_type>(
-                        //~ SuperCoder::factory::max_symbols());
-                //~ }
-        //~ };
-
     public:
 
         /// Constructor
@@ -107,13 +83,25 @@ namespace kodo
 
     protected:
 
-        bool sort_streaks(const std::pair<uint32_t, uint32_t> &i,
-                          const std::pair<uint32_t, uint32_t> &j)
+        struct sort
         {
-            if( i.first > j.first ) return false;
-            if( j.first > i.first ) return true;
-            return j.second < i.second;
-        }
+            // sort highest zero count first, then highest index
+            static bool zeros(const std::pair<uint32_t, uint32_t> &i,
+                              const std::pair<uint32_t, uint32_t> &j)
+            {
+                if( i.first < j.first ) return false;
+                if( j.first < i.first ) return true;
+                return j.second < i.second;
+            }
+
+            // sort on first index first
+            static bool index(const std::pair<uint32_t, uint32_t> &i,
+                               const std::pair<uint32_t, uint32_t> &j)
+            {
+                if( i.second > j.second ) return false;
+                else return true; // indices are unique
+            }
+        };
 
         /// Find the intended pivot index in a perpetual coding vector, which is
         /// the index following the longest streak of zeros in the vector
@@ -121,13 +109,15 @@ namespace kodo
         /// @return a pivot candidate if found
         boost::optional<uint32_t> find_pivot(value_type *symbol_id)
         {
-                        // Look for all zero streaks in the coding vector
+            // Look for all zero streaks in the coding vector
             uint32_t symbols = SuperCoder::symbols();
             bool streak = false;
             uint32_t zeros = 0;
             std::vector<std::pair<uint32_t, uint32_t>> zero_streaks;
 
-            for(uint32_t i=0; i < symbols; ++i)
+            //~ for(uint32_t i=0; i < symbols; ++i)
+            uint32_t i=0;
+            while(i < symbols)
             {
                 value_type current_coefficient =
                     SuperCoder::coefficient_value(symbol_id, i);
@@ -146,45 +136,39 @@ namespace kodo
                 }
                 else
                 {
-                    if(streak or i == (symbols-1) ) //end of zero streak
+                    if(streak) //end of zero streak
                     {
                         std::pair<uint32_t, uint32_t> zero_streak(zeros,i);
                         zero_streaks.push_back(zero_streak);
-
-                        zeros = 0;
                         streak = false;
                     }
                 }
+                i++;
             }
 
-            // if all values in the vector was zeros
-            if(zero_streaks.size() == 1)
-                return boost::none;
-
-            //~ std::sort(zero_streaks.begin(), zero_streaks.end(), sort_streaks);
-
-            /*
-            look for the two largest zero ranges
-
-            case 1
-            if neighter terminates at the end index, we do not have wrap around
-                -> use pivot +1 after the longest zero ends.
-
-            case 2
-            else we have wrap around
-                -> use the smallest end index of the two zero range +1
-            */
-
-            if (zero_streaks[0].second == symbols-1 or
-                zero_streaks[1].second == symbols-1)
+            if(streak) // if the last value is zero
             {
-                return std::min(zero_streaks[0].second,
-                                zero_streaks[1].second);
+                std::pair<uint32_t, uint32_t> zero_streak(zeros,i);
+                zero_streaks.push_back(zero_streak);
             }
-            else
-            {
+
+            // All values in the vector was non-zero
+            if(zero_streaks.size() == 0)
+                return boost::optional<uint32_t>(0);
+
+            std::sort(zero_streaks.begin(), zero_streaks.end(), sort::zeros);
+
+            // if the longest streak does not terminate at the end
+            if (zero_streaks[0].second != symbols-1)
                 return zero_streaks[0].second;
-            }
+
+            std::sort(zero_streaks.begin(), zero_streaks.end(), sort::index);
+
+            //in case the first value in the symbol id is non-zero
+            if(zero_streaks[0].second - zero_streaks[0].first)
+                return boost::optional<uint32_t>(0);
+
+            return zero_streaks[0].second;
         }
 
         boost::optional<uint32_t> forward_substitute_to_pivot(
@@ -195,45 +179,44 @@ namespace kodo
             assert(symbol_data != 0);
 
             boost::optional<uint32_t> pivot = find_pivot(symbol_id);
-
-            if(!pivot)
-                return boost::none;
+            if(pivot == boost::none)
+                return pivot;
 
             for(uint32_t j=0; j < SuperCoder::symbols(); ++j)
             {
-                uint32_t index = (*pivot+j) % SuperCoder::symbols();
+                uint32_t i = (*pivot+j) % SuperCoder::symbols();
 
                 value_type current_coefficient =
-                    SuperCoder::coefficient_value(symbol_id, index);
+                    SuperCoder::coefficient_value(symbol_id, i);
 
                 if(!current_coefficient)
                     continue;
 
-                if(!SuperCoder::is_symbol_pivot(index))
-                    return boost::optional<uint32_t>(index);
+                if(!SuperCoder::is_symbol_pivot(i))
+                    return boost::optional<uint32_t>(i);
 
-                value_type *vector_index =
-                    SuperCoder::coefficient_vector_values(index);
+                value_type *coefficients_i =
+                    SuperCoder::coefficient_vector_values(i);
 
-                value_type *symbol_index =
-                    SuperCoder::symbol_value(index);
+                value_type *symbol_i =
+                    SuperCoder::symbol_value(i);
 
                 if(fifi::is_binary<field_type>::value)
                 {
-                    SuperCoder::subtract(symbol_id, vector_index,
+                    SuperCoder::subtract(symbol_id, coefficients_i,
                         SuperCoder::coefficient_vector_length());
 
-                    SuperCoder::subtract(symbol_data, symbol_index,
+                    SuperCoder::subtract(symbol_data, symbol_i,
                         SuperCoder::symbol_length());
                 }
                 else
                 {
                     SuperCoder::multiply_subtract(
-                        symbol_id, vector_index,
+                        symbol_id, coefficients_i,
                         current_coefficient,
                         SuperCoder::coefficient_vector_length());
 
-                    SuperCoder::multiply_subtract(symbol_data, symbol_index,
+                    SuperCoder::multiply_subtract(symbol_data, symbol_i,
                         current_coefficient, SuperCoder::symbol_length());
                 }
             }
@@ -255,10 +238,8 @@ namespace kodo
                 boost::optional<uint32_t> pivot_id
                     = forward_substitute_to_pivot(symbol_data, vector_data);
 
-                if(!pivot_id)
-                {
+                if(pivot_id == boost::none)
                     return;
-                }
 
                 if(!fifi::is_binary<field_type>::value)
                 {
@@ -538,73 +519,6 @@ namespace kodo
                 }
             }
 
-    protected:
-
-        /// Swap two rows
-        /// @param i first row
-        /// @param j second row
-        //~ void swap(uint32_t i, uint32_t j)
-            //~ {
-                //~ assert(i < SuperCoder::symbols());
-                //~ assert(j < SuperCoder::symbols());
-//~
-                //~ value_type *symbol_i = SuperCoder::symbol(i);
-                //~ value_type *symbol_j = SuperCoder::symbol(j);
-//~
-                //~ std::copy(symbol_i,
-                          //~ symbol_i + SuperCoder::symbol_length(),
-                          //~ &m_symbol[0]);
-//~
-                //~ std::copy(symbol_j,
-                          //~ symbol_j + SuperCoder::symbol_length(),
-                          //~ symbol_i);
-//~
-                //~ std::copy(&m_symbol[0],
-                          //~ &m_symbol[0]+ SuperCoder::symbol_length(),
-                          //~ symbol_j);
-//~
-                //~ value_type *symbol_id_i = SuperCoder::vector(i);
-                //~ value_type *symbol_id_j = SuperCoder::vector(j);
-//~
-                //~ std::copy(symbol_id_i,
-                          //~ symbol_id_i + SuperCoder::vector_length(),
-                          //~ &m_symbol_id_full[0]);
-//~
-                //~ std::copy(symbol_id_j,
-                          //~ symbol_id_j + SuperCoder::vector_length(),
-                          //~ symbol_id_i);
-//~
-                //~ std::copy(&m_symbol_id_full[0],
-                          //~ &m_symbol_id_full[0]+ SuperCoder::vector_length(),
-                          //~ symbol_id_j);
-//~
-                //~ bool temp;
-                //~ temp = m_coded[i];
-                //~ m_coded[i] = m_coded[j];
-                //~ m_coded[j] = temp;
-//~
-                //~ temp = m_uncoded[i];
-                //~ m_uncoded[i] = m_uncoded[j];
-                //~ m_uncoded[j] = temp;
-            //~ }
-
-
-
-        /// Find the buffer size needed to store a coding vector,
-        /// @return the minimum buffer size for a coding vector in bytes
-        //~ uint32_t symbol_id_size() const
-            //~ {
-                //~ return perpetual_base::symbol_id_size<field_type>(
-                    //~ SuperCoder::symbols());
-            //~ }
-
-    protected:
-
-        /// A temporary full symbol id buffer
-        //~ std::vector<value_type> m_symbol_id_full;
-
-        /// A temporary symbol buffer
-        //~ std::vector<value_type> m_symbol;
     };
 }
 
