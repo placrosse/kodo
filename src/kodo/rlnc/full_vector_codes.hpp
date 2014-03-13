@@ -15,7 +15,8 @@
 #include "../finite_field_math.hpp"
 #include "../finite_field_info.hpp"
 #include "../zero_symbol_encoder.hpp"
-#include "../systematic_encoder.hpp"
+#include "../default_on_systematic_encoder.hpp"
+#include "../default_off_systematic_encoder.hpp"
 #include "../systematic_decoder.hpp"
 #include "../storage_bytes_used.hpp"
 #include "../storage_block_info.hpp"
@@ -46,6 +47,7 @@
 #include "../forward_linear_block_decoder.hpp"
 #include "../linear_block_decoder_delayed.hpp"
 #include "../coefficient_value_access.hpp"
+#include "../pivot_aware_generator.hpp"
 
 namespace kodo
 {
@@ -66,7 +68,7 @@ namespace kodo
         public // Payload Codec API
                payload_encoder<
                // Codec Header API
-               systematic_encoder<
+               default_on_systematic_encoder<
                symbol_id_encoder<
                // Symbol ID API
                plain_symbol_id_writer<
@@ -108,12 +110,13 @@ namespace kodo
         : public // Payload API
                  payload_encoder<
                  // Codec Header API
-                 non_systematic_encoder<
+                 default_off_systematic_encoder<
                  symbol_id_encoder<
                  // Symbol ID API
                  recoding_symbol_id<
                  // Coefficient Generator API
                  uniform_generator<
+                 pivot_aware_generator<
                  // Encoder API
                  encode_symbol_tracker<
                  zero_symbol_encoder<
@@ -123,7 +126,7 @@ namespace kodo
                  // Proxy
                  proxy_layer<
                  recoding_stack<MainStack>, MainStack>
-                     > > > > > > > > >
+                     > > > > > > > > > >
     { };
 
     /// @ingroup fec_stacks

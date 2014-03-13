@@ -16,7 +16,7 @@ namespace kodo
     ///        indicates that it does not have full rank (i.e. not all symbols
     ///        have been specified).
     template<class SuperCoder>
-    class storage_aware_generator : public SuperCoder
+    class check_partial_generator : public SuperCoder
     {
     public:
 
@@ -25,16 +25,17 @@ namespace kodo
         {
             assert(coefficients != 0);
 
-            if(SuperCoder::rank() < SuperCoder::symbols())
-            {
-                SuperCoder::generate_partial(coefficients);
-            }
-            else
+            if(SuperCoder::can_generate())
             {
                 SuperCoder::generate(coefficients);
             }
+            else
+            {
+                SuperCoder::generate_partial(coefficients);
+            }
         }
     };
+
 }
 
 

@@ -15,6 +15,8 @@
 #include <gauge/csv_printer.hpp>
 #include <gauge/json_printer.hpp>
 
+#include <kodo/has_systematic_encoder.hpp>
+#include <kodo/set_systematic_off.hpp>
 #include <kodo/rlnc/full_vector_codes.hpp>
 #include <kodo/rlnc/seed_codes.hpp>
 #include <kodo/rs/reed_solomon_codes.hpp>
@@ -212,7 +214,7 @@ struct throughput_benchmark : public gauge::time_benchmark
 
         // We switch any systematic operations off, because we are only
         // interested in producing coded symbols
-        if (kodo::is_systematic_encoder(m_encoder))
+        if (kodo::has_systematic_encoder<Encoder>::value)
             kodo::set_systematic_off(m_encoder);
 
         uint32_t payload_count = m_payloads.size();

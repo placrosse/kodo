@@ -41,7 +41,7 @@ inline void test_initialize(uint32_t symbols, uint32_t symbol_size)
         encoder->set_symbols(sak::storage(data_in));
 
         // Set the encoder non-systematic
-        if(kodo::is_systematic_encoder(encoder))
+        if(kodo::has_systematic_encoder<Encoder>::value)
             kodo::set_systematic_off(encoder);
 
         while( !decoder->is_complete() )

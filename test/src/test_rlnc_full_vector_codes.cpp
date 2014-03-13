@@ -17,7 +17,6 @@
 #include <kodo/payload_recoder.hpp>
 #include <kodo/partial_shallow_symbol_storage.hpp>
 #include <kodo/linear_block_decoder_delayed.hpp>
-#include <kodo/storage_aware_generator.hpp>
 #include <kodo/shallow_symbol_storage.hpp>
 #include <kodo/has_shallow_symbol_storage.hpp>
 
@@ -117,12 +116,11 @@ namespace kodo
             : public // Payload Codec API
                      payload_encoder<
                      // Codec Header API
-                     systematic_encoder<
+                     default_on_systematic_encoder<
                      symbol_id_encoder<
                      // Symbol ID API
                      plain_symbol_id_writer<
                      // Coefficient Generator API
-                     storage_aware_generator<
                      uniform_generator<
                      // Encoder API
                      encode_symbol_tracker<
@@ -143,7 +141,7 @@ namespace kodo
                      final_coder_factory_pool<
                      // Final type
                      full_rlnc_encoder_shallow<Field>
-                         > > > > > > > > > > > > > > > > > >
+                         > > > > > > > > > > > > > > > > > //>
         { };
     }
 

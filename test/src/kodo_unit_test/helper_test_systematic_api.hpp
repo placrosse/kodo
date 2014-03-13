@@ -31,7 +31,7 @@ inline void test_systematic(uint32_t symbols, uint32_t symbol_size)
     encoder->set_symbols(sak::storage(data_in));
 
     // Ensure encoder systematic
-    EXPECT_TRUE(kodo::is_systematic_encoder(encoder));
+    ASSERT_TRUE(kodo::has_systematic_encoder<Encoder>::value);
     kodo::set_systematic_on(encoder);
 
     uint32_t pkg_count = 0;

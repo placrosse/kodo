@@ -3,13 +3,13 @@
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
 
-/// @file test_proxy_seen_encoder_rank.cpp Unit tests for the proxy layer class
+/// @file test_proxy_remote_rank.cpp Unit tests for the proxy layer class
 
 #include <cstdint>
 
 #include <gtest/gtest.h>
 
-#include <kodo/proxy_seen_encoder_rank.hpp>
+#include <kodo/proxy_remote_rank.hpp>
 
 namespace kodo
 {
@@ -21,7 +21,7 @@ namespace kodo
     {
 
         // Object to represent the main stack, which the proxy will
-        // access to call the seen_encoder_rank() function.
+        // access to call the remote_rank() function.
         class dummy_main_stack
         {
         public:
@@ -30,14 +30,14 @@ namespace kodo
 
         public:
 
-            rank_type seen_encoder_rank() const
+            rank_type remote_rank() const
             {
-                return m_seen_encoder_rank;
+                return m_remote_rank;
             }
 
         public:
 
-            uint32_t m_seen_encoder_rank;
+            uint32_t m_remote_rank;
         };
 
 
@@ -77,29 +77,29 @@ namespace kodo
         };
 
 
-        class test_stack : public proxy_seen_encoder_rank<dummy_layer>
+        class test_stack : public proxy_remote_rank<dummy_layer>
         { };
     }
 }
 
-TEST(TestProxySeenEncoderRank, test)
+TEST(TestProxyRemoteRank, api)
 {
 
     kodo::test_stack::factory factory;
     kodo::test_stack stack;
     stack.initialize(factory);
 
-    factory.m_main_stack.m_seen_encoder_rank = 0U;
-    EXPECT_EQ(stack.seen_encoder_rank(), 0U);
+    factory.m_main_stack.m_remote_rank = 0U;
+    EXPECT_EQ(stack.remote_rank(), 0U);
 
-    factory.m_main_stack.m_seen_encoder_rank = 50U;
-    EXPECT_EQ(stack.seen_encoder_rank(), 50U);
+    factory.m_main_stack.m_remote_rank = 50U;
+    EXPECT_EQ(stack.remote_rank(), 50U);
 
-    factory.m_main_stack.m_seen_encoder_rank = 5U;
-    EXPECT_EQ(stack.seen_encoder_rank(), 5U);
+    factory.m_main_stack.m_remote_rank = 5U;
+    EXPECT_EQ(stack.remote_rank(), 5U);
 
-    factory.m_main_stack.m_seen_encoder_rank = 0U;
-    EXPECT_EQ(stack.seen_encoder_rank(), 0U);
+    factory.m_main_stack.m_remote_rank = 0U;
+    EXPECT_EQ(stack.remote_rank(), 0U);
 
 }
 
