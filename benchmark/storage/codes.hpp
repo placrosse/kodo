@@ -5,8 +5,8 @@
 
 #pragma once
 
-#include <kodo/default_on_systematic_encoder.hpp>
 #include <kodo/backward_linear_block_decoder.hpp>
+#include <kodo/default_on_systematic_encoder.hpp>
 #include <kodo/has_shallow_symbol_storage.hpp>
 #include <kodo/linear_block_decoder_delayed.hpp>
 #include <kodo/partial_shallow_symbol_storage.hpp>
