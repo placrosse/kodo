@@ -110,7 +110,7 @@ namespace kodo
             assert(symbol_dest != 0);
             assert(symbol_length > 0);
 
-            coefficient = fifi::pack<field_type>(coefficient);
+            coefficient = fifi::pack_constant<field_type>(coefficient);
 
             m_field->region_multiply_constant(symbol_dest, coefficient,
                 symbol_length);
@@ -127,7 +127,7 @@ namespace kodo
             assert(symbol_src != 0);
             assert(symbol_length > 0);
 
-            coefficient = fifi::pack<field_type>(coefficient);
+            coefficient = fifi::pack_constant<field_type>(coefficient);
 
             m_field->region_multiply_add(symbol_dest,
                                symbol_src, coefficient, symbol_length);
@@ -158,7 +158,7 @@ namespace kodo
             assert(symbol_length > 0);
             assert(symbol_dest != symbol_src);
 
-            coefficient = fifi::pack<field_type>(coefficient);
+            coefficient = fifi::pack_constant<field_type>(coefficient);
 
             m_field->region_multiply_subtract(symbol_dest,
                 symbol_src, coefficient, symbol_length);
