@@ -29,11 +29,6 @@ namespace kodo
         /// @copydoc layer::value_type
         typedef typename field_type::value_type value_type;
 
-    protected:
-
-        /// the max width seen
-        uint32_t m_max_seen_width;
-
     public:
 
         /// Constructor
@@ -41,20 +36,11 @@ namespace kodo
             : m_max_seen_width(0)
         { }
 
-        /// @copydoc layer::construct(Factory&)
-        template<class Factory>
-        void construct(Factory &the_factory)
-        {
-            SuperCoder::construct(the_factory);
-        }
-
         /// @copydoc layer::initialize(Factory&)
         template<class Factory>
         void initialize(Factory& the_factory)
         {
             SuperCoder::initialize(the_factory);
-
-            //@TODO initialize to zero and update when symbols arrive
             m_max_seen_width = 0;
         }
 
@@ -86,6 +72,8 @@ namespace kodo
 
             if(SuperCoder::is_complete())
                 final_decoding();
+
+            SuperCoder::update_symbol_status();
         }
 
         /// @copydoc layer::decode_symbol(uint8_t*,uint8_t*)
@@ -94,25 +82,29 @@ namespace kodo
             assert(symbol_data != 0);
             assert(coefficients != 0);
 
-            value_type *s =
-                reinterpret_cast<value_type*>(symbol_data);
-
-            value_type *c =
-                reinterpret_cast<value_type*>(coefficients);
-
+            value_type *s = reinterpret_cast<value_type*>(symbol_data);
+            value_type *c = reinterpret_cast<value_type*>(coefficients);
             decode_coefficients(s, c);
 
             if(SuperCoder::is_complete())
                 final_decoding();
+
+            SuperCoder::update_symbol_status();
         }
 
     protected:
 
+        /// the max width seen
+        uint32_t m_max_seen_width;
+
+        /// @return the highist width seen
         uint32_t max_width() const
         {
             return m_max_seen_width;
         }
 
+        /// update the highest width seen
+        /// @param width an observed width
         void seen_width(uint32_t width)
         {
             assert(width <= SuperCoder::symbols());
@@ -141,7 +133,6 @@ namespace kodo
             uint32_t i = 0;
             value_type value = SuperCoder::coefficient_value(symbol_id, i);
 
-            //~ for(uint32_t i=0; i < SuperCoder::symbols()*2; ++i)
             while(!value or i < SuperCoder::symbols())
             {
                 uint32_t index = i % SuperCoder::symbols();
@@ -193,8 +184,6 @@ namespace kodo
             boost::optional<uint32_t> pivot = find_pivot(symbol_id);
             if(pivot == boost::none)
                 return pivot;
-
-            //~ std::cout << "max width: " << max_width() << std::endl;
 
             for(uint32_t j=0; j < SuperCoder::symbols(); ++j)
             {
@@ -414,8 +403,6 @@ namespace kodo
         /// backwards substitute to finalize decoding
         void final_backward_substitute()
         {
-            //~ std::cout << "using max width: " << max_width() << std::endl;
-
             assert(SuperCoder::is_complete());
 
             uint32_t symbols = SuperCoder::symbols();
@@ -449,13 +436,12 @@ namespace kodo
             if(max_width() < pivot_id)
                 top_index = pivot_id - max_width();
 
-            //~ std::cout << "top index : " << top_index << " for pivot id " << pivot_id << std::endl;
             for(uint32_t i = top_index; i < pivot_id; ++i)
             {
                 if( SuperCoder::is_symbol_decoded(i) )
                 {
-                    // We know that we have no non-zero elements
-                    // outside the pivot position.
+                    // We know that we have no non-zero elements outside the
+                    // pivot position.
                     continue;
                 }
 
