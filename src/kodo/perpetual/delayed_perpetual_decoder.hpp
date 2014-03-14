@@ -16,9 +16,8 @@
 namespace kodo
 {
 
-    /// Implementes a simple uniform random encoding scheme
-    /// where the payload_id carries all coding coefficients
-    /// i.e. the "encoding vector"
+    /// Perpetual decoder which identifies the index most suitable to use as a
+    /// pivot in order to best utilize the perpetual structure
     template<class SuperCoder>
     class delayed_perpetual_decoder : public SuperCoder
     {
@@ -91,7 +90,7 @@ namespace kodo
 
         struct sort
         {
-            // sort highest zero count first, then highest index
+            // sort zero count descending, then index descending
             static bool zeros(const std::pair<uint32_t, uint32_t> &i,
                               const std::pair<uint32_t, uint32_t> &j)
             {
@@ -100,7 +99,7 @@ namespace kodo
                 return j.second < i.second;
             }
 
-            // sort on first index first
+            // sort on index acceding
             static bool index(const std::pair<uint32_t, uint32_t> &i,
                                const std::pair<uint32_t, uint32_t> &j)
             {
@@ -121,7 +120,6 @@ namespace kodo
             uint32_t zeros = 0;
             std::vector<std::pair<uint32_t, uint32_t>> zero_streaks;
 
-            //~ for(uint32_t i=0; i < symbols; ++i)
             uint32_t i=0;
             while(i < symbols)
             {
@@ -152,7 +150,7 @@ namespace kodo
                 i++;
             }
 
-            if(streak) // if the last value is zero
+            if(streak) // save the streak if the last coefficient was zero
             {
                 std::pair<uint32_t, uint32_t> zero_streak(zeros,i);
                 zero_streaks.push_back(zero_streak);
@@ -164,7 +162,7 @@ namespace kodo
 
             std::sort(zero_streaks.begin(), zero_streaks.end(), sort::zeros);
 
-            // if the longest streak does not terminate at the end
+            // in cases where the longest streak does not terminate at the end
             if (zero_streaks[0].second != symbols-1)
                 return zero_streaks[0].second;
 
@@ -239,8 +237,7 @@ namespace kodo
                 assert(symbol_data != 0);
                 assert(vector_data != 0);
 
-                // See if we can find a pivot
-                // @TODO find the pivot after the longest streak of zeros and not just the first one
+                // Look for a pivot
                 boost::optional<uint32_t> pivot_id
                     = forward_substitute_to_pivot(symbol_data, vector_data);
 
@@ -248,12 +245,8 @@ namespace kodo
                     return;
 
                 if(!fifi::is_binary<field_type>::value)
-                {
-                    // Normalize symbol and vector
                     SuperCoder::normalize(symbol_data, vector_data, *pivot_id);
-                }
 
-                // Save the received symbol
                 SuperCoder::store_coded_symbol(symbol_data, vector_data, *pivot_id);
             }
 
@@ -261,10 +254,8 @@ namespace kodo
         {
             final_forward();
 
-            //~ std::cout << "final backwards" << std::endl;
             if(SuperCoder::is_complete())
                 final_backward_substitute();
-
         }
 
         /// Final forward substitution to put the decoding matrix on echelon form
@@ -286,8 +277,10 @@ namespace kodo
                             //we did not find a pivot
                             if(i+1 == SuperCoder::symbols())
                             {
-                                value_type *vector_col = SuperCoder::coefficient_vector_values( col );
-                                value_type *symbol_col = SuperCoder::symbol_value( col );
+                                value_type *vector_col =
+                                    SuperCoder::coefficient_vector_values( col );
+                                value_type *symbol_col =
+                                    SuperCoder::symbol_value( col );
 
                                 // Unless we are looking for the last pivot we
                                 // check if the row below is identical if not we
@@ -319,16 +312,16 @@ namespace kodo
                                     }
                                 }
                                 // Delete the row as we have no pivot for it
-                                std::fill_n(vector_col, SuperCoder::coefficient_vector_length(), 0);
+                                std::fill_n(vector_col,
+                                    SuperCoder::coefficient_vector_length(), 0);
                                 SuperCoder::set_symbol_missing(col);
                             }
 
                             continue;
                         }
 
-                        // A pivot was found
-                        // If we found the pivot on a row with a higher
-                        // index than the pivot we are looking for, we swap it up
+                        // If we found the pivot on a row with a higher index
+                        // than the pivot we are looking for, we swap it up
                         if(i > col)
                         {
                             value_type *vector_col = SuperCoder::coefficient_vector_values(col);
@@ -356,8 +349,6 @@ namespace kodo
                                             SuperCoder::symbol_length());
                         }
 
-                        //~ value_type *vector_col = SuperCoder::vector( col );
-                        //~ value_type *symbol_col = SuperCoder::symbol( col );
                         value_type *vector_col = SuperCoder::coefficient_vector_values( col );
                         value_type *symbol_col = SuperCoder::symbol_value( col );
 
@@ -365,47 +356,38 @@ namespace kodo
                         {
                             SuperCoder::normalize(symbol_col, vector_col, col);
                         }
-//~ //~
+
                         // Substitute into below rows, we use the max seen width
                         // to skip a large number of indices that must be zero
                         uint32_t start_index = std::max(
                             SuperCoder::symbols() - m_max_seen_width, i+1);
-//~ //~
+
                         for(uint32_t j = start_index; j < SuperCoder::symbols(); ++j)
                         {
-                            //~ value_type *vector_j = SuperCoder::vector( j );
-                            //~ value_type *symbol_j = SuperCoder::symbol( j );
                             value_type *vector_j = SuperCoder::coefficient_vector_values(j);
                             value_type *symbol_j = SuperCoder::symbol_value(j);
-//~ //~
-                            //~ value_type coefficient_j
-                                //~ = SuperCoder::coefficient( col, vector_j );
-                            value_type coefficient_j
-                                = SuperCoder::coefficient_value(vector_j, col);
 
-//~ //~
+                            value_type coefficient_j =
+                                SuperCoder::coefficient_value(vector_j, col);
+
                             // If symbol exists
-                            if( coefficient_j)
+                            if(coefficient_j)
                             {
                                 if(fifi::is_binary<field_type>::value)
                                 {
-                                    SuperCoder::subtract(
-                                        vector_j, vector_col,
-                                        //~ SuperCoder::vector_length());
+                                    SuperCoder::subtract(vector_j, vector_col,
                                         SuperCoder::coefficient_vector_length());
-//~ //~
+
                                     SuperCoder::subtract(
                                         symbol_j, symbol_col,
                                         SuperCoder::symbol_length());
                                 }
                                 else
                                 {
-                                    SuperCoder::multiply_subtract(
-                                        vector_j, vector_col,
-                                        coefficient_j,
-                                        //~ SuperCoder::vector_length());
+                                    SuperCoder::multiply_subtract(vector_j,
+                                        vector_col, coefficient_j,
                                         SuperCoder::coefficient_vector_length());
-//~ //~
+
                                     SuperCoder::multiply_subtract(
                                         symbol_j, symbol_col,
                                         coefficient_j,
@@ -413,39 +395,33 @@ namespace kodo
                                 }
                             }
                         }
-//~ //~
+
                         //we found a pivot so no need to look further
                         break;
                     }
                 }
             }
 
-
-        //~ /// Final backwards substitution
+        /// backwards substitute to finalize decoding
         void final_backward_substitute()
         {
             assert(SuperCoder::is_complete());
-//~ //~
+
             uint32_t symbols = SuperCoder::symbols();
-//~ //~
+
             for(uint32_t i = symbols; i --> 0;)
             {
-                //~ value_type *vector_i = SuperCoder::vector(i);
-                //~ value_type *symbol_i = SuperCoder::symbol(i);
                 value_type *vector_i = SuperCoder::coefficient_vector_values(i);
                 value_type *symbol_i = SuperCoder::symbol_value(i);
 
                 backward_substitute(symbol_i, vector_i, i);
             }
         }
-//~
-//~
-//~
-        /// Backward substitute the found symbol into the
-        /// existing symbols.
+
+        /// Backward substitute the found symbol into the existing symbols.
         /// The perpetual decoder uses a slightly modified version of the
         /// bacwards_substitute from linear block decoder, to avoid inspecting
-        ///the many 0 elements
+        /// the many 0 elements
         /// @param pivot_id the pivot index of the symbol in the
         ///        buffers vector_data and symbol_data
         /// @param vector_data buffer containing the encoding vector
@@ -456,18 +432,7 @@ namespace kodo
         {
             assert(vector_data != 0);
             assert(symbol_data != 0);
-//~ //~
             assert(pivot_id < SuperCoder::symbols());
-//~ //~
-            // These asserts can go away since the function
-            // will also work for packets already received (mvp).
-//                assert(m_uncoded[pivot_id] == false);
-//                assert(m_coded[pivot_id] == false);
-//~ //~
-            // We found a "1" that nobody else had as pivot, we now
-            // substract this packet from other coded packets
-            // - if they have a "1" on our pivot place
-
 
             uint32_t width_top = 0;
             if(m_max_seen_width < pivot_id)
@@ -475,58 +440,43 @@ namespace kodo
 
             for(uint32_t i = width_top; i < pivot_id; ++i)
             {
-                //~ if( m_uncoded[i] )
                 if( SuperCoder::is_symbol_decoded(i) )
                 {
                     // We know that we have no non-zero elements
                     // outside the pivot position.
                     continue;
                 }
-//~ //~
-                // if(i == pivot_id)
-                // {
-                //     // We cannot backward substitute into ourself
-                //     continue;
-                // }
-//~ //~
-                //~ if( m_coded[i] )
-                //~ {
 
-                //~ value_type *vector_i = SuperCoder::vector(i);
                 value_type *vector_i = SuperCoder::coefficient_vector_values(i);
-//~ //~
+
                 value_type value =
                     SuperCoder::coefficient_value(vector_i, pivot_id);
-//~ //~
+
                 if(value)
                 {
-                    //~ value_type *symbol_i = SuperCoder::symbol(i);
                     value_type *symbol_i = SuperCoder::symbol_value(i);
-//~ //~
+
                     if(fifi::is_binary<field_type>::value)
                     {
-                        SuperCoder::subtract(vector_i, vector_data,
-                                             SuperCoder::coefficient_vector_length());
-//~ //~
+                        SuperCoder::subtract(
+                            vector_i, vector_data,
+                            SuperCoder::coefficient_vector_length());
+
                         SuperCoder::subtract(symbol_i, symbol_data,
                                              SuperCoder::symbol_length());
                     }
                     else
                     {
-//~ //~
-                        // Update symbol and corresponding vector
-                        SuperCoder::multiply_subtract(vector_i, vector_data,
-                                                      value,
-                                                      SuperCoder::coefficient_vector_length());
-//~ //~
-                        SuperCoder::multiply_subtract(symbol_i, symbol_data,
-                                                      value,
-                                                      SuperCoder::symbol_length());
+                        SuperCoder::multiply_subtract(
+                            vector_i, vector_data, value,
+                            SuperCoder::coefficient_vector_length());
+
+                        SuperCoder::multiply_subtract(
+                            symbol_i, symbol_data, value,
+                            SuperCoder::symbol_length());
                     }
                 }
             }
         }
-
     };
 }
-
