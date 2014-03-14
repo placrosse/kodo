@@ -31,16 +31,15 @@ namespace kodo
 
     protected:
 
+        /// the max width seen
         uint32_t m_max_seen_width;
 
     public:
 
         /// Constructor
         delayed_perpetual_decoder()
-            : m_max_seen_width(SuperCoder::symbols()-1)
+            : m_max_seen_width(0)
         { }
-            ///@Todo start width zero width
-
 
         /// @copydoc layer::construct(Factory&)
         template<class Factory>
@@ -56,12 +55,33 @@ namespace kodo
             SuperCoder::initialize(the_factory);
 
             //@TODO initialize to zero and update when symbols arrive
-            m_max_seen_width = SuperCoder::symbols()-1;
+            m_max_seen_width = 0;
         }
 
         /// @copydoc layer::decode_symbol(uint8_t*, uint32_t)
         void decode_symbol(uint8_t *symbol_data, uint32_t symbol_index)
         {
+            assert(symbol_index < SuperCoder::symbols());
+            assert(symbol_data != 0);
+
+            if(SuperCoder::is_symbol_decoded(symbol_index))
+            {
+                return;
+            }
+
+            const value_type *symbol =
+                reinterpret_cast<value_type*>(symbol_data);
+
+            if(SuperCoder::is_symbol_seen(symbol_index))
+            {
+                SuperCoder::swap_decode(symbol, symbol_index);
+            }
+            else
+            {
+                // Store the uncoded symbol
+                SuperCoder::store_uncoded_symbol(symbol, symbol_index);
+            }
+
             SuperCoder::decode_symbol(symbol_data, symbol_index);
 
             if(SuperCoder::is_complete())
@@ -88,25 +108,17 @@ namespace kodo
 
     protected:
 
-        struct sort
+        uint32_t max_width() const
         {
-            // sort zero count descending, then index descending
-            static bool zeros(const std::pair<uint32_t, uint32_t> &i,
-                              const std::pair<uint32_t, uint32_t> &j)
-            {
-                if( i.first < j.first ) return false;
-                if( j.first < i.first ) return true;
-                return j.second < i.second;
-            }
+            return m_max_seen_width;
+        }
 
-            // sort on index acceding
-            static bool index(const std::pair<uint32_t, uint32_t> &i,
-                               const std::pair<uint32_t, uint32_t> &j)
-            {
-                if( i.second > j.second ) return false;
-                else return true; // indices are unique
-            }
-        };
+        void seen_width(uint32_t width)
+        {
+            assert(width <= SuperCoder::symbols());
+            if(width > m_max_seen_width)
+                m_max_seen_width = width;
+        }
 
         /// Find the intended pivot index in a perpetual coding vector, which is
         /// the index following the longest streak of zeros in the vector
@@ -114,67 +126,63 @@ namespace kodo
         /// @return a pivot candidate if found
         boost::optional<uint32_t> find_pivot(value_type *symbol_id)
         {
-            // Look for all zero streaks in the coding vector
-            uint32_t symbols = SuperCoder::symbols();
-            bool streak = false;
+            // as the longest zero streak may run over the end of the coding
+            // vector we look through the vector from the beginning until we
+            // have passed the end and run into a non-zero element. We handle
+            // the two special cases that the vector is all zeros and all non-zeros
+
+            // if we receive a full vector the pivot and longest_streak will not
+            // be updated
+            boost::optional<uint32_t> pivot = boost::optional<uint32_t>(0);
+            uint32_t longest_streak = 0;
+
             uint32_t zeros = 0;
-            std::vector<std::pair<uint32_t, uint32_t>> zero_streaks;
+            bool streak = false;
+            uint32_t i = 0;
+            value_type value = SuperCoder::coefficient_value(symbol_id, i);
 
-            uint32_t i=0;
-            while(i < symbols)
+            //~ for(uint32_t i=0; i < SuperCoder::symbols()*2; ++i)
+            while(!value or i < SuperCoder::symbols())
             {
-                value_type current_coefficient =
-                    SuperCoder::coefficient_value(symbol_id, i);
+                uint32_t index = i % SuperCoder::symbols();
+                value = SuperCoder::coefficient_value(symbol_id, index);
 
-                if(!current_coefficient)
+                if(!value)
                 {
-                    if(streak) //continue zero streak
-                    {
-                        zeros ++;
-                    }
-                    else //new zero streak
-                    {
-                        zeros = 1;
-                        streak = true;
-                    }
+                    streak = true;
+                    zeros++;
+
+                    // we received the zero vector
+                    if(zeros >= SuperCoder::symbols())
+                        return boost::none;
                 }
                 else
                 {
-                    if(streak) //end of zero streak
+                    if(streak) // streak ended
                     {
-                        std::pair<uint32_t, uint32_t> zero_streak(zeros,i);
-                        zero_streaks.push_back(zero_streak);
+                        if(zeros > longest_streak)
+                        {
+                            pivot = boost::optional<uint32_t>(index);
+                            longest_streak = zeros;
+                        }
+
                         streak = false;
+                        zeros = 0;
                     }
                 }
-                i++;
+
+                ++i;
             }
 
-            if(streak) // save the streak if the last coefficient was zero
-            {
-                std::pair<uint32_t, uint32_t> zero_streak(zeros,i);
-                zero_streaks.push_back(zero_streak);
-            }
-
-            // All values in the vector was non-zero
-            if(zero_streaks.size() == 0)
-                return boost::optional<uint32_t>(0);
-
-            std::sort(zero_streaks.begin(), zero_streaks.end(), sort::zeros);
-
-            // in cases where the longest streak does not terminate at the end
-            if (zero_streaks[0].second != symbols-1)
-                return zero_streaks[0].second;
-
-            std::sort(zero_streaks.begin(), zero_streaks.end(), sort::index);
-
-            //in case the first value in the symbol id is non-zero
-            if(zero_streaks[0].second - zero_streaks[0].first)
-                return boost::optional<uint32_t>(0);
-
-            return zero_streaks[0].second;
+            seen_width(SuperCoder::symbols() - longest_streak);
+            return pivot;
         }
 
+        /// Finds a pivot candidate and iterates the encoding vector and
+        /// subtracts existing symbols until a pivot element is found.
+        /// @param symbol_data the data of the encoded symbol
+        /// @param symbol_id the data constituting the encoding vector
+        /// @return the pivot index if found.
         boost::optional<uint32_t> forward_substitute_to_pivot(
             value_type *symbol_data,
             value_type *symbol_id)
@@ -185,6 +193,8 @@ namespace kodo
             boost::optional<uint32_t> pivot = find_pivot(symbol_id);
             if(pivot == boost::none)
                 return pivot;
+
+            //~ std::cout << "max width: " << max_width() << std::endl;
 
             for(uint32_t j=0; j < SuperCoder::symbols(); ++j)
             {
@@ -296,7 +306,6 @@ namespace kodo
 
                                     bool same;
                                     same = std::equal(vector_col,
-
                                                       vector_col + SuperCoder::coefficient_vector_length(),
                                                       vector_col_1 );
 
@@ -360,7 +369,7 @@ namespace kodo
                         // Substitute into below rows, we use the max seen width
                         // to skip a large number of indices that must be zero
                         uint32_t start_index = std::max(
-                            SuperCoder::symbols() - m_max_seen_width, i+1);
+                            SuperCoder::symbols() - max_width(), i+1);
 
                         for(uint32_t j = start_index; j < SuperCoder::symbols(); ++j)
                         {
@@ -405,6 +414,8 @@ namespace kodo
         /// backwards substitute to finalize decoding
         void final_backward_substitute()
         {
+            //~ std::cout << "using max width: " << max_width() << std::endl;
+
             assert(SuperCoder::is_complete());
 
             uint32_t symbols = SuperCoder::symbols();
@@ -434,11 +445,12 @@ namespace kodo
             assert(symbol_data != 0);
             assert(pivot_id < SuperCoder::symbols());
 
-            uint32_t width_top = 0;
-            if(m_max_seen_width < pivot_id)
-                width_top = pivot_id - m_max_seen_width;
+            uint32_t top_index = 0;
+            if(max_width() < pivot_id)
+                top_index = pivot_id - max_width();
 
-            for(uint32_t i = width_top; i < pivot_id; ++i)
+            //~ std::cout << "top index : " << top_index << " for pivot id " << pivot_id << std::endl;
+            for(uint32_t i = top_index; i < pivot_id; ++i)
             {
                 if( SuperCoder::is_symbol_decoded(i) )
                 {
