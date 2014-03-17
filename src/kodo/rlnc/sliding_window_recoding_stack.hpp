@@ -42,7 +42,7 @@ namespace kodo
                  feedback_pivot_status_reader<
                  final_feedback_reader<
                  // Payload Codec API
-                 payload_rank_encoder<
+                 payload_rank_recoder<
                  payload_encoder<
                  // Codec Header API
                  sliding_window_systematic_encoder<
@@ -57,23 +57,6 @@ namespace kodo
                  linear_block_encoder<
                  pivot_status_reader<
                  rank_info<
-
-                 // Payload API
-                 // payload_rank_recoder<
-                 // payload_encoder<
-                 // Codec Header API
-                 // default_off_systematic_encoder<
-                 // symbol_id_encoder<
-                 // Symbol ID API
-                 // recoding_symbol_id<
-                 // Coefficient Generator API
-                 // uniform_generator<
-                 // pivot_aware_generator<
-                 // Encoder API
-                 // encode_symbol_tracker<
-                 // zero_symbol_encoder<
-                 // linear_block_encoder<
-                 // rank_info<
                  // Coefficient Storage API
                  coefficient_value_access<
                  // Proxy
