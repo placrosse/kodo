@@ -66,12 +66,12 @@ namespace kodo
             SuperCoder::decode(payload);
 
             rank_type decoder_rank = SuperCoder::rank();
-            rank_type seen_encoder_rank = SuperCoder::seen_encoder_rank();
+            rank_type remote_rank = SuperCoder::remote_rank();
 
             // If the decoder and encoder rank matches we know that when
             // using Gaussian Elimination with backward substitution that
             // symbols stored must be fully decoded
-            if(decoder_rank == seen_encoder_rank)
+            if(decoder_rank == remote_rank)
             {
                 for(uint32_t i = 0; i < SuperCoder::symbols(); ++i)
                 {

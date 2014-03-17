@@ -35,22 +35,21 @@ namespace kodo
 
         /// @copydoc layer::write_id(uint8_t*, uint8_t**)
         uint32_t write_id(uint8_t *symbol_id, uint8_t **coefficients)
-            {
-                assert(symbol_id != 0);
-                assert(coefficients != 0);
+        {
+            assert(symbol_id != 0);
+            assert(coefficients != 0);
 
-                seed_type seed =
-                    (seed_type) Super::encode_symbol_count();
+            seed_type seed = (seed_type) Super::encode_symbol_count();
 
-                Super::seed(seed);
-                Super::generate(&m_coefficients[0]);
+            Super::seed(seed);
+            Super::generate(&m_coefficients[0]);
 
-                /// Store the seed as the symbol id
-                sak::big_endian::put<seed_type>(seed, symbol_id);
-                *coefficients = &m_coefficients[0];
+            // Store the seed as the symbol id
+            sak::big_endian::put<seed_type>(seed, symbol_id);
+            *coefficients = &m_coefficients[0];
 
-                return sizeof(seed_type);
-            }
+            return sizeof(seed_type);
+        }
 
     private:
 

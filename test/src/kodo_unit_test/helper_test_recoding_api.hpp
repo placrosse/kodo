@@ -12,6 +12,8 @@
 #include <gtest/gtest.h>
 
 #include <kodo/has_shallow_symbol_storage.hpp>
+#include <kodo/has_systematic_encoder.hpp>
+#include <kodo/set_systematic_off.hpp>
 
 /// Small helper structure holding the parameters needed for the
 /// recoding tests.
@@ -76,7 +78,7 @@ inline void invoke_recoding(recoding_parameters param)
     encoder->set_symbols(sak::storage(data_in));
 
     // Set the encoder non-systematic
-    if(kodo::is_systematic_encoder(encoder))
+    if(kodo::has_systematic_encoder<Encoder>::value)
         kodo::set_systematic_off(encoder);
 
     while( !decoder_two->is_complete() )
@@ -233,7 +235,7 @@ inline void test_recoding_relay(recoding_parameters param)
     encoder->set_symbols(sak::storage(data_in));
 
     // Set the encoder non-systematic
-    if(kodo::is_systematic_encoder(encoder))
+    if(kodo::has_systematic_encoder<Encoder>::value)
         kodo::set_systematic_off(encoder);
 
     while( !(decoder_two->is_complete() && decoder_one->is_complete()) )

@@ -9,13 +9,23 @@
 
 #include "basic_api_test_helper.hpp"
 
-#include <sak/storage.hpp>
-#include "../../../src/kodo/systematic_operations.hpp"
+#include <kodo/has_set_systematic_off.hpp>
+#include <kodo/set_systematic_off.hpp>
+
+#include <kodo/write_feedback.hpp>
+#include <kodo/read_feedback.hpp>
+#include <kodo/feedback_size.hpp>
+
+#include <kodo/has_debug_linear_block_decoder.hpp>
+#include <kodo/print_decoder_state.hpp>
+
+#include <kodo/has_print_cached_symbol_coefficients.hpp>
+#include <kodo/print_cached_symbol_coefficients.hpp>
 
 /// Helper for the reuse test, ensures that all encoders and decoders
 /// produce valid data
-template<class Encoder, class Decoder>
-inline void test_reuse_helper(Encoder encoder, Decoder decoder)
+template<class EncoderPointer, class DecoderPointer>
+inline void test_reuse_helper(EncoderPointer encoder, DecoderPointer decoder)
 {
     std::vector<uint8_t> payload(encoder->payload_size());
 
@@ -24,8 +34,26 @@ inline void test_reuse_helper(Encoder encoder, Decoder decoder)
 
     encoder->set_symbols(storage_in);
 
+    // We need the actual data type not the shared_ptr
+    typedef typename EncoderPointer::element_type encoder_type;
+    typedef typename DecoderPointer::element_type decoder_type;
+
+    uint32_t feedback_size = 0;
+
+    if(kodo::has_write_feedback<decoder_type>::value)
+    {
+        EXPECT_EQ(kodo::feedback_size(encoder),
+                  kodo::feedback_size(decoder));
+
+        feedback_size = kodo::feedback_size(encoder);
+        EXPECT_TRUE(feedback_size > 0);
+    }
+
+    std::vector<uint8_t> feedback(feedback_size);
+
+
     // Set the encoder non-systematic
-    if(kodo::is_systematic_encoder(encoder))
+    if(kodo::has_set_systematic_off<encoder_type>::value)
         kodo::set_systematic_off(encoder);
 
     while( !decoder->is_complete() )
@@ -34,6 +62,15 @@ inline void test_reuse_helper(Encoder encoder, Decoder decoder)
         EXPECT_TRUE(payload_used <= encoder->payload_size());
 
         decoder->decode( &payload[0] );
+
+        if(kodo::has_write_feedback<decoder_type>::value)
+        {
+            uint32_t written = kodo::write_feedback(decoder, &feedback[0]);
+            EXPECT_TRUE(written > 0);
+
+            // Pass to the encoder
+            kodo::read_feedback(encoder, &feedback[0]);
+        }
     }
 
     std::vector<uint8_t> data_out(decoder->block_size(), '\0');
@@ -202,8 +239,22 @@ inline void test_reuse_incomplete(uint32_t symbols, uint32_t symbol_size)
             decoder->decode(&payload[0]);
 
             // Stop decoding after a while with probability
-            if (!do_complete && decoder->rank() == symbols - 2)
+            assert(symbols > 2);
+            if (!do_complete && decoder->rank() == (symbols - 2))
                 break;
+
+            // if(kodo::has_print_cached_symbol_coefficients<Decoder>::value)
+            // {
+            //     kodo::print_cached_symbol_coefficients(decoder, std::cout);
+            //     std::cout << std::endl;
+            // }
+
+            // if(kodo::has_debug_linear_block_decoder<Decoder>::value)
+            // {
+            //     kodo::print_decoder_state(decoder, std::cout);
+            //     std::cout << std::endl;
+            // }
+
         }
 
         // Check if completed decoders are correct
@@ -256,10 +307,11 @@ template
 >
 inline void test_reuse_incomplete()
 {
-    test_reuse_incomplete<Encoder, Decoder>(1, 1600);
+    test_reuse_incomplete<Encoder, Decoder>(4, 1600);
     test_reuse_incomplete<Encoder, Decoder>(32, 1600);
 
-    uint32_t symbols = rand_symbols();
+    // The test requires that we have at least two symbols
+    uint32_t symbols = rand_symbols() + 2;
     uint32_t symbol_size = rand_symbol_size();
 
     test_reuse_incomplete<Encoder, Decoder>(symbols, symbol_size);

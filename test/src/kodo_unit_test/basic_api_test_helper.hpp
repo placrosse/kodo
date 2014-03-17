@@ -6,8 +6,12 @@
 #pragma once
 
 #include <gtest/gtest.h>
-#include <random>
-#include <fifi/field_types.hpp>
+
+#include <fifi/is_prime2325.hpp>
+#include <fifi/prime2325_binary_search.hpp>
+#include <fifi/prime2325_apply_prefix.hpp>
+
+#include <kodo/default_on_systematic_encoder.hpp>
 
 /// @param max_value The maximum value to return
 /// @return a random number between 1 and max_value

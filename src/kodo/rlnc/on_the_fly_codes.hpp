@@ -8,13 +8,13 @@
 #include <cstdint>
 
 #include "full_vector_codes.hpp"
-#include "../storage_aware_generator.hpp"
+#include "on_the_fly_generator.hpp"
 #include "../partial_decoding_tracker.hpp"
 #include "../rank_info.hpp"
 #include "../payload_rank_encoder.hpp"
 #include "../payload_rank_decoder.hpp"
 #include "../payload_rank_recoder.hpp"
-#include "../proxy_seen_encoder_rank.hpp"
+#include "../proxy_remote_rank.hpp"
 #include "../coefficient_value_access.hpp"
 #include "../rank_symbol_decoding_status_updater.hpp"
 
@@ -41,13 +41,12 @@ namespace kodo
                payload_rank_encoder<
                payload_encoder<
                // Codec Header API
-               systematic_encoder<
+               default_on_systematic_encoder<
                symbol_id_encoder<
                // Symbol ID API
                plain_symbol_id_writer<
                // Coefficient Generator API
-               storage_aware_generator<
-               uniform_generator<
+               on_the_fly_generator<
                // Encoder API
                encode_symbol_tracker<
                zero_symbol_encoder<
@@ -68,7 +67,7 @@ namespace kodo
                final_coder_factory_pool<
                // Final type
                on_the_fly_encoder<Field>
-                   > > > > > > > > > > > > > > > > > > > >
+                   > > > > > > > > > > > > > > > > > > >
     { };
 
     /// Intermediate stack implementing the recoding functionality of
@@ -87,12 +86,13 @@ namespace kodo
                  payload_rank_recoder<
                  payload_encoder<
                  // Codec Header API
-                 non_systematic_encoder<
+                 default_off_systematic_encoder<
                  symbol_id_encoder<
                  // Symbol ID API
                  recoding_symbol_id<
                  // Coefficient Generator API
                  uniform_generator<
+                 pivot_aware_generator<
                  // Encoder API
                  encode_symbol_tracker<
                  zero_symbol_encoder<
@@ -101,10 +101,10 @@ namespace kodo
                  // Coefficient Storage API
                  coefficient_value_access<
                  // Proxy
-                 proxy_seen_encoder_rank<
+                 proxy_remote_rank<
                  proxy_layer<
                  on_the_fly_recoding_stack<MainStack>,
-                 MainStack> > > > > > > > > > > > >
+                 MainStack> > > > > > > > > > > > > >
     { };
 
     /// @ingroup fec_stacks

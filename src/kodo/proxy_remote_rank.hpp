@@ -10,11 +10,11 @@
 namespace kodo
 {
 
-    /// @ingroup proxy_layers
-    /// @brief The proxy_seen_encoder_rank will forward calls to the
-    ///        seen_encoder_rank() function to a main stack
+    /// @ingroup proxy_layers status_api
+    /// @brief The proxy_remote_rank will forward calls to the
+    ///        remote_rank() function to a main stack
     template<class SuperCoder>
-    class proxy_seen_encoder_rank : public SuperCoder
+    class proxy_remote_rank : public SuperCoder
     {
     public:
 
@@ -38,10 +38,10 @@ namespace kodo
         }
 
         /// @copydoc layer::seen_encoder_rank() const
-        rank_type seen_encoder_rank() const
+        rank_type remote_rank() const
         {
             assert(m_proxy);
-            return m_proxy->seen_encoder_rank();
+            return m_proxy->remote_rank();
         }
 
     private:

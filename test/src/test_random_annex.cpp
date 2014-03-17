@@ -12,6 +12,7 @@
 #include <kodo/random_annex_decoder.hpp>
 #include <kodo/rfc5052_partitioning_scheme.hpp>
 #include <kodo/rlnc/full_vector_codes.hpp>
+#include <kodo/set_systematic_off.hpp>
 
 #include "kodo_unit_test/basic_api_test_helper.hpp"
 
@@ -133,7 +134,7 @@ void invoke_random_annex_partial(uint32_t max_symbols,
         typename random_annex_decoder::pointer_type decoder =
             obj_decoder.build(i);
 
-        if(kodo::is_systematic_encoder(encoder))
+        if(kodo::has_systematic_encoder<Encoder>::value)
             kodo::set_systematic_off(encoder);
 
         EXPECT_TRUE(encoder->block_size() >= encoder->bytes_used());

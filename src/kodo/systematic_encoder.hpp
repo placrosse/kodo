@@ -13,7 +13,6 @@
 #include <boost/type_traits/is_base_of.hpp>
 
 #include "systematic_base_coder.hpp"
-#include "systematic_operations.hpp"
 
 namespace kodo
 {
@@ -25,16 +24,10 @@ namespace kodo
     /// the systematic encoder to produce systematic packets. If
     /// SystematicOn is false a user must first call the set_systematic_on()
     /// function to start producing systematic packets.
-    template<bool SystematicOn, class SuperCoder>
-    class base_systematic_encoder : public SuperCoder
+    template<class SuperCoder>
+    class systematic_encoder : public SuperCoder
     {
     public:
-
-        /// @copydoc layer::field_type
-        typedef typename SuperCoder::field_type field_type;
-
-        /// @copydoc layer::value_type
-        typedef typename field_type::value_type value_type;
 
         /// The symbol count type
         typedef typename systematic_base_coder::counter_type
@@ -69,22 +62,6 @@ namespace kodo
 
     public:
 
-        /// Constructor
-        base_systematic_encoder()
-            : m_systematic(SystematicOn)
-        { }
-
-        /// @copydoc layer::initialize(Factory&)
-        template<class Factory>
-        void initialize(Factory& the_factory)
-        {
-            SuperCoder::initialize(the_factory);
-
-            /// Reset the state
-            m_systematic = SystematicOn;
-            m_systematic_count = 0;
-        }
-
         /// @copydoc layer::encode(uint8_t*, uint8_t*)
         uint32_t encode(uint8_t *symbol_data, uint8_t *symbol_header)
         {
@@ -95,37 +72,14 @@ namespace kodo
             // generated more symbols than what currently accessible
             // to the encoder
 
-            bool in_systematic_phase =
-                m_systematic_count < SuperCoder::rank();
-
-            if(m_systematic && in_systematic_phase)
+            if(SuperCoder::in_systematic_phase())
             {
-                return encode_systematic(symbol_data,
-                                         symbol_header);
+                return encode_systematic(symbol_data, symbol_header);
             }
             else
             {
-                return encode_non_systematic(symbol_data,
-                                             symbol_header);
+                return encode_non_systematic(symbol_data, symbol_header);
             }
-        }
-
-        /// @return, true if the encoder is in systematic mode
-        bool is_systematic_on() const
-        {
-            return m_systematic;
-        }
-
-        /// Set the encoder in systematic mode
-        void set_systematic_on()
-        {
-            m_systematic = true;
-        }
-
-        /// Turns off systematic mode
-        void set_systematic_off()
-        {
-            m_systematic = false;
         }
 
         /// @copydoc layer::header_size() const
@@ -134,14 +88,6 @@ namespace kodo
             return SuperCoder::header_size() +
                 sizeof(flag_type) + sizeof(counter_type);
         }
-
-        /// @return The number of systematically encoded packets produced
-        ///         by this encoder
-        void systematic_count()
-        {
-            return m_systematic_count;
-        }
-
 
     protected:
 
@@ -157,14 +103,13 @@ namespace kodo
             sak::big_endian::put<flag_type>(
                 systematic_base_coder::systematic_flag, symbol_header);
 
+            uint32_t next_symbol = SuperCoder::next_systematic_symbol();
+
             /// Set the symbol id
             sak::big_endian::put<counter_type>(
-                m_systematic_count, symbol_header + sizeof(flag_type));
+                next_symbol, symbol_header + sizeof(flag_type));
 
-            /// @todo consider if the systematic packets are not added in-order
-            SuperCoder::encode_symbol(symbol_data, m_systematic_count);
-
-            ++m_systematic_count;
+            SuperCoder::encode_symbol(symbol_data, next_symbol);
 
             return sizeof(flag_type) + sizeof(counter_type);
         }
@@ -188,82 +133,8 @@ namespace kodo
             return bytes_consumed + sizeof(flag_type);
         }
 
-    protected:
-
-        /// Allows the systematic mode to be disabled at run-time
-        bool m_systematic;
-
-        /// Counts the number of systematic packets produced
-        uint32_t m_systematic_count;
-
     };
 
-    template<class SuperCoder>
-    class systematic_encoder :
-        public base_systematic_encoder<true, SuperCoder>
-    {};
-
-    template<class SuperCoder>
-    class non_systematic_encoder :
-        public base_systematic_encoder<false, SuperCoder>
-    {};
-
-    /// Overload for the generic is_systematic_encoder_dispatch(...) function
-    ///
-    /// \ingroup g_systematic_coding
-    /// \ingroup g_generic_api
-    ///
-    /// @param e the encoder
-    /// @return true since this is an systematic encoder
-    template<class SuperCoder>
-    inline bool
-    is_systematic_encoder_dispatch(const systematic_encoder<SuperCoder> *)
-    {
-        return true;
-    }
-
-    /// Overload for the generic is_systematic_on_dispatch(...) function
-    ///
-    /// \ingroup g_systematic_coding
-    /// \ingroup g_generic_api
-    ///
-    /// @param e the encoder
-    /// @return true if the encoder currently produces systematic symbols
-    template<class SuperCoder>
-    inline bool
-    is_systematic_on_dispatch(systematic_encoder<SuperCoder> *e)
-    {
-        assert(e != 0);
-        return e->is_systematic_on();
-    }
-
-    /// Overload for the generic set_systematic_off_dispatch(...) function
-    ///
-    /// \ingroup g_systematic_coding
-    /// \ingroup g_generic_api
-    ///
-    /// @param e the encoder
-    template<class SuperCoder>
-    inline void
-    set_systematic_off_dispatch(systematic_encoder<SuperCoder> *e)
-    {
-        assert(e != 0);
-        e->set_systematic_off();
-    }
-
-    /// Overload for the generic set_systematic_on_dispatch(...) function
-    ///
-    /// \ingroup g_systematic_coding
-    /// \ingroup g_generic_api
-    ///
-    /// @param e the encoder
-    template<class SuperCoder>
-    inline void
-    set_systematic_on_dispatch(systematic_encoder<SuperCoder> *e)
-    {
-        assert(e != 0);
-        e->set_systematic_on();
-    }
 }
 
 
