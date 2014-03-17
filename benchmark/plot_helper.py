@@ -267,7 +267,6 @@ def add_arguments(argument_list):
     return args
 
 
-
 def add_argument_json(parser):
     parser.add_argument(
         '--json', dest='json', action='store',
