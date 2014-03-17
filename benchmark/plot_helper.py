@@ -12,8 +12,8 @@ import os
 import argparse
 
 import pymongo
-assert pymongo.version_tuple[:2] >= (
-    2, 5), "You need a newer version of pymongo"
+assert pymongo.version_tuple[:2] >= (2, 5),\
+    'You need a newer version of pymongo'
 from pymongo import MongoClient
 
 from matplotlib import pyplot as pl
@@ -103,7 +103,7 @@ slaves = {
 def get_slave(name):
     result = "ID: {0}".format(name.replace("_", "-"))
     if name in slaves:
-        result += "\nOS: {1}\nCPU: {2}".format(
+        result += "\nOS: {0}\nCPU: {1}".format(
             slaves[name]['OS'], slaves[name]['CPU'])
     return result
 
@@ -178,10 +178,11 @@ class plotter(object):
         return df
 
     def get_base_path(self):
+        path = os.path.abspath(os.path.expanduser(self.args.output_dir))
         if self.from_json:
-            path = os.path.basename("local")
+            path = os.path.join(path, os.path.basename("local"))
         else:
-            path = os.path.basename("database")
+            path = os.path.join(path, os.path.basename("database"))
 
         if hasattr(self.args, "coder"):
             path = os.path.join(path, self.args.coder)
@@ -219,19 +220,23 @@ class plotter(object):
         """
         for l in plot.lines:
             field = l.get_label()
-            l.set_marker(markers(field))
+            l.set_marker(get_marker(field))
 
     def set_legend_title(self, title):
         self.legend_title = title
 
     def write(self, subdirectory, filename):
+
         pl.legend(fontsize="x-small", ncol=4,
                   mode="expand", title=self.legend_title)
         if not self.pdf:
-            self.pdf = pp(os.path.join(self.get_base_path(), "all.pdf"))
+            pdf_path = os.path.join(self.get_base_path(), "all.pdf")
+            self.pdf = pp(pdf_path)
+            print("wrote: {}".format(pdf_path))
         self.pdf.savefig(transparent=True)
-
-        pl.savefig(self.get_full_path(subdirectory, filename))
+        figure_path = self.get_full_path(subdirectory, filename)
+        pl.savefig(figure_path)
+        print("wrote: {}".format(figure_path))
         pl.close('all')
 
 
@@ -241,6 +246,12 @@ def add_arguments(argument_list):
     """
 
     parser = argparse.ArgumentParser()
+
+    # Required arguments
+    parser.add_argument(
+        '--output-dir', dest='output_dir', action='store', default='.',
+        help='The directory in which the plots are generated.')
+
     arguments = {
         "json": add_argument_json,
         "coder": add_argument_coder,
@@ -254,6 +265,7 @@ def add_arguments(argument_list):
 
     args = parser.parse_args()
     return args
+
 
 
 def add_argument_json(parser):
@@ -275,7 +287,7 @@ def add_argument_coder(parser):
 
 def add_argument_output_format(parser):
     parser.add_argument(
-        '--output-format', dest='output_format', action='store', default='eps',
+        '--output-format', dest='output_format', action='store', default='png',
         help='The format of the generated figures, e.g. eps, pdf')
 
 
