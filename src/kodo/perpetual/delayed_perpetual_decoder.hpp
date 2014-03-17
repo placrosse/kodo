@@ -125,17 +125,18 @@ namespace kodo
 
             // if we receive a full vector the pivot and longest_streak will not
             // be updated
+            uint32_t symbols = SuperCoder::symbols();
             boost::optional<uint32_t> pivot = boost::optional<uint32_t>(0);
             uint32_t longest_streak = 0;
 
             uint32_t zeros = 0;
             bool streak = false;
             uint32_t i = 0;
-            value_type value = SuperCoder::coefficient_value(symbol_id, i);
+            value_type value;
 
-            while(!value or i < SuperCoder::symbols())
+            do
             {
-                uint32_t index = i % SuperCoder::symbols();
+                uint32_t index = i % symbols;
                 value = SuperCoder::coefficient_value(symbol_id, index);
 
                 if(!value)
@@ -144,7 +145,7 @@ namespace kodo
                     zeros++;
 
                     // we received the zero vector
-                    if(zeros >= SuperCoder::symbols())
+                    if(zeros >= symbols)
                         return boost::none;
                 }
                 else
@@ -157,6 +158,9 @@ namespace kodo
                             longest_streak = zeros;
                         }
 
+                        if(zeros >= symbols/2) // no other streak can be longer
+                            break;
+
                         streak = false;
                         zeros = 0;
                     }
@@ -164,6 +168,7 @@ namespace kodo
 
                 ++i;
             }
+            while(!value or i < symbols);
 
             seen_width(SuperCoder::symbols() - longest_streak);
             return pivot;
@@ -407,70 +412,57 @@ namespace kodo
 
             uint32_t symbols = SuperCoder::symbols();
 
-            for(uint32_t i = symbols; i --> 0;)
+            for(uint32_t dest = symbols-1; dest --> 0;)
             {
-                value_type *vector_i = SuperCoder::coefficient_vector_values(i);
-                value_type *symbol_i = SuperCoder::symbol_value(i);
+                if(SuperCoder::is_symbol_decoded(dest))
+                    continue;
 
-                backward_substitute(symbol_i, vector_i, i);
+                backward_substitute(dest);
             }
         }
 
-        /// Backward substitute the found symbol into the existing symbols.
-        /// The perpetual decoder uses a slightly modified version of the
-        /// bacwards_substitute from linear block decoder, to avoid inspecting
-        /// the many 0 elements
-        /// @param pivot_id the pivot index of the symbol in the
-        ///        buffers vector_data and symbol_data
-        /// @param vector_data buffer containing the encoding vector
-        /// @param symbol_data buffer containing the encoding symbol
-        void backward_substitute(const value_type *symbol_data,
-                                 const value_type *vector_data,
-                                 uint32_t pivot_id)
+        /// Backward substitute into a specified existing symbols.
+        /// The perpetual decoder uses a modified version of the backward
+        /// substitute, to avoid inspecting the many 0 elements
+        /// @param dest the index of the row to substitute into
+        void backward_substitute(uint32_t dest)
         {
-            assert(vector_data != 0);
-            assert(symbol_data != 0);
-            assert(pivot_id < SuperCoder::symbols());
+            uint32_t symbols = SuperCoder::symbols();
+            assert(dest < symbols);
 
-            uint32_t top_index = 0;
-            if(max_width() < pivot_id)
-                top_index = pivot_id - max_width();
+            value_type *vector_dest = SuperCoder::coefficient_vector_values(dest);
+            value_type *symbol_dest = SuperCoder::symbol_value(dest);
 
-            for(uint32_t i = top_index; i < pivot_id; ++i)
+            uint32_t highest_index = dest + max_width();
+            if(highest_index >= symbols)
+                highest_index = symbols;
+
+            for(uint32_t i = highest_index; i --> dest + 1;)
             {
-                if( SuperCoder::is_symbol_decoded(i) )
-                {
-                    // We know that we have no non-zero elements outside the
-                    // pivot position.
-                    continue;
-                }
-
-                value_type *vector_i = SuperCoder::coefficient_vector_values(i);
-
-                value_type value =
-                    SuperCoder::coefficient_value(vector_i, pivot_id);
+                value_type value = SuperCoder::coefficient_value(vector_dest, i);
 
                 if(value)
                 {
                     value_type *symbol_i = SuperCoder::symbol_value(i);
+                    value_type *vector_i = SuperCoder::coefficient_vector_values(i);
 
                     if(fifi::is_binary<field_type>::value)
                     {
                         SuperCoder::subtract(
-                            vector_i, vector_data,
+                            vector_dest, vector_i,
                             SuperCoder::coefficient_vector_length());
 
-                        SuperCoder::subtract(symbol_i, symbol_data,
+                        SuperCoder::subtract(symbol_dest, symbol_i,
                                              SuperCoder::symbol_length());
                     }
                     else
                     {
                         SuperCoder::multiply_subtract(
-                            vector_i, vector_data, value,
+                            vector_dest, vector_i, value,
                             SuperCoder::coefficient_vector_length());
 
                         SuperCoder::multiply_subtract(
-                            symbol_i, symbol_data, value,
+                            symbol_dest, symbol_i, value,
                             SuperCoder::symbol_length());
                     }
                 }
