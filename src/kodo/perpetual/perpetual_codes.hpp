@@ -15,8 +15,8 @@
 #include "../finite_field_math.hpp"
 #include "../finite_field_info.hpp"
 #include "../zero_symbol_encoder.hpp"
-#include "../systematic_encoder.hpp"
-#include "../systematic_decoder.hpp"
+//~ #include "../systematic_encoder.hpp"
+//~ #include "../systematic_decoder.hpp"
 #include "../storage_bytes_used.hpp"
 #include "../storage_block_info.hpp"
 #include "../deep_symbol_storage.hpp"
@@ -65,7 +65,7 @@ namespace kodo
         public // Payload Codec API
                payload_encoder<
                // Codec Header API
-               systematic_encoder<
+               //~ systematic_encoder<
                symbol_id_encoder<
                // Symbol ID API
                plain_symbol_id_writer<
@@ -90,7 +90,7 @@ namespace kodo
                final_coder_factory_pool<
                // Final type
                perpetual_encoder<Field
-                   > > > > > > > > > > > > > > > > > >
+                   > > > > > > > > > > > > > > > > >
     { };
 
         //~ /// @ingroup fec_stacks
@@ -105,7 +105,7 @@ namespace kodo
         : public // Payload API
                  payload_decoder<
                  // Codec Header API
-                 systematic_decoder<
+                 //~ systematic_decoder<
                  symbol_id_decoder<
                  // Symbol ID API
                  plain_symbol_id_reader<
@@ -130,7 +130,7 @@ namespace kodo
                  final_coder_factory_pool<
                  // Final type
                  standard_perpetual_decoder<Field>
-                     > > > > > > > > > > > > > > > > > >
+                     > > > > > > > > > > > > > > > > >
     { };
 
     //~ /// @ingroup fec_stacks
@@ -142,7 +142,7 @@ namespace kodo
         : public // Payload API
                  payload_decoder<
                  // Codec Header API
-                 systematic_decoder<
+                 //~ systematic_decoder<
                  symbol_id_decoder<
                  // Symbol ID API
                  plain_symbol_id_reader<
@@ -171,7 +171,7 @@ namespace kodo
                  final_coder_factory_pool<
                  // Final type
                  debug_standard_perpetual_decoder<Field>
-                     > > > > > > > > > > > > > > > > > > > > > >
+                     > > > > > > > > > > > > > > > > > > > > >
     { };
 
 }
