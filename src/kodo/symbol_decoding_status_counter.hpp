@@ -58,7 +58,7 @@ namespace kodo
 
                 --m_symbols_seen;
             }
-            else if(SuperCoder::is_symbol_decoded(index))
+            else if(SuperCoder::is_symbol_uncoded(index))
             {
                 ++m_symbols_missing;
 
@@ -85,7 +85,7 @@ namespace kodo
 
                 --m_symbols_missing;
             }
-            else if(SuperCoder::is_symbol_decoded(index))
+            else if(SuperCoder::is_symbol_uncoded(index))
             {
                 ++m_symbols_seen;
 
@@ -98,8 +98,8 @@ namespace kodo
             SuperCoder::set_symbol_seen(index);
         }
 
-        /// @copydoc layer::set_symbol_decoded(uint32_t)
-        void set_symbol_decoded(uint32_t index)
+        /// @copydoc layer::set_symbol_uncoded(uint32_t)
+        void set_symbol_uncoded(uint32_t index)
         {
             assert(index < SuperCoder::symbols());
 
@@ -122,7 +122,7 @@ namespace kodo
                 --m_symbols_seen;
             }
 
-            SuperCoder::set_symbol_decoded(index);
+            SuperCoder::set_symbol_uncoded(index);
         }
 
         /// @copydoc layer::symbols_missing() const

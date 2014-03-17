@@ -147,7 +147,7 @@ void test_forward_stack()
 
     EXPECT_TRUE(d->is_symbol_seen(0));
     EXPECT_TRUE(d->is_symbol_seen(1));
-    EXPECT_TRUE(d->is_symbol_decoded(2));
+    EXPECT_TRUE(d->is_symbol_uncoded(2));
 
     EXPECT_FALSE(d->is_complete());
 
@@ -169,7 +169,7 @@ void test_forward_stack()
 
     EXPECT_TRUE(d->is_symbol_seen(0));
     EXPECT_TRUE(d->is_symbol_seen(1));
-    EXPECT_TRUE(d->is_symbol_decoded(2));
+    EXPECT_TRUE(d->is_symbol_uncoded(2));
     EXPECT_TRUE(d->is_symbol_seen(4));
 
     EXPECT_FALSE(d->is_complete());
@@ -193,7 +193,7 @@ void test_forward_stack()
 
     EXPECT_TRUE(d->is_symbol_seen(0));
     EXPECT_TRUE(d->is_symbol_seen(1));
-    EXPECT_TRUE(d->is_symbol_decoded(2));
+    EXPECT_TRUE(d->is_symbol_uncoded(2));
     EXPECT_TRUE(d->is_symbol_seen(4));
 
     EXPECT_FALSE(d->is_complete());
@@ -216,11 +216,11 @@ void test_forward_stack()
     EXPECT_TRUE(d->is_symbol_pivot(3));
     EXPECT_TRUE(d->is_symbol_pivot(4));
 
-    EXPECT_TRUE(d->is_symbol_decoded(0));
-    EXPECT_TRUE(d->is_symbol_decoded(1));
-    EXPECT_TRUE(d->is_symbol_decoded(2));
-    EXPECT_TRUE(d->is_symbol_decoded(3));
-    EXPECT_TRUE(d->is_symbol_decoded(4));
+    EXPECT_TRUE(d->is_symbol_uncoded(0));
+    EXPECT_TRUE(d->is_symbol_uncoded(1));
+    EXPECT_TRUE(d->is_symbol_uncoded(2));
+    EXPECT_TRUE(d->is_symbol_uncoded(3));
+    EXPECT_TRUE(d->is_symbol_uncoded(4));
 
     EXPECT_TRUE(d->is_complete());
 

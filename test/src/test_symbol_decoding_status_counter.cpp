@@ -108,7 +108,7 @@ TEST(TestSymbolDecodingStatusCounter, api)
     EXPECT_EQ(stack.symbols_seen(), 1U);
     EXPECT_EQ(stack.symbols_decoded(), 0U);
 
-    stack.set_symbol_decoded(symbol);
+    stack.set_symbol_uncoded(symbol);
     EXPECT_EQ(stack.symbols_missing(), stack.symbols() - 1);
     EXPECT_EQ(stack.symbols_seen(), 0U);
     EXPECT_EQ(stack.symbols_decoded(), 1U);
@@ -140,13 +140,13 @@ TEST(TestSymbolDecodingStatusCounter, api)
     EXPECT_EQ(stack.symbols_decoded(), 0U);
 
     // Seen -> Decoded
-    stack.set_symbol_decoded(symbol);
+    stack.set_symbol_uncoded(symbol);
     EXPECT_EQ(stack.symbols_missing(), stack.symbols() - 1);
     EXPECT_EQ(stack.symbols_seen(), 0U);
     EXPECT_EQ(stack.symbols_decoded(), 1U);
 
     // Decoded -> Decoded
-    stack.set_symbol_decoded(symbol);
+    stack.set_symbol_uncoded(symbol);
     EXPECT_EQ(stack.symbols_missing(), stack.symbols() - 1);
     EXPECT_EQ(stack.symbols_seen(), 0U);
     EXPECT_EQ(stack.symbols_decoded(), 1U);
@@ -164,7 +164,7 @@ TEST(TestSymbolDecodingStatusCounter, api)
     EXPECT_EQ(stack.symbols_decoded(), 0U);
 
     // Missing -> Decoded
-    stack.set_symbol_decoded(symbol);
+    stack.set_symbol_uncoded(symbol);
     EXPECT_EQ(stack.symbols_missing(), stack.symbols() - 1);
     EXPECT_EQ(stack.symbols_seen(), 0U);
     EXPECT_EQ(stack.symbols_decoded(), 1U);

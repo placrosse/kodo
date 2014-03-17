@@ -118,7 +118,7 @@ TEST(TestRankSymbolDecodingStatusUpdator, api)
     EXPECT_EQ(stack.symbols(), factory.symbols());
 
     for(uint32_t i = 0; i < stack.symbols(); ++i)
-        EXPECT_FALSE(stack.is_symbol_decoded(i));
+        EXPECT_FALSE(stack.is_symbol_uncoded(i));
 
     stack.m_rank = 1;
     stack.m_remote_rank = 2;
@@ -128,7 +128,7 @@ TEST(TestRankSymbolDecodingStatusUpdator, api)
     stack.decode(&payload[0]);
 
     for(uint32_t i = 0; i < stack.symbols(); ++i)
-        EXPECT_FALSE(stack.is_symbol_decoded(i));
+        EXPECT_FALSE(stack.is_symbol_uncoded(i));
 
     stack.m_rank = 2;
     stack.m_remote_rank = 2;
@@ -137,11 +137,11 @@ TEST(TestRankSymbolDecodingStatusUpdator, api)
 
     stack.decode(&payload[0]);
 
-    EXPECT_TRUE(stack.is_symbol_decoded(0));
-    EXPECT_TRUE(stack.is_symbol_decoded(1));
-    EXPECT_FALSE(stack.is_symbol_decoded(2));
-    EXPECT_FALSE(stack.is_symbol_decoded(3));
-    EXPECT_FALSE(stack.is_symbol_decoded(4));
+    EXPECT_TRUE(stack.is_symbol_uncoded(0));
+    EXPECT_TRUE(stack.is_symbol_uncoded(1));
+    EXPECT_FALSE(stack.is_symbol_uncoded(2));
+    EXPECT_FALSE(stack.is_symbol_uncoded(3));
+    EXPECT_FALSE(stack.is_symbol_uncoded(4));
 
     stack.m_rank = 3;
     stack.m_remote_rank = 3;
@@ -150,22 +150,22 @@ TEST(TestRankSymbolDecodingStatusUpdator, api)
 
     stack.decode(&payload[0]);
 
-    EXPECT_TRUE(stack.is_symbol_decoded(0));
-    EXPECT_TRUE(stack.is_symbol_decoded(1));
-    EXPECT_FALSE(stack.is_symbol_decoded(2));
-    EXPECT_FALSE(stack.is_symbol_decoded(3));
-    EXPECT_TRUE(stack.is_symbol_decoded(4));
+    EXPECT_TRUE(stack.is_symbol_uncoded(0));
+    EXPECT_TRUE(stack.is_symbol_uncoded(1));
+    EXPECT_FALSE(stack.is_symbol_uncoded(2));
+    EXPECT_FALSE(stack.is_symbol_uncoded(3));
+    EXPECT_TRUE(stack.is_symbol_uncoded(4));
 
     stack.m_rank = 3;
     stack.m_remote_rank = 5;
 
     stack.decode(&payload[0]);
 
-    EXPECT_TRUE(stack.is_symbol_decoded(0));
-    EXPECT_TRUE(stack.is_symbol_decoded(1));
-    EXPECT_FALSE(stack.is_symbol_decoded(2));
-    EXPECT_FALSE(stack.is_symbol_decoded(3));
-    EXPECT_TRUE(stack.is_symbol_decoded(4));
+    EXPECT_TRUE(stack.is_symbol_uncoded(0));
+    EXPECT_TRUE(stack.is_symbol_uncoded(1));
+    EXPECT_FALSE(stack.is_symbol_uncoded(2));
+    EXPECT_FALSE(stack.is_symbol_uncoded(3));
+    EXPECT_TRUE(stack.is_symbol_uncoded(4));
 
     stack.m_rank = 4;
     stack.m_remote_rank = 5;
@@ -174,11 +174,11 @@ TEST(TestRankSymbolDecodingStatusUpdator, api)
 
     stack.decode(&payload[0]);
 
-    EXPECT_TRUE(stack.is_symbol_decoded(0));
-    EXPECT_TRUE(stack.is_symbol_decoded(1));
-    EXPECT_FALSE(stack.is_symbol_decoded(2));
-    EXPECT_FALSE(stack.is_symbol_decoded(3));
-    EXPECT_TRUE(stack.is_symbol_decoded(4));
+    EXPECT_TRUE(stack.is_symbol_uncoded(0));
+    EXPECT_TRUE(stack.is_symbol_uncoded(1));
+    EXPECT_FALSE(stack.is_symbol_uncoded(2));
+    EXPECT_FALSE(stack.is_symbol_uncoded(3));
+    EXPECT_TRUE(stack.is_symbol_uncoded(4));
 
     stack.m_rank = 5;
     stack.m_remote_rank = 5;
@@ -187,11 +187,11 @@ TEST(TestRankSymbolDecodingStatusUpdator, api)
 
     stack.decode(&payload[0]);
 
-    EXPECT_TRUE(stack.is_symbol_decoded(0));
-    EXPECT_TRUE(stack.is_symbol_decoded(1));
-    EXPECT_TRUE(stack.is_symbol_decoded(2));
-    EXPECT_TRUE(stack.is_symbol_decoded(3));
-    EXPECT_TRUE(stack.is_symbol_decoded(4));
+    EXPECT_TRUE(stack.is_symbol_uncoded(0));
+    EXPECT_TRUE(stack.is_symbol_uncoded(1));
+    EXPECT_TRUE(stack.is_symbol_uncoded(2));
+    EXPECT_TRUE(stack.is_symbol_uncoded(3));
+    EXPECT_TRUE(stack.is_symbol_uncoded(4));
 
 }
 

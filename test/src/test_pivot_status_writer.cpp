@@ -75,14 +75,14 @@ namespace kodo
                 m_set_symbol_seen = index;
             }
 
-            void set_symbol_decoded(uint32_t index)
+            void set_symbol_uncoded(uint32_t index)
             {
-                m_set_symbol_decoded = index;
+                m_set_symbol_uncoded = index;
             }
 
             uint32_t m_set_symbol_missing;
             uint32_t m_set_symbol_seen;
-            uint32_t m_set_symbol_decoded;
+            uint32_t m_set_symbol_uncoded;
 
         };
 
@@ -110,8 +110,8 @@ TEST(TestPivotStatusWriter, api)
 
     EXPECT_EQ(stack.pivot_status_size(), 2U);
 
-    stack.set_symbol_decoded(1U);
-    EXPECT_EQ(stack.m_set_symbol_decoded, 1U);
+    stack.set_symbol_uncoded(1U);
+    EXPECT_EQ(stack.m_set_symbol_uncoded, 1U);
 
     stack.set_symbol_seen(5U);
     EXPECT_EQ(stack.m_set_symbol_seen, 5U);
@@ -119,11 +119,11 @@ TEST(TestPivotStatusWriter, api)
     stack.set_symbol_missing(6U);
     EXPECT_EQ(stack.m_set_symbol_missing, 6U);
 
-    stack.set_symbol_decoded(7U);
-    EXPECT_EQ(stack.m_set_symbol_decoded, 7U);
+    stack.set_symbol_uncoded(7U);
+    EXPECT_EQ(stack.m_set_symbol_uncoded, 7U);
 
-    stack.set_symbol_decoded(8U);
-    EXPECT_EQ(stack.m_set_symbol_decoded, 8U);
+    stack.set_symbol_uncoded(8U);
+    EXPECT_EQ(stack.m_set_symbol_uncoded, 8U);
 
 
     std::vector<uint8_t> buffer(stack.pivot_status_size(), 0);

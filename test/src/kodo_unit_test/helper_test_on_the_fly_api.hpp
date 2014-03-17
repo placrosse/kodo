@@ -63,7 +63,7 @@ inline void test_on_the_fly(uint32_t symbols, uint32_t symbol_size)
             uint32_t symbols_decoded = 0;
             for(uint32_t i = 0; i < decoder->symbols(); ++i)
             {
-                if(!decoder->is_symbol_decoded(i))
+                if(!decoder->is_symbol_uncoded(i))
                     continue;
 
                 ++symbols_decoded;
@@ -196,7 +196,7 @@ inline void test_on_the_fly_systematic(uint32_t symbols, uint32_t symbol_size)
             uint32_t symbols_decoded = 0;
             for(uint32_t i = 0; i < decoder->symbols(); ++i)
             {
-                if(!decoder->is_symbol_decoded(i))
+                if(!decoder->is_symbol_uncoded(i))
                     continue;
 
                 ++symbols_decoded;
@@ -315,7 +315,7 @@ inline void test_on_the_fly_systematic_no_errors(uint32_t symbols,
             uint32_t symbols_decoded = 0;
             for(uint32_t i = 0; i < decoder->symbols(); ++i)
             {
-                if(!decoder->is_symbol_decoded(i))
+                if(!decoder->is_symbol_uncoded(i))
                     continue;
 
                 ++symbols_decoded;
@@ -428,7 +428,7 @@ inline void test_systematic_packets_decode()
     decoder->decode( &payload[0] );
 
     EXPECT_TRUE(decoder->is_partial_complete());
-    EXPECT_TRUE(decoder->is_symbol_decoded(0));
+    EXPECT_TRUE(decoder->is_symbol_uncoded(0));
 
     encoder->encode( &payload[0] );
     // Simulate a packet loss
@@ -437,8 +437,8 @@ inline void test_systematic_packets_decode()
     decoder->decode( &payload[0] );
 
     EXPECT_TRUE(decoder->is_partial_complete());
-    EXPECT_TRUE(decoder->is_symbol_decoded(0));
-    EXPECT_TRUE(decoder->is_symbol_decoded(2));
+    EXPECT_TRUE(decoder->is_symbol_uncoded(0));
+    EXPECT_TRUE(decoder->is_symbol_uncoded(2));
 
     // We now have to loop since we are producing coded packets
     // and we might generate linear dependent packets
@@ -453,9 +453,9 @@ inline void test_systematic_packets_decode()
     }
 
     EXPECT_TRUE(decoder->is_partial_complete());
-    EXPECT_TRUE(decoder->is_symbol_decoded(0));
-    EXPECT_TRUE(decoder->is_symbol_decoded(1));
-    EXPECT_TRUE(decoder->is_symbol_decoded(2));
+    EXPECT_TRUE(decoder->is_symbol_uncoded(0));
+    EXPECT_TRUE(decoder->is_symbol_uncoded(1));
+    EXPECT_TRUE(decoder->is_symbol_uncoded(2));
 
     encoder->set_symbol(3, symbol_sequence[3]);
 
@@ -463,7 +463,7 @@ inline void test_systematic_packets_decode()
     decoder->decode( &payload[0] );
 
     EXPECT_TRUE(decoder->is_partial_complete());
-    EXPECT_TRUE(decoder->is_symbol_decoded(3));
+    EXPECT_TRUE(decoder->is_symbol_uncoded(3));
 
     // Nothing should happen now since the encoder contains no
     // new symbols

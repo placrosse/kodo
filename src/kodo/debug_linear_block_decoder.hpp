@@ -79,7 +79,7 @@ namespace kodo
                 }
                 else
                 {
-                    assert(SuperCoder::is_symbol_decoded(i));
+                    assert(SuperCoder::is_symbol_uncoded(i));
                     out << std::setfill(' ') << std::setw(3) << i << " U:  ";
                 }
 

@@ -35,7 +35,7 @@ namespace kodo
     /// after calling layer::decode(uint8_t*)
     ///
     /// To figure out which symbols have been partially decoded the decoder's
-    /// layer::is_symbol_decoded(uint32_t) const function can be used.
+    /// layer::is_symbol_uncoded(uint32_t) const function can be used.
     template<class SuperCoder>
     class partial_decoding_tracker : public SuperCoder
     {

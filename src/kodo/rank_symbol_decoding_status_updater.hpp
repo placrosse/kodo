@@ -37,7 +37,7 @@ namespace kodo
     /// on the incoming symbols.
     ///
     /// To figure out which symbols have been partially decoded the decoder's
-    /// layer::is_symbol_decoded(uint32_t) const function can be used.
+    /// layer::is_symbol_uncoded(uint32_t) const function can be used.
     template<class SuperCoder>
     class rank_symbol_decoding_status_updater : public SuperCoder
     {
@@ -77,7 +77,7 @@ namespace kodo
                 {
                     if(SuperCoder::is_symbol_seen(i))
                     {
-                        SuperCoder::set_symbol_decoded(i);
+                        SuperCoder::set_symbol_uncoded(i);
                     }
                 }
 

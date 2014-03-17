@@ -100,7 +100,7 @@ namespace kodo
             assert(symbol_index < SuperCoder::symbols());
             assert(symbol_data != 0);
 
-            if(SuperCoder::is_symbol_decoded(symbol_index))
+            if(SuperCoder::is_symbol_uncoded(symbol_index))
             {
                 return;
             }
@@ -149,7 +149,7 @@ namespace kodo
         {
             assert(index < SuperCoder::symbols());
             return SuperCoder::is_symbol_seen(index) ||
-                SuperCoder::is_symbol_decoded(index);
+                SuperCoder::is_symbol_uncoded(index);
         }
 
     protected:
@@ -163,7 +163,7 @@ namespace kodo
 
             // We have finished decoding mark all symbols decoded
             for(uint32_t i = 0; i < SuperCoder::symbols(); ++i)
-                SuperCoder::set_symbol_decoded(i);
+                SuperCoder::set_symbol_uncoded(i);
         }
 
         /// Decodes a symbol based on the coefficients
@@ -214,7 +214,7 @@ namespace kodo
                          uint32_t pivot_index)
         {
             assert(SuperCoder::is_symbol_seen(pivot_index));
-            assert(!SuperCoder::is_symbol_decoded(pivot_index));
+            assert(!SuperCoder::is_symbol_uncoded(pivot_index));
             assert(!SuperCoder::is_symbol_missing(pivot_index));
 
             SuperCoder::set_symbol_missing(pivot_index);
@@ -357,7 +357,7 @@ namespace kodo
             assert(pivot_index < SuperCoder::symbols());
 
             assert(!SuperCoder::is_symbol_seen(pivot_index));
-            assert(!SuperCoder::is_symbol_decoded(pivot_index));
+            assert(!SuperCoder::is_symbol_uncoded(pivot_index));
             assert(SuperCoder::is_symbol_missing(pivot_index));
 
             // If this pivot index was smaller than the maximum pivot
@@ -450,7 +450,7 @@ namespace kodo
                     continue;
                 }
 
-                if( SuperCoder::is_symbol_decoded(i) )
+                if( SuperCoder::is_symbol_uncoded(i) )
                 {
                     // We know that we have no non-zero elements
                     // outside the pivot position.
@@ -511,7 +511,7 @@ namespace kodo
                                 uint32_t pivot_index)
         {
             assert(!SuperCoder::is_symbol_seen(pivot_index));
-            assert(!SuperCoder::is_symbol_decoded(pivot_index));
+            assert(!SuperCoder::is_symbol_uncoded(pivot_index));
             assert(SuperCoder::is_symbol_missing(pivot_index));
 
             assert(SuperCoder::is_symbol_available(pivot_index));
@@ -543,7 +543,7 @@ namespace kodo
                                   uint32_t pivot_index)
         {
             assert(!SuperCoder::is_symbol_seen(pivot_index));
-            assert(!SuperCoder::is_symbol_decoded(pivot_index));
+            assert(!SuperCoder::is_symbol_uncoded(pivot_index));
             assert(SuperCoder::is_symbol_missing(pivot_index));
 
             assert(SuperCoder::is_symbol_available(pivot_index));
@@ -561,7 +561,7 @@ namespace kodo
             SuperCoder::set_coefficient_value(vector_dest, pivot_index, 1U);
 
             // Mark this symbol decoded
-            SuperCoder::set_symbol_decoded(pivot_index);
+            SuperCoder::set_symbol_uncoded(pivot_index);
 
             // Copy it into the symbol storage
             sak::const_storage src =

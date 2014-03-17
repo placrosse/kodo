@@ -103,7 +103,7 @@ TEST(TestSymbolDecodingStatusTracker, api)
     {
         EXPECT_TRUE(stack.is_symbol_missing(i));
         EXPECT_FALSE(stack.is_symbol_seen(i));
-        EXPECT_FALSE(stack.is_symbol_decoded(i));
+        EXPECT_FALSE(stack.is_symbol_uncoded(i));
     }
 
     uint32_t symbol = 1;
@@ -111,24 +111,24 @@ TEST(TestSymbolDecodingStatusTracker, api)
     stack.set_symbol_seen(symbol);
     EXPECT_FALSE(stack.is_symbol_missing(symbol));
     EXPECT_TRUE(stack.is_symbol_seen(symbol));
-    EXPECT_FALSE(stack.is_symbol_decoded(symbol));
+    EXPECT_FALSE(stack.is_symbol_uncoded(symbol));
 
-    stack.set_symbol_decoded(symbol);
+    stack.set_symbol_uncoded(symbol);
     EXPECT_FALSE(stack.is_symbol_missing(symbol));
     EXPECT_FALSE(stack.is_symbol_seen(symbol));
-    EXPECT_TRUE(stack.is_symbol_decoded(symbol));
+    EXPECT_TRUE(stack.is_symbol_uncoded(symbol));
 
     stack.set_symbol_missing(symbol);
     EXPECT_TRUE(stack.is_symbol_missing(symbol));
     EXPECT_FALSE(stack.is_symbol_seen(symbol));
-    EXPECT_FALSE(stack.is_symbol_decoded(symbol));
+    EXPECT_FALSE(stack.is_symbol_uncoded(symbol));
 
     // Again all symbols should be missing
     for(uint32_t i = 0; i < stack.symbols(); ++i)
     {
         EXPECT_TRUE(stack.is_symbol_missing(i));
         EXPECT_FALSE(stack.is_symbol_seen(i));
-        EXPECT_FALSE(stack.is_symbol_decoded(i));
+        EXPECT_FALSE(stack.is_symbol_uncoded(i));
     }
 
     symbol = 9;
@@ -136,17 +136,17 @@ TEST(TestSymbolDecodingStatusTracker, api)
     stack.set_symbol_seen(symbol);
     EXPECT_FALSE(stack.is_symbol_missing(symbol));
     EXPECT_TRUE(stack.is_symbol_seen(symbol));
-    EXPECT_FALSE(stack.is_symbol_decoded(symbol));
+    EXPECT_FALSE(stack.is_symbol_uncoded(symbol));
 
-    stack.set_symbol_decoded(symbol);
+    stack.set_symbol_uncoded(symbol);
     EXPECT_FALSE(stack.is_symbol_missing(symbol));
     EXPECT_FALSE(stack.is_symbol_seen(symbol));
-    EXPECT_TRUE(stack.is_symbol_decoded(symbol));
+    EXPECT_TRUE(stack.is_symbol_uncoded(symbol));
 
     stack.set_symbol_missing(symbol);
     EXPECT_TRUE(stack.is_symbol_missing(symbol));
     EXPECT_FALSE(stack.is_symbol_seen(symbol));
-    EXPECT_FALSE(stack.is_symbol_decoded(symbol));
+    EXPECT_FALSE(stack.is_symbol_uncoded(symbol));
 
 
 }

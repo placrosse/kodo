@@ -59,7 +59,7 @@ namespace kodo
             assert(symbol_index < SuperCoder::symbols());
             assert(symbol_data != 0);
 
-            if(SuperCoder::is_symbol_decoded(symbol_index))
+            if(SuperCoder::is_symbol_uncoded(symbol_index))
                 return;
 
             const value_type *symbol =

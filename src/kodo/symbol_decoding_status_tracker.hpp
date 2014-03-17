@@ -34,9 +34,9 @@ namespace kodo
             /// to partially decoded packets.
             seen,
 
-            /// decoded means that the symbol has been received and
+            /// uncoded means that the symbol has been received and
             /// fully decoded.
-            decoded
+            uncoded
         };
 
     public:
@@ -75,11 +75,11 @@ namespace kodo
             m_status[index] = symbol_decoding_status::seen;
         }
 
-        /// @copydoc layer::set_symbol_decoded(uint32_t)
-        void set_symbol_decoded(uint32_t index)
+        /// @copydoc layer::set_symbol_uncoded(uint32_t)
+        void set_symbol_uncoded(uint32_t index)
         {
             assert(index < m_status.size());
-            m_status[index] = symbol_decoding_status::decoded;
+            m_status[index] = symbol_decoding_status::uncoded;
         }
 
         /// @copydoc layer::is_symbol_missing(uint32_t) const
@@ -96,11 +96,11 @@ namespace kodo
             return m_status[index] == symbol_decoding_status::seen;
         }
 
-        /// @copydoc layer::is_symbol_decoded(uint32_t) const
-        bool is_symbol_decoded(uint32_t index) const
+        /// @copydoc layer::is_symbol_uncoded(uint32_t) const
+        bool is_symbol_uncoded(uint32_t index) const
         {
             assert(index < m_status.size());
-            return m_status[index] == symbol_decoding_status::decoded;
+            return m_status[index] == symbol_decoding_status::uncoded;
         }
 
     public:

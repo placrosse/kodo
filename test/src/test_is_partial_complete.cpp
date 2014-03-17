@@ -118,7 +118,7 @@ TEST(TestIsPartialComplete, check_true)
             uint32_t symbols_decoded = 0;
             for(uint32_t i = 0; i < decoder->symbols(); ++i)
             {
-                if(!decoder->is_symbol_decoded(i))
+                if(!decoder->is_symbol_uncoded(i))
                     continue;
 
                 ++symbols_decoded;
@@ -210,7 +210,7 @@ TEST(TestIsPartialComplete, check_two_encoders)
             uint32_t symbols_decoded = 0;
             for(uint32_t i = 0; i < decoder->symbols(); ++i)
             {
-                if(!decoder->is_symbol_decoded(i))
+                if(!decoder->is_symbol_uncoded(i))
                     continue;
 
                 ++symbols_decoded;
