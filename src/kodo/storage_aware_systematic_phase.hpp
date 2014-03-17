@@ -64,7 +64,7 @@ namespace kodo
         bool in_systematic_phase() const
         {
             // We know that there must be some systematic symbols to
-            // send if the rank (denotes the number of symbols
+            // send if the uncoded symbols (denotes the number of symbols
             // available in the encoder matrix is larger than the
             // number of systematic symbols we have sent
             return m_systematic_count < SuperCoder::symbols_uncoded();
