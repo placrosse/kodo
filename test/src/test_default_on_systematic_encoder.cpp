@@ -68,7 +68,7 @@ namespace kodo
             {
                 m_symbols = the_factory.symbols();
                 m_symbol_size = the_factory.max_symbol_size();
-                m_is_symbol_pivot.resize(m_symbols, false);
+                m_is_symbol_uncoded.resize(m_symbols, false);
             }
 
             uint32_t encode_symbol(uint8_t *symbol_data, uint32_t symbol_index)
@@ -94,18 +94,18 @@ namespace kodo
                 return m_symbols;
             }
 
-            bool is_symbol_pivot(uint32_t index) const
+            bool is_symbol_uncoded(uint32_t index) const
             {
                 (void) index;
-                return m_is_symbol_pivot[index];
+                return m_is_symbol_uncoded[index];
             }
 
-            uint32_t rank() const
+            uint32_t symbols_uncoded() const
             {
                 uint32_t rank = 0;
                 for(uint32_t i = 0; i < m_symbols; ++i)
                 {
-                    rank += m_is_symbol_pivot[i];
+                    rank += m_is_symbol_uncoded[i];
                 }
                 return rank;
             }
@@ -130,7 +130,7 @@ namespace kodo
             uint32_t m_symbols;
             uint32_t m_symbol_size;
 
-            std::vector<bool> m_is_symbol_pivot;
+            std::vector<bool> m_is_symbol_uncoded;
 
             uint32_t m_systematic_index;
 
@@ -186,9 +186,9 @@ inline void test()
 
     stack.reset();
 
-    stack.m_is_symbol_pivot[1] = true;
+    stack.m_is_symbol_uncoded[1] = true;
 
-    EXPECT_EQ(stack.rank(), 1U);
+    EXPECT_EQ(stack.symbols_uncoded(), 1U);
 
     // We encode and there is one packet we should encode systematic
     stack.encode(&symbol[0], &header[0]);
@@ -210,7 +210,7 @@ inline void test()
 
     stack.set_systematic_off();
 
-    stack.m_is_symbol_pivot[0] = true;
+    stack.m_is_symbol_uncoded[0] = true;
 
     // We have turned systematic off
     stack.encode(&symbol[0], &header[0]);

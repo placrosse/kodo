@@ -115,13 +115,13 @@ TEST(TestIsPartialComplete, check_true)
         {
             // Check that we as many pivot elements as expected and that these
             // are decoded
-            uint32_t symbols_decoded = 0;
+            uint32_t symbols_uncoded = 0;
             for(uint32_t i = 0; i < decoder->symbols(); ++i)
             {
                 if(!decoder->is_symbol_uncoded(i))
                     continue;
 
-                ++symbols_decoded;
+                ++symbols_uncoded;
 
                 auto symbol_storage =
                     sak::storage(decoder->symbol(i), decoder->symbol_size());
@@ -129,7 +129,7 @@ TEST(TestIsPartialComplete, check_true)
                 EXPECT_TRUE(sak::equal(symbol_storage, symbol_sequence[i]));
             }
 
-            EXPECT_EQ(symbols_decoded, decoder->symbols_decoded());
+            EXPECT_EQ(symbols_uncoded, decoder->symbols_uncoded());
 
         }
     }
@@ -207,13 +207,13 @@ TEST(TestIsPartialComplete, check_two_encoders)
         {
             // Check that we as many decoded symbols as expected and that these
             // are decoded
-            uint32_t symbols_decoded = 0;
+            uint32_t symbols_uncoded = 0;
             for(uint32_t i = 0; i < decoder->symbols(); ++i)
             {
                 if(!decoder->is_symbol_uncoded(i))
                     continue;
 
-                ++symbols_decoded;
+                ++symbols_uncoded;
 
                 auto symbol_storage =
                     sak::storage(decoder->symbol(i), decoder->symbol_size());
@@ -221,7 +221,7 @@ TEST(TestIsPartialComplete, check_two_encoders)
                 EXPECT_TRUE(sak::equal(symbol_storage, symbol_sequence[i]));
             }
 
-            EXPECT_EQ(symbols_decoded, decoder->symbols_decoded());
+            EXPECT_EQ(symbols_uncoded, decoder->symbols_uncoded());
 
         }
 

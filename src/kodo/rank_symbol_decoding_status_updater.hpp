@@ -81,7 +81,7 @@ namespace kodo
                     }
                 }
 
-                assert(SuperCoder::rank() == SuperCoder::symbols_decoded());
+                assert(SuperCoder::rank() == SuperCoder::symbols_uncoded());
             }
         }
 

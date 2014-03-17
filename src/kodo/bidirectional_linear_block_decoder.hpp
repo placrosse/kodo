@@ -141,7 +141,7 @@ namespace kodo
         /// @copydoc layer::rank() const
         uint32_t rank() const
         {
-            return SuperCoder::symbols_seen() + SuperCoder::symbols_decoded();
+            return SuperCoder::symbols_seen() + SuperCoder::symbols_uncoded();
         }
 
         /// @copydoc layer::is_symbol_pivot(uint32_t) const

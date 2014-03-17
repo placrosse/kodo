@@ -67,7 +67,7 @@ namespace kodo
             // send if the rank (denotes the number of symbols
             // available in the encoder matrix is larger than the
             // number of systematic symbols we have sent
-            return m_systematic_count < SuperCoder::rank();
+            return m_systematic_count < SuperCoder::symbols_uncoded();
         }
 
         /// @return The index of the next symbol to be sent in a
@@ -82,9 +82,9 @@ namespace kodo
             for(uint32_t i = m_offset; i < SuperCoder::symbols(); ++i)
             {
                 bool is_not_sent = !m_systematic_symbols_sent.test(i);
-                bool is_pivot = SuperCoder::is_symbol_pivot(i);
+                bool is_uncoded = SuperCoder::is_symbol_uncoded(i);
 
-                if(is_not_sent && is_pivot)
+                if(is_not_sent && is_uncoded)
                 {
                     next_symbol_found = true;
                     next_symbol = i;
@@ -132,9 +132,9 @@ namespace kodo
             {
 
                 bool is_sent = m_systematic_symbols_sent.test(i);
-                bool is_pivot = SuperCoder::is_symbol_pivot(i);
+                bool is_uncoded = SuperCoder::is_symbol_uncoded(i);
 
-                if(is_sent && is_pivot)
+                if(is_sent && is_uncoded)
                 {
                     ++m_offset;
                 }

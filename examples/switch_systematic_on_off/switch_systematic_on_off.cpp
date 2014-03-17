@@ -94,7 +94,7 @@ int main()
         // to the original source symbols and are therefore marked as
         // decoded
         std::cout << "Symbols decoded "
-                  << decoder->symbols_decoded() << std::endl;
+                  << decoder->symbols_uncoded() << std::endl;
     }
 
     // The decoder is complete, now copy the symbols from the decoder

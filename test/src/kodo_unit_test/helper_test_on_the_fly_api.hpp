@@ -60,13 +60,13 @@ inline void test_on_the_fly(uint32_t symbols, uint32_t symbol_size)
         {
             // Check that we as many pivot elements as expected and that these
             // are decoded
-            uint32_t symbols_decoded = 0;
+            uint32_t symbols_uncoded = 0;
             for(uint32_t i = 0; i < decoder->symbols(); ++i)
             {
                 if(!decoder->is_symbol_uncoded(i))
                     continue;
 
-                ++symbols_decoded;
+                ++symbols_uncoded;
 
                 auto symbol_storage =
                     sak::storage(decoder->symbol(i), decoder->symbol_size());
@@ -74,7 +74,7 @@ inline void test_on_the_fly(uint32_t symbols, uint32_t symbol_size)
                 EXPECT_TRUE(sak::equal(symbol_storage, symbol_sequence[i]));
             }
 
-            EXPECT_EQ(symbols_decoded, decoder->symbols_decoded());
+            EXPECT_EQ(symbols_uncoded, decoder->symbols_uncoded());
         }
 
         if(((rand() % 2) == 0) && encoder->rank() < symbols)
@@ -193,13 +193,13 @@ inline void test_on_the_fly_systematic(uint32_t symbols, uint32_t symbol_size)
         {
             // Check that we as many pivot elements as expected and that these
             // are decoded
-            uint32_t symbols_decoded = 0;
+            uint32_t symbols_uncoded = 0;
             for(uint32_t i = 0; i < decoder->symbols(); ++i)
             {
                 if(!decoder->is_symbol_uncoded(i))
                     continue;
 
-                ++symbols_decoded;
+                ++symbols_uncoded;
 
                 auto symbol_storage =
                     sak::storage(decoder->symbol(i), decoder->symbol_size());
@@ -207,7 +207,7 @@ inline void test_on_the_fly_systematic(uint32_t symbols, uint32_t symbol_size)
                 EXPECT_TRUE(sak::equal(symbol_storage, symbol_sequence[i]));
             }
 
-            EXPECT_EQ(symbols_decoded, decoder->symbols_decoded());
+            EXPECT_EQ(symbols_uncoded, decoder->symbols_uncoded());
         }
 
 
@@ -312,13 +312,13 @@ inline void test_on_the_fly_systematic_no_errors(uint32_t symbols,
         {
             // Check that we as many pivot elements as expected and that these
             // are decoded
-            uint32_t symbols_decoded = 0;
+            uint32_t symbols_uncoded = 0;
             for(uint32_t i = 0; i < decoder->symbols(); ++i)
             {
                 if(!decoder->is_symbol_uncoded(i))
                     continue;
 
-                ++symbols_decoded;
+                ++symbols_uncoded;
 
                 auto symbol_storage =
                     sak::storage(decoder->symbol(i), decoder->symbol_size());
@@ -326,7 +326,7 @@ inline void test_on_the_fly_systematic_no_errors(uint32_t symbols,
                 EXPECT_TRUE(sak::equal(symbol_storage, symbol_sequence[i]));
             }
 
-            EXPECT_EQ(symbols_decoded, decoder->symbols_decoded());
+            EXPECT_EQ(symbols_uncoded, decoder->symbols_uncoded());
         }
 
 
@@ -443,7 +443,7 @@ inline void test_systematic_packets_decode()
     // We now have to loop since we are producing coded packets
     // and we might generate linear dependent packets
     uint32_t loop = 0;
-    while(decoder->symbols_decoded() != 3)
+    while(decoder->symbols_uncoded() != 3)
     {
         encoder->encode( &payload[0] );
         decoder->decode( &payload[0] );
@@ -482,7 +482,7 @@ inline void test_systematic_packets_decode()
     encoder->encode( &payload[0] );
     // Packet loss
 
-    while(decoder->symbols_decoded() != 5)
+    while(decoder->symbols_uncoded() != 5)
     {
         encoder->encode( &payload[0] );
         decoder->decode( &payload[0] );

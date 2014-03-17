@@ -8,6 +8,7 @@
 #include <cstdint>
 
 #include "on_the_fly_codes.hpp"
+#include "sliding_window_recoding_stack.hpp"
 
 #include "../pivot_status_writer.hpp"
 #include "../feedback_pivot_status_writer.hpp"
@@ -34,7 +35,7 @@ namespace kodo
                // Payload API
                partial_decoding_tracker<
                rank_symbol_decoding_status_updater<
-               payload_recoder<on_the_fly_recoding_stack,
+               payload_recoder<sliding_window_recoding_stack,
                payload_rank_decoder<
                payload_decoder<
                // Codec Header API

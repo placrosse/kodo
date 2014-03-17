@@ -94,13 +94,20 @@ namespace kodo
                 return m_symbols;
             }
 
+            /// @todo: Is this function needed now we have is_symbol_uncoded
             bool is_symbol_pivot(uint32_t index) const
             {
                 (void) index;
                 return m_is_symbol_pivot[index];
             }
 
-            uint32_t rank() const
+            bool is_symbol_uncoded(uint32_t index) const
+            {
+                (void) index;
+                return m_is_symbol_pivot[index];
+            }
+
+            uint32_t symbols_uncoded() const
             {
                 uint32_t rank = 0;
                 for(uint32_t i = 0; i < m_symbols; ++i)
@@ -201,7 +208,7 @@ TEST(TestSlidingWindowSystematicEncoder, api)
     // Simulate that we have one packet available
     stack.m_is_symbol_pivot[1] = true;
 
-    EXPECT_EQ(stack.rank(), 1U);
+    EXPECT_EQ(stack.symbols_uncoded(), 1U);
 
     // We encode and there is one packet we should encode systematic
     stack.encode(&symbol[0], &header[0]);
@@ -214,7 +221,7 @@ TEST(TestSlidingWindowSystematicEncoder, api)
     stack.reset();
 
     // We have sent one systematically but the difference between the
-    // "local" remote rank is 1 in which case we send the packet
+    // "local" remote symbols_uncoded is 1 in which case we send the packet
     // systematically again
     stack.encode(&symbol[0], &header[0]);
 
@@ -296,7 +303,7 @@ TEST(TestSlidingWindowSystematicEncoder, api)
     stack.m_is_symbol_pivot[2] = true;
     stack.m_is_symbol_pivot[3] = true;
 
-    EXPECT_EQ(stack.rank(), 4U);
+    EXPECT_EQ(stack.symbols_uncoded(), 4U);
     EXPECT_EQ(stack.remote_rank(), 3U);
 
     // Now two packets are added locally but not the same as added

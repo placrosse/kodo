@@ -34,17 +34,17 @@ namespace kodo
             void decode(uint8_t *payload)
             {
                 m_payload = payload;
-                m_symbols_decoded = m_symbols_decoded_new;
+                m_symbols_uncoded = m_symbols_uncoded_new;
             }
 
-            uint32_t symbols_decoded() const
+            uint32_t symbols_uncoded() const
             {
-                return m_symbols_decoded;
+                return m_symbols_uncoded;
             }
 
             uint8_t* m_payload;
-            uint32_t m_symbols_decoded;
-            uint32_t m_symbols_decoded_new;
+            uint32_t m_symbols_uncoded;
+            uint32_t m_symbols_uncoded_new;
         };
 
         // Instantiate a stack containing the partial_decoding_tracker
@@ -80,23 +80,23 @@ TEST(TestPartialDecodingTracker, test_partial_decoding)
 
     std::vector<uint8_t> payload(10);
 
-    stack.m_symbols_decoded = 0;
-    stack.m_symbols_decoded_new = 0;
+    stack.m_symbols_uncoded = 0;
+    stack.m_symbols_uncoded_new = 0;
     stack.decode(&payload[0]);
 
     EXPECT_FALSE(stack.is_partial_complete());
 
-    stack.m_symbols_decoded_new = 1;
+    stack.m_symbols_uncoded_new = 1;
     stack.decode(&payload[0]);
 
     EXPECT_TRUE(stack.is_partial_complete());
 
-    stack.m_symbols_decoded_new = 1;
+    stack.m_symbols_uncoded_new = 1;
     stack.decode(&payload[0]);
 
     EXPECT_FALSE(stack.is_partial_complete());
 
-    stack.m_symbols_decoded_new = 10;
+    stack.m_symbols_uncoded_new = 10;
     stack.decode(&payload[0]);
 
     EXPECT_TRUE(stack.is_partial_complete());

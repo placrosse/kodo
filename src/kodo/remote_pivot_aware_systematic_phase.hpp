@@ -48,9 +48,9 @@ namespace kodo
                     bool is_remote_pivot =
                         SuperCoder::remote_is_symbol_pivot(i);
 
-                    bool is_pivot = SuperCoder::is_symbol_pivot(i);
+                    bool is_uncoded = SuperCoder::is_symbol_uncoded(i);
 
-                    if(!is_remote_pivot && is_pivot)
+                    if(!is_remote_pivot && is_uncoded)
                     {
                         next_symbol_found = true;
                         next_symbol = i;
@@ -91,9 +91,9 @@ namespace kodo
                 bool is_remote_pivot =
                     SuperCoder::remote_is_symbol_pivot(i);
 
-                bool is_pivot = SuperCoder::is_symbol_pivot(i);
+                bool is_uncoded = SuperCoder::is_symbol_uncoded(i);
 
-                if(!is_remote_pivot && is_pivot)
+                if(!is_remote_pivot && is_uncoded)
                 {
                     ++difference;
                 }

@@ -31,7 +31,7 @@ namespace kodo
     ///
     /// Detecting whether data has been partially decoded is done by
     /// using the decoders' symbol status API in particiular by
-    /// comparing the layer::symbols_decoded() counters before and
+    /// comparing the layer::symbols_uncoded() counters before and
     /// after calling layer::decode(uint8_t*)
     ///
     /// To figure out which symbols have been partially decoded the decoder's
@@ -60,16 +60,16 @@ namespace kodo
         {
             assert(payload != 0);
 
-            uint32_t symbols_decoded = SuperCoder::symbols_decoded();
+            uint32_t symbols_uncoded = SuperCoder::symbols_uncoded();
 
             SuperCoder::decode(payload);
 
             // We cannot have less decoded symbols after calling decode
-            assert(SuperCoder::symbols_decoded() >= symbols_decoded);
+            assert(SuperCoder::symbols_uncoded() >= symbols_uncoded);
 
             // If new symbols have been decoded toggle the bool
             m_partial_complete =
-                SuperCoder::symbols_decoded() > symbols_decoded;
+                SuperCoder::symbols_uncoded() > symbols_uncoded;
         }
 
 

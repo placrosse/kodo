@@ -19,6 +19,8 @@
 
 int main()
 {
+    srand(time(0));
+
     // Set the number of symbols (i.e. the generation size in RLNC
     // terminology) and the size of a symbol in bytes
     uint32_t symbols = 16;
@@ -60,6 +62,19 @@ int main()
 
     while( !decoder->is_complete() )
     {
+        // Randomly choose to insert a symbol
+        if((rand() % 2) && (encoder->rank() < symbols))
+        {
+            // For an encoder the rank specifies the number of symbols
+            // it has available for encoding
+            uint32_t rank = encoder->rank();
+
+            encoder->set_symbol(rank, symbol_storage[rank]);
+
+            std::cout << "Symbol " << rank << " added to the encoder"
+                      << std::endl;
+        }
+
         // Encode a packet into the payload buffer
         encoder->encode( &payload[0] );
 
@@ -73,23 +88,16 @@ int main()
             continue;
         }
 
+        std::cout << "Decoder received packet" << std::endl;
+
         // Packet got through - pass that packet to the decoder
         decoder->decode( &payload[0] );
 
+        std::cout << "Encoder rank = " << encoder->rank() << std::endl;
         std::cout << "Decoder rank = " << decoder->rank() << std::endl;
-
-        // Randomly choose to insert a symbol
-        if((rand() % 2) && (encoder->rank() < symbols))
-        {
-            // For an encoder the rank specifies the number of symbols
-            // it has available for encoding
-            uint32_t rank = encoder->rank();
-
-            encoder->set_symbol(rank, symbol_storage[rank]);
-
-            std::cout << "Symbol " << rank << " added to the encoder"
-                      << std::endl;
-        }
+        std::cout << "Decoder uncoded = " << decoder->symbols_uncoded()
+                  << std::endl;
+        std::cout << "Decoder seen = " << decoder->symbols_seen() << std::endl;
 
         // Transmit the feedback
         decoder->write_feedback(&feedback[0]);
