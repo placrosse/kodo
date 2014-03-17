@@ -21,7 +21,7 @@ int main()
 {
     // Set the number of symbols (i.e. the generation size in RLNC
     // terminology) and the size of a symbol in bytes
-    uint32_t symbols = 42;
+    uint32_t symbols = 16;
     uint32_t symbol_size = 160;
 
     // Typdefs for the encoder/decoder type we wish to use
@@ -63,13 +63,20 @@ int main()
         // Encode a packet into the payload buffer
         encoder->encode( &payload[0] );
 
+        std::cout << "Packet encoded" << std::endl;
+
         // Send the data to the decoders, here we just for fun
         // simulate that we are loosing 50% of the packets
         if(rand() % 2)
-           continue;
+        {
+            std::cout << "Packet dropped on channel" << std::endl;
+            continue;
+        }
 
         // Packet got through - pass that packet to the decoder
         decoder->decode( &payload[0] );
+
+        std::cout << "Decoder rank = " << decoder->rank() << std::endl;
 
         // Randomly choose to insert a symbol
         if((rand() % 2) && (encoder->rank() < symbols))
@@ -79,6 +86,9 @@ int main()
             uint32_t rank = encoder->rank();
 
             encoder->set_symbol(rank, symbol_storage[rank]);
+
+            std::cout << "Symbol " << rank << " added to the encoder"
+                      << std::endl;
         }
 
         // Transmit the feedback
@@ -86,7 +96,12 @@ int main()
 
         // Simulate loss of feedback
         if(rand() % 2)
+        {
+            std::cout << "Lost feedback from decoder" << std::endl;
             continue;
+        }
+
+        std::cout << "Received feedback from decoder" << std::endl;
 
         encoder->read_feedback(&feedback[0]);
     }
