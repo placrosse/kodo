@@ -39,7 +39,8 @@ namespace kodo
         perpetual_generator()
             : m_symbol_distribution(field_type::min_value, field_type::max_value),
               m_pivot_distribution(0, SuperCoder::symbols()-1),
-              m_width(SuperCoder::symbols()/2)
+              m_width(SuperCoder::symbols()/2),
+              m_generated(0)
             {}
 
         /// @copydoc layer::initialize(Factory&)
@@ -50,6 +51,7 @@ namespace kodo
             m_pivot_distribution = boost::random::uniform_int_distribution
                 <uint32_t>(0, SuperCoder::symbols()-1);
             m_width = SuperCoder::symbols()/2;
+            m_generated = 0;
 
             assert(m_width < SuperCoder::symbols());
         }
@@ -62,7 +64,12 @@ namespace kodo
             // Ensure all coefficients are initially zero
             std::fill_n( coefficients, SuperCoder::coefficient_vector_size(), 0);
 
-            uint32_t pivot = m_pivot_distribution(m_random_generator);
+            uint32_t pivot;
+            if(m_generated < SuperCoder::symbols())
+                pivot = m_generated;
+            else
+                pivot = m_pivot_distribution(m_random_generator);
+
             value_type* c = reinterpret_cast<value_type*>(coefficients);
             fifi::set_value<field_type>(c, pivot, 1);
 
@@ -73,6 +80,8 @@ namespace kodo
                 value_type coefficient = m_symbol_distribution(m_random_generator);
                 fifi::set_value<field_type>(c, index, coefficient);
             }
+
+            m_generated++;
         }
 
         /// @copydoc layer::generate_partial(uint8_t*)
@@ -156,6 +165,9 @@ namespace kodo
 
         /// The number of non-zero values following the pivot
         uint32_t m_width;
+
+        /// counter for number of generated coefficient vectors
+        uint32_t m_generated;
 
     };
 }
