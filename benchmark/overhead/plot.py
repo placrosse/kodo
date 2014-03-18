@@ -35,9 +35,9 @@ def plot(args):
     df['field'] = df['benchmark'].apply(plot_helper.get_field)
     df['algorithm'] = df['testcase'].apply(plot_helper.get_algorithm)
 
-    sparse = df[df['testcase'] == "SparseFullRLNC"].groupby(
+    dense = df[df['testcase'].isin(plot_helper.codes['dense'])].groupby(
         by=['slavename', 'symbol_size'])
-    dense = df[df['testcase'] != "SparseFullRLNC"].groupby(
+    sparse = df[df['testcase'].isin(plot_helper.codes['sparse'])].groupby(
         by=['slavename', 'symbol_size'])
 
     def plot_setup(p):

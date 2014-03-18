@@ -107,6 +107,11 @@ def get_slave(name):
             slaves[name]['OS'], slaves[name]['CPU'])
     return result
 
+codes = {
+    "dense": ["FullRLNC", "BackwardFullRLNC", "FullDelayedRLNC"],
+    "sparse": ["SparseFullRLNC"],
+    }
+
 
 def set_common_params():
     pl.rcParams.update({
