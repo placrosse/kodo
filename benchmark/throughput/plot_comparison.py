@@ -86,10 +86,10 @@ def plot(args):
                 (branch_mean - master_mean) / master_mean * 100
 
             # Group by type of code; dense, sparse
-            dense = branch_group[branch_group['testcase'] !=
-                                 "SparseFullRLNC"].groupby(by=['symbol_size'])
-            sparse = branch_group[branch_group['testcase'] ==
-                                  "SparseFullRLNC"].groupby(by=['symbol_size'])
+            dense = df[df['testcase'].isin(
+                plot_helper.codes['dense'])].groupby(by=['symbol_size'])
+            sparse = df[df['testcase'].isin(
+                plot_helper.codes['sparse'])].groupby(by=['symbol_size'])
 
             def plot_setup(p):
                 pylab.ylabel("Throughput gain [\%]")

@@ -38,10 +38,10 @@ def plot(args):
     df['algorithm'] = df['testcase'].apply(plot_helper.get_algorithm)
 
     # Group by type of code; dense, sparse
-    dense = df[df['testcase'] != "SparseFullRLNC"].groupby(by=
-              ['slavename', 'symbol_size'])
-    sparse = df[df['testcase'] == "SparseFullRLNC"].groupby(by=
-               ['slavename', 'symbol_size'])
+    dense = df[df['testcase'].isin(plot_helper.codes['dense'])].groupby(
+        by=['slavename', 'symbol_size'])
+    sparse = df[df['testcase'].isin(plot_helper.codes['sparse'])].groupby(
+        by=['slavename', 'symbol_size'])
 
     def plot_setup(p):
         pylab.ylabel("Throughput" + " [" + list(group['unit'])[0] + "]")
