@@ -39,8 +39,8 @@ namespace kodo
         perpetual_generator()
             : m_symbol_distribution(field_type::min_value, field_type::max_value),
               m_pivot_distribution(0, SuperCoder::symbols()-1),
-              m_width(SuperCoder::symbols()/2),
-              m_generated(0)
+              m_width(SuperCoder::symbols()/10),
+              m_generated (0)
             {}
 
         /// @copydoc layer::initialize(Factory&)
@@ -50,7 +50,7 @@ namespace kodo
             SuperCoder::initialize(the_factory);
             m_pivot_distribution = boost::random::uniform_int_distribution
                 <uint32_t>(0, SuperCoder::symbols()-1);
-            m_width = SuperCoder::symbols()/2;
+            m_width = SuperCoder::symbols()/10;
             m_generated = 0;
 
             assert(m_width < SuperCoder::symbols());
@@ -65,8 +65,10 @@ namespace kodo
             std::fill_n( coefficients, SuperCoder::coefficient_vector_size(), 0);
 
             uint32_t pivot;
-            if(m_generated < SuperCoder::symbols())
-                pivot = m_generated;
+            if(m_generated < m_width + 1)
+                pivot = 0;
+            else if (m_generated < SuperCoder::symbols() + m_width)
+                pivot = m_generated - m_width;
             else
                 pivot = m_pivot_distribution(m_random_generator);
 
@@ -150,7 +152,7 @@ namespace kodo
                 return m_width;
             }
 
-    private:
+    protected:
 
         /// The distribution wrapping the random generator
         boost::random::uniform_int_distribution<value_type>
