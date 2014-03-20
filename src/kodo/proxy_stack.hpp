@@ -49,16 +49,15 @@ namespace kodo
     template
     <
         template <class> class ProxyStack,
-        template <class, class> class NestedStack,
         class SuperCoder
     >
     class proxy_stack :
-        public NestedStack<ProxyStack<SuperCoder>,SuperCoder>
+        public nested_stack<ProxyStack<SuperCoder>,SuperCoder>
     {
     public:
 
         /// Typedef of the "actual" SuperCoder type
-        typedef NestedStack<ProxyStack<SuperCoder>,SuperCoder> Super;
+        typedef nested_stack<ProxyStack<SuperCoder>,SuperCoder> Super;
 
     public:
 
