@@ -90,31 +90,23 @@ namespace kodo
         void generate_partial(uint8_t *coefficients)
         {
             assert(coefficients != 0);
-            m_pivot_distribution = boost::random::uniform_int_distribution<uint32_t>(0, SuperCoder::symbols()-1);
 
             // Ensure all coefficients are initially zero
             std::fill_n( coefficients, SuperCoder::coefficient_vector_size(), 0);
+
+            // No data to recode return the valid zero symbol and vector.
+            if(SuperCoder::rank() == 0)
+                return;
 
             uint32_t symbols = SuperCoder::symbols();
 
             //attempt to draw a valid pivot, we try at most symbols time
             uint32_t pivot = m_pivot_distribution(m_random_generator);
-            uint32_t trials = 1;
-            while((SuperCoder::is_symbol_pivot(pivot)) and (trials <= symbols))
-            {
+            while(!SuperCoder::is_symbol_pivot(pivot))
                 pivot = m_pivot_distribution(m_random_generator);
-                trials++;
-            }
 
             value_type* c = reinterpret_cast<value_type*>(coefficients);
-            if(SuperCoder::is_symbol_pivot(pivot))
-            {
-                fifi::set_value<field_type>(c, pivot, 1);
-            }
-            else
-            {
-                return;
-            }
+            fifi::set_value<field_type>(c, pivot, 1);
 
             for(uint32_t i = 1; i <= m_width; ++i)
             {
