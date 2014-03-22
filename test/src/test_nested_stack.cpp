@@ -9,118 +9,14 @@
 #include <gtest/gtest.h>
 
 #include <kodo/nested_stack.hpp>
-
-namespace kodo
-{
-
-    // Put dummy layers and tests classes in an anonymous namespace
-    // to avoid violations of ODF (one-definition-rule) in other
-    // translation units
-    namespace
-    {
-        class dummy_nested
-        {
-        public:
-
-            typedef std::shared_ptr<dummy_nested> pointer;
-
-            class factory
-            {
-            public:
-
-                factory(uint32_t max_symbols, uint32_t max_symbol_size)
-                    : m_max_symbols(max_symbols),
-                      m_max_symbol_size(max_symbol_size),
-                      m_symbols(0),
-                      m_symbol_size(0)
-                { }
-
-                void set_symbols(uint32_t symbols)
-                {
-                    m_symbols = symbols;
-                }
-
-                void set_symbol_size(uint32_t symbol_size)
-                {
-                    m_symbol_size = symbol_size;
-                }
-
-                std::shared_ptr<dummy_nested> build()
-                {
-                    return std::make_shared<dummy_nested>();
-                }
-
-            public:
-
-                uint32_t m_max_symbols;
-                uint32_t m_max_symbol_size;
-                uint32_t m_symbols;
-                uint32_t m_symbol_size;
-
-            };
-
-            template<class Factory>
-            void initialize(Factory& the_factory)
-            {
-                m_symbols = the_factory.m_symbols;
-                m_symbol_size = the_factory.m_symbol_size;
-            }
-
-            uint32_t m_symbols;
-            uint32_t m_symbol_size;
-
-        };
-
-        class dummy_layer
-        {
-        public:
-
-            class factory
-            {
-            public:
-
-                factory(uint32_t max_symbols, uint32_t max_symbol_size)
-                    : m_max_symbols(max_symbols),
-                      m_max_symbol_size(max_symbol_size)
-                { }
-
-                uint32_t symbols() const
-                {
-                    return m_max_symbols;
-                }
-
-                uint32_t symbol_size() const
-                {
-                    return m_max_symbol_size;
-                }
-
-
-                uint32_t m_max_symbols;
-                uint32_t m_max_symbol_size;
-
-            };
-
-            template<class Factory>
-            void initialize(Factory& the_factory)
-            {
-                (void) the_factory;
-            }
-        };
-
-        class dummy_stack : public nested_stack<dummy_nested, dummy_layer>
-        { };
-
-    }
-
-}
-
+#include "kodo_unit_test/helper_test_nested_stack.hpp"
 
 TEST(TestNestedStack, api)
 {
     uint32_t symbols = 16;
     uint32_t symbol_size = 1400;
 
-    kodo::dummy_stack::factory factory(symbols, symbol_size);
+    kodo::helper_test_nested_stack::factory factory(symbols, symbol_size);
     EXPECT_EQ(factory.m_max_symbols, symbols);
     EXPECT_EQ(factory.m_max_symbol_size, symbol_size);
 
@@ -128,7 +24,7 @@ TEST(TestNestedStack, api)
     EXPECT_EQ(nested_factory.m_max_symbols, symbols);
     EXPECT_EQ(nested_factory.m_max_symbol_size, symbol_size);
 
-    kodo::dummy_stack stack;
+    kodo::helper_test_nested_stack stack;
 
     stack.initialize(factory);
 
@@ -137,6 +33,20 @@ TEST(TestNestedStack, api)
 
     EXPECT_EQ(nested->m_symbols, symbols);
     EXPECT_EQ(nested->m_symbol_size, symbol_size);
+
+    // Try to adjust the symbols and symbol size. If we now initialize
+    // the stack again we should see the change refelected in the
+    // nested stack
+    factory.m_symbols = 10;
+    factory.m_symbol_size = 100;
+
+    stack.initialize(factory);
+
+    nested = stack.nested();
+    assert(nested);
+
+    EXPECT_EQ(nested->m_symbols, factory.m_symbols);
+    EXPECT_EQ(nested->m_symbol_size, factory.m_symbol_size);
 
 }
 
