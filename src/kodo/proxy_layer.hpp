@@ -7,11 +7,35 @@
 
 #include <cstdint>
 
+#include <boost/shared_ptr.hpp>
+#include <boost/make_shared.hpp>
+
+#include <sak/storage.hpp>
+
 namespace kodo
 {
 
     /// @brief Special layer used to create parallel stacks with
     ///       some shared layers.
+    ///
+    /// The proxy_layer takes two template arguments the FinalType and
+    /// the MainStack.
+    ///
+    /// The FinalType is the type of the actual stack containing the
+    /// proxy stack. This is similar to the argument passed to the
+    /// factory layers in the standard stacks. The proxy layer needs
+    /// this information since it also acts as a factory for the proxy
+    /// stack.
+    ///
+    /// The MainStack is the type of the stack where the proxy stack
+    /// will forward function calls that are not handled directly in
+    /// the proxy stack.
+    ///
+    /// The proxy layer implements most of the API seen in the
+    /// different layers. This means that if a particiular function is
+    /// not implement in the stack containing the proxy layer the
+    /// proxy_layer will make sure that the function call is forwarded
+    /// to the main stack.
     template<class FinalType, class MainStack>
     class proxy_layer
     {
