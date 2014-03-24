@@ -174,7 +174,6 @@ namespace kodo
 }
 
 
-/// Run the tests typical coefficients stack
 TEST(TestSlidingWindowSystematicEncoder, api)
 {
     uint32_t symbols = 10;
@@ -257,8 +256,9 @@ TEST(TestSlidingWindowSystematicEncoder, api)
     stack.set_systematic_off();
     stack.m_remote_is_symbol_pivot[1] = true;
 
-    // We simulate that the remote device has received packet 1, so now the rank
-    // difference is again 1 but we have turned systematic off
+    // We simulate that the remote device has received packet 1, so
+    // now the rank difference is again 1 but we have turned
+    // systematic off
     stack.encode(&symbol[0], &header[0]);
 
     EXPECT_TRUE(stack.m_encode_full);

@@ -21,6 +21,9 @@ namespace kodo
     namespace
     {
 
+        /// The proxy_layer class which provides the API required by
+        /// the proxy_stack code requires the "main stack" to provide
+        /// two typedefs (which are th ones added here)
         template<class SuperCoder>
         class main_stack_types : public SuperCoder
         {
@@ -29,7 +32,11 @@ namespace kodo
             typedef field_type::value_type value_type;
         };
 
-
+        /// The nested_stack used by the proxy_stack layer calls the
+        /// set_symbols() and set_symbol_size() functions when
+        /// building the nested stack. This layer makes sure that
+        /// these two functions exist even though they are unused. We
+        /// maybe should perform some tests here.
         template<class SuperCoder>
         class proxy_symbols : public SuperCoder
         {
@@ -45,8 +52,6 @@ namespace kodo
 
                 void set_symbols(uint32_t symbols)
                 {
-                    std::cout << "symbols = " << symbols
-                              << " max_symbols = " << SuperCoder::factory::max_symbols() << std::endl;
                     assert(symbols <=
                            SuperCoder::factory::max_symbols());
 
@@ -69,13 +74,15 @@ namespace kodo
 
         };
 
+        /// This stack is the proxy stack i.e. the stack which is
+        /// embedded with the main stack.
         template<class MainStack>
         class dummy_proxy_stack : public
             proxy_symbols<
             proxy_layer<dummy_proxy_stack<MainStack>, MainStack> >
         { };
 
-        /// The stack used in unit test
+        /// The stack represents the main stack used in unit test
         class dummy_stack : public
             proxy_stack<dummy_proxy_stack,
             main_stack_types<helper_nested_layer> >
@@ -126,9 +133,6 @@ TEST(TestProxyStack, api)
     EXPECT_EQ(nested->proxy_stack(), &stack);
     EXPECT_EQ(nested->symbols(), factory.m_symbols);
     EXPECT_EQ(nested->symbol_size(), factory.m_symbol_size);
-
-
-
 }
 
 
