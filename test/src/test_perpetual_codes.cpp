@@ -13,7 +13,7 @@
 #include "kodo_unit_test/basic_api_test_helper.hpp"
 
 #include "kodo_unit_test/helper_test_reuse_api.hpp"
-//~ #include "kodo_unit_test/helper_test_recoding_api.hpp"
+#include "kodo_unit_test/helper_test_recoding_api.hpp"
 //~ #include "kodo_unit_test/helper_test_on_the_fly_api.hpp"
 #include "kodo_unit_test/helper_test_basic_api.hpp"
 #include "kodo_unit_test/helper_test_initialize_api.hpp"
@@ -54,26 +54,24 @@ TEST(TestPerpetualCodes, mix_uncoded)
 }
 
 /// The recoding
-//~ TEST(TestPerpetualCodes, test_recoders_api)
-//~ {
-    //~ test_recoders<kodo::perpetual_encoder, kodo::standard_perpetual_decoder>();
-//~ }
+TEST(TestPerpetualCodes, test_recoders_api)
+{
+    test_recoders<kodo::perpetual_encoder, kodo::standard_perpetual_decoder>();
+}
 
 /// The recoding
-//~ TEST(TestPerpetualCodes, test_recoding_relay)
-//~ {
-    //~ test_recoding_relay<kodo::perpetual_encoder, kodo::standard_perpetual_decoder>();
-//~ }
+TEST(TestPerpetualCodes, test_recoding_relay)
+{
+    test_recoding_relay<kodo::perpetual_encoder, kodo::standard_perpetual_decoder>();
+}
 
-/// Tests the basic API functionality this mean basic encoding
-/// and decoding
+/// Tests the basic API functionality this mean basic encoding and decoding
 TEST(TestPerpetualCodes, test_reuse_api)
 {
     test_reuse<kodo::perpetual_encoder, kodo::standard_perpetual_decoder>();
 }
 
-/// Tests the basic API functionality this mean basic encoding
-/// and decoding
+/// Tests the basic API functionality this mean basic encoding and decoding
 TEST(TestPerpetualCodes, test_reuse_incomplete_api)
 {
     test_reuse_incomplete<kodo::perpetual_encoder, kodo::standard_perpetual_decoder>();
