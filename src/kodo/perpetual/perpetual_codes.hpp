@@ -15,16 +15,16 @@
 #include "../finite_field_math.hpp"
 #include "../finite_field_info.hpp"
 #include "../zero_symbol_encoder.hpp"
-//~ #include "../systematic_encoder.hpp"
-//~ #include "../systematic_decoder.hpp"
+#include "../default_off_systematic_encoder.hpp"
 #include "../storage_bytes_used.hpp"
 #include "../storage_block_info.hpp"
 #include "../deep_symbol_storage.hpp"
 #include "../payload_encoder.hpp"
-// #include "../payload_recoder.hpp"
+#include "../payload_recoder.hpp"
 #include "../payload_decoder.hpp"
 #include "../symbol_id_encoder.hpp"
 #include "../symbol_id_decoder.hpp"
+//~ #include "../recoding_symbol_id.hpp"
 #include "../coefficient_storage.hpp"
 #include "../coefficient_info.hpp"
 #include "../plain_symbol_id_reader.hpp"
@@ -43,9 +43,13 @@
 #include "../forward_linear_block_decoder.hpp"
 #include "../linear_block_decoder_delayed.hpp"
 #include "../coefficient_value_access.hpp"
+#include "../pivot_aware_generator.hpp"
 
 #include "../perpetual/perpetual_generator.hpp"
 #include "../perpetual/delayed_perpetual_decoder.hpp"
+#include "../perpetual/perpetual_recoding_symbol_id.hpp"
+
+#include "../rlnc/full_vector_codes.hpp"
 
 namespace kodo
 {
@@ -65,7 +69,6 @@ namespace kodo
         public // Payload Codec API
                payload_encoder<
                // Codec Header API
-               //~ systematic_encoder<
                symbol_id_encoder<
                // Symbol ID API
                plain_symbol_id_writer<
@@ -93,19 +96,46 @@ namespace kodo
                    > > > > > > > > > > > > > > > > >
     { };
 
-        //~ /// @ingroup fec_stacks
-    //~ /// @brief Implementation of a complete perpetual decoder
-    //~ ///
-    //~ /// This configuration adds the following features (including those
-    //~ /// described for the encoder):
-    //~ /// - Recoding using the recoding_stack
-    //~ /// - Linear block decoder using Gauss-Jordan elimination.
+    /// Recoding functionality for the  perpetual code. The recoder uses a
+    /// proxy_layer which forwards any calls not implemented in the recoding
+    ///stack to the MainStack.
+    template<class MainStack>
+    class perpetual_recoding_stack
+        : public // Payload API
+                 payload_encoder<
+                 // Codec Header API
+                 symbol_id_encoder<
+                 // Symbol ID API
+                 perpetual_recoding_symbol_id<
+                 // Coefficient Generator API
+                 perpetual_generator<
+                 pivot_aware_generator<
+                 // Encoder API
+                 encode_symbol_tracker<
+                 zero_symbol_encoder<
+                 linear_block_encoder<
+                 // Coefficient Storage API
+                 coefficient_value_access<
+                 // Proxy
+                 proxy_layer<
+                 perpetual_recoding_stack<MainStack>, MainStack>
+                     > > > > > > > > >// >
+    { };
+
+    /// @ingroup fec_stacks
+    /// @brief Implementation of a complete perpetual decoder
+    ///
+    /// This configuration adds the following features (including those
+    /// described for the encoder):
+    /// - Recoding using the recoding_stack
+    /// - Linear block decoder using Gauss-Jordan elimination.
     template<class Field>
     class standard_perpetual_decoder
-        : public // Payload API
+        : public // Recoder
+                 payload_recoder<perpetual_recoding_stack,
+                 // Payload API
                  payload_decoder<
                  // Codec Header API
-                 //~ systematic_decoder<
                  symbol_id_decoder<
                  // Symbol ID API
                  plain_symbol_id_reader<
@@ -130,7 +160,7 @@ namespace kodo
                  final_coder_factory_pool<
                  // Final type
                  standard_perpetual_decoder<Field>
-                     > > > > > > > > > > > > > > > > >
+                     > > > > > > > > > > > > > > > > > >
     { };
 
     //~ /// @ingroup fec_stacks
@@ -139,10 +169,11 @@ namespace kodo
     //~ /// @copydoc perpetual_decoder
     template<class Field>
     class debug_standard_perpetual_decoder
-        : public // Payload API
+        : public // Recoder
+                 payload_recoder<perpetual_recoding_stack,
+                 // Payload API
                  payload_decoder<
                  // Codec Header API
-                 //~ systematic_decoder<
                  symbol_id_decoder<
                  // Symbol ID API
                  plain_symbol_id_reader<
@@ -171,7 +202,7 @@ namespace kodo
                  final_coder_factory_pool<
                  // Final type
                  debug_standard_perpetual_decoder<Field>
-                     > > > > > > > > > > > > > > > > > > > > >
+                     > > > > > > > > > > > > > > > > > > > > > >
     { };
 
 }
