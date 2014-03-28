@@ -32,54 +32,11 @@ namespace kodo
             typedef field_type::value_type value_type;
         };
 
-        /// The nested_stack used by the proxy_stack layer calls the
-        /// set_symbols() and set_symbol_size() functions when
-        /// building the nested stack. This layer makes sure that
-        /// these two functions exist even though they are unused. We
-        /// maybe should perform some tests here.
-        template<class SuperCoder>
-        class proxy_symbols : public SuperCoder
-        {
-        public:
-
-            class factory : public SuperCoder::factory
-            {
-            public:
-
-                factory(uint32_t max_symbols, uint32_t max_symbol_size)
-                    : SuperCoder::factory(max_symbols, max_symbol_size)
-                { }
-
-                void set_symbols(uint32_t symbols)
-                {
-                    assert(symbols <=
-                           SuperCoder::factory::max_symbols());
-
-                    m_symbols = symbols;
-                }
-
-                void set_symbol_size(uint32_t symbol_size)
-                {
-                    assert(symbol_size <=
-                           SuperCoder::factory::max_symbol_size());
-
-                    m_symbol_size = symbol_size;
-                }
-
-            public:
-
-                uint32_t m_symbols;
-                uint32_t m_symbol_size;
-            };
-
-        };
-
         /// This stack is the proxy stack i.e. the stack which is
         /// embedded with the main stack.
         template<class MainStack>
         class dummy_proxy_stack : public
-            proxy_symbols<
-            proxy_layer<dummy_proxy_stack<MainStack>, MainStack> >
+            proxy_layer<dummy_proxy_stack<MainStack>, MainStack>
         { };
 
         /// The stack represents the main stack used in unit test

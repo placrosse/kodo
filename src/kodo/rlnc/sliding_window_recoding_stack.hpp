@@ -26,6 +26,19 @@
 namespace kodo
 {
 
+    /// @todo Move to own file
+    template<class SuperCoder>
+    class map_recode_to_encode : public SuperCoder
+    {
+    public:
+
+        uint32_t recode(uint8_t* payload)
+        {
+            return SuperCoder::encode(payload);
+        }
+    };
+
+
     /// Intermediate stack implementing the recoding functionality of
     /// a RLNC code. As can be seen we are able to reuse a great deal
     /// of layers from the encode stack. It is important that the
@@ -38,7 +51,8 @@ namespace kodo
     /// recoding stack to the MainStack.
     template<class MainStack>
     class sliding_window_recoding_stack
-        : public // Feedback API
+        : public map_recode_to_encode<
+                 // Feedback API
                  feedback_pivot_status_reader<
                  final_feedback_reader<
                  // Payload Codec API
@@ -63,7 +77,7 @@ namespace kodo
                  proxy_remote_rank<
                  proxy_layer<
                  sliding_window_recoding_stack<MainStack>,
-                 MainStack> > > > > > > > > > > > > > > >
+                 MainStack> > > > > > > > > > > > > > > > >
     { };
 
 }

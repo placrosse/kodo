@@ -26,8 +26,7 @@ struct recoding_parameters
 };
 
 /// Tests that the recoding function works, this is done by using one
-/// encoder
-/// and two decoders:
+/// encoder and two decoders:
 ///
 ///    +------------+      +------------+      +------------+
 ///    | encoder    |+---->| decoder #1 |+---->| decoder #2 |
@@ -134,7 +133,6 @@ inline void test_recoders(recoding_parameters param)
         Decoder<fifi::binary16> >(param);
 }
 
-
 /// Invokes the recoding API for the Encoder and Decoder with
 /// typical field sizes
 /// @param param The recoding parameters
@@ -175,12 +173,8 @@ inline void test_recoders()
     test_recoders<Encoder,Decoder>(param);
 }
 
-
-
-
 /// Tests that the recoding function works, this is done by using one
-/// encoder
-/// and two decoders:
+/// encoder and two decoders:
 ///
 ///          +---------------------------------------+
 ///          |                                       |
@@ -232,6 +226,24 @@ inline void test_recoding_relay(recoding_parameters param)
     std::vector<uint8_t> payload_two(encoder->payload_size());
     std::vector<uint8_t> data_in = random_vector(encoder->block_size());
 
+    // In case our encoder/decoders support feedback
+    std::vector<uint8_t> feedback;
+
+    if(kodo::has_feedback_size<Encoder>::value)
+    {
+        // If one has it both should
+        ASSERT_TRUE(kodo::has_feedback_size<Decoder>::value);
+
+        EXPECT_EQ(kodo::feedback_size(encoder),
+                  kodo::feedback_size(decoder_one));
+
+        EXPECT_EQ(kodo::feedback_size(encoder),
+                  kodo::feedback_size(decoder_two));
+
+        feedback.resize(kodo::feedback_size(encoder));
+    }
+
+
     encoder->set_symbols(sak::storage(data_in));
 
     // Set the encoder non-systematic
@@ -240,25 +252,24 @@ inline void test_recoding_relay(recoding_parameters param)
 
     while( !(decoder_two->is_complete() && decoder_one->is_complete()) )
     {
-        uint32_t encode_size = encoder->encode( &payload_one[0] );
+        uint32_t encode_size = encoder->encode(payload_one.data());
         EXPECT_TRUE(encode_size <= payload_one.size());
         EXPECT_TRUE(encode_size > 0);
 
         // Copy the encoded symbol into payload two
-        std::copy(payload_one.begin(), payload_one.end(), payload_two.begin());
-
-        decoder_two->decode( &payload_two[0] );
+        payload_two = payload_one;
+        decoder_two->decode(payload_two.data());
 
         if((rand() % 2) == 0)
         {
-            decoder_one->decode( &payload_one[0] );
+            decoder_one->decode(payload_one.data());
 
-            uint32_t recode_size = decoder_one->recode( &payload_one[0] );
+            uint32_t recode_size = decoder_one->recode(payload_one.data());
 
             EXPECT_TRUE(recode_size <= payload_one.size());
             EXPECT_TRUE(recode_size > 0);
 
-            decoder_two->decode( &payload_one[0] );
+            decoder_two->decode(payload_one.data());
         }
 
     }
@@ -269,13 +280,8 @@ inline void test_recoding_relay(recoding_parameters param)
     decoder_one->copy_symbols(sak::storage(data_out_one));
     decoder_two->copy_symbols(sak::storage(data_out_two));
 
-    EXPECT_TRUE(std::equal(data_out_one.begin(),
-                           data_out_one.end(),
-                           data_in.begin()));
-
-    EXPECT_TRUE(std::equal(data_out_two.begin(),
-                           data_out_two.end(),
-                           data_in.begin()));
+    EXPECT_TRUE(data_out_one == data_in);
+    EXPECT_TRUE(data_out_two == data_in);
 }
 
 /// Invokes the recoding API for the Encoder and Decoder with
@@ -300,7 +306,6 @@ inline void test_recoding_relay(recoding_parameters param)
         Encoder<fifi::binary16>,
         Decoder<fifi::binary16> >(param);
 }
-
 
 /// Invokes the recoding API for the Encoder and Decoder with
 /// typical field sizes

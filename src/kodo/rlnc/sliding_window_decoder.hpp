@@ -13,6 +13,9 @@
 #include "../pivot_status_writer.hpp"
 #include "../feedback_pivot_status_writer.hpp"
 #include "../final_feedback_writer.hpp"
+#include "../proxy_stack.hpp"
+#include "../nested_payload_recoder.hpp"
+#include "../nested_feedback_reader.hpp"
 
 namespace kodo
 {
@@ -30,12 +33,14 @@ namespace kodo
     template<class Field>
     class sliding_window_decoder :
         public // Feedback API
+               nested_feedback_reader<
                feedback_pivot_status_writer<
                final_feedback_writer<
                // Payload API
                partial_decoding_tracker<
                rank_symbol_decoding_status_updater<
-               payload_recoder<sliding_window_recoding_stack,
+               nested_payload_recoder<
+               proxy_stack<sliding_window_recoding_stack,
                payload_rank_decoder<
                payload_decoder<
                // Codec Header API
@@ -65,7 +70,7 @@ namespace kodo
                final_coder_factory_pool<
                // Final type
                sliding_window_decoder<Field>
-                   > > > > > > > > > > > > > > > > > > > > > > > > >
+               > > > > > > > > > > > > > > > > > > > > > > > > > > >
     { };
 
 }

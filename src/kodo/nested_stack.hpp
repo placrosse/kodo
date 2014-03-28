@@ -1,9 +1,12 @@
-// Copyright Steinwurf ApS 2014
+// Copyright Steinwurf ApS 2011-2014.
 // Distributed under the "STEINWURF RESEARCH LICENSE 1.0".
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
 
 #pragma once
+
+#include "set_symbols.hpp"
+#include "set_symbol_size.hpp"
 
 namespace kodo
 {
@@ -84,8 +87,18 @@ namespace kodo
 
             auto& nested_factory = the_factory.nested();
 
-            nested_factory.set_symbols(the_factory.symbols());
-            nested_factory.set_symbol_size(the_factory.symbol_size());
+            // Use the Kodo generic API to set the symbols and
+            // symbol_size if the nested stack supports it
+
+            if(has_set_symbols<nested_factory_type>::value)
+            {
+                set_symbols(nested_factory, the_factory.symbols());
+            }
+
+            if(has_set_symbol_size<nested_factory_type>::value)
+            {
+                set_symbol_size(nested_factory, the_factory.symbol_size());
+            }
 
             if(!m_nested_stack)
             {

@@ -76,7 +76,7 @@ int main()
         }
 
         // Encode a packet into the payload buffer
-        encoder->encode( &payload[0] );
+        encoder->encode(payload.data());
 
         std::cout << "Packet encoded" << std::endl;
 
@@ -91,7 +91,7 @@ int main()
         std::cout << "Decoder received packet" << std::endl;
 
         // Packet got through - pass that packet to the decoder
-        decoder->decode( &payload[0] );
+        decoder->decode(payload.data());
 
         std::cout << "Encoder rank = " << encoder->rank() << std::endl;
         std::cout << "Decoder rank = " << decoder->rank() << std::endl;
@@ -100,7 +100,7 @@ int main()
         std::cout << "Decoder seen = " << decoder->symbols_seen() << std::endl;
 
         // Transmit the feedback
-        decoder->write_feedback(&feedback[0]);
+        decoder->write_feedback(feedback.data());
 
         // Simulate loss of feedback
         if(rand() % 2)
@@ -111,7 +111,7 @@ int main()
 
         std::cout << "Received feedback from decoder" << std::endl;
 
-        encoder->read_feedback(&feedback[0]);
+        encoder->read_feedback(feedback.data());
     }
 
     // The decoder is complete, now copy the symbols from the decoder

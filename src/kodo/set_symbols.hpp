@@ -43,14 +43,6 @@ namespace kodo
         assert(0);
     }
 
-    /// @ingroup generic_api
-    /// @copydoc set_symbols(const T&, uint32_t)
-    template<class T>
-    inline void set_symbols(boost::shared_ptr<T>& t, uint32_t symbols)
-    {
-        return set_symbols(*t, symbols);
-    }
-
 }
 
 
