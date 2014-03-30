@@ -23,10 +23,12 @@ struct recoding_parameters
     uint32_t m_max_symbol_size;
     uint32_t m_symbols;
     uint32_t m_symbol_size;
+
+    bool m_systematic_encoder;
 };
 
 /// Tests that the recoding function works, this is done by using one
-/// encoder and two decoders:
+/// encoder and two decoders sequentially:
 ///
 ///    +------------+      +------------+      +------------+
 ///    | encoder    |+---->| decoder #1 |+---->| decoder #2 |
@@ -68,6 +70,23 @@ inline void invoke_recoding(recoding_parameters param)
         decoder_two->set_symbols(sak::storage(buffer_decoder_two));
     }
 
+    // In case our encoder/decoders support feedback
+    std::vector<uint8_t> feedback;
+
+    if(kodo::has_feedback_size<Encoder>::value)
+    {
+        // If encoder has the feedback size so should the decoder
+        ASSERT_TRUE(kodo::has_feedback_size<Decoder>::value);
+
+        EXPECT_EQ(kodo::feedback_size(encoder),
+                  kodo::feedback_size(decoder_one));
+
+        EXPECT_EQ(kodo::feedback_size(encoder),
+                  kodo::feedback_size(decoder_two));
+
+        feedback.resize(kodo::feedback_size(encoder));
+    }
+
     EXPECT_EQ(encoder->payload_size(), decoder_one->payload_size());
     EXPECT_EQ(encoder->payload_size(), decoder_two->payload_size());
 
@@ -77,22 +96,46 @@ inline void invoke_recoding(recoding_parameters param)
     encoder->set_symbols(sak::storage(data_in));
 
     // Set the encoder non-systematic
-    if(kodo::has_systematic_encoder<Encoder>::value)
+    if (kodo::has_systematic_encoder<Encoder>::value)
+    {
         kodo::set_systematic_off(encoder);
+    }
 
-    while( !decoder_two->is_complete() )
+    while (!decoder_two->is_complete())
     {
         uint32_t encode_size = encoder->encode( &payload[0] );
         EXPECT_TRUE(encode_size <= payload.size());
         EXPECT_TRUE(encode_size > 0);
 
-        decoder_one->decode( &payload[0] );
+        decoder_one->decode(payload.data());
 
-        uint32_t recode_size = decoder_one->recode( &payload[0] );
+        // Pass feedback if available
+        if (kodo::has_write_feedback<Decoder>::value)
+        {
+            uint32_t size = kodo::write_feedback(decoder_one, feedback.data());
+
+            EXPECT_TRUE(size > 0);
+            EXPECT_TRUE(size <= feedback.size());
+
+            kodo::read_feedback(encoder, feedback.data());
+        }
+
+        uint32_t recode_size = decoder_one->recode(payload.data());
         EXPECT_TRUE(recode_size <= payload.size());
         EXPECT_TRUE(recode_size > 0);
 
-        decoder_two->decode( &payload[0] );
+        decoder_two->decode(payload.data());
+
+        // Pass feedback if available
+        if (kodo::has_write_feedback<Decoder>::value)
+        {
+            uint32_t size = kodo::write_feedback(decoder_two, feedback.data());
+
+            EXPECT_TRUE(size > 0);
+            EXPECT_TRUE(size <= feedback.size());
+
+            kodo::read_feedback(decoder_one, feedback.data());
+        }
     }
 
     std::vector<uint8_t> data_out_one(decoder_one->block_size(), '\0');
@@ -101,13 +144,8 @@ inline void invoke_recoding(recoding_parameters param)
     decoder_one->copy_symbols(sak::storage(data_out_one));
     decoder_two->copy_symbols(sak::storage(data_out_two));
 
-    EXPECT_TRUE(std::equal(data_out_one.begin(),
-                           data_out_one.end(),
-                           data_in.begin()));
-
-    EXPECT_TRUE(std::equal(data_out_two.begin(),
-                           data_out_two.end(),
-                           data_in.begin()));
+    EXPECT_TRUE(data_out_one == data_in);
+    EXPECT_TRUE(data_out_two == data_in);
 }
 
 /// Invokes the recoding API for the Encoder and Decoder with
@@ -183,8 +221,9 @@ inline void test_recoders()
 ///    | encoder    |+---->| decoder #1 |+---->| decoder #2 |
 ///    +------------+      +------------+      +------------+
 ///
-/// Where the encoder passes data to the first decoder which then
-/// recodes and passes data to the second decoder
+/// Where the encoder passes data to the first decoder and second
+/// decoder. The first decoder then recodes and passes data to the
+/// second decoder.
 ///
 /// @param param The recoding parameters to use
 template<class Encoder, class Decoder>
@@ -226,29 +265,14 @@ inline void test_recoding_relay(recoding_parameters param)
     std::vector<uint8_t> payload_two(encoder->payload_size());
     std::vector<uint8_t> data_in = random_vector(encoder->block_size());
 
-    // In case our encoder/decoders support feedback
-    std::vector<uint8_t> feedback;
-
-    if(kodo::has_feedback_size<Encoder>::value)
-    {
-        // If one has it both should
-        ASSERT_TRUE(kodo::has_feedback_size<Decoder>::value);
-
-        EXPECT_EQ(kodo::feedback_size(encoder),
-                  kodo::feedback_size(decoder_one));
-
-        EXPECT_EQ(kodo::feedback_size(encoder),
-                  kodo::feedback_size(decoder_two));
-
-        feedback.resize(kodo::feedback_size(encoder));
-    }
-
-
     encoder->set_symbols(sak::storage(data_in));
 
     // Set the encoder non-systematic
-    if(kodo::has_systematic_encoder<Encoder>::value)
+    if(kodo::has_systematic_encoder<Encoder>::value &&
+       !param.m_systematic_encoder)
+    {
         kodo::set_systematic_off(encoder);
+    }
 
     while( !(decoder_two->is_complete() && decoder_one->is_complete()) )
     {
@@ -314,7 +338,7 @@ template
 <
     template <class> class Encoder,
     template <class> class Decoder
->
+    >
 inline void test_recoding_relay()
 {
     recoding_parameters param;
@@ -322,6 +346,7 @@ inline void test_recoding_relay()
     param.m_max_symbol_size = 1600;
     param.m_symbols = param.m_max_symbols;
     param.m_symbol_size = param.m_max_symbol_size;
+    param.m_systematic_encoder = false;
 
     test_recoding_relay<Encoder,Decoder>(param);
 
@@ -329,6 +354,7 @@ inline void test_recoding_relay()
     param.m_max_symbol_size = 1600;
     param.m_symbols = param.m_max_symbols;
     param.m_symbol_size = param.m_max_symbol_size;
+    param.m_systematic_encoder = false;
 
     test_recoding_relay<Encoder,Decoder>(param);
 
@@ -336,6 +362,7 @@ inline void test_recoding_relay()
     param.m_max_symbol_size = 8;
     param.m_symbols = param.m_max_symbols;
     param.m_symbol_size = param.m_max_symbol_size;
+    param.m_systematic_encoder = false;
 
     test_recoding_relay<Encoder,Decoder>(param);
 
@@ -343,6 +370,39 @@ inline void test_recoding_relay()
     param.m_max_symbol_size = rand_symbol_size();
     param.m_symbols = rand_symbols(param.m_max_symbols);
     param.m_symbol_size = rand_symbol_size(param.m_max_symbol_size);
+    param.m_systematic_encoder = false;
+
+    test_recoding_relay<Encoder,Decoder>(param);
+
+    param.m_max_symbols = 32;
+    param.m_max_symbol_size = 1600;
+    param.m_symbols = param.m_max_symbols;
+    param.m_symbol_size = param.m_max_symbol_size;
+    param.m_systematic_encoder = true;
+
+    test_recoding_relay<Encoder,Decoder>(param);
+
+    param.m_max_symbols = 1;
+    param.m_max_symbol_size = 1600;
+    param.m_symbols = param.m_max_symbols;
+    param.m_symbol_size = param.m_max_symbol_size;
+    param.m_systematic_encoder = true;
+
+    test_recoding_relay<Encoder,Decoder>(param);
+
+    param.m_max_symbols = 8;
+    param.m_max_symbol_size = 8;
+    param.m_symbols = param.m_max_symbols;
+    param.m_symbol_size = param.m_max_symbol_size;
+    param.m_systematic_encoder = true;
+
+    test_recoding_relay<Encoder,Decoder>(param);
+
+    param.m_max_symbols = rand_symbols();
+    param.m_max_symbol_size = rand_symbol_size();
+    param.m_symbols = rand_symbols(param.m_max_symbols);
+    param.m_symbol_size = rand_symbol_size(param.m_max_symbol_size);
+    param.m_systematic_encoder = true;
 
     test_recoding_relay<Encoder,Decoder>(param);
 }
