@@ -18,6 +18,7 @@ namespace kodo
 {
 
     /// @ingroup debug
+    ///
     /// @brief Debug layer which allows inspecting the state of a
     ///        linear block decoder.
     ///

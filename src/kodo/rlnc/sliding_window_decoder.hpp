@@ -40,7 +40,7 @@ namespace kodo
                partial_decoding_tracker<
                rank_symbol_decoding_status_updater<
                nested_payload_recoder<
-               proxy_stack<sliding_window_recoding_stack,
+               proxy_stack<proxy_args<>, sliding_window_recoding_stack,
                payload_rank_decoder<
                payload_decoder<
                // Codec Header API

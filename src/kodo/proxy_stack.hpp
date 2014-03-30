@@ -10,6 +10,13 @@
 namespace kodo
 {
 
+    template<class... Args>
+    struct proxy_args
+    { };
+
+    /// @todo The names are a bit confusing here since multiple things
+    /// are called proxy stack
+    ///
     /// The proxy stack layer supports advanced compositions of layers. It
     /// builds on the nested_stack layer which provides support for
     /// embedding a codec stack within a codec stack. In addition to the
@@ -28,7 +35,7 @@ namespace kodo
     ///            +--------------+      |       +--------------+
     ///            |   layer 1    |+-----+       |   layer 0    |
     ///            |(proxy stack) |              +--------------+
-    /// "main      |              |<-----+       |   layer 1    |    "nested
+    /// "main      |              |<-----+       |   layer 1    |    "proxy
     ///  stack"    +--------------+      |       +--------------+     stack"
     ///            |   layer 2    |      |       |   layer 2    |
     ///            +--------------+      |       +--------------+
@@ -46,18 +53,38 @@ namespace kodo
     /// to setup the proxy functionality (forwarding calls back to the main
     /// stack). If this functionality is not needed then the more simple
     /// nested_stack layer may be used instead.
+    ///
+    /// The proxy stack will setup the call forwarding by invoking the
+    /// set_factory_proxy() and set_stack_proxy() functions in the
+    /// nested stack.  In addition the proxy stack will assume that
+    /// the proxy stack takes as first template argument the main
+    /// stack type.
+    ///
+    /// Additional template arguments can be passed to the proxy_stack
+    /// using the proxy_args helper class.
+    ///
+    /// Example use:
+    ///
+    ///
+    template<class Args, template <class...> class ProxyStack, class SuperCoder>
+    struct proxy_stack;
+
+    /// Specialization of the proxy_stack allowing the use of the
+    /// proxy_args helper to specify additional template arguments in
+    /// the proxy stack
     template
     <
-        template <class> class ProxyStack,
+        class... Args,
+        template <class...> class ProxyStack,
         class SuperCoder
     >
-    class proxy_stack :
-        public nested_stack<ProxyStack<SuperCoder>,SuperCoder>
+    class proxy_stack<proxy_args<Args...>, ProxyStack, SuperCoder> :
+        public nested_stack<ProxyStack<SuperCoder, Args...>,SuperCoder>
     {
     public:
 
         /// Typedef of the "actual" SuperCoder type
-        typedef nested_stack<ProxyStack<SuperCoder>,SuperCoder> Super;
+        typedef nested_stack<ProxyStack<SuperCoder, Args...>,SuperCoder> Super;
 
     public:
 
