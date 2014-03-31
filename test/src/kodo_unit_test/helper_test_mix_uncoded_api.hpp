@@ -103,8 +103,8 @@ inline void test_mix_uncoded(uint32_t symbols, uint32_t symbol_size)
 
 template
 <
-    template <class> class Encoder,
-    template <class> class Decoder
+    template <class...> class Encoder,
+    template <class...> class Decoder
 >
 inline void test_mix_uncoded(uint32_t symbols, uint32_t symbol_size)
 {
@@ -129,8 +129,8 @@ inline void test_mix_uncoded(uint32_t symbols, uint32_t symbol_size)
 
 template
 <
-    template <class> class Encoder,
-    template <class> class Decoder
+    template <class...> class Encoder,
+    template <class...> class Decoder
 >
 inline void test_mix_uncoded()
 {

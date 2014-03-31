@@ -186,7 +186,7 @@ namespace kodo
                  plain_symbol_id_reader<
                  // Decoder API
                  aligned_coefficients_decoder<
-                 debug_linear_block_decoder<  // <-- Debug layer
+                 debug_linear_block_decoder<enable_debug,  // <-- Debug layer
                  debug_cached_symbol_decoder< // <-- Debug layer
                  cached_symbol_decoder<       // <-- Access to decoding symbols
                  forward_linear_block_decoder<

@@ -16,6 +16,8 @@
 #include "../proxy_stack.hpp"
 #include "../nested_payload_recoder.hpp"
 #include "../nested_feedback_reader.hpp"
+#include "../disable_debug.hpp"
+#include "../debug_linear_block_decoder.hpp"
 
 namespace kodo
 {
@@ -30,7 +32,7 @@ namespace kodo
     /// this feature there is an example in the
     /// kodo/examples/sliding_window which demonstrates the use fo the
     /// feedback API.
-    template<class Field>
+    template<class Field, class DebugTag = disable_debug>
     class sliding_window_decoder :
         public // Feedback API
                nested_feedback_reader<
@@ -49,6 +51,7 @@ namespace kodo
                // Symbol ID API
                plain_symbol_id_reader<
                // Decoder API
+               debug_linear_block_decoder<DebugTag,
                aligned_coefficients_decoder<
                forward_linear_block_decoder<
                pivot_status_writer<
@@ -70,7 +73,7 @@ namespace kodo
                final_coder_factory_pool<
                // Final type
                sliding_window_decoder<Field>
-               > > > > > > > > > > > > > > > > > > > > > > > > > > >
+               > > > > > > > > > > > > > > > > > > > > > > > > > > > >
     { };
 
 }

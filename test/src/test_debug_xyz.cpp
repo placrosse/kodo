@@ -37,7 +37,7 @@ namespace kodo
                      // Symbol ID API
                      plain_symbol_id_reader<
                      // Codec API
-                     debug_linear_block_decoder<
+                     debug_linear_block_decoder<enable_debug,
                      aligned_coefficients_decoder<
                      forward_linear_block_decoder<
                      symbol_decoding_status_counter<

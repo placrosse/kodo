@@ -15,6 +15,9 @@
 #include <kodo/has_systematic_encoder.hpp>
 #include <kodo/set_systematic_off.hpp>
 
+#include <kodo/has_debug.hpp>
+#include <kodo/debug.hpp>
+
 /// Small helper structure holding the parameters needed for the
 /// recoding tests.
 struct recoding_parameters
@@ -109,6 +112,10 @@ inline void invoke_recoding(recoding_parameters param)
 
         decoder_one->decode(payload.data());
 
+        if (kodo::has_debug<Decoder>::value)
+        {
+        }
+
         // Pass feedback if available
         if (kodo::has_write_feedback<Decoder>::value)
         {
@@ -153,8 +160,8 @@ inline void invoke_recoding(recoding_parameters param)
 /// @param param The recoding parameters
 template
 <
-    template <class> class Encoder,
-    template <class> class Decoder
+    template <class...> class Encoder,
+    template <class...> class Decoder
 >
 inline void test_recoders(recoding_parameters param)
 {
@@ -176,8 +183,8 @@ inline void test_recoders(recoding_parameters param)
 /// @param param The recoding parameters
 template
 <
-    template <class> class Encoder,
-    template <class> class Decoder
+    template <class...> class Encoder,
+    template <class...> class Decoder
 >
 inline void test_recoders()
 {
@@ -313,8 +320,8 @@ inline void test_recoding_relay(recoding_parameters param)
 /// @param param The recoding parameters
 template
 <
-    template <class> class Encoder,
-    template <class> class Decoder
+    template <class...> class Encoder,
+    template <class...> class Decoder
 >
 inline void test_recoding_relay(recoding_parameters param)
 {
@@ -336,8 +343,8 @@ inline void test_recoding_relay(recoding_parameters param)
 /// @param param The recoding parameters
 template
 <
-    template <class> class Encoder,
-    template <class> class Decoder
+    template <class...> class Encoder,
+    template <class...> class Decoder
     >
 inline void test_recoding_relay()
 {

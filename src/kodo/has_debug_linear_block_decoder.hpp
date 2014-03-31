@@ -26,8 +26,8 @@ namespace kodo
     template<class T>
     struct has_debug_linear_block_decoder
     {
-        template<class U>
-        static uint8_t test(const kodo::debug_linear_block_decoder<U> *);
+        template<class V, class U>
+        static uint8_t test(const kodo::debug_linear_block_decoder<V,U> *);
 
         static uint32_t test(...);
 

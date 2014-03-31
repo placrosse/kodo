@@ -31,7 +31,7 @@ namespace kodo
                      // Codec Header API
                      // Symbol ID API
                      // Decoder API
-                     debug_linear_block_decoder<
+                     debug_linear_block_decoder<enable_debug,
                      forward_linear_block_decoder<
                      symbol_decoding_status_counter<
                      symbol_decoding_status_tracker<
@@ -59,7 +59,7 @@ namespace kodo
                      // Codec Header API
                      // Symbol ID API
                      // Decoder API
-                     debug_linear_block_decoder<
+                     debug_linear_block_decoder<enable_debug,
                      linear_block_decoder_delayed<
                      forward_linear_block_decoder<
                      symbol_decoding_status_counter<

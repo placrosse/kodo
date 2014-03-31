@@ -11,11 +11,22 @@
 #include <vector>
 #include <iomanip>
 
-
 #include <fifi/fifi_utils.hpp>
+
+#include "enable_debug.hpp"
+#include "disable_debug.hpp"
 
 namespace kodo
 {
+
+    /// Fall-through case for the case where DebugTag is disable_debug
+    template<class DebugTag, class SuperCoder>
+    class debug_linear_block_decoder : public SuperCoder
+    {
+        static_assert(std::is_same<DebugTag, disable_debug>::value,
+                      "Unexpected DebugTag should be disable_debug in the "
+                      "fall-through case.");
+    };
 
     /// @ingroup debug
     ///
@@ -52,7 +63,8 @@ namespace kodo
     /// The coding coefficient values will depend on the chosen finite
     /// field
     template<class SuperCoder>
-    class debug_linear_block_decoder : public SuperCoder
+    class debug_linear_block_decoder<enable_debug, SuperCoder> :
+        public SuperCoder
     {
     public:
 
@@ -63,6 +75,13 @@ namespace kodo
         typedef typename field_type::value_type value_type;
 
     public:
+
+        /// @todo Put the layer::debug in the layers_doxygen file
+        /// @copydoc layer::debug(std::ostream&)
+        void debug(std::ostream& out)
+        {
+            print_decoder_state(out);
+        }
 
         /// Prints the decoder's state to the output stream
         /// @param out, the output stream

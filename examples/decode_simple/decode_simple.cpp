@@ -40,7 +40,7 @@ namespace kodo
         : public // Decoder API
                  debug_cached_symbol_decoder<
                  cached_symbol_decoder<
-                 debug_linear_block_decoder<
+                 debug_linear_block_decoder<enable_debug,
                  forward_linear_block_decoder<
                  symbol_decoding_status_counter<
                  symbol_decoding_status_tracker<
