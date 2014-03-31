@@ -3,10 +3,6 @@
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
 
-
-/// @file test_rlnc_on_the_fly_codes.cpp Unit tests for the full
-///       vector codes (i.e. Network Coding encoders and decoders).
-
 #include <ctime>
 
 #include <gtest/gtest.h>
@@ -114,96 +110,98 @@ TEST(TestOnTheFlyCodes, test_systematic_packets_decode)
         kodo::on_the_fly_decoder>();
 }
 
+/// @todo We are using the new debug strategy which means we no longer
+/// need explicit debug coders
 //------------------------------------------------------------------
 // kodo::on_the_fly_encoder, kodo::debug_on_the_fly_decoder
 //------------------------------------------------------------------
 
-/// Tests the basic API functionality this mean basic encoding
-/// and decoding
-TEST(TestDebugOnTheFlyCodes, test_basic_api)
-{
-    test_basic_api<kodo::on_the_fly_encoder,
-        kodo::debug_on_the_fly_decoder>();
-}
+// /// Tests the basic API functionality this mean basic encoding
+// /// and decoding
+// TEST(TestDebugOnTheFlyCodes, test_basic_api)
+// {
+//     test_basic_api<kodo::on_the_fly_encoder,
+//         kodo::debug_on_the_fly_decoder>();
+// }
 
-/// Test that the encoders and decoders initialize() function can be used
-/// to reset the state of an encoder and decoder and that they therefore
-/// can be safely reused.
-TEST(TestDebugOnTheFlyCodes, test_initialize_api)
-{
-    test_initialize<kodo::on_the_fly_encoder,
-        kodo::debug_on_the_fly_decoder>();
-}
+// /// Test that the encoders and decoders initialize() function can be used
+// /// to reset the state of an encoder and decoder and that they therefore
+// /// can be safely reused.
+// TEST(TestDebugOnTheFlyCodes, test_initialize_api)
+// {
+//     test_initialize<kodo::on_the_fly_encoder,
+//         kodo::debug_on_the_fly_decoder>();
+// }
 
-/// Tests that an encoder producing systematic packets is handled
-/// correctly in the decoder.
-TEST(TestDebugOnTheFlyCodes, test_systematic_api)
-{
-    test_systematic<kodo::on_the_fly_encoder,
-        kodo::debug_on_the_fly_decoder>();
-}
+// /// Tests that an encoder producing systematic packets is handled
+// /// correctly in the decoder.
+// TEST(TestDebugOnTheFlyCodes, test_systematic_api)
+// {
+//     test_systematic<kodo::on_the_fly_encoder,
+//         kodo::debug_on_the_fly_decoder>();
+// }
 
-/// Tests whether mixed un-coded and coded packets are correctly handled
-/// in the encoder and decoder.
-TEST(TestDebugOnTheFlyCodes, mix_uncoded_api)
-{
-    test_mix_uncoded<kodo::on_the_fly_encoder,
-        kodo::debug_on_the_fly_decoder>();
-}
+// /// Tests whether mixed un-coded and coded packets are correctly handled
+// /// in the encoder and decoder.
+// TEST(TestDebugOnTheFlyCodes, mix_uncoded_api)
+// {
+//     test_mix_uncoded<kodo::on_the_fly_encoder,
+//         kodo::debug_on_the_fly_decoder>();
+// }
 
-/// Test the recoding functionality of the stack
-TEST(TestDebugOnTheFlyCodes, test_recoders_api)
-{
-    test_recoders<kodo::on_the_fly_encoder,
-        kodo::debug_on_the_fly_decoder>();
-}
+// /// Test the recoding functionality of the stack
+// TEST(TestDebugOnTheFlyCodes, test_recoders_api)
+// {
+//     test_recoders<kodo::on_the_fly_encoder,
+//         kodo::debug_on_the_fly_decoder>();
+// }
 
-/// Test the recoding functionality of the stack
-TEST(TestDebugOnTheFlyCodes, test_recoding_relay)
-{
-    test_recoding_relay<kodo::on_the_fly_encoder,
-        kodo::debug_on_the_fly_decoder>();
-}
+// /// Test the recoding functionality of the stack
+// TEST(TestDebugOnTheFlyCodes, test_recoding_relay)
+// {
+//     test_recoding_relay<kodo::on_the_fly_encoder,
+//         kodo::debug_on_the_fly_decoder>();
+// }
 
-/// Tests that we can progressively set on symbol at-a-time on
-/// encoder
-TEST(TestDebugOnTheFlyCodes, test_on_the_fly_api)
-{
-    test_on_the_fly<kodo::on_the_fly_encoder,
-        kodo::debug_on_the_fly_decoder>();
-}
+// /// Tests that we can progressively set on symbol at-a-time on
+// /// encoder
+// TEST(TestDebugOnTheFlyCodes, test_on_the_fly_api)
+// {
+//     test_on_the_fly<kodo::on_the_fly_encoder,
+//         kodo::debug_on_the_fly_decoder>();
+// }
 
-/// Tests that we can progressively set on symbol at-a-time on
-/// encoder
-TEST(TestDebugOnTheFlyCodes, test_on_the_fly_systematic_api)
-{
-    test_on_the_fly_systematic<kodo::on_the_fly_encoder,
-        kodo::debug_on_the_fly_decoder>();
-}
+// /// Tests that we can progressively set on symbol at-a-time on
+// /// encoder
+// TEST(TestDebugOnTheFlyCodes, test_on_the_fly_systematic_api)
+// {
+//     test_on_the_fly_systematic<kodo::on_the_fly_encoder,
+//         kodo::debug_on_the_fly_decoder>();
+// }
 
-/// Tests that we can progressively set on symbol at-a-time on
-/// encoder
-TEST(TestDebugOnTheFlyCodes, test_on_the_fly_systematic_no_errors_api)
-{
-    test_on_the_fly_systematic_no_errors<kodo::on_the_fly_encoder,
-        kodo::debug_on_the_fly_decoder>();
-}
+// /// Tests that we can progressively set on symbol at-a-time on
+// /// encoder
+// TEST(TestDebugOnTheFlyCodes, test_on_the_fly_systematic_no_errors_api)
+// {
+//     test_on_the_fly_systematic_no_errors<kodo::on_the_fly_encoder,
+//         kodo::debug_on_the_fly_decoder>();
+// }
 
-/// Tests that we can progressively set on symbol at-a-time on
-/// encoder
-TEST(TestDebugOnTheFlyCodes, test_reuse_api)
-{
-    test_reuse<kodo::on_the_fly_encoder,
-        kodo::debug_on_the_fly_decoder>();
-}
+// /// Tests that we can progressively set on symbol at-a-time on
+// /// encoder
+// TEST(TestDebugOnTheFlyCodes, test_reuse_api)
+// {
+//     test_reuse<kodo::on_the_fly_encoder,
+//         kodo::debug_on_the_fly_decoder>();
+// }
 
-/// Tests that we can progressively set on symbol at-a-time on
-/// encoder
-TEST(TestDebugOnTheFlyCodes, test_reuse_incomplete_api)
-{
-    test_reuse_incomplete<kodo::on_the_fly_encoder,
-        kodo::debug_on_the_fly_decoder>();
-}
+// /// Tests that we can progressively set on symbol at-a-time on
+// /// encoder
+// TEST(TestDebugOnTheFlyCodes, test_reuse_incomplete_api)
+// {
+//     test_reuse_incomplete<kodo::on_the_fly_encoder,
+//         kodo::debug_on_the_fly_decoder>();
+// }
 
 
 

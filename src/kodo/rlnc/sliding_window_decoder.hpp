@@ -18,6 +18,7 @@
 #include "../nested_feedback_reader.hpp"
 #include "../disable_debug.hpp"
 #include "../debug_linear_block_decoder.hpp"
+#include "../common_decoder_layers.hpp"
 
 namespace kodo
 {
@@ -51,13 +52,15 @@ namespace kodo
                // Symbol ID API
                plain_symbol_id_reader<
                // Decoder API
-               debug_linear_block_decoder<DebugTag,
-               aligned_coefficients_decoder<
-               forward_linear_block_decoder<
                pivot_status_writer<
-               rank_info<
-               symbol_decoding_status_counter<
-               symbol_decoding_status_tracker<
+               common_decoder_layers<DebugTag,
+               // debug_linear_block_decoder<DebugTag,
+               // aligned_coefficients_decoder<
+               // forward_linear_block_decoder<
+               // pivot_status_writer<
+               // rank_info<
+               // symbol_decoding_status_counter<
+               // symbol_decoding_status_tracker<
                // Coefficient Storage API
                coefficient_value_access<
                coefficient_storage<
@@ -73,7 +76,7 @@ namespace kodo
                final_coder_factory_pool<
                // Final type
                sliding_window_decoder<Field>
-               > > > > > > > > > > > > > > > > > > > > > > > > > > > >
+               > > > > > > > > > > > > > > > > > > > > > > >
     { };
 
 }

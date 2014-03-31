@@ -114,6 +114,8 @@ inline void invoke_recoding(recoding_parameters param)
 
         if (kodo::has_debug<Decoder>::value)
         {
+            std::cout << "Decoder one" << std::endl;
+            kodo::debug(decoder_one, std::cout);
         }
 
         // Pass feedback if available
@@ -132,6 +134,12 @@ inline void invoke_recoding(recoding_parameters param)
         EXPECT_TRUE(recode_size > 0);
 
         decoder_two->decode(payload.data());
+
+        if (kodo::has_debug<Decoder>::value)
+        {
+            std::cout << "Decoder two" << std::endl;
+            kodo::debug(decoder_two, std::cout);
+        }
 
         // Pass feedback if available
         if (kodo::has_write_feedback<Decoder>::value)

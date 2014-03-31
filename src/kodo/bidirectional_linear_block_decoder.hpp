@@ -138,6 +138,9 @@ namespace kodo
             return rank() == SuperCoder::symbols();
         }
 
+        /// @todo Shouldn't this function should use the rank_type from the
+        /// rank_info layer
+        ///
         /// @copydoc layer::rank() const
         uint32_t rank() const
         {

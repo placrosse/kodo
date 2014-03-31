@@ -1,0 +1,32 @@
+// Copyright Steinwurf ApS 2011-2014.
+// Distributed under the "STEINWURF RESEARCH LICENSE 1.0".
+// See accompanying file LICENSE.rst or
+// http://www.steinwurf.com/licensing
+
+#pragma once
+
+#include "debug_linear_block_decoder.hpp"
+#include "aligned_coefficients_decoder.hpp"
+#include "forward_linear_block_decoder.hpp"
+#include "rank_info.hpp"
+#include "symbol_decoding_status_counter.hpp"
+#include "symbol_decoding_status_tracker.hpp"
+
+namespace kodo
+{
+
+    /// @todo documentation
+    /// They implement the Deocder API
+    template<class DebugTag, class SuperCoder>
+    using common_decoder_layers =
+               debug_linear_block_decoder<DebugTag,
+               aligned_coefficients_decoder<
+               forward_linear_block_decoder<
+               rank_info<
+               symbol_decoding_status_counter<
+               symbol_decoding_status_tracker<SuperCoder> > > > > >;
+
+}
+
+
+
