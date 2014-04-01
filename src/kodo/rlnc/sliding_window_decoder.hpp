@@ -19,6 +19,7 @@
 #include "../disable_debug.hpp"
 #include "../debug_linear_block_decoder.hpp"
 #include "../common_decoder_layers.hpp"
+#include "../common_coefficient_storage_layers.hpp"
 
 namespace kodo
 {
@@ -62,9 +63,10 @@ namespace kodo
                // symbol_decoding_status_counter<
                // symbol_decoding_status_tracker<
                // Coefficient Storage API
-               coefficient_value_access<
-               coefficient_storage<
-               coefficient_info<
+               common_coefficient_storage_layers<
+               // coefficient_value_access<
+               // coefficient_storage<
+               // coefficient_info<
                // Storage API
                deep_symbol_storage<
                storage_bytes_used<
@@ -76,7 +78,7 @@ namespace kodo
                final_coder_factory_pool<
                // Final type
                sliding_window_decoder<Field, DebugTag>
-               > > > > > > > > > > > > > > > > > > > > > > >
+               > > > > > > > > > > > > > > > > > > > > >
     { };
 
 }
