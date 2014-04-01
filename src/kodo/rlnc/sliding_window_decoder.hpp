@@ -75,7 +75,7 @@ namespace kodo
                // Factory API
                final_coder_factory_pool<
                // Final type
-               sliding_window_decoder<Field>
+               sliding_window_decoder<Field, DebugTag>
                > > > > > > > > > > > > > > > > > > > > > > >
     { };
 
