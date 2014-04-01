@@ -10,17 +10,17 @@
 namespace kodo
 {
 
-    /// @todo docs
     /// @ingroup payload_codec_layers
+    ///
     /// @brief Implements the recode function for Network Codes.
     ///
-    /// The payload recoder layer has been implemented as
-    /// a simple layer forwarding calls to recode to a proxy
-    /// encoder. The reason for this design was that recoding could
-    /// be implemented by almost entirely copying the layers of an
-    /// encoder. The only difference being that the a special Symbol ID
-    /// layer generating the recoding coefficients and creating the
-    /// recoded symbol id (or encoding vector).
+    /// The nested_payload_recoder layer has been implemented as a
+    /// simple layer forwarding calls to recode to a nested/proxy
+    /// stack. The reason for this design was that recoding can be
+    /// implemented by almost entirely copying the layers of an
+    /// encoder. However, to avoid mixin encoding and decoding layers
+    /// the encoding layers are typically place in a nested
+    /// stack. This layer forwards the recode call to that stack.
     template<class SuperCoder>
     class nested_payload_recoder : public SuperCoder
     {

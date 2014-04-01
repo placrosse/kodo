@@ -55,18 +55,8 @@ namespace kodo
                // Decoder API
                pivot_status_writer<
                common_decoder_layers<DebugTag,
-               // debug_linear_block_decoder<DebugTag,
-               // aligned_coefficients_decoder<
-               // forward_linear_block_decoder<
-               // pivot_status_writer<
-               // rank_info<
-               // symbol_decoding_status_counter<
-               // symbol_decoding_status_tracker<
                // Coefficient Storage API
                common_coefficient_storage_layers<
-               // coefficient_value_access<
-               // coefficient_storage<
-               // coefficient_info<
                // Storage API
                deep_symbol_storage<
                storage_bytes_used<

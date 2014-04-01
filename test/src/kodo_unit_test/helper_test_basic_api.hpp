@@ -174,29 +174,46 @@ template
 >
 inline void test_basic_api(uint32_t symbols, uint32_t symbol_size)
 {
-    test_basic_api
-        <
-            Encoder<fifi::binary>,
-            Decoder<fifi::binary>
-        >(symbols, symbol_size);
+    SCOPED_TRACE(testing::Message() << "symbols = " << symbols);
+    SCOPED_TRACE(testing::Message() << "symbol_size = " << symbols);
 
-    test_basic_api
-        <
-            Encoder<fifi::binary8>,
-            Decoder<fifi::binary8>
-        >(symbols, symbol_size);
+    {
 
-    test_basic_api
-        <
-            Encoder<fifi::binary16>,
-            Decoder<fifi::binary16>
-        >(symbols, symbol_size);
+        SCOPED_TRACE(testing::Message() << "field = binary");
 
-    test_basic_api
-        <
-            Encoder<fifi::prime2325>,
-            Decoder<fifi::prime2325>
-        >(symbols, symbol_size);
+        test_basic_api
+            <
+                Encoder<fifi::binary>,
+                Decoder<fifi::binary>
+            >(symbols, symbol_size);
+    }
+
+    {
+        SCOPED_TRACE(testing::Message() << "field = binary8");
+        test_basic_api
+            <
+                Encoder<fifi::binary8>,
+                Decoder<fifi::binary8>
+            >(symbols, symbol_size);
+    }
+
+    {
+        SCOPED_TRACE(testing::Message() << "field = binary16");
+        test_basic_api
+            <
+                Encoder<fifi::binary16>,
+                Decoder<fifi::binary16>
+            >(symbols, symbol_size);
+    }
+
+    {
+        SCOPED_TRACE(testing::Message() << "field = prime2325");
+        test_basic_api
+            <
+                Encoder<fifi::prime2325>,
+                Decoder<fifi::prime2325>
+            >(symbols, symbol_size);
+    }
 }
 
 /// Helper function that invokes the test_basic_api functions using a

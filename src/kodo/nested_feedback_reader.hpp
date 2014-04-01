@@ -10,7 +10,14 @@
 namespace kodo
 {
 
-    /// @todo docs
+    /// @ingroup feedback_layers
+    ///
+    /// @brief Implements and forward the layer::read_feedback(const
+    ///        uint8_t*) function to the nested stack.
+    ///
+    /// This layer is useful if the read feedback call should be
+    /// forwarded to a nested stack instead of being handled in the
+    /// main stack.
     template<class SuperCoder>
     class nested_feedback_reader : public SuperCoder
     {

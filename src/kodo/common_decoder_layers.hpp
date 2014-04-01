@@ -15,8 +15,11 @@
 namespace kodo
 {
 
-    /// @todo documentation
-    /// They implement the Deocder API
+    /// @ingroup decoder_layers
+    ///
+    /// @brief Template alias for a common selection of layers
+    ///        full-filling the requirements for the Decoder API
+    ///
     template<class DebugTag, class SuperCoder>
     using common_decoder_layers =
                debug_linear_block_decoder<DebugTag,

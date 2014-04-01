@@ -7,6 +7,7 @@
 
 #include <kodo/rlnc/sliding_window_encoder.hpp>
 #include <kodo/rlnc/sliding_window_decoder.hpp>
+#include <kodo/debug.hpp>
 
 /// @example sliding_window.cpp
 ///
@@ -62,6 +63,12 @@ int main()
 
     while( !decoder->is_complete() )
     {
+
+        if (kodo::has_debug<rlnc_decoder>::value )
+        {
+            kodo::debug(decoder, std::cout);
+        }
+
         // Randomly choose to insert a symbol
         if((rand() % 2) && (encoder->rank() < symbols))
         {
@@ -119,7 +126,7 @@ int main()
     decoder->copy_symbols(sak::storage(data_out));
 
     // Check we properly decoded the data
-    if (std::equal(data_out.begin(), data_out.end(), data_in.begin()))
+    if (data_out == data_in)
     {
         std::cout << "Data decoded correctly" << std::endl;
     }

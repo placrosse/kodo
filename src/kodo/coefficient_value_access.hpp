@@ -12,6 +12,7 @@
 namespace kodo
 {
 
+    /// @todo Add to group
     /// @brief Provides functions to access and manipulate values in
     ///        an array of coefficients
     template<class SuperCoder>

@@ -24,67 +24,67 @@
 
 /// @todo reenable this
 /// Tests the basic API functionality this mean basic encoding
-// /// and decoding
-// TEST(TestSlidingWindowCodes, test_basic_api)
-// {
-//     test_basic_api<kodo::sliding_window_encoder,
-//         kodo::sliding_window_decoder>();
-// }
+/// and decoding
+TEST(TestSlidingWindowCodes, test_basic_api)
+{
+    test_basic_api<kodo::sliding_window_encoder,
+        kodo::sliding_window_decoder>();
+}
 
-// /// Test that the encoders and decoders initialize() function can be used
-// /// to reset the state of an encoder and decoder and that they therefore
-// /// can be safely reused.
-// TEST(TestSlidingWindwoCodes, test_initialize)
-// {
-//     test_initialize<kodo::sliding_window_encoder,
-//         kodo::sliding_window_decoder>();
-// }
+/// Test that the encoders and decoders initialize() function can be used
+/// to reset the state of an encoder and decoder and that they therefore
+/// can be safely reused.
+TEST(TestSlidingWindwoCodes, test_initialize)
+{
+    test_initialize<kodo::sliding_window_encoder,
+        kodo::sliding_window_decoder>();
+}
 
-// /// Tests that an encoder producing systematic packets is handled
-// /// correctly in the decoder.
-// TEST(TestSlidingWindowCodes, test_systematic)
-// {
-//     test_systematic<kodo::sliding_window_encoder,
-//         kodo::sliding_window_decoder>();
-// }
+/// Tests that an encoder producing systematic packets is handled
+/// correctly in the decoder.
+TEST(TestSlidingWindowCodes, test_systematic)
+{
+    test_systematic<kodo::sliding_window_encoder,
+        kodo::sliding_window_decoder>();
+}
 
-// /// Tests whether mixed un-coded and coded packets are correctly handled
-// /// in the encoder and decoder.
-// TEST(TestSlidingWindowCodes, mix_uncoded)
-// {
-//     test_mix_uncoded<kodo::sliding_window_encoder,
-//         kodo::sliding_window_decoder>();
-// }
+/// Tests whether mixed un-coded and coded packets are correctly handled
+/// in the encoder and decoder.
+TEST(TestSlidingWindowCodes, mix_uncoded)
+{
+    test_mix_uncoded<kodo::sliding_window_encoder,
+        kodo::sliding_window_decoder>();
+}
 
-// /// The recoding
-// TEST(TestSlidingWindowCodes, test_recoders_api)
-// {
-//     test_recoders<kodo::sliding_window_encoder,
-//         kodo::sliding_window_decoder>();
-// }
+/// The recoding
+TEST(TestSlidingWindowCodes, test_recoders_api)
+{
+    test_recoders<kodo::sliding_window_encoder,
+        kodo::sliding_window_decoder>();
+}
 
-// /// The recoding
-// TEST(TestSlidingWindowCodes, test_recoding_relay)
-// {
-//     test_recoding_relay<kodo::sliding_window_encoder,
-//         kodo::sliding_window_decoder>();
-// }
+/// The recoding
+TEST(TestSlidingWindowCodes, test_recoding_relay)
+{
+    test_recoding_relay<kodo::sliding_window_encoder,
+        kodo::sliding_window_decoder>();
+}
 
-// /// Tests the basic API functionality this mean basic encoding
-// /// and decoding
-// TEST(TestSlidingWindowCodes, test_reuse_api)
-// {
-//     test_reuse<kodo::sliding_window_encoder,
-//         kodo::sliding_window_decoder>();
-// }
+/// Tests the basic API functionality this mean basic encoding
+/// and decoding
+TEST(TestSlidingWindowCodes, test_reuse_api)
+{
+    test_reuse<kodo::sliding_window_encoder,
+        kodo::sliding_window_decoder>();
+}
 
-// /// Tests the basic API functionality this mean basic encoding
-// /// and decoding
-// TEST(TestSlidingWindowCodes, test_reuse_incomplete_api)
-// {
-//     test_reuse_incomplete<kodo::sliding_window_encoder,
-//         kodo::sliding_window_decoder>();
-// }
+/// Tests the basic API functionality this mean basic encoding
+/// and decoding
+TEST(TestSlidingWindowCodes, test_reuse_incomplete_api)
+{
+    test_reuse_incomplete<kodo::sliding_window_encoder,
+        kodo::sliding_window_decoder>();
+}
 
 
 

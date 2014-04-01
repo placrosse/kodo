@@ -30,6 +30,22 @@ struct recoding_parameters
     bool m_systematic_encoder;
 };
 
+// Output operator for the recoding parameters
+// @param out The output stream (ostream) to write to
+// @param p The recoding_parameter struct to write
+// @return The output stream
+inline std::ostream& operator<<(std::ostream& out,
+                                const recoding_parameters& p)
+{
+    out << "Recoding parameters:" << std::endl;
+    out << "  m_max_symbols = " << p.m_max_symbols << std::endl;
+    out << "  m_max_symbol_size = " << p.m_max_symbol_size << std::endl;
+    out << "  m_symbols = " << p.m_symbols << std::endl;
+    out << "  m_symbol_size = " << p.m_symbol_size << std::endl;
+    out << "  m_systematic_encoder = " << p.m_systematic_encoder << std::endl;
+    return out;
+}
+
 /// Tests that the recoding function works, this is done by using one
 /// encoder and two decoders sequentially:
 ///
@@ -173,17 +189,28 @@ template
 >
 inline void test_recoders(recoding_parameters param)
 {
-    invoke_recoding<
-        Encoder<fifi::binary>,
-        Decoder<fifi::binary> >(param);
+    SCOPED_TRACE(testing::Message() << param);
 
-    invoke_recoding<
-        Encoder<fifi::binary8>,
-        Decoder<fifi::binary8> >(param);
+    {
+        SCOPED_TRACE(testing::Message() << "field = binary");
+        invoke_recoding<
+            Encoder<fifi::binary>,
+            Decoder<fifi::binary> >(param);
+    }
 
-    invoke_recoding<
-        Encoder<fifi::binary16>,
-        Decoder<fifi::binary16> >(param);
+    {
+        SCOPED_TRACE(testing::Message() << "field = binary8");
+        invoke_recoding<
+            Encoder<fifi::binary8>,
+            Decoder<fifi::binary8> >(param);
+    }
+
+    {
+        SCOPED_TRACE(testing::Message() << "field = binary16");
+        invoke_recoding<
+            Encoder<fifi::binary16>,
+            Decoder<fifi::binary16> >(param);
+    }
 }
 
 /// Invokes the recoding API for the Encoder and Decoder with
@@ -333,17 +360,28 @@ template
 >
 inline void test_recoding_relay(recoding_parameters param)
 {
-    test_recoding_relay<
-        Encoder<fifi::binary>,
-        Decoder<fifi::binary> >(param);
+    SCOPED_TRACE(testing::Message() << param);
 
-    test_recoding_relay<
-        Encoder<fifi::binary8>,
-        Decoder<fifi::binary8> >(param);
+    {
+        SCOPED_TRACE(testing::Message() << "field = binary");
+        test_recoding_relay<
+            Encoder<fifi::binary>,
+            Decoder<fifi::binary> >(param);
+    }
 
-    test_recoding_relay<
-        Encoder<fifi::binary16>,
-        Decoder<fifi::binary16> >(param);
+    {
+        SCOPED_TRACE(testing::Message() << "field = binary8");
+        test_recoding_relay<
+            Encoder<fifi::binary8>,
+            Decoder<fifi::binary8> >(param);
+    }
+
+    {
+        SCOPED_TRACE(testing::Message() << "field = binary16");
+        test_recoding_relay<
+            Encoder<fifi::binary16>,
+            Decoder<fifi::binary16> >(param);
+    }
 }
 
 /// Invokes the recoding API for the Encoder and Decoder with

@@ -12,8 +12,10 @@
 namespace kodo
 {
 
-    /// @todo documentation
-    /// They implement the Coefficent Storage API
+    /// @ingroup coefficient_storage_layers
+    ///
+    /// @brief Template alias for the common set of coefficient
+    ///        storage layers used in most stacks
     template<class SuperCoder>
     using common_coefficient_storage_layers =
                coefficient_value_access<
