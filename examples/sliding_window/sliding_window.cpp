@@ -28,7 +28,7 @@ int main()
 
 //     // Typdefs for the encoder/decoder type we wish to use
 //     typedef kodo::sliding_window_encoder<fifi::binary8> rlnc_encoder;
-//     typedef kodo::sliding_window_decoder<fifi::binary8> rlnc_decoder;
+    typedef kodo::sliding_window_decoder<fifi::binary8> rlnc_decoder;
 
 //     // In the following we will make an encoder/decoder factory.
 //     // The factories are used to build actual encoders/decoders
