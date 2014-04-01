@@ -21,10 +21,10 @@ int main()
 {
     srand((uint32_t)time(0));
 
-//     // Set the number of symbols (i.e. the generation size in RLNC
-//     // terminology) and the size of a symbol in bytes
-//     uint32_t symbols = 16;
-//     uint32_t symbol_size = 160;
+    // Set the number of symbols (i.e. the generation size in RLNC
+    // terminology) and the size of a symbol in bytes
+    uint32_t symbols = 16;
+    uint32_t symbol_size = 160;
 
 //     // Typdefs for the encoder/decoder type we wish to use
 //     typedef kodo::sliding_window_encoder<fifi::binary8> rlnc_encoder;
@@ -35,8 +35,8 @@ int main()
 //     rlnc_encoder::factory encoder_factory(symbols, symbol_size);
 //     auto encoder = encoder_factory.build();
 
-//     rlnc_decoder::factory decoder_factory(symbols, symbol_size);
-//     auto decoder = decoder_factory.build();
+    rlnc_decoder::factory decoder_factory(symbols, symbol_size);
+    auto decoder = decoder_factory.build();
 
 //     // Allocate some storage for a "payload" the payload is what we would
 //     // eventually send over a network
