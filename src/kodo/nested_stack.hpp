@@ -92,12 +92,13 @@ namespace kodo
 
             if(has_set_symbols<nested_factory_type>::value)
             {
-                set_symbols(nested_factory, the_factory.symbols());
+                kodo::set_symbols(nested_factory, the_factory.symbols());
             }
 
             if(has_set_symbol_size<nested_factory_type>::value)
             {
-                set_symbol_size(nested_factory, the_factory.symbol_size());
+                kodo::set_symbol_size(nested_factory,
+                                      the_factory.symbol_size());
             }
 
             if(!m_nested_stack)
