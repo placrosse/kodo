@@ -22,6 +22,7 @@
 #include "kodo_unit_test/helper_test_systematic_api.hpp"
 #include "kodo_unit_test/helper_test_mix_uncoded_api.hpp"
 
+/// @todo reenable this
 /// Tests the basic API functionality this mean basic encoding
 // /// and decoding
 // TEST(TestSlidingWindowCodes, test_basic_api)
