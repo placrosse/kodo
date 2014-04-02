@@ -6,27 +6,23 @@
 #pragma once
 
 #include "nested_stack.hpp"
+#include "proxy_args.hpp"
 
 namespace kodo
 {
 
-    template<class... Args>
-    struct proxy_args
-    { };
-
-    /// @todo The names are a bit confusing here since multiple things
-    /// are called proxy stack
+    /// @todo group
     ///
     /// The proxy stack layer supports advanced compositions of layers. It
     /// builds on the nested_stack layer which provides support for
     /// embedding a codec stack within a codec stack. In addition to the
-    /// embedding provided by the nested_stack layer the proxy stack layer
+    /// embedding provided by the nested_stack layer the proxy_layer
     /// will forward all common calls not handled in the nested stack back
     /// to the container stack.
     ///
     /// A simple figure might be a better way of showing the functionality:
     ///
-    ///                                      forwarding calls to nested proxy
+    ///                                      forwarding calls to nested
     ///                                      stack
     ///
     ///                                  +---------------+
@@ -34,39 +30,76 @@ namespace kodo
     ///            |   layer 0    |      |               v
     ///            +--------------+      |       +--------------+
     ///            |   layer 1    |+-----+       |   layer 0    |
-    ///            |(proxy stack) |              +--------------+
-    /// "main      |              |<-----+       |   layer 1    |    "proxy
+    ///            |(proxy_stack) |              +--------------+
+    /// "main      |              |<-----+       |   layer 1    |    "nested
     ///  stack"    +--------------+      |       +--------------+     stack"
     ///            |   layer 2    |      |       |   layer 2    |
     ///            +--------------+      |       +--------------+
-    ///            |   layer 3    |      |       | proxy layer  |
+    ///            |   layer 3    |      |       | proxy_layer  |
     ///            +--------------+      |       +--------------+
     ///            |   layer 4    |      |               +
     ///            +--------------+      |               |
     ///                                  +---------------+
     ///
     ///                                  calls that are not implemented in the
-    ///                                  proxy stack are forwarded back to the
-    ///                                  "main" stack by the proxy layer
+    ///                                  nested stack are forwarded back to the
+    ///                                  "main" stack by the proxy_layer
     ///
     /// Note, as shown in the figure the nested stack must use the proxy_layer
     /// to setup the proxy functionality (forwarding calls back to the main
     /// stack). If this functionality is not needed then the more simple
     /// nested_stack layer may be used instead.
     ///
-    /// The proxy stack will setup the call forwarding by invoking the
+    /// The proxy_stack will setup the call forwarding by invoking the
     /// set_factory_proxy() and set_stack_proxy() functions in the
-    /// nested stack.  In addition the proxy stack will assume that
-    /// the proxy stack takes as first template argument the main
+    /// nested stack.  In addition the proxy_stack will assume that
+    /// the nested stack takes as first template argument the main
     /// stack type.
     ///
-    /// Additional template arguments can be passed to the proxy_stack
+    /// Additional template arguments can be passed to the nested stack
     /// using the proxy_args helper class.
     ///
     /// Example use:
     ///
+    ///     // A "nested stack" with the proxy_layer at the bottom
+    ///     template<class MainStack>
+    ///     class my_nested_stack : public
+    ///         computation_layer_one<
+    ///         computation_layer_two<
+    ///         proxy_layer<my_nested_stack<MainStack>, MainStack> > >
+    ///     { };
     ///
-    template<class Args, template <class...> class ProxyStack, class SuperCoder>
+    ///     // The "main stack" using the "nested stack"
+    ///     class main_stack : public
+    ///         some_layer_one<
+    ///         proxy_stack<proxy_args<>, my_nested_stack,
+    ///         some_layer_two<
+    ///         some_layer_three> > >
+    ///     { };
+    ///
+    ///
+    /// Now imagine if the my_nested_stack took an additional template
+    /// argument. If that was the case we would use the proxy_args<..>
+    /// helper to pass them in.
+    ///
+    /// Example:
+    ///
+    ///     template<class Another, class MainStack>
+    ///     class my_nested_stack : public
+    ///         ...
+    ///
+    ///     class main_stack : public
+    ///         some_layer_one<
+    ///         proxy_stack<proxy_args<int>, my_nested_stack,
+    ///
+    /// This code would pass int as the Another template argument - cool :)
+    ///
+    template
+    <
+        class Args,
+        template <class...> class NestedStack,
+        class SuperCoder
+    >
     struct proxy_stack;
 
     /// Specialization of the proxy_stack allowing the use of the
@@ -75,16 +108,16 @@ namespace kodo
     template
     <
         class... Args,
-        template <class...> class ProxyStack,
+        template <class...> class NestedStack,
         class SuperCoder
     >
-    class proxy_stack<proxy_args<Args...>, ProxyStack, SuperCoder> :
-        public nested_stack<ProxyStack<SuperCoder, Args...>,SuperCoder>
+    class proxy_stack<proxy_args<Args...>, NestedStack, SuperCoder> :
+        public nested_stack<NestedStack<SuperCoder, Args...>,SuperCoder>
     {
     public:
 
         /// Typedef of the "actual" SuperCoder type
-        typedef nested_stack<ProxyStack<SuperCoder, Args...>,SuperCoder> Super;
+        typedef nested_stack<NestedStack<SuperCoder, Args...>,SuperCoder> Super;
 
     public:
 

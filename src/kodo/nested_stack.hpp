@@ -10,7 +10,8 @@
 
 namespace kodo
 {
-
+    /// @todo group
+    ///
     /// The nested stack layer provides a way of "nesting" a stack
     /// within another stack. Essentially this layer will build and
     /// store another stack as a member. Other layers may access the
