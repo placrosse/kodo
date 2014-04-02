@@ -83,12 +83,12 @@ namespace kodo
         {
             print_decoder_state(out);
 
-            // If the lower layers define the debug function forward it
-            if (kodo::has_debug<SuperCoder>::value)
-            {
-                SuperCoder& next = *this;
-                kodo::debug(next, out);
-            }
+            // // If the lower layers define the debug function forward it
+            // if (kodo::has_debug<SuperCoder>::value)
+            // {
+            //     SuperCoder& next = *this;
+            //     kodo::debug(next, out);
+            // }
 
         }
 

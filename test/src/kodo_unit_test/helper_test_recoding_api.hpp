@@ -228,6 +228,7 @@ inline void test_recoders()
     param.m_max_symbol_size = 1600;
     param.m_symbols = param.m_max_symbols;
     param.m_symbol_size = param.m_max_symbol_size;
+    param.m_systematic_encoder = false;
 
     test_recoders<Encoder,Decoder>(param);
 
@@ -235,6 +236,7 @@ inline void test_recoders()
     param.m_max_symbol_size = 1600;
     param.m_symbols = param.m_max_symbols;
     param.m_symbol_size = param.m_max_symbol_size;
+    param.m_systematic_encoder = false;
 
     test_recoders<Encoder,Decoder>(param);
 
@@ -242,6 +244,7 @@ inline void test_recoders()
     param.m_max_symbol_size = 8;
     param.m_symbols = param.m_max_symbols;
     param.m_symbol_size = param.m_max_symbol_size;
+    param.m_systematic_encoder = false;
 
     test_recoders<Encoder,Decoder>(param);
 
@@ -249,6 +252,7 @@ inline void test_recoders()
     param.m_max_symbol_size = rand_symbol_size();
     param.m_symbols = rand_symbols(param.m_max_symbols);
     param.m_symbol_size = rand_symbol_size(param.m_max_symbol_size);
+    param.m_systematic_encoder = false;
 
     test_recoders<Encoder,Decoder>(param);
 }
