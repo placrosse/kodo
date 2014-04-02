@@ -8,7 +8,7 @@
 namespace kodo
 {
 
-    /// @todo group
+    /// @ingroup utility
     ///
     /// @brief Small helper class needed to disambiguate template
     ///        argument decuction when using a variadic template

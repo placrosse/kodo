@@ -15,6 +15,7 @@
 
 #include "enable_debug.hpp"
 #include "disable_debug.hpp"
+#include "debug.hpp"
 
 namespace kodo
 {
@@ -28,7 +29,7 @@ namespace kodo
                       "fall-through case.");
     };
 
-    /// @ingroup debug
+    /// @ingroup debug_layers
     ///
     /// @brief Debug layer which allows inspecting the state of a
     ///        linear block decoder.
@@ -81,6 +82,14 @@ namespace kodo
         void debug(std::ostream& out)
         {
             print_decoder_state(out);
+
+            // If the lower layers define the debug function forward it
+            if (kodo::has_debug<SuperCoder>::value)
+            {
+                SuperCoder& next = *this;
+                kodo::debug(next, out);
+            }
+
         }
 
         /// Prints the decoder's state to the output stream

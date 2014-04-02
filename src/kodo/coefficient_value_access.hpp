@@ -12,7 +12,8 @@
 namespace kodo
 {
 
-    /// @todo Add to group
+    /// @ingroup coefficient_storage_layers
+    ///
     /// @brief Provides functions to access and manipulate values in
     ///        an array of coefficients
     template<class SuperCoder>

@@ -11,14 +11,16 @@
 namespace kodo
 {
 
-    /// @todo group
+    /// @ingroup utility
     ///
-    /// The proxy stack layer supports advanced compositions of layers. It
-    /// builds on the nested_stack layer which provides support for
-    /// embedding a codec stack within a codec stack. In addition to the
-    /// embedding provided by the nested_stack layer the proxy_layer
-    /// will forward all common calls not handled in the nested stack back
-    /// to the container stack.
+    /// @brief The proxy stack layer supports advanced compositions of
+    ///        layers. It builds on the nested_stack layer which
+    ///        provides support for embedding a codec stack within a
+    ///        codec stack.
+    ///
+    /// In addition to the embedding provided by the nested_stack
+    /// layer the proxy_layer will forward all common calls not
+    /// handled in the nested stack back to the container stack.
     ///
     /// A simple figure might be a better way of showing the functionality:
     ///

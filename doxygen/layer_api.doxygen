@@ -13,7 +13,7 @@ public:
     /// @typedef value_type
     /// The value type storing the field elements used for the
     /// specified field. E.g. the binary extension field 2^8 uses
-    /// uint8_t as the value_type.
+nn    /// uint8_t as the value_type.
     typedef field::value_type value_type;
 
     /// @typedef seed_type
@@ -794,6 +794,16 @@ public:
     /// @return True if the symbol has been "seen" or fully decoded and
     ///         False if the symbol is missing at the decoder.
     bool remote_is_symbol_pivot(uint32_t index) const;
+
+    //------------------------------------------------------------------
+    // DEBUG API
+    //------------------------------------------------------------------
+
+    /// @ingroup debug_api
+    ///
+    /// @param out The output stream where the debugging information
+    ///        will be written.
+    void debug(std::ostream& out);
 
 };
 

@@ -10,13 +10,14 @@
 
 namespace kodo
 {
-    /// @todo group
+    /// @ingroup utility
     ///
-    /// The nested stack layer provides a way of "nesting" a stack
-    /// within another stack. Essentially this layer will build and
-    /// store another stack as a member. Other layers may access the
-    /// nested stack through the nested() functions available in the
-    /// factory and the layer.
+    /// @brief The nested stack layer provides a way of "nesting" a
+    ///        stack within another stack.
+    ///
+    /// Essentially this layer will build and store another stack as a
+    /// member. Other layers may access the nested stack through the
+    /// nested() functions available in the factory and the layer.
     ///
     /// This is useful in cases where we want to redirect some calls
     /// to e.g. a different encoder or decoder depending on some
