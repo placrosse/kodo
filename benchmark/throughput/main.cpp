@@ -107,7 +107,7 @@ struct throughput_benchmark : public gauge::time_benchmark
             {
                 // We did not generate enough payloads to decode successfully,
                 // so we will generate more payloads for next run
-                //m_factor++;
+                m_factor++;
 
                 return false;
             }
@@ -191,8 +191,6 @@ struct throughput_benchmark : public gauge::time_benchmark
         {
             m_payloads[i].resize(m_encoder->payload_size());
         }
-
-        m_temp_payload.resize(m_encoder->payload_size());
     }
 
     void encode_payloads()
@@ -310,28 +308,23 @@ protected:
     /// The encoder to use
     encoder_ptr m_encoder;
 
-    /// The number of symbols encoded
+    /// The number of encoded symbols
     uint32_t m_encoded_symbols;
 
-    /// The encoder to use
+    /// The decoder to use
     decoder_ptr m_decoder;
 
-    /// The number of symbols decoded
+    /// The number of decoded symbols
     uint32_t m_decoded_symbols;
 
     /// The data encoded
     std::vector<uint8_t> m_encoded_data;
-
-    /// Temporary payload to not destroy the already encoded payloads
-    /// when decoding
-    std::vector<uint8_t> m_temp_payload;
 
     /// Storage for encoded symbols
     std::vector< std::vector<uint8_t> > m_payloads;
 
     /// Multiplication factor for payload_count
     uint32_t m_factor;
-
 };
 
 
@@ -592,7 +585,9 @@ BENCHMARK_F(setup_delayed_rlnc_throughput2325, FullDelayedRLNC, Prime2325, 5)
    run_benchmark();
 }
 
-/// Sparse
+//------------------------------------------------------------------
+// SparseFullRLNC
+//------------------------------------------------------------------
 
 typedef sparse_throughput_benchmark<
     kodo::sparse_full_rlnc_encoder<fifi::binary>,

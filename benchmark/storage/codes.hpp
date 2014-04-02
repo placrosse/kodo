@@ -87,7 +87,7 @@ namespace kodo
     /// here refers to the fact the we will not perform the backwards
     /// substitution until we have reached full rank
     template<class Field>
-    class full_delayed_rlnc_decoder : public
+    class full_delayed_rlnc_decoder_shallow : public
         // Payload API
         payload_recoder<recoding_stack,
         payload_decoder<
@@ -107,7 +107,7 @@ namespace kodo
         coefficient_storage<
         coefficient_info<
         // Storage API
-        deep_symbol_storage<
+        mutable_shallow_symbol_storage<
         storage_bytes_used<
         storage_block_info<
         // Finite Field API
@@ -116,7 +116,7 @@ namespace kodo
         // Factory API
         final_coder_factory_pool<
         // Final type
-        full_delayed_rlnc_decoder<Field>
+        full_delayed_rlnc_decoder_shallow<Field>
         > > > > > > > > > > > > > > > > > > >
     { };
 
@@ -124,7 +124,7 @@ namespace kodo
     /// used to control the density i.e. the number of non-zero elements in
     /// the encoding vector.
     template<class Field>
-    class sparse_full_rlnc_encoder : public
+    class sparse_full_rlnc_encoder_shallow : public
         // Payload Codec API
         payload_encoder<
         // Codec Header API
@@ -152,13 +152,13 @@ namespace kodo
         // Factory API
         final_coder_factory_pool<
         // Final type
-        sparse_full_rlnc_encoder<Field
+        sparse_full_rlnc_encoder_shallow<Field
         > > > > > > > > > > > > > > > > > >
     { };
 
     /// RLNC decoder which uses the policy based linear block decoder
     template<class Field>
-    class backward_full_rlnc_decoder : public
+    class backward_full_rlnc_decoder_shallow : public
         // Payload API
         payload_recoder<recoding_stack,
         payload_decoder<
@@ -177,7 +177,7 @@ namespace kodo
         coefficient_storage<
         coefficient_info<
         // Storage API
-        deep_symbol_storage<
+        mutable_shallow_symbol_storage<
         storage_bytes_used<
         storage_block_info<
         // Finite Field API
@@ -186,7 +186,7 @@ namespace kodo
         // Factory API
         final_coder_factory_pool<
         // Final type
-        backward_full_rlnc_decoder<Field>
+        backward_full_rlnc_decoder_shallow<Field>
         > > > > > > > > > > > > > > > > > >
     { };
 }
