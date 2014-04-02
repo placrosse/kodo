@@ -68,7 +68,7 @@ TEST(TestDebugXYZ, test_debug_linear_block_decoder)
     uint32_t symbols = rand_symbols();
     uint32_t symbol_size = rand_symbol_size();
 
-    test_basic_api
+    test_basic_api_
     <
         kodo::full_rlnc_encoder<fifi::binary>,
         kodo::debug_decoder<fifi::binary>
