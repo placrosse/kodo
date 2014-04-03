@@ -127,7 +127,7 @@ def build(bld):
         bld.recurse('examples/encode_decode_storage')
         bld.recurse('examples/encode_on_the_fly')
         bld.recurse('examples/encode_recode_decode_simple')
-        #bld.recurse('examples/sample_makefile')
+        bld.recurse('examples/sample_makefile')
         bld.recurse('examples/switch_systematic_on_off')
         bld.recurse('examples/rank_callback')
         bld.recurse('examples/use_cached_symbol_decoder')

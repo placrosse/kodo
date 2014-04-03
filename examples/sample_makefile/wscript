@@ -51,6 +51,8 @@ def build(bld):
         args += ['FIFI_DIR=' + fifi_dir]
         boost_dir = bld.dependency_path('boost')
         args += ['BOOST_DIR=' + boost_dir]
+        platform_dir = os.path.join(bld.dependency_path('platform'), 'src')
+        args += ['PLATFORM_DIR=' + platform_dir]
 
         # Get the current directory
         current_dir = task.generator.path.abspath()
