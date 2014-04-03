@@ -9,6 +9,7 @@
 # git clone https://github.com/steinwurf/sak.git
 # git clone https://github.com/steinwurf/fifi.git
 # git clone https://github.com/steinwurf/platform.git
+# git clone https://github.com/steinwurf/cpuid.git
 # git clone https://github.com/steinwurf/external-boost-light.git
 # git clone https://github.com/steinwurf/kodo.git
 # Then build this example:
@@ -37,8 +38,17 @@ BOOST_DIR ?= ../../../external-boost-light
 # The include path for the platform sources
 PLATFORM_DIR ?= ../../../platform/src
 
+# The include path for the cpuid sources
+CPUID_DIR ?= ../../../cpuid/src
+
+# cpuid is also a library but instead of compiling the library we just
+# compile all the .cpp files.
+CPUID_CPP_FILES := $(wildcard $(CPUID_DIR)/cpuid/*.cpp)
+
 # Set default flags
-INCLUDES = -I $(BOOST_DIR) -I $(SAK_DIR) -I $(FIFI_DIR) -I $(KODO_DIR) -I $(PLATFORM_DIR)
+INCLUDES = -I $(BOOST_DIR) -I $(SAK_DIR) -I $(FIFI_DIR) -I $(KODO_DIR) \
+           -I $(PLATFORM_DIR) -I $(CPUID_DIR)
+
 CXXFLAGS = -std=c++0x -s -O2 -ftree-vectorize
 
 # Choose default compiler based on the OS
@@ -72,4 +82,5 @@ TARGET ?= example
 
 # Invoke the compiler
 all:
-	$(CXX) $(FIFI_CPP_FILES) main.cpp -o $(TARGET) $(CXXFLAGS) $(INCLUDES)
+	$(CXX) $(CPUID_CPP_FILES) $(FIFI_CPP_FILES) main.cpp -o $(TARGET) \
+        $(CXXFLAGS) $(INCLUDES)
