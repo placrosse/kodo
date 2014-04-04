@@ -166,18 +166,12 @@ class plotter(object):
     def __del__(self):
         self.pdf.close()
 
-    def get_dataframe(self, query, collection="none"):
+    def get_dataframe(self, query, collection=None):
         if self.from_json:
             df = pandas.read_json(self.args.json)
             df['slavename'] = "local"
         else:
-            db = connect_database()
-            if collection == "kodo_throughput":
-                mc = db.kodo_throughput.find(query)
-            elif collection == "kodo_decoding_probability":
-                mc = db.kodo_decoding_probability.find(query)
-            elif collection == "kodo_overhead":
-                mc = db.kodo_overhead.find(query)
+            mc = connect_database()[collection].find(query)
             df = pandas.DataFrame.from_records(list(mc))
 
         return df
