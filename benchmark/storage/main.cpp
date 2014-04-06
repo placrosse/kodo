@@ -16,18 +16,14 @@
 #include <gauge/json_printer.hpp>
 
 #include <kodo/has_systematic_encoder.hpp>
+#include <kodo/rlnc/shallow_codes.hpp>
 #include <kodo/set_systematic_off.hpp>
-#include <kodo/rlnc/full_vector_codes.hpp>
-#include <kodo/rlnc/seed_codes.hpp>
-#include <kodo/rs/reed_solomon_codes.hpp>
 
 #include <tables/table.hpp>
 
-#include "codes.hpp"
-
 /// A test block represents an encoder and decoder pair
 template<class Encoder, class Decoder>
-struct throughput_benchmark : public gauge::time_benchmark
+struct storage_benchmark : public gauge::time_benchmark
 {
     typedef typename Encoder::factory encoder_factory;
     typedef typename Encoder::pointer encoder_ptr;
@@ -42,8 +38,6 @@ struct throughput_benchmark : public gauge::time_benchmark
 
     void start()
     {
-        //m_encoded_symbols = 0;
-        //m_decoded_symbols = 0;
         gauge::time_benchmark::start();
     }
 
@@ -283,10 +277,10 @@ struct throughput_benchmark : public gauge::time_benchmark
             uint32_t random_symbol = rand() % symbols;
             auto ret = erased.insert(random_symbol);
             // Skip this symbol if it was already included in the erased set
-            if (ret.second==false) continue;
+            if (ret.second == false) continue;
             // Zero the symbol
             std::fill_n(m_data_out.begin() + random_symbol * symbol_size,
-                symbol_size, 0);
+                        symbol_size, 0);
         }
 
         m_decoder_factory->set_symbols(symbols);
@@ -361,13 +355,13 @@ protected:
 
 /// A test block represents an encoder and decoder pair
 template<class Encoder, class Decoder>
-struct sparse_throughput_benchmark :
-    public throughput_benchmark<Encoder,Decoder>
+struct sparse_storage_benchmark :
+    public storage_benchmark<Encoder,Decoder>
 {
 public:
 
     /// The type of the base benchmark
-    typedef throughput_benchmark<Encoder,Decoder> Super;
+    typedef storage_benchmark<Encoder,Decoder> Super;
 
     /// We need access to the encoder built to adjust the average number of
     /// nonzero symbols
@@ -504,19 +498,9 @@ BENCHMARK_OPTION(sparse_density_options)
 // FullRLNC
 //------------------------------------------------------------------
 
-typedef throughput_benchmark<
-    kodo::full_rlnc_encoder_shallow<fifi::binary>,
-    kodo::full_rlnc_decoder_shallow<fifi::binary>>
-    setup_rlnc_throughput;
-
-BENCHMARK_F(setup_rlnc_throughput, FullRLNC, Binary, 5)
-{
-    run_benchmark();
-}
-
-typedef throughput_benchmark<
-    kodo::full_rlnc_encoder_shallow<fifi::binary8>,
-    kodo::full_rlnc_decoder_shallow<fifi::binary8>>
+typedef storage_benchmark<
+    kodo::shallow_full_rlnc_encoder<fifi::binary8>,
+    kodo::shallow_full_rlnc_decoder<fifi::binary8>>
     setup_rlnc_throughput8;
 
 BENCHMARK_F(setup_rlnc_throughput8, FullRLNC, Binary8, 5)
@@ -528,19 +512,9 @@ BENCHMARK_F(setup_rlnc_throughput8, FullRLNC, Binary8, 5)
 // BackwardFullRLNC
 //------------------------------------------------------------------
 
-typedef throughput_benchmark<
-    kodo::full_rlnc_encoder_shallow<fifi::binary>,
-    kodo::backward_full_rlnc_decoder_shallow<fifi::binary>>
-    setup_backward_rlnc_throughput;
-
-BENCHMARK_F(setup_backward_rlnc_throughput, BackwardFullRLNC, Binary, 5)
-{
-    run_benchmark();
-}
-
-typedef throughput_benchmark<
-    kodo::full_rlnc_encoder_shallow<fifi::binary8>,
-    kodo::backward_full_rlnc_decoder_shallow<fifi::binary8>>
+typedef storage_benchmark<
+    kodo::shallow_full_rlnc_encoder<fifi::binary8>,
+    kodo::shallow_backward_full_rlnc_decoder<fifi::binary8>>
     setup_backward_rlnc_throughput8;
 
 BENCHMARK_F(setup_backward_rlnc_throughput8, BackwardFullRLNC, Binary8, 5)
@@ -552,19 +526,9 @@ BENCHMARK_F(setup_backward_rlnc_throughput8, BackwardFullRLNC, Binary8, 5)
 // FullDelayedRLNC
 //------------------------------------------------------------------
 
-typedef throughput_benchmark<
-   kodo::full_rlnc_encoder_shallow<fifi::binary>,
-   kodo::full_delayed_rlnc_decoder_shallow<fifi::binary>>
-   setup_delayed_rlnc_throughput;
-
-BENCHMARK_F(setup_delayed_rlnc_throughput, FullDelayedRLNC, Binary, 5)
-{
-   run_benchmark();
-}
-
-typedef throughput_benchmark<
-   kodo::full_rlnc_encoder_shallow<fifi::binary8>,
-   kodo::full_delayed_rlnc_decoder_shallow<fifi::binary8>>
+typedef storage_benchmark<
+   kodo::shallow_full_rlnc_encoder<fifi::binary8>,
+   kodo::shallow_full_delayed_rlnc_decoder<fifi::binary8>>
    setup_delayed_rlnc_throughput8;
 
 BENCHMARK_F(setup_delayed_rlnc_throughput8, FullDelayedRLNC, Binary8, 5)
@@ -576,19 +540,9 @@ BENCHMARK_F(setup_delayed_rlnc_throughput8, FullDelayedRLNC, Binary8, 5)
 // SparseFullRLNC
 //------------------------------------------------------------------
 
-typedef sparse_throughput_benchmark<
-    kodo::sparse_full_rlnc_encoder_shallow<fifi::binary>,
-    kodo::full_rlnc_decoder_shallow<fifi::binary>>
-    setup_sparse_rlnc_throughput;
-
-BENCHMARK_F(setup_sparse_rlnc_throughput, SparseFullRLNC, Binary, 5)
-{
-    run_benchmark();
-}
-
-typedef sparse_throughput_benchmark<
-    kodo::sparse_full_rlnc_encoder_shallow<fifi::binary8>,
-    kodo::full_rlnc_decoder_shallow<fifi::binary8>>
+typedef sparse_storage_benchmark<
+    kodo::shallow_sparse_full_rlnc_encoder<fifi::binary8>,
+    kodo::shallow_full_rlnc_decoder<fifi::binary8>>
     setup_sparse_rlnc_throughput8;
 
 BENCHMARK_F(setup_sparse_rlnc_throughput8, SparseFullRLNC, Binary8, 5)
