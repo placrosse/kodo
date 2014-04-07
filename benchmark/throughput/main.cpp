@@ -106,14 +106,13 @@ struct throughput_benchmark : public gauge::time_benchmark
 
                 return false;
             }
+
             // At this point, the output data should be equal to the input data
-            assert(std::equal(m_data_out.begin(), m_data_out.end(),
-                              m_data_in.begin()));
+            assert(m_data_out == m_data_in);
         }
 
-        // Force only one iteration
         return true;
-        //return gauge::time_benchmark::accept_measurement();
+        // return gauge::time_benchmark::accept_measurement();
     }
 
     std::string unit_text() const
@@ -155,6 +154,7 @@ struct throughput_benchmark : public gauge::time_benchmark
         uint32_t symbols = cs.get_value<uint32_t>("symbols");
         uint32_t symbol_size = cs.get_value<uint32_t>("symbol_size");
 
+        /// @todo Research the cause of this
         // Make the factories fit perfectly otherwise there seems to
         // be problems with memory access i.e. when using a factory
         // with max symbols 1024 with a symbols 16
@@ -176,24 +176,25 @@ struct throughput_benchmark : public gauge::time_benchmark
         // Prepare the data buffers
         m_data_in.resize(m_encoder->block_size());
         m_data_out.resize(m_encoder->block_size());
-        std::fill_n(m_data_out.begin(), m_data_out.size(), 0);
 
-        for (uint8_t &e : m_data_in)
-        {
-            e = rand() % 256;
-        }
+        std::fill_n(m_data_out.begin(), m_data_out.size(), 0);
+        std::generate_n(m_data_in.begin(), m_data_in.size(), rand);
 
         m_encoder->set_symbols(sak::storage(m_data_in));
 
         m_decoder->set_symbols(sak::storage(m_data_out));
 
+        // Create the payload buffer
+        m_temp_payload.resize(m_decoder->payload_size());
+
         // Prepare storage to the encoded payloads
         uint32_t payload_count = symbols * m_factor;
+        assert(payload_count > 0);
 
         m_payloads.resize(payload_count);
-        for (uint32_t i = 0; i < payload_count; ++i)
+        for (auto& payload : m_payloads)
         {
-            m_payloads[i].resize(m_encoder->payload_size());
+            payload.resize(m_encoder->payload_size());
         }
     }
 
@@ -206,28 +207,24 @@ struct throughput_benchmark : public gauge::time_benchmark
         if (kodo::has_systematic_encoder<Encoder>::value)
             kodo::set_systematic_off(m_encoder);
 
-        uint32_t payload_count = m_payloads.size();
-
-        for (uint32_t i = 0; i < payload_count; ++i)
+        for (auto& payload : m_payloads)
         {
-            std::vector<uint8_t> &payload = m_payloads[i];
-            m_encoder->encode(&payload[0]);
-
+            m_encoder->encode(payload.data());
             ++m_encoded_symbols;
         }
     }
 
     void decode_payloads()
     {
-        uint32_t payload_count = m_payloads.size();
-
-        for (uint32_t i = 0; i < payload_count; ++i)
+        for (auto& payload : m_payloads)
         {
-            m_decoder->decode(&m_payloads[i][0]);
+            // std::copy_n(payload.data(), payload.size(), m_temp_payload.data());
+            // m_decoder->decode(m_temp_payload.data());
+            m_decoder->decode(payload.data());
 
             ++m_decoded_symbols;
 
-            if (m_decoder->is_complete())
+            if(m_decoder->is_complete())
             {
                 return;
             }
@@ -331,6 +328,14 @@ protected:
 
     /// The output data
     std::vector<uint8_t> m_data_out;
+
+    /// Buffer storing the encoded payloads before adding them to the
+    /// decoder. This is necessary since the decoder will "work on"
+    /// the encoded payloads directly. Therefore if we want to be able
+    /// to run multiple iterations with the same encoded paylaods we
+    /// have to copy them before injecting them into the decoder. This
+    /// of course has a negative impact on the decoding throughput.
+    std::vector<uint8_t> m_temp_payload;
 
     /// Storage for encoded symbols
     std::vector< std::vector<uint8_t> > m_payloads;
