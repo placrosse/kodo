@@ -17,6 +17,10 @@
 #include <kodo/rlnc/shallow_codes.hpp>
 #include <kodo/set_systematic_off.hpp>
 
+#include <fifi/is_prime2325.hpp>
+#include <fifi/prime2325_binary_search.hpp>
+#include <fifi/prime2325_apply_prefix.hpp>
+
 #include <tables/table.hpp>
 
 /// A test block represents an encoder and decoder pair
@@ -102,7 +106,7 @@ struct throughput_benchmark : public gauge::time_benchmark
             {
                 // We did not generate enough payloads to decode successfully,
                 // so we will generate more payloads for next run
-                m_factor++;
+                ++m_factor;
 
                 return false;
             }
@@ -111,8 +115,7 @@ struct throughput_benchmark : public gauge::time_benchmark
             assert(m_data_out == m_data_in);
         }
 
-        return true;
-        // return gauge::time_benchmark::accept_measurement();
+        return gauge::time_benchmark::accept_measurement();
     }
 
     std::string unit_text() const
@@ -200,6 +203,22 @@ struct throughput_benchmark : public gauge::time_benchmark
 
     void encode_payloads()
     {
+        // Only used for prime fields, lets reconsider how we implement
+        // this less intrusive
+        uint32_t prefix = 0;
+
+        if (fifi::is_prime2325<typename Encoder::field_type>::value)
+        {
+            uint32_t block_length =
+                fifi::size_to_length<fifi::prime2325>(m_encoder->block_size());
+
+            fifi::prime2325_binary_search search(block_length);
+            prefix = search.find_prefix(sak::storage(m_data_in));
+
+            // Apply the negated prefix
+            fifi::apply_prefix(sak::storage(m_data_in), ~prefix);
+        }
+
         m_encoder->set_symbols(sak::storage(m_data_in));
 
         // We switch any systematic operations off so we code
@@ -216,15 +235,14 @@ struct throughput_benchmark : public gauge::time_benchmark
 
     void decode_payloads()
     {
-        for (auto& payload : m_payloads)
+        for (const auto& payload : m_payloads)
         {
-            // std::copy_n(payload.data(), payload.size(), m_temp_payload.data());
-            // m_decoder->decode(m_temp_payload.data());
-            m_decoder->decode(payload.data());
+            std::copy_n(payload.data(), payload.size(), m_temp_payload.data());
+            m_decoder->decode(m_temp_payload.data());
 
             ++m_decoded_symbols;
 
-            if(m_decoder->is_complete())
+            if (m_decoder->is_complete())
             {
                 return;
             }

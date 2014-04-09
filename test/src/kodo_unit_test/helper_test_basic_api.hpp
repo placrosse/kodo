@@ -110,7 +110,8 @@ inline void test_basic_api(uint32_t symbols, uint32_t symbol_size)
         // This field only works for multiple of uint32_t
         assert((encoder->block_size() % 4) == 0);
 
-        uint32_t block_length = encoder->block_size() / 4;
+        uint32_t block_length =
+            fifi::size_to_length<fifi::prime2325>(encoder->block_size());
 
         fifi::prime2325_binary_search search(block_length);
         prefix = search.find_prefix(storage_in_copy);
