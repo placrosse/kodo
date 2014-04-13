@@ -14,6 +14,11 @@
 
 namespace kodo
 {
+    /// @ingroup fec_stacks
+    /// @brief Complete stack implementing a shallow storage RLNC encoder.
+    ///
+    /// The encoder is identical to the full_rlnc_encoder except for
+    /// the fact that is uses a shallow storage layer.
     template<class Field>
     class shallow_full_rlnc_encoder : public
         // Payload Codec API

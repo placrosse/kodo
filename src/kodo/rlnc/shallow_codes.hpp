@@ -5,6 +5,8 @@
 
 #pragma once
 
+/// @todo Move shallow includes to code specific aggregation files
+
 #include "shallow_full_rlnc_encoder.hpp"
 #include "shallow_full_rlnc_decoder.hpp"
 

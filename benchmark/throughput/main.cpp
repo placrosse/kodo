@@ -203,20 +203,20 @@ struct throughput_benchmark : public gauge::time_benchmark
 
     void encode_payloads()
     {
-        // Only used for prime fields, lets reconsider how we implement
-        // this less intrusive
-        uint32_t prefix = 0;
-
+        // If we are working in the prime2325 finite field we have to
+        // "map" the data first. This cost is included in the encoder
+        // throughput (we do it with the clock running), just as it
+        // would be in a real application.
         if (fifi::is_prime2325<typename Encoder::field_type>::value)
         {
             uint32_t block_length =
                 fifi::size_to_length<fifi::prime2325>(m_encoder->block_size());
 
             fifi::prime2325_binary_search search(block_length);
-            prefix = search.find_prefix(sak::storage(m_data_in));
+            m_prefix = search.find_prefix(sak::storage(m_data_in));
 
             // Apply the negated prefix
-            fifi::apply_prefix(sak::storage(m_data_in), ~prefix);
+            fifi::apply_prefix(sak::storage(m_data_in), ~m_prefix);
         }
 
         m_encoder->set_symbols(sak::storage(m_data_in));
@@ -231,19 +231,55 @@ struct throughput_benchmark : public gauge::time_benchmark
             m_encoder->encode(payload.data());
             ++m_encoded_symbols;
         }
+
+        /// @todo Revert to the original input data by re-applying the
+        /// prefix to the input data. This is needed since the
+        /// benchmark loops and re-encodes the same data. If we did
+        /// not re-apply the prefix the input data would be corrupted
+        /// in the second iteration, causing decoding to produce
+        /// incorrect output data. In a real-world application this
+        /// would typically not be needed. For this reason the
+        /// prime2325 results encoding results will show a lower
+        /// throughput than what we can expect to see in an actual
+        /// application. Currently we don't have a good solution for
+        /// this. Possible solutions would be to copy the input data,
+        /// however in that way we will also see a performance hit.
+        if (fifi::is_prime2325<typename Encoder::field_type>::value)
+        {
+            // Apply the negated prefix
+            fifi::apply_prefix(sak::storage(m_data_in), ~m_prefix);
+        }
     }
 
     void decode_payloads()
     {
         for (const auto& payload : m_payloads)
         {
+
+            /// @todo This copy would typically not be performed by an
+            /// actual application, however since the benchmark
+            /// performs several iterations decoding the same data we
+            /// have to copy the input data to avoid corrupting
+            /// it. The decoder works on data "in-place" therefore we
+            /// would corrupt the payloads if we did not copy them.
+            ///
+            /// Changing this would most likely improve the throughput
+            /// of the decoders. We are open to suggestions :)
             std::copy_n(payload.data(), payload.size(), m_temp_payload.data());
+
             m_decoder->decode(m_temp_payload.data());
 
             ++m_decoded_symbols;
 
             if (m_decoder->is_complete())
             {
+                if(fifi::is_prime2325<typename Decoder::field_type>::value)
+                {
+                    // Now we have to apply the negated prefix to the
+                    // decoded data
+                    fifi::apply_prefix(sak::storage(m_data_out), ~m_prefix);
+                }
+
                 return;
             }
         }
@@ -268,6 +304,7 @@ struct throughput_benchmark : public gauge::time_benchmark
 
             encode_payloads();
         }
+
     }
 
     /// Run the decoder
@@ -360,6 +397,9 @@ protected:
 
     /// Multiplication factor for payload_count
     uint32_t m_factor;
+
+    /// Prefix used when testing with the prime2325 finite field
+    uint32_t m_prefix;
 };
 
 
@@ -493,7 +533,7 @@ BENCHMARK_OPTION(sparse_density_options)
 }
 
 //------------------------------------------------------------------
-// FullRLNC
+// Shallow FullRLNC
 //------------------------------------------------------------------
 
 typedef throughput_benchmark<
@@ -533,7 +573,7 @@ BENCHMARK_F(setup_rlnc_throughput2325, FullRLNC, Prime2325, 5)
 }
 
 //------------------------------------------------------------------
-// BackwardFullRLNC
+// Shallow BackwardFullRLNC
 //------------------------------------------------------------------
 
 typedef throughput_benchmark<
@@ -577,7 +617,7 @@ BENCHMARK_F(setup_backward_rlnc_throughput2325, BackwardFullRLNC, Prime2325, 5)
 }
 
 //------------------------------------------------------------------
-// FullDelayedRLNC
+// Shallow FullDelayedRLNC
 //------------------------------------------------------------------
 
 typedef throughput_benchmark<
@@ -621,7 +661,7 @@ BENCHMARK_F(setup_delayed_rlnc_throughput2325, FullDelayedRLNC, Prime2325, 5)
 }
 
 //------------------------------------------------------------------
-// SparseFullRLNC
+// Shallow SparseFullRLNC
 //------------------------------------------------------------------
 
 typedef sparse_throughput_benchmark<
