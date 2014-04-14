@@ -15,7 +15,14 @@
 
 namespace kodo
 {
-    /// RLNC decoder which uses the policy based linear block decoder
+    /// @ingroup fec_stacks
+    /// @brief Complete stack implementing a shallow storage backward RLNC
+    ///        decoder.
+    ///
+    /// The decoder is identical to the full_rlnc_decoder except for
+    /// the fact that is uses a shallow storage layer and that it
+    /// performs gaussian elimination in the opposite direction
+    /// (i.e. from right to left).
     template<class Field>
     class shallow_backward_full_rlnc_decoder : public
         // Payload API

@@ -5,7 +5,10 @@
 
 #pragma once
 
-/// @todo Move shallow includes to code specific aggregation files
+/// @todo The stacks define in this header should be moved to separate
+///       headers and include here instead (according to the one class
+///       per file guideline).
+#include "full_vector_codes.hpp"
 
 #include "shallow_full_rlnc_encoder.hpp"
 #include "shallow_full_rlnc_decoder.hpp"

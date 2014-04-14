@@ -14,8 +14,8 @@
 #include <gauge/json_printer.hpp>
 
 #include <kodo/has_systematic_encoder.hpp>
-#include <kodo/rlnc/shallow_codes.hpp>
 #include <kodo/set_systematic_off.hpp>
+#include <kodo/rlnc/full_rlnc_codes.hpp>
 
 #include <fifi/is_prime2325.hpp>
 #include <fifi/prime2325_binary_search.hpp>

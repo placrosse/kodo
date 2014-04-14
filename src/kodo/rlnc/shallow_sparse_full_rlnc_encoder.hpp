@@ -15,6 +15,12 @@
 
 namespace kodo
 {
+    /// @ingroup fec_stacks
+    /// @brief Complete stack implementing a shallow storage sparse RLNC
+    ///        decoder.
+    ///
+    /// The decoder is identical to the full_rlnc_decoder except for
+    /// the fact that is uses a shallow storage layer. Furthermore the
     /// RLNC encoder using a density based random generator, which can be
     /// used to control the density i.e. the number of non-zero elements in
     /// the encoding vector.

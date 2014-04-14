@@ -14,9 +14,21 @@
 
 namespace kodo
 {
-    /// RLNC decoder using Gaussian elimination decoder, delayed
+    /// @ingroup fec_stacks
+    /// @brief Complete stack implementing a shallow storage delayed RLNC
+    ///        decoder.
+    ///
+    /// The decoder is identical to the full_rlnc_decoder except for
+    /// the fact that is uses a shallow storage layer. Furthermore the
+    /// decoder uses a delayed Gaussian elimination decoder.  Delayed
     /// here refers to the fact the we will not perform the backwards
-    /// substitution until we have reached full rank
+    /// substitution until full rank is reached. This has the
+    /// advantage that it should overall reduce the necessary number
+    /// of finite field operations needed - this is obtained by
+    /// reducing the so called fill-in effect. Fill-in refers to the
+    /// fact that by performing row operations we may change an
+    /// element previously zero into a non-zero element. Fill-in is
+    /// also most often an effect seen with sparse codes.
     template<class Field>
     class shallow_full_delayed_rlnc_decoder : public
         // Payload API
