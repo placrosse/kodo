@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include <fifi/arithmetics.hpp>
+#include <fifi/fifi_utils.hpp>
 
 #include "vandermonde_matrix.hpp"
 
@@ -82,20 +82,19 @@ namespace kodo
         for(uint32_t i = 0; i < m->rows(); ++i)
         {
             value_type pivot = m->element(i,i);
-            pivot = m_field->invert(pivot);
+            pivot = fifi::pack_constant<field_type>(m_field->invert(pivot));
 
-            fifi::multiply_constant(
-                *m_field, pivot, m->row_value(i), m->row_length());
+            m_field->region_multiply_constant(m->row_value(i), pivot, m->row_length());
 
             for(uint32_t j = 0; j < m->rows(); ++j)
             {
                 if(j == i)
                     continue;
 
-                value_type scale = m->element(j, i);
-                fifi::multiply_subtract(
-                    *m_field, scale, m->row_value(j), m->row_value(i),
-                    &temp_row[0], m->row_length());
+                value_type scale = fifi::pack_constant<field_type>(m->element(j, i));
+
+                m_field->region_multiply_subtract(m->row_value(j),
+                    m->row_value(i), scale, m->row_length());
 
             }
         }

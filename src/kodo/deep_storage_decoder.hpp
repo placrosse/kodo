@@ -3,13 +3,9 @@
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
 
-#ifndef KODO_DEEP_STORAGE_DECODER_HPP
-#define KODO_DEEP_STORAGE_DECODER_HPP
+#pragma once
 
 #include <cstdint>
-
-#include <boost/function.hpp>
-#include <boost/bind.hpp>
 
 #include <sak/storage.hpp>
 
@@ -125,6 +121,3 @@ namespace kodo
     };
 
 }
-
-#endif
-

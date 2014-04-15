@@ -112,7 +112,7 @@ namespace kodo
         {};
 
         template<class Field>
-        class full_rlnc_encoder_shallow
+        class shallow_full_rlnc_encoder
             : public // Payload Codec API
                      payload_encoder<
                      // Codec Header API
@@ -140,7 +140,7 @@ namespace kodo
                      // Factory API
                      final_coder_factory_pool<
                      // Final type
-                     full_rlnc_encoder_shallow<Field>
+                     shallow_full_rlnc_encoder<Field>
                          > > > > > > > > > > > > > > > > > //>
         { };
     }
@@ -152,7 +152,7 @@ namespace kodo
 /// and decoding
 TEST(TestRlncFullVectorCodes, test_basic_api)
 {
-    test_basic_api<kodo::full_rlnc_encoder_shallow,
+    test_basic_api<kodo::shallow_full_rlnc_encoder,
         kodo::full_rlnc_decoder>();
 
     test_basic_api<kodo::full_rlnc_encoder,
@@ -170,7 +170,7 @@ TEST(TestRlncFullVectorCodes, test_basic_api)
 /// can be safely reused.
 TEST(TestRlncFullVectorCodes, test_initialize)
 {
-    test_initialize<kodo::full_rlnc_encoder_shallow,
+    test_initialize<kodo::shallow_full_rlnc_encoder,
         kodo::full_rlnc_decoder>();
 
     test_initialize<kodo::full_rlnc_encoder,
@@ -239,7 +239,7 @@ TEST(TestRlncFullVectorCodes, test_recoding_relay)
 TEST(TestRlncFullVectorCodes, test_reuse_api)
 {
     test_reuse<
-        kodo::full_rlnc_encoder_shallow,
+        kodo::shallow_full_rlnc_encoder,
         kodo::full_rlnc_decoder>();
 
     test_reuse<
@@ -257,7 +257,7 @@ TEST(TestRlncFullVectorCodes, test_reuse_api)
 TEST(TestRlncFullVectorCodes, test_reuse_incomplete_api)
 {
     test_reuse_incomplete<
-        kodo::full_rlnc_encoder_shallow,
+        kodo::shallow_full_rlnc_encoder,
         kodo::full_rlnc_decoder>();
 
     test_reuse_incomplete<
@@ -269,6 +269,3 @@ TEST(TestRlncFullVectorCodes, test_reuse_incomplete_api)
         kodo::full_rlnc_encoder,
         kodo::full_rlnc_decoder_delayed>();
 }
-
-
-

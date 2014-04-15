@@ -10,7 +10,8 @@
 #include <sstream>
 
 #include <gtest/gtest.h>
-#include <fifi/field_types.hpp>
+#include <fifi/binary.hpp>
+#include <fifi/binary8.hpp>
 #include <kodo/coefficient_info.hpp>
 #include <kodo/coefficient_storage.hpp>
 #include <kodo/coefficient_value_access.hpp>
@@ -121,29 +122,6 @@ TEST(TestDebugCoefficientStorage, api)
         debug.print_coefficient_vector_values(output);
         EXPECT_EQ(
             "0:\t255\t0\t0\t\n1:\t0\t255\t0\t\n2:\t0\t0\t255\t\n",
-            output.str());
-    }
-
-    {
-        typedef kodo::test_debug_coefficient_storage<fifi::binary32> stack;
-
-        stack::factory f(symbols, symbols_size);
-
-        stack debug;
-        debug.construct(f);
-        debug.initialize(f);
-
-        stack::value_type* c = debug.coefficient_vector_values(0);
-        fifi::set_value<stack::field_type>(c, 0, 13371337);
-        c = debug.coefficient_vector_values(1);
-        fifi::set_value<stack::field_type>(c, 1, 13371337);
-        c = debug.coefficient_vector_values(2);
-        fifi::set_value<stack::field_type>(c, 2, 13371337);
-
-        std::stringstream output;
-        debug.print_coefficient_vector_values(output);
-        EXPECT_EQ(
-            "0:\t13371337\t0\t0\t\n1:\t0\t13371337\t0\t\n2:\t0\t0\t13371337\t\n",
             output.str());
     }
 }

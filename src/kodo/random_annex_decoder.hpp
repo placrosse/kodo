@@ -3,15 +3,13 @@
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
 
-#ifndef KODO_RANDOM_ANNEX_DECODER_HPP
-#define KODO_RANDOM_ANNEX_DECODER_HPP
+#pragma once
 
 #include <cstdint>
+#include <functional>
 
 #include <boost/make_shared.hpp>
 #include <boost/noncopyable.hpp>
-#include <boost/function.hpp>
-#include <boost/bind.hpp>
 
 #include <sak/storage.hpp>
 
@@ -48,7 +46,7 @@ namespace kodo
         typedef typename std::set<annex_info>::iterator annex_iterator;
 
         /// The callback function to invoke when a decoder completes
-        typedef boost::function<void ()> is_complete_handler;
+        typedef std::function<void ()> is_complete_handler;
 
     public:
 
@@ -305,8 +303,8 @@ namespace kodo
                     decoder->set_bytes_used(bytes_used);
 
                     is_complete_handler handler =
-                        boost::bind(&random_annex_decoder::decoder_complete,
-                                    this, i);
+                        std::bind(&random_annex_decoder::decoder_complete,
+                                  this, i);
 
                     wrap_coder wrap(decoder, handler);
 
@@ -337,6 +335,3 @@ namespace kodo
     };
 
 }
-
-#endif
-

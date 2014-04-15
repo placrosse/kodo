@@ -19,7 +19,7 @@
 int main()
 {
     // Seed rand
-    srand(time(0));
+    srand(static_cast<uint32_t>(time(0)));
 
     // Set the number of symbols (i.e. the generation size in RLNC
     // terminology) and the size of a symbol in bytes
@@ -97,4 +97,3 @@ int main()
                   << "please file a bug report :)" << std::endl;
     }
 }
-

@@ -6,6 +6,10 @@ detailed list of every change, see the Git log.
 
 Latest
 ------
+* Major: Started to use C++11 features only available in: gcc/g++-4.7
+  and later and Microsoft Visual Studio 2013.
+* Major: Update to Fifi version 11, which brings in hardware
+  accelerated finite field computations (based on SIMD instructions).
 * Minor: Added sliding window encoder and decoder. These codes extend
   the functionality of the on the fly codes which allow encoding
   before all symbols are available, by supporting feedback between the

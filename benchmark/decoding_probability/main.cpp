@@ -42,7 +42,7 @@ public:
     decoding_probability_benchmark()
     {
         // Seed the random generator controlling the erasures
-        m_random_generator.seed((uint64_t)time(0));
+        m_random_generator.seed((uint32_t)time(0));
     }
 
     void start()
@@ -517,4 +517,3 @@ int main(int argc, const char* argv[])
 
     return 0;
 }
-

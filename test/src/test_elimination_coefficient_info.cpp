@@ -6,7 +6,8 @@
 #include <cstdint>
 
 #include <gtest/gtest.h>
-#include <fifi/field_types.hpp>
+#include <fifi/binary.hpp>
+#include <fifi/binary8.hpp>
 #include <kodo/elimination_coefficient_info.hpp>
 #include <kodo/storage_block_info.hpp>
 
