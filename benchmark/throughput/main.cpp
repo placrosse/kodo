@@ -180,11 +180,16 @@ struct throughput_benchmark : public gauge::time_benchmark
         m_data_in.resize(m_encoder->block_size());
         m_data_out.resize(m_encoder->block_size());
 
-        std::fill_n(m_data_out.begin(), m_data_out.size(), 0);
         std::generate_n(m_data_in.begin(), m_data_in.size(), rand);
 
         m_encoder->set_symbols(sak::storage(m_data_in));
 
+        // This step is not needed for deep storage decoders, but also
+        // does not hurt :) For shallow decoders it will provide the
+        // memory that we will decode into, whereas a deep storage
+        // decoder already has its own memory (in this case the deep
+        // storage decoder will just gets its internal memory
+        // initialized by m_data_out)
         m_decoder->set_symbols(sak::storage(m_data_out));
 
         // Create the payload buffer
