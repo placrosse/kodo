@@ -54,9 +54,8 @@ namespace kodo
             {
             public:
 
-                factory() : m_main_stack_pointer(&m_main_stack)
-                {
-                }
+                // factory() : m_main_stack_pointer(&m_main_stack)
+                // { }
 
                 const main_stack* proxy_stack() const
                 {
@@ -65,7 +64,6 @@ namespace kodo
 
             public:
 
-                main_stack m_main_stack;
                 main_stack* m_main_stack_pointer;
 
             };
@@ -78,28 +76,49 @@ namespace kodo
 
 
         class test_stack : public proxy_remote_rank<dummy_layer>
-        { };
+        {
+        public:
+
+            typedef proxy_remote_rank<dummy_layer> Super;
+            typedef Super::main_stack main_stack;
+
+            const main_stack* stack() const
+            {
+                return Super::m_proxy;
+            }
+
+        };
     }
 }
 
 TEST(TestProxyRemoteRank, api)
 {
-
     kodo::test_stack::factory factory;
+
+    // Initialize the factory with a specific main_stack
+    kodo::dummy_main_stack main_stack_one;
+    factory.m_main_stack_pointer = &main_stack_one;
+
+    // Initialize the "test stack" i.e. the stack implementing the
+    // proxy_remote_rank layer
     kodo::test_stack stack;
     stack.initialize(factory);
 
-    factory.m_main_stack.m_remote_rank = 0U;
+    EXPECT_EQ(stack.stack(), &main_stack_one);
+
+    main_stack_one.m_remote_rank = 0U;
     EXPECT_EQ(stack.remote_rank(), 0U);
 
-    factory.m_main_stack.m_remote_rank = 50U;
+    main_stack_one.m_remote_rank = 50U;
     EXPECT_EQ(stack.remote_rank(), 50U);
 
-    factory.m_main_stack.m_remote_rank = 5U;
+    main_stack_one.m_remote_rank = 5U;
     EXPECT_EQ(stack.remote_rank(), 5U);
 
-    factory.m_main_stack.m_remote_rank = 0U;
+    main_stack_one.m_remote_rank = 0U;
     EXPECT_EQ(stack.remote_rank(), 0U);
+
+
 
 }
 

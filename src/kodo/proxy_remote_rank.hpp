@@ -33,8 +33,7 @@ namespace kodo
         {
             SuperCoder::initialize(the_factory);
 
-            m_proxy = SuperCoder::proxy_stack();
-            // m_proxy = the_factory.proxy_stack();
+            m_proxy = the_factory.proxy_stack();
             assert(m_proxy);
         }
 
@@ -45,7 +44,7 @@ namespace kodo
             return m_proxy->remote_rank();
         }
 
-    private:
+    protected:
 
         /// Store a pointer to the main stack
         const main_stack* m_proxy;

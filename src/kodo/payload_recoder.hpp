@@ -91,10 +91,10 @@ namespace kodo
             // main stack has been constructed and initialized.
 
             auto& stack_factory = the_factory.recode_factory();
+            stack_factory.set_stack_proxy(this);
 
             if(!m_recode_stack)
             {
-                stack_factory.set_stack_proxy(this);
                 m_recode_stack = stack_factory.build();
             }
             else
@@ -102,6 +102,9 @@ namespace kodo
 
                 m_recode_stack->initialize(the_factory.recode_factory());
             }
+
+            assert(m_recode_stack);
+            assert(m_recode_stack->proxy_stack() == this);
         }
 
         /// @copydoc layer::recode(uint8_t*)
@@ -121,22 +124,22 @@ namespace kodo
                             m_recode_stack->payload_size());
         }
 
-    private:
+    // private:
 
-        /// Sets the recoding stack on the coder
-        /// @param recoder The recoding stack.
-        void set_recode_stack(const recode_pointer &recoder)
-        {
-            assert(!m_recode_stack);
-            m_recode_stack = recoder;
-        }
+    //     /// Sets the recoding stack on the coder
+    //     /// @param recoder The recoding stack.
+    //     void set_recode_stack(const recode_pointer &recoder)
+    //     {
+    //         assert(!m_recode_stack);
+    //         m_recode_stack = recoder;
+    //     }
 
-        /// @return True if the coder already has already been initialized
-        ///         with an recoding stack
-        bool has_recode_stack() const
-        {
-            return m_recode_stack.get() != 0;
-        }
+    //     /// @return True if the coder already has already been initialized
+    //     ///         with an recoding stack
+    //     bool has_recode_stack() const
+    //     {
+    //         return m_recode_stack.get() != 0;
+    //     }
 
     protected:
 
