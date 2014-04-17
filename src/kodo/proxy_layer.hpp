@@ -113,7 +113,7 @@ namespace kodo
 
                 pointer coder = boost::make_shared<FinalType>();
 
-                coder->set_proxy(m_stack_proxy);
+                // coder->set_proxy(m_stack_proxy);
 
                 factory_type *this_factory =
                     static_cast<factory_type*>(this);
@@ -223,7 +223,8 @@ namespace kodo
         template<class Factory>
         void initialize(Factory &the_factory)
         {
-            (void) the_factory;
+            m_proxy = the_factory.proxy_stack();
+            assert(m_proxy);
         }
 
         /// @return a pointer to the main proxy stack
