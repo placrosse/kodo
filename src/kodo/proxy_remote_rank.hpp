@@ -33,7 +33,8 @@ namespace kodo
         {
             SuperCoder::initialize(the_factory);
 
-            m_proxy = the_factory.proxy_stack();
+            m_proxy = SuperCoder::proxy_stack();
+            // m_proxy = the_factory.proxy_stack();
             assert(m_proxy);
         }
 
