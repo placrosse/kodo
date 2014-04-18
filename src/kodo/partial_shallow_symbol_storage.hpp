@@ -113,7 +113,11 @@ namespace kodo
             auto symbol_sequence =
                 sak::split_storage(symbol_storage, Super::symbol_size());
 
-            uint32_t sequence_size = symbol_sequence.size();
+            // Check that cast below is safe
+            assert(symbol_sequence.size() <=
+                   std::numeric_limits<uint32_t>::max());
+
+            uint32_t sequence_size = (uint32_t)symbol_sequence.size();
             uint32_t last_index = sequence_size - 1;
 
             for(uint32_t i = 0; i < last_index; ++i)
