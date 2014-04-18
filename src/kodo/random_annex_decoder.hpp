@@ -241,8 +241,12 @@ namespace kodo
                 // Now we use the reverse annex info to further pass
                 // symbols to decoders with our decoded block in
                 // their annex
-                uint32_t reverse_annex_size =
+                auto reverse_annex_size =
                     m_reverse_annex[from_decoder].size();
+
+                // Check that we do not overflow our loop variable
+                assert(reverse_annex_size <=
+                       std::numeric_limits<uint32_t>::max());
 
                 for(uint32_t to_decoder = 0;
                     to_decoder < reverse_annex_size; ++to_decoder)

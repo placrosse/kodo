@@ -58,7 +58,11 @@ namespace kodo
 
             const uint8_t* last = buffer + Super::pivot_status_size();
             boost::from_block_range(buffer, last, m_pivot_status);
-            m_remote_rank = m_pivot_status.count();
+
+            auto count = m_pivot_status.count();
+            assert(count <= std::numeric_limits<rank_type>::max());
+
+            m_remote_rank = (rank_type) count;
         }
 
         /// @copydoc layer::remote_rank() const

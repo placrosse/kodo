@@ -90,7 +90,11 @@ namespace kodo
         ///         this object
         uint32_t encoders() const
             {
-                return m_encoders.size();
+                auto size = m_encoders.size();
+
+                // Check that we do not overflow the return type
+                assert(size <= std::numeric_limits<uint32_t>::max());
+                return (uint32_t) size;
             }
 
         /// Builds a specific encoder

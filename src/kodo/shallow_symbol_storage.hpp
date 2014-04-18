@@ -107,7 +107,7 @@ namespace kodo
             auto symbol_sequence = sak::split_storage(
                 symbol_storage, SuperCoder::symbol_size());
 
-            uint32_t sequence_size = symbol_sequence.size();
+            auto sequence_size = symbol_sequence.size();
             assert(sequence_size == SuperCoder::symbols());
 
             for(uint32_t i = 0; i < sequence_size; ++i)
