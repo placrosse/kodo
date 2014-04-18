@@ -53,6 +53,9 @@ namespace kodo
         /// The type of the main stack
         typedef MainStack main_stack_type;
 
+        /// The type of the main stack
+        typedef typename main_stack_type::factory main_factory_type;
+
     public:
 
         /// @ingroup factory_layers
@@ -80,11 +83,28 @@ namespace kodo
             ///
             /// @param main_factory The stack where calls should be
             ///        forwarded.
-            void set_main_factory(typename MainStack::factory* main_factory)
+            void set_main_factory(main_factory_type* main_factory)
             {
+                // Currently we have added the asserts in such a way
+                // that the factory pointer can only be specified once
                 assert(main_factory != 0);
                 assert(m_main_factory == 0);
+
                 m_main_factory = main_factory;
+            }
+
+            /// @return a pointer to the main factory
+            const main_factory_type* main_factory() const
+            {
+                assert(m_main_factory);
+                return m_main_factory;
+            }
+
+            /// @return a pointer to the main factory
+            main_factory_type* main_factory()
+            {
+                assert(m_main_factory);
+                return m_main_factory;
             }
 
             /// Sets the pointer to the main stack. If a function call

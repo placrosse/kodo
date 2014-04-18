@@ -48,31 +48,12 @@ namespace kodo
 
             typedef dummy_main_stack main_stack_type;
 
-        public:
-
-            class factory
+            const main_stack_type* main_stack() const
             {
-            public:
+                return m_main_stack;
+            }
 
-                factory() : m_main_stack_pointer(&m_main_stack)
-                {
-                }
-
-                const main_stack_type* main_stack() const
-                {
-                    return m_main_stack_pointer;
-                }
-
-            public:
-
-                main_stack_type m_main_stack;
-                main_stack_type* m_main_stack_pointer;
-
-            };
-
-            template<class Factory>
-            void initialize(Factory& /*the_factory*/)
-            { }
+            main_stack_type* m_main_stack;
 
         };
 
@@ -84,21 +65,21 @@ namespace kodo
 
 TEST(TestProxyRemoteRank, api)
 {
+    kodo::dummy_main_stack main_stack;
 
-    kodo::test_stack::factory factory;
     kodo::test_stack stack;
-    stack.initialize(factory);
+    stack.m_main_stack = &main_stack;
 
-    factory.m_main_stack.m_remote_rank = 0U;
+    main_stack.m_remote_rank = 0U;
     EXPECT_EQ(stack.remote_rank(), 0U);
 
-    factory.m_main_stack.m_remote_rank = 50U;
+    main_stack.m_remote_rank = 50U;
     EXPECT_EQ(stack.remote_rank(), 50U);
 
-    factory.m_main_stack.m_remote_rank = 5U;
+    main_stack.m_remote_rank = 5U;
     EXPECT_EQ(stack.remote_rank(), 5U);
 
-    factory.m_main_stack.m_remote_rank = 0U;
+    main_stack.m_remote_rank = 0U;
     EXPECT_EQ(stack.remote_rank(), 0U);
 
 }

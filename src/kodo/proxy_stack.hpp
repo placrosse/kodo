@@ -140,14 +140,28 @@ namespace kodo
 
     public:
 
-        /// @copydoc layer::construct(Factory&)
+        /// @copydoc layer::initialize(Factory&)
         template<class Factory>
-        void construct(Factory& the_factory)
+        void initialize(Factory& the_factory)
         {
-            Super::construct(the_factory);
-
+            // Here perform a bit of work before calling
+            // Super::initialize(...) which is not typical. In this
+            // case we have to make sure the nested factory is in the
+            // correct state - in general the user (i.e you ;)) are
+            // the one responsible for configuring the state of a
+            // factory before building a new coder. However, in this
+            // case the nested/proxy stack is held withing the main
+            // stack we therefore have to set the state.
             auto& nested_factory = the_factory.nested();
+
+            assert(nested_factory.main_factory() == &the_factory);
+
             nested_factory.set_main_stack(this);
+
+            Super::initialize(the_factory);
+
+            assert(Super::nested()->main_stack() == this);
+
         }
 
     };
