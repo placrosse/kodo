@@ -71,7 +71,7 @@ TEST(TestProxyStack, api)
     auto nested = stack.nested();
     assert(nested);
 
-    EXPECT_EQ(nested->proxy_stack(), &stack);
+    EXPECT_EQ(nested->main_stack(), &stack);
 
     EXPECT_EQ(nested->symbols(), symbols);
     EXPECT_EQ(nested->symbol_size(), symbol_size);
@@ -87,7 +87,7 @@ TEST(TestProxyStack, api)
     nested = stack.nested();
     assert(nested);
 
-    EXPECT_EQ(nested->proxy_stack(), &stack);
+    EXPECT_EQ(nested->main_stack(), &stack);
     EXPECT_EQ(nested->symbols(), factory.m_symbols);
     EXPECT_EQ(nested->symbol_size(), factory.m_symbol_size);
 }

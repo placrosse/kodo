@@ -53,7 +53,7 @@ namespace kodo
     /// nested_stack layer may be used instead.
     ///
     /// The proxy_stack will setup the call forwarding by invoking the
-    /// set_factory_proxy() and set_stack_proxy() functions in the
+    /// set_main_factory() and set_main_stack() functions in the
     /// nested stack.  In addition the proxy_stack will assume that
     /// the nested stack takes as first template argument the main
     /// stack type.
@@ -133,7 +133,7 @@ namespace kodo
             factory(uint32_t max_symbols, uint32_t max_symbol_size) :
                 Super::factory(max_symbols, max_symbol_size)
             {
-                Super::factory::nested().set_factory_proxy(this);
+                Super::factory::nested().set_main_factory(this);
             }
 
         };
@@ -147,7 +147,7 @@ namespace kodo
             Super::construct(the_factory);
 
             auto& nested_factory = the_factory.nested();
-            nested_factory.set_stack_proxy(this);
+            nested_factory.set_main_stack(this);
         }
 
     };

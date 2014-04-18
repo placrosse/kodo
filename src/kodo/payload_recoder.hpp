@@ -49,7 +49,7 @@ namespace kodo
                 : SuperCoder::factory(max_symbols, max_symbol_size),
                   m_stack_factory(max_symbols, max_symbol_size)
             {
-                m_stack_factory.set_factory_proxy(this);
+                m_stack_factory.set_main_factory(this);
             }
 
             /// Make sure we have enough space for both the payload
@@ -94,7 +94,7 @@ namespace kodo
 
             if(!m_recode_stack)
             {
-                stack_factory.set_stack_proxy(this);
+                stack_factory.set_main_stack(this);
                 m_recode_stack = stack_factory.build();
             }
             else

@@ -19,11 +19,11 @@ namespace kodo
     public:
 
         /// @copydoc proxy_layer::main_stack
-        typedef typename SuperCoder::main_stack main_stack;
+        typedef typename SuperCoder::main_stack_type main_stack_type;
 
 
         /// @copydoc layer::rank_type
-        typedef typename main_stack::rank_type rank_type;
+        typedef typename main_stack_type::rank_type rank_type;
 
     public:
 
@@ -33,7 +33,7 @@ namespace kodo
         {
             SuperCoder::initialize(the_factory);
 
-            m_proxy = the_factory.proxy_stack();
+            m_proxy = the_factory.main_stack();
             assert(m_proxy);
         }
 
@@ -47,7 +47,7 @@ namespace kodo
     private:
 
         /// Store a pointer to the main stack
-        const main_stack* m_proxy;
+        const main_stack_type* m_proxy;
 
     };
 

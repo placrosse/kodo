@@ -26,26 +26,10 @@ namespace
     namespace
     {
 
-        template<class SuperLayer>
-        class dummy_layer : public SuperLayer
+        template<class SuperCoder>
+        class dummy_layer : public SuperCoder
         {
         public:
-
-            class factory : public SuperLayer::factory
-            {
-            public:
-
-                factory(uint32_t max_symbols, uint32_t max_symbol_size)
-                    : SuperLayer::factory(max_symbols, max_symbol_size)
-                { }
-
-            };
-
-            void initialize(factory& /*the_factory*/)
-            { }
-
-            void construct(factory& /*the_factory*/)
-            { }
 
         };
 
@@ -73,14 +57,16 @@ namespace
                 : m_coder_factory(max_symbols, max_symbol_size),
                   m_proxy_factory(max_symbols, max_symbol_size)
             {
-                m_proxy_factory.set_factory_proxy(&m_coder_factory);
+                m_proxy_factory.set_main_factory(&m_coder_factory);
             }
 
             void run_general_api()
             {
+                SCOPED_TRACE("general api");
+
                 auto coder = m_coder_factory.build();
 
-                m_proxy_factory.set_stack_proxy(coder.get());
+                m_proxy_factory.set_main_stack(coder.get());
 
                 EXPECT_EQ(m_coder_factory.max_symbols(),
                           m_proxy_factory.max_symbols());
@@ -112,9 +98,10 @@ namespace
                 auto proxy = m_proxy_factory.build();
                 const auto& proxy_const = proxy;
 
-                EXPECT_EQ(proxy->proxy_stack(), m_proxy_factory.proxy_stack());
-                EXPECT_EQ(proxy_const->proxy_stack(),
-                          m_proxy_factory.proxy_stack());
+                EXPECT_EQ(proxy->main_stack(), m_proxy_factory.main_stack());
+
+                EXPECT_EQ(proxy_const->main_stack(),
+                          m_proxy_factory.main_stack());
 
                 //-------------------------------------------------------------
                 // SYMBOL STORAGE API
@@ -237,8 +224,10 @@ namespace
 
             void run_encoder_api()
             {
+                SCOPED_TRACE("encoder api");
+
                 auto coder = m_coder_factory.build();
-                m_proxy_factory.set_stack_proxy(coder.get());
+                m_proxy_factory.set_main_stack(coder.get());
 
                 auto proxy = m_proxy_factory.build();
 
@@ -277,8 +266,10 @@ namespace
 
             void run_decoder_api()
             {
+                SCOPED_TRACE("decoder api");
+
                 auto coder = m_coder_factory.build();
-                m_proxy_factory.set_stack_proxy(coder.get());
+                m_proxy_factory.set_main_stack(coder.get());
 
                 auto proxy = m_proxy_factory.build();
 
@@ -322,8 +313,10 @@ namespace
 
             void run_coefficients_api()
             {
+                SCOPED_TRACE("coefficients api");
+
                 auto coder = m_coder_factory.build();
-                m_proxy_factory.set_stack_proxy(coder.get());
+                m_proxy_factory.set_main_stack(coder.get());
 
                 auto proxy = m_proxy_factory.build();
 

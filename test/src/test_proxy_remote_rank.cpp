@@ -46,7 +46,7 @@ namespace kodo
         {
         public:
 
-            typedef dummy_main_stack main_stack;
+            typedef dummy_main_stack main_stack_type;
 
         public:
 
@@ -58,15 +58,15 @@ namespace kodo
                 {
                 }
 
-                const main_stack* proxy_stack() const
+                const main_stack_type* main_stack() const
                 {
                     return m_main_stack_pointer;
                 }
 
             public:
 
-                main_stack m_main_stack;
-                main_stack* m_main_stack_pointer;
+                main_stack_type m_main_stack;
+                main_stack_type* m_main_stack_pointer;
 
             };
 
