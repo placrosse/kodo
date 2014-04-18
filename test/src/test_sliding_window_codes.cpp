@@ -27,8 +27,10 @@
 /// and decoding
 TEST(TestSlidingWindowCodes, test_basic_api)
 {
-    test_basic_api<kodo::sliding_window_encoder,
-        kodo::sliding_window_decoder>();
+    test_basic_api<
+        kodo::sliding_window_encoder,
+        kodo::sliding_window_decoder,
+        kodo::disable_debug>();
 }
 
 /// Test that the encoders and decoders initialize() function can be used

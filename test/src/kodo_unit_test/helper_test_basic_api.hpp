@@ -28,6 +28,7 @@
 
 #include <kodo/has_rank.hpp>
 #include <kodo/rank.hpp>
+#include <kodo/proxy_args.hpp>
 
 /// Helper function which will invoke a number of checks on an encoder
 /// and decoder pair
@@ -170,7 +171,9 @@ inline void test_basic_api_(uint32_t symbols, uint32_t symbol_size)
 template
 <
     template <class...> class Encoder,
-    template <class...> class Decoder
+    template <class...> class Decoder,
+    class... Tags
+// kodo::proxy_args<Args...> EncoderArgs = kodo::proxy_args<>
 >
 inline void test_basic_api(uint32_t symbols, uint32_t symbol_size)
 {
@@ -181,8 +184,9 @@ inline void test_basic_api(uint32_t symbols, uint32_t symbol_size)
 
         SCOPED_TRACE(testing::Message() << "field = binary");
 
+        // typedef Encoder<fifi::binary, Tags...> encoder_type;
         typedef Encoder<fifi::binary> encoder_type;
-        typedef Decoder<fifi::binary> decoder_type;
+        typedef Decoder<fifi::binary, Tags...> decoder_type;
 
         test_basic_api_
             <
@@ -225,17 +229,18 @@ inline void test_basic_api(uint32_t symbols, uint32_t symbol_size)
 template
 <
     template <class...> class Encoder,
-    template <class...> class Decoder
+    template <class...> class Decoder,
+    class... Tags
 >
 inline void test_basic_api()
 {
 
-    test_basic_api<Encoder, Decoder>(32, 1600);
-    test_basic_api<Encoder, Decoder>(1, 1600);
+    test_basic_api<Encoder, Decoder, Tags...>(32, 1600);
+    test_basic_api<Encoder, Decoder, Tags...>(1, 1600);
 
     uint32_t symbols = rand_symbols();
     uint32_t symbol_size = rand_symbol_size();
 
-    test_basic_api<Encoder, Decoder>(symbols, symbol_size);
+    test_basic_api<Encoder, Decoder, Tags...>(symbols, symbol_size);
 }
 
