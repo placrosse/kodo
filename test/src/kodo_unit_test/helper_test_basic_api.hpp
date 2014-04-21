@@ -137,19 +137,6 @@ inline void test_basic_api_(uint32_t symbols, uint32_t symbol_size)
             kodo::read_feedback(encoder, &feedback[0]);
         }
 
-        // if(kodo::has_print_cached_symbol_coefficients<Decoder>::value)
-        // {
-        //     kodo::print_cached_symbol_coefficients(decoder, std::cout);
-        //     std::cout << std::endl;
-        // }
-
-        // if(kodo::has_debug_linear_block_decoder<Decoder>::value)
-        // {
-        //     kodo::print_decoder_state(decoder, std::cout);
-        //     std::cout << std::endl;
-        // }
-
-
     }
 
     std::vector<uint8_t> data_out(decoder->block_size(), '\0');
@@ -170,10 +157,8 @@ inline void test_basic_api_(uint32_t symbols, uint32_t symbol_size)
 /// different finite fields
 template
 <
-    template <class...> class Encoder,
-    template <class...> class Decoder,
-    class... Tags
-// kodo::proxy_args<Args...> EncoderArgs = kodo::proxy_args<>
+    template <class> class Encoder,
+    template <class> class Decoder
 >
 inline void test_basic_api(uint32_t symbols, uint32_t symbol_size)
 {
@@ -181,66 +166,66 @@ inline void test_basic_api(uint32_t symbols, uint32_t symbol_size)
     SCOPED_TRACE(testing::Message() << "symbol_size = " << symbols);
 
     {
-
         SCOPED_TRACE(testing::Message() << "field = binary");
-
-        // typedef Encoder<fifi::binary, Tags...> encoder_type;
-        typedef Encoder<fifi::binary> encoder_type;
-        typedef Decoder<fifi::binary, Tags...> decoder_type;
-
         test_basic_api_
             <
-                encoder_type,
-                decoder_type
+                Encoder<fifi::binary>,
+                Decoder<fifi::binary>
             >(symbols, symbol_size);
     }
 
-    /// @todo reenable this
     // {
-    //     SCOPED_TRACE(testing::Message() << "field = binary8");
+    //     SCOPED_TRACE(testing::Message() << "field = binary4");
     //     test_basic_api_
     //         <
-    //             Encoder<fifi::binary8>,
-    //             Decoder<fifi::binary8>
+    //             Encoder<fifi::binary4>,
+    //             Decoder<fifi::binary4>
     //         >(symbols, symbol_size);
     // }
 
-    // {
-    //     SCOPED_TRACE(testing::Message() << "field = binary16");
-    //     test_basic_api_
-    //         <
-    //             Encoder<fifi::binary16>,
-    //             Decoder<fifi::binary16>
-    //         >(symbols, symbol_size);
-    // }
+    {
+        SCOPED_TRACE(testing::Message() << "field = binary8");
+        test_basic_api_
+            <
+                Encoder<fifi::binary8>,
+                Decoder<fifi::binary8>
+            >(symbols, symbol_size);
+    }
 
-    // {
-    //     SCOPED_TRACE(testing::Message() << "field = prime2325");
-    //     test_basic_api_
-    //         <
-    //             Encoder<fifi::prime2325>,
-    //             Decoder<fifi::prime2325>
-    //         >(symbols, symbol_size);
-    // }
+    {
+        SCOPED_TRACE(testing::Message() << "field = binary16");
+        test_basic_api_
+            <
+                Encoder<fifi::binary16>,
+                Decoder<fifi::binary16>
+            >(symbols, symbol_size);
+    }
+
+    {
+        SCOPED_TRACE(testing::Message() << "field = prime2325");
+        test_basic_api_
+            <
+                Encoder<fifi::prime2325>,
+                Decoder<fifi::prime2325>
+            >(symbols, symbol_size);
+    }
 }
 
 /// Helper function that invokes the test_basic_api functions using a
 /// set of symbols and symbol sizes
 template
 <
-    template <class...> class Encoder,
-    template <class...> class Decoder,
-    class... Tags
+    template <class> class Encoder,
+    template <class> class Decoder
 >
 inline void test_basic_api()
 {
 
-    test_basic_api<Encoder, Decoder, Tags...>(32, 1600);
-    test_basic_api<Encoder, Decoder, Tags...>(1, 1600);
+    test_basic_api<Encoder, Decoder>(32, 1600);
+    test_basic_api<Encoder, Decoder>(1, 1600);
 
     uint32_t symbols = rand_symbols();
     uint32_t symbol_size = rand_symbol_size();
 
-    test_basic_api<Encoder, Decoder, Tags...>(symbols, symbol_size);
+    test_basic_api<Encoder, Decoder>(symbols, symbol_size);
 }
-
