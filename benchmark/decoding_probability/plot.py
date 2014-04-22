@@ -8,51 +8,58 @@ http://www.steinwurf.com/licensing
 Plot the number of extra symbols needed to decode
 """
 
-import pandas as pd
-import scipy as sp
-import pylab as pl
+import scipy
+import pylab
 
 import sys
-sys.path.insert(0, "../")
-import plot_helper as ph
+import os
+sys.path.insert(0, os.path.join(
+    os.path.dirname(os.path.realpath(__file__)), ".."))
+import plot_helper
+
 
 def plot(args):
-    plotter = ph.plotter(args)
+    plotter = plot_helper.plotter(args)
 
     query = {
-    "branch" : "master",
-    "scheduler": "kodo-nightly-benchmark",
-    "utc_date" : {"$gte": args.date - ph.timedelta(1), "$lt": args.date},
+        "branch": "master",
+        "scheduler": "kodo (nightly benchmark)",
+        "utc_date": {
+            "$gte": args.date - plot_helper.timedelta(1),
+            "$lt": args.date
+        }
     }
     df = plotter.get_dataframe(query, "kodo_decoding_probability")
 
-    df['mean'] = df['used'].apply(sp.mean) -df['symbols']
-    df['std'] = df['used'].apply(sp.std)
-    df['field'] = df['benchmark'].apply(ph.fields)
-    df['algorithm'] = df['testcase'].apply(ph.algorithms)
+    df['mean'] = df['used'].apply(scipy.mean) - df['symbols']
+    df['std'] = df['used'].apply(scipy.std)
+    df['field'] = df['benchmark'].apply(plot_helper.get_field)
+    df['algorithm'] = df['testcase'].apply(plot_helper.get_algorithm)
 
-    sparse = df[df['testcase'] == "SparseFullRLNC"].groupby(by= ['slavename',
-        'symbol_size'])
-    dense = df[df['testcase'] != "SparseFullRLNC"].groupby(by= ['slavename',
-        'symbol_size'])
+    dense = df[df['testcase'].isin(plot_helper.codes['dense'])].groupby(
+        by=['slavename', 'symbol_size'])
+    sparse = df[df['testcase'].isin(plot_helper.codes['sparse'])].groupby(
+        by=['slavename', 'symbol_size'])
 
     def plot_setup(p):
-        pl.ylabel("Extra symbols" + " [" + list(group['unit'])[0] + "]")
-        pl.xscale('log', basex=2)
-        pl.xticks(list(sp.unique(group['symbols'])))
+        pylab.ylabel("Extra symbols [{}]".format(list(group['unit'])[0]))
+        pylab.xscale('log', basex=2)
+        pylab.xticks(list(scipy.unique(group['symbols'])))
         plotter.set_slave_info(slavename)
         plotter.set_markers(p)
 
-    for (slavename,symbols), group in sparse:
+    for (slavename, symbols), group in sparse:
         p = group.pivot_table('mean',  rows='symbols', cols=['field',
-            'density']).plot()
+                                                             'density']).plot()
         plot_setup(p)
         plotter.set_legend_title("(Field, Density)")
         plotter.write("sparse", slavename)
 
-    for (slavename,symbols), group in dense:
-        p = group.pivot_table('mean',  rows='symbols', cols=['field',
-            'algorithm']).plot()
+    for (slavename, symbols), group in dense:
+        p = group.pivot_table(
+            'mean',
+            rows='symbols',
+            cols=['field', 'algorithm']).plot()
         plot_setup(p)
         plotter.set_legend_title("(Field, Algorithm)")
         plotter.write("dense", slavename)
@@ -60,5 +67,5 @@ def plot(args):
     return df
 
 if __name__ == '__main__':
-    args = ph.add_arguments(["json", "date", "output-format"])
+    args = plot_helper.add_arguments(["json", "date", "output-format"])
     df = plot(args)

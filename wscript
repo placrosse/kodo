@@ -23,7 +23,7 @@ def options(opt):
         resolve.ResolveGitMajorVersion(
             name = 'fifi',
             git_repository = 'github.com/steinwurf/fifi.git',
-            major_version = 10))
+            major_version = 11))
 
     bundle.add_dependency(opt,
         resolve.ResolveGitMajorVersion(
@@ -61,6 +61,18 @@ def options(opt):
             git_repository = 'github.com/steinwurf/tables.git',
             major_version = 4))
 
+    bundle.add_dependency(opt,
+        resolve.ResolveGitMajorVersion(
+            name = 'cpuid',
+            git_repository = 'github.com/steinwurf/cpuid.git',
+            major_version = 3))
+
+    bundle.add_dependency(opt,
+        resolve.ResolveGitMajorVersion(
+            name = 'platform',
+            git_repository = 'github.com/steinwurf/platform.git',
+            major_version = 1))
+
     opt.load('wurf_dependency_resolve')
     opt.load('wurf_dependency_bundle')
     opt.load('wurf_tools')
@@ -84,6 +96,8 @@ def configure(conf):
         recurse_helper(conf, 'fifi')
         recurse_helper(conf, 'gauge')
         recurse_helper(conf, 'tables')
+        recurse_helper(conf, 'cpuid')
+        recurse_helper(conf, 'platform')
 
         conf.recurse('examples/sample_makefile')
 
@@ -99,6 +113,8 @@ def build(bld):
         recurse_helper(bld, 'fifi')
         recurse_helper(bld, 'gauge')
         recurse_helper(bld, 'tables')
+        recurse_helper(bld, 'cpuid')
+        recurse_helper(bld, 'platform')
 
         # Only build test when executed from the
         # top-level wscript i.e. not when included as a dependency
@@ -124,9 +140,10 @@ def build(bld):
         bld.recurse('benchmark/decoding_probability')
 
     # Export own includes
-    bld(includes = './src',
+    bld(name = 'kodo_includes',
+        includes = './src',
         export_includes = './src',
-        name = 'kodo_includes')
+        use = ['cpuid', 'fifi'])
 
     # Export unit test includes, these files are useful for testing
     # the correctness of encoders and decoders. Since users of kodo

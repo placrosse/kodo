@@ -8,65 +8,81 @@ http://www.steinwurf.com/licensing
 Plot the number of extra symbols needed to decode
 """
 
-import pandas as pd
-import scipy as sp
-from matplotlib import pyplot as pl
+import scipy
+from matplotlib import pyplot
 
 import sys
-sys.path.insert(0, "../")
-import plot_helper as ph
+
+import os
+sys.path.insert(0, os.path.join(
+    os.path.dirname(os.path.realpath(__file__)), ".."))
+
+import plot_helper
+
 
 def plot(args):
-    plotter = ph.plotter(args)
+    plotter = plot_helper.plotter(args)
 
     query = {
-    "branch" : "master",
-    "scheduler": "kodo-nightly-benchmark",
-    "utc_date" : {"$gte": args.date - ph.timedelta(1), "$lt": args.date},
+        "branch": "master",
+        "scheduler": "kodo (nightly benchmark)",
+        "utc_date": {
+            "$gte": args.date - plot_helper.timedelta(1),
+            "$lt": args.date},
     }
     df = plotter.get_dataframe(query, "kodo_decoding_probability")
 
     # Calculate the expected number of extra pacekts depending on the rank
-    df['dependency'] = df['rank'].apply(sp.mean, axis=0)-1
-    df['field'] = df['benchmark'].apply(ph.fields)
-    df['algorithm'] = df['testcase'].apply(ph.algorithms)
+    df['dependency'] = df['rank'].apply(scipy.mean, axis=0) - 1
+    df['field'] = df['benchmark'].apply(plot_helper.get_field)
+    df['algorithm'] = df['testcase'].apply(plot_helper.get_algorithm)
 
     # Group by type of code; dense, sparse
-    sparse = df[df['testcase'] == "SparseFullRLNC"].groupby(by= ['slavename',
-        'symbol_size','symbols'])
-    dense = df[df['testcase'] != "SparseFullRLNC"].groupby(by= ['slavename',
-        'symbol_size','symbols'])
+    dense = df[df['testcase'].isin(plot_helper.codes['dense'])].groupby(
+        by=['slavename', 'symbol_size', 'symbols'])
+    sparse = df[df['testcase'].isin(plot_helper.codes['sparse'])].groupby(
+        by=['slavename', 'symbol_size', 'symbols'])
 
     def set_comparison_plot():
         #pl.xlim(xmin = max(0, pl.xlim()[1] -16 ))
-        pl.xticks( symbols-2**sp.arange(sp.log2(symbols))[::-1] ,
-            2**sp.arange(sp.log2(symbols),dtype=int)[::-1])
-        pl.grid('on')
+        pyplot.xticks(
+            symbols - 2 ** scipy.arange(scipy.log2(symbols))[::-1],
+            2 ** scipy.arange(scipy.log2(symbols), dtype=int)[::-1])
+        pyplot.grid('on')
         plotter.set_slave_info(slavename)
-        pl.xlabel("Rank Deficiency")
-        pl.ylabel("Extra Packets")
+        pyplot.xlabel("Rank Deficiency")
+        pyplot.ylabel("Extra Packets")
 
-    #Verbose plotting since due to no pandas support for plotting of vectors
+    # Verbose plotting since due to no pandas support for plotting of vectors
     for (slavename, symbol_size, symbols), group in sparse:
-        pl.figure()
-        for (deps, field,density) in zip(group['dependency'], group['field'],
-            group['density']):
-            pl.plot(sp.arange(symbols), deps, marker = ph.markers(field),
-                label = "(" + field +", " + str(density) + ")")
+        pyplot.figure()
+        for (deps, field, density) in zip(group['dependency'], group['field'],
+                                          group['density']):
+            pyplot.plot(
+                scipy.arange(symbols),
+                deps,
+                marker=plot_helper.get_marker(field),
+                label="({}, {})".format(field, str(density)))
+
         set_comparison_plot()
         plotter.write("sparse", slavename)
 
     for (slavename, symbol_size, symbols), group in dense:
-        pl.figure()
-        for (deps, field, algorithm) in zip(group['dependency'], group['field'],
-            group['algorithm']):
-            pl.plot(sp.arange(symbols), deps, marker = ph.markers(field),
-                label = "(" + field +", " + algorithm + ")")
+        pyplot.figure()
+        for (deps, field, algorithm) in zip(
+                group['dependency'],
+                group['field'],
+                group['algorithm']):
+            pyplot.plot(
+                scipy.arange(symbols),
+                deps,
+                marker=plot_helper.get_marker(field),
+                label="({}, {})".format(field, algorithm))
         set_comparison_plot()
         plotter.write("dense", slavename)
 
     return df
 
 if __name__ == '__main__':
-    args = ph.add_arguments(["json", "date", "output-format"])
+    args = plot_helper.add_arguments(["json", "date", "output-format"])
     df = plot(args)

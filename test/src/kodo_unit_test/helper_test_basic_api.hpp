@@ -5,6 +5,11 @@
 
 #pragma once
 
+#include <fifi/binary.hpp>
+#include <fifi/binary4.hpp>
+#include <fifi/binary8.hpp>
+#include <fifi/binary16.hpp>
+#include <fifi/prime2325.hpp>
 #include <fifi/is_prime2325.hpp>
 #include <fifi/prime2325_binary_search.hpp>
 #include <fifi/prime2325_apply_prefix.hpp>
@@ -106,7 +111,8 @@ inline void test_basic_api_(uint32_t symbols, uint32_t symbol_size)
         // This field only works for multiple of uint32_t
         assert((encoder->block_size() % 4) == 0);
 
-        uint32_t block_length = encoder->block_size() / 4;
+        uint32_t block_length =
+            fifi::size_to_length<fifi::prime2325>(encoder->block_size());
 
         fifi::prime2325_binary_search search(block_length);
         prefix = search.find_prefix(storage_in_copy);
@@ -174,6 +180,7 @@ inline void test_basic_api(uint32_t symbols, uint32_t symbol_size)
             >(symbols, symbol_size);
     }
 
+    /// @todo enable
     // {
     //     SCOPED_TRACE(testing::Message() << "field = binary4");
     //     test_basic_api_

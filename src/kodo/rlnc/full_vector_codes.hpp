@@ -51,6 +51,7 @@
 
 namespace kodo
 {
+    /// @todo Enforce one class per file rule
 
     /// @ingroup fec_stacks
     /// @brief Complete stack implementing a RLNC encoder.
@@ -212,5 +213,3 @@ namespace kodo
     { };
 
 }
-
-

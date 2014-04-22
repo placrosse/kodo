@@ -9,7 +9,8 @@
 #include <cstdint>
 
 #include <gtest/gtest.h>
-#include <fifi/field_types.hpp>
+#include <fifi/binary.hpp>
+#include <fifi/binary8.hpp>
 #include <kodo/coefficient_info.hpp>
 #include <kodo/storage_block_info.hpp>
 namespace kodo
@@ -98,19 +99,5 @@ TEST(TestCoefficientInfo, api)
         EXPECT_EQ(info.coefficient_vector_elements(), symbols);
         EXPECT_EQ(info.coefficient_vector_length(), 16U);
         EXPECT_EQ(info.coefficient_vector_size(), 16U);
-    }
-
-    {
-        typedef kodo::test_coefficient_info<fifi::binary32> stack;
-
-        stack::factory f(symbols, symbols_size);
-
-        stack info;
-        info.construct(f);
-        info.initialize(f);
-
-        EXPECT_EQ(info.coefficient_vector_elements(), symbols);
-        EXPECT_EQ(info.coefficient_vector_length(), 16U);
-        EXPECT_EQ(info.coefficient_vector_size(), 64U);
     }
 }
