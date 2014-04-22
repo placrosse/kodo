@@ -11,7 +11,7 @@
 #include <gtest/gtest.h>
 
 #include <kodo/has_debug_linear_block_decoder.hpp>
-#include <kodo/rlnc/full_vector_codes.hpp>
+#include <kodo/rlnc/full_rlnc_codes.hpp>
 #include <kodo/rlnc/on_the_fly_codes.hpp>
 
 TEST(TestHasDebugLinearBlockDecoder, detect)
@@ -22,10 +22,10 @@ TEST(TestHasDebugLinearBlockDecoder, detect)
     EXPECT_FALSE(kodo::has_debug_linear_block_decoder<
                      kodo::full_rlnc_encoder<fifi::binary8> >::value);
 
-    EXPECT_FALSE(kodo::has_debug_linear_block_decoder<
+    EXPECT_TRUE(kodo::has_debug_linear_block_decoder<
                      kodo::full_rlnc_decoder<fifi::binary> >::value);
 
-    EXPECT_FALSE(kodo::has_debug_linear_block_decoder<
+    EXPECT_TRUE(kodo::has_debug_linear_block_decoder<
                      kodo::full_rlnc_decoder<fifi::binary8> >::value);
 
     EXPECT_FALSE(kodo::has_debug_linear_block_decoder<
@@ -46,13 +46,4 @@ TEST(TestHasDebugLinearBlockDecoder, detect)
     EXPECT_FALSE(kodo::has_debug_linear_block_decoder<
                      kodo::full_rlnc_encoder<fifi::binary8> >::value);
 
-    EXPECT_TRUE(kodo::has_debug_linear_block_decoder<
-                    kodo::debug_full_rlnc_decoder<fifi::binary> >::value);
-
-    EXPECT_TRUE(kodo::has_debug_linear_block_decoder<
-                    kodo::debug_full_rlnc_decoder<fifi::binary8> >::value);
-
 }
-
-
-

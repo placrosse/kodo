@@ -9,7 +9,7 @@
 
 #include <kodo/file_encoder.hpp>
 #include <kodo/object_decoder.hpp>
-#include <kodo/rlnc/full_vector_codes.hpp>
+#include <kodo/rlnc/full_rlnc_codes.hpp>
 #include <kodo/set_systematic_off.hpp>
 
 #include <boost/filesystem.hpp>
@@ -104,7 +104,3 @@ TEST(TestFileEncoder, test_file_encoder)
     }
 
 }
-
-
-
-

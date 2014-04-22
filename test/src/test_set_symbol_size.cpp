@@ -8,7 +8,7 @@
 #include <gtest/gtest.h>
 
 #include <kodo/set_symbol_size.hpp>
-#include <kodo/rlnc/full_vector_codes.hpp>
+#include <kodo/rlnc/full_rlnc_codes.hpp>
 
 namespace kodo
 {
@@ -70,6 +70,3 @@ TEST(TestSetSymbolSize, invoke)
     }
 
 }
-
-
-

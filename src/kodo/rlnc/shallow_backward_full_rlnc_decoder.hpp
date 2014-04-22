@@ -5,13 +5,13 @@
 
 #pragma once
 
-#include <kodo/backward_linear_block_decoder.hpp>
-#include <kodo/default_on_systematic_encoder.hpp>
-#include <kodo/has_shallow_symbol_storage.hpp>
-#include <kodo/linear_block_decoder_delayed.hpp>
-#include <kodo/partial_shallow_symbol_storage.hpp>
-#include <kodo/rlnc/full_vector_codes.hpp>
-#include <kodo/shallow_symbol_storage.hpp>
+#include "../backward_linear_block_decoder.hpp"
+#include "../default_on_systematic_encoder.hpp"
+#include "../has_shallow_symbol_storage.hpp"
+#include "../linear_block_decoder_delayed.hpp"
+#include "../partial_shallow_symbol_storage.hpp"
+#include "full_rlnc_codes.hpp"
+#include "../shallow_symbol_storage.hpp"
 
 namespace kodo
 {
@@ -26,7 +26,7 @@ namespace kodo
     template<class Field>
     class shallow_backward_full_rlnc_decoder : public
         // Payload API
-        payload_recoder<recoding_stack,
+        payload_recoder<full_rlnc_recoding_stack,
         payload_decoder<
         // Codec Header API
         systematic_decoder<

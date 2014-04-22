@@ -7,7 +7,7 @@
 
 #include <cstdint>
 
-#include "full_vector_codes.hpp"
+#include "full_rlnc_codes.hpp"
 #include "sliding_window_generator.hpp"
 #include "sliding_window_systematic_encoder.hpp"
 
@@ -77,6 +77,3 @@ namespace kodo
     { };
 
 }
-
-
-

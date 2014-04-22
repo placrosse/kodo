@@ -25,6 +25,7 @@ namespace kodo
 {
 
     /// @ingroup fec_stacks
+    ///
     /// @brief Implementation of a complete RLNC sliding window decoder
     ///
     /// This configuration extends the on_the_fly_decoder with the

@@ -5,11 +5,8 @@
 
 #include <ctime>
 
-#include <kodo/rlnc/full_vector_codes.hpp>
-
-#include <kodo/cached_symbol_decoder.hpp>
-#include <kodo/debug_cached_symbol_decoder.hpp>
-#include <kodo/debug_linear_block_decoder.hpp>
+#include <kodo/rlnc/full_rlnc_codes.hpp>
+#include <kodo/debug.hpp>
 
 /// @example use_debug_layers.cpp
 ///
@@ -27,8 +24,11 @@ int main()
     uint32_t symbol_size = 16;
 
     // Typdefs for the encoder/decoder type we wish to use
-    typedef kodo::full_rlnc_encoder<fifi::binary8> rlnc_encoder;
-    typedef kodo::debug_full_rlnc_decoder<fifi::binary8> rlnc_decoder;
+    typedef kodo::full_rlnc_encoder<fifi::binary8>
+        rlnc_encoder;
+
+    typedef kodo::full_rlnc_decoder<fifi::binary8, kodo::enable_debug>
+        rlnc_decoder;
 
     // In the following we will make an encoder/decoder factory.
     // The factories are used to build actual encoders/decoders
@@ -73,13 +73,10 @@ int main()
         // Pass that packet to the decoder
         decoder->decode( &payload[0] );
 
-        std::cout << "Received symbol:" << std::endl;
-        decoder->print_cached_symbol_coefficients(std::cout);
-
-        std::cout << "Decoder state:" << std::endl;
-        decoder->print_decoder_state(std::cout);
-
-        std::cout << "Decoder rank:" << decoder->rank() << std::endl;
+        if (kodo::has_debug<rlnc_decoder>::value)
+        {
+            kodo::debug(decoder, std::cout);
+        }
     }
 
     // The decoder is complete, now copy the symbols from the decoder

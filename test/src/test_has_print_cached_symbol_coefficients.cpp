@@ -11,7 +11,7 @@
 #include <gtest/gtest.h>
 
 #include <kodo/has_print_cached_symbol_coefficients.hpp>
-#include <kodo/rlnc/full_vector_codes.hpp>
+#include <kodo/rlnc/full_rlnc_codes.hpp>
 #include <kodo/rlnc/on_the_fly_codes.hpp>
 
 TEST(TestHasPrintCachedSymbolCoefficients, detect)
@@ -46,14 +46,5 @@ TEST(TestHasPrintCachedSymbolCoefficients, detect)
     EXPECT_FALSE(kodo::has_print_cached_symbol_coefficients<
                      kodo::full_rlnc_encoder<fifi::binary8> >::value);
 
-    EXPECT_TRUE(kodo::has_print_cached_symbol_coefficients<
-                    kodo::debug_full_rlnc_decoder<fifi::binary> >::value);
-
-    EXPECT_TRUE(kodo::has_print_cached_symbol_coefficients<
-                    kodo::debug_full_rlnc_decoder<fifi::binary8> >::value);
 
 }
-
-
-
-

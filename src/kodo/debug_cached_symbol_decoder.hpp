@@ -17,6 +17,8 @@
 namespace kodo
 {
 
+    /// @todo Implement debug() function
+
     /// @ingroup debug
     ///
     /// @brief This layer makes it easy to print the incoming coded symbol
@@ -114,4 +116,3 @@ namespace kodo
     };
 
 }
-

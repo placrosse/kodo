@@ -23,7 +23,7 @@
 #include <iostream>
 #include <vector>
 
-#include <kodo/rlnc/full_vector_codes.hpp>
+#include <kodo/rlnc/full_rlnc_codes.hpp>
 #include <kodo/cached_symbol_decoder.hpp>
 #include <kodo/debug_cached_symbol_decoder.hpp>
 #include <kodo/debug_linear_block_decoder.hpp>

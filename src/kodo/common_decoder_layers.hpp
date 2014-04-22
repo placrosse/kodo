@@ -30,6 +30,3 @@ namespace kodo
                symbol_decoding_status_tracker<SuperCoder> > > > > >;
 
 }
-
-
-

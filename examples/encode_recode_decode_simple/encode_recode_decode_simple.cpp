@@ -28,7 +28,7 @@
 /// research litterature (e.g. MORE: A Network Coding Approach to
 /// Opportunistic Routing).
 
-#include <kodo/rlnc/full_vector_codes.hpp>
+#include <kodo/rlnc/full_rlnc_codes.hpp>
 
 int main()
 {
@@ -103,4 +103,3 @@ int main()
                   << "please file a bug report :)" << std::endl;
     }
 }
-

@@ -9,7 +9,7 @@
 
 #include <gtest/gtest.h>
 
-#include <kodo/rlnc/full_vector_codes.hpp>
+#include <kodo/rlnc/full_rlnc_codes.hpp>
 #include <kodo/proxy_layer.hpp>
 
 #include "kodo_unit_test/basic_api_test_helper.hpp"
@@ -387,5 +387,3 @@ TEST(TestProxyLayer, decoder)
     t.run_decoder_api();
     t.run_coefficients_api();
 }
-
-

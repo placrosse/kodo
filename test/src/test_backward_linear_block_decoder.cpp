@@ -10,7 +10,7 @@
 #include <gtest/gtest.h>
 
 #include <kodo/backward_linear_block_decoder.hpp>
-#include <kodo/rlnc/full_vector_codes.hpp>
+#include <kodo/rlnc/full_rlnc_codes.hpp>
 
 #include <kodo/debug_linear_block_decoder.hpp>
 
@@ -252,6 +252,3 @@ TEST(TestBackwardLinearBlockDecoder, test_decoder_delayed)
 {
     test_backward_stack<kodo::test_backward_delayed_stack>();
 }
-
-
-

@@ -12,9 +12,10 @@
 
 #include <kodo/has_debug_cached_symbol_decoder.hpp>
 #include <kodo/has_print_cached_symbol_data.hpp>
-#include <kodo/rlnc/full_vector_codes.hpp>
+#include <kodo/rlnc/full_rlnc_codes.hpp>
 #include <kodo/rlnc/on_the_fly_codes.hpp>
 
+/// @todo review this unit test
 TEST(TestHasDebugCachedSymbolDecoder, detect)
 {
     EXPECT_FALSE(kodo::has_debug_cached_symbol_decoder<
@@ -47,12 +48,4 @@ TEST(TestHasDebugCachedSymbolDecoder, detect)
     EXPECT_FALSE(kodo::has_debug_cached_symbol_decoder<
                      kodo::full_rlnc_encoder<fifi::binary8> >::value);
 
-    EXPECT_TRUE(kodo::has_debug_cached_symbol_decoder<
-                    kodo::debug_full_rlnc_decoder<fifi::binary> >::value);
-
-    EXPECT_TRUE(kodo::has_debug_cached_symbol_decoder<
-                    kodo::debug_full_rlnc_decoder<fifi::binary8> >::value);
-
 }
-
-

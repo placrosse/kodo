@@ -7,7 +7,7 @@
 
 #include <cstdint>
 
-#include "full_vector_codes.hpp"
+#include "full_rlnc_codes.hpp"
 #include "on_the_fly_generator.hpp"
 #include "../partial_decoding_tracker.hpp"
 #include "../rank_info.hpp"

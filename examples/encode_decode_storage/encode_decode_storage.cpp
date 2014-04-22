@@ -6,7 +6,7 @@
 #include <kodo/file_encoder.hpp>
 #include <kodo/shallow_storage_decoder.hpp>
 #include <kodo/storage_encoder.hpp>
-#include <kodo/rlnc/full_vector_codes.hpp>
+#include <kodo/rlnc/full_rlnc_codes.hpp>
 #include <kodo/partial_shallow_symbol_storage.hpp>
 
 /// @example encode_decode_storage.cpp
@@ -62,7 +62,7 @@ namespace kodo
     template<class Field>
     class shallow_rlnc_decoder :
         public // Payload API
-               payload_recoder<recoding_stack,
+               payload_recoder<full_rlnc_recoding_stack,
                payload_decoder<
                // Codec Header API
                systematic_decoder<
@@ -163,4 +163,3 @@ int main()
                   << "please file a bug report :)" << std::endl;
     }
 }
-

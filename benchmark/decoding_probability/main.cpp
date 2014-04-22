@@ -15,7 +15,7 @@
 #include <gauge/python_printer.hpp>
 
 #include <kodo/has_deep_symbol_storage.hpp>
-#include <kodo/rlnc/full_vector_codes.hpp>
+#include <kodo/rlnc/full_rlnc_codes.hpp>
 #include <kodo/rlnc/seed_codes.hpp>
 #include <kodo/rs/reed_solomon_codes.hpp>
 #include <kodo/set_systematic_on.hpp>

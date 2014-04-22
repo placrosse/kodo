@@ -17,7 +17,7 @@
 #include <kodo/feedback_size.hpp>
 
 #include <kodo/has_debug_linear_block_decoder.hpp>
-#include <kodo/print_decoder_state.hpp>
+
 
 #include <kodo/has_print_cached_symbol_coefficients.hpp>
 #include <kodo/print_cached_symbol_coefficients.hpp>
@@ -317,6 +317,3 @@ inline void test_reuse_incomplete()
 
     test_reuse_incomplete<Encoder, Decoder>(symbols, symbol_size);
 }
-
-
-

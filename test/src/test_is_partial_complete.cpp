@@ -11,7 +11,7 @@
 #include <gtest/gtest.h>
 
 #include <kodo/is_partial_complete.hpp>
-#include <kodo/rlnc/full_vector_codes.hpp>
+#include <kodo/rlnc/full_rlnc_codes.hpp>
 #include <kodo/rlnc/on_the_fly_codes.hpp>
 
 #include "kodo_unit_test/basic_api_test_helper.hpp"
@@ -237,6 +237,3 @@ TEST(TestIsPartialComplete, check_two_encoders)
                            data_out.end(),
                            data_in.begin()));
 }
-
-
-

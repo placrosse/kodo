@@ -13,7 +13,7 @@
 #include <kodo/deep_storage_decoder.hpp>
 #include <kodo/storage_encoder.hpp>
 #include <kodo/rfc5052_partitioning_scheme.hpp>
-#include <kodo/rlnc/full_vector_codes.hpp>
+#include <kodo/rlnc/full_rlnc_codes.hpp>
 #include <kodo/partial_shallow_symbol_storage.hpp>
 #include <kodo/set_systematic_off.hpp>
 
@@ -33,7 +33,7 @@ namespace kodo
         template<class Field>
         class shallow_rlnc_decoder :
             public // Payload API
-                  payload_recoder<recoding_stack,
+                  payload_recoder<full_rlnc_recoding_stack,
                   payload_decoder<
                   // Codec Header API
                   systematic_decoder<
@@ -278,14 +278,3 @@ TEST(TestStorageCoder, deep_storage_decoder)
 
     test_deep_decoder(symbols, symbol_size, object_size);
 }
-
-
-
-
-
-
-
-
-
-
-

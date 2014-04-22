@@ -7,7 +7,7 @@
 
 #include <cstdint>
 
-#include "full_vector_codes.hpp"
+#include "full_rlnc_codes.hpp"
 #include "on_the_fly_generator.hpp"
 #include "sliding_window_systematic_encoder.hpp"
 #include "sliding_window_generator.hpp"
@@ -26,7 +26,7 @@
 
 namespace kodo
 {
-
+    /// @ingroup
     /// Intermediate stack implementing the recoding functionality of
     /// a RLNC code. As can be seen we are able to reuse a great deal
     /// of layers from the encode stack. It is important that the
@@ -69,6 +69,3 @@ namespace kodo
     { };
 
 }
-
-
-

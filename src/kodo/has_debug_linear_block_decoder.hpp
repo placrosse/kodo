@@ -11,6 +11,7 @@ namespace kodo
 {
 
     /// @ingroup type_traits
+    ///
     /// Type trait helper allows compile time detection of whether a
     /// decoder contains the debug_linear_block_decoder
     ///
@@ -35,5 +36,3 @@ namespace kodo
     };
 
 }
-
-

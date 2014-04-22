@@ -13,7 +13,7 @@
 #include <kodo/set_systematic_on.hpp>
 #include <kodo/set_systematic_off.hpp>
 #include <kodo/has_set_systematic_on.hpp>
-#include <kodo/rlnc/full_vector_codes.hpp>
+#include <kodo/rlnc/full_rlnc_codes.hpp>
 
 namespace kodo
 {
@@ -85,6 +85,3 @@ TEST(TestSetSystematicOn, set)
     }
 
 }
-
-
-

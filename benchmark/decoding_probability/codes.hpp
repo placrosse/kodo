@@ -6,7 +6,7 @@
 #pragma once
 
 
-#include <kodo/rlnc/full_vector_codes.hpp>
+#include <kodo/rlnc/full_rlnc_codes.hpp>
 #include <kodo/linear_block_decoder_delayed.hpp>
 #include <kodo/sparse_uniform_generator.hpp>
 
@@ -16,7 +16,7 @@ namespace kodo
     template<class Field>
     class full_delayed_rlnc_decoder
         : public // Payload API
-                 payload_recoder<recoding_stack,
+                 payload_recoder<full_rlnc_recoding_stack,
                  payload_decoder<
                  // Codec Header API
                  systematic_decoder<
@@ -50,7 +50,7 @@ namespace kodo
     template<class Field>
     class full_rlnc_decoder_unsystematic
         : public // Payload API
-            payload_recoder<recoding_stack,
+            payload_recoder<full_rlnc_recoding_stack,
             payload_decoder<
             // Codec Header API
             symbol_id_decoder<
@@ -149,4 +149,3 @@ namespace kodo
     { };
 
 }
-

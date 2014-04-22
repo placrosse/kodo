@@ -3,7 +3,7 @@
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
 
-#include <kodo/rlnc/full_vector_codes.hpp>
+#include <kodo/rlnc/full_rlnc_codes.hpp>
 #include <kodo/cached_symbol_decoder.hpp>
 #include <kodo/empty_decoder.hpp>
 
@@ -179,4 +179,3 @@ int main()
                   << "please file a bug report :)" << std::endl;
     }
 }
-

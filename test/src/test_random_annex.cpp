@@ -11,14 +11,10 @@
 #include <kodo/random_annex_encoder.hpp>
 #include <kodo/random_annex_decoder.hpp>
 #include <kodo/rfc5052_partitioning_scheme.hpp>
-#include <kodo/rlnc/full_vector_codes.hpp>
+#include <kodo/rlnc/full_rlnc_codes.hpp>
 #include <kodo/set_systematic_off.hpp>
 
 #include "kodo_unit_test/basic_api_test_helper.hpp"
-
-/// @file test_random_annex.cpp Unit tests for the Random Annex coding
-///       scheme
-
 
 /// Tests the build_annex functionality
 template<class Partitioning>
@@ -197,14 +193,26 @@ void invoke_random_annex_partial(uint32_t max_symbols,
 
 }
 
+namespace
+{
+    template<class Field>
+    using encoder = kodo::full_rlnc_encoder<Field>;
+
+    template<class Field>
+    using decoder = kodo::full_rlnc_decoder<Field, kodo::disable_debug>;
+}
+
 void test_random_annex_coders(uint32_t symbols, uint32_t symbol_size,
                               uint32_t multiplier)
 {
+
+
+
     invoke_random_annex_partial<
-        kodo::full_rlnc_encoder,
-        kodo::full_rlnc_decoder,
-            kodo::rfc5052_partitioning_scheme>(
-                symbols, symbol_size, multiplier);
+        encoder,
+        decoder,
+        kodo::rfc5052_partitioning_scheme>(
+            symbols, symbol_size, multiplier);
 }
 
 
@@ -223,5 +231,3 @@ TEST(TestRandomAnnexCoder, construct_and_invoke_the_basic_api)
 
     test_random_annex_coders(symbols, symbol_size, multiplier);
 }
-
-
