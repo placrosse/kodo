@@ -9,6 +9,8 @@
 #include <gtest/gtest.h>
 
 #include <kodo/debug.hpp>
+#include <kodo/rlnc/sliding_window_encoder.hpp>
+#include <kodo/rlnc/sliding_window_decoder.hpp>
 
 namespace kodo
 {
@@ -34,6 +36,21 @@ namespace kodo
     }
 }
 
+template<class Decoder>
+inline std::string test_output()
+{
+    typename Decoder::factory factory(10, 100);
+    auto decoder = factory.build();
+
+    std::stringstream ss;
+    if (kodo::has_debug<Decoder>::value)
+    {
+        kodo::debug(decoder, ss);
+    }
+
+    return ss.str();
+}
+
 TEST(TestDebug, invoke)
 {
 
@@ -57,29 +74,16 @@ TEST(TestDebug, invoke)
         }
     }
 
-    /// @todo enable with real stack
-    // {
-    //     // Check that the code compiles with a normal stack
-    //     typedef kodo::full_rlnc_encoder<fifi::binary8> encoder_type;
+    // Define two real stacks with debug on or off
+    typedef kodo::sliding_window_decoder<
+        fifi::binary8> decoder_debug_off;
 
-    //     encoder_type::factory factory(10,10);
-    //     auto encoder = factory.build();
+    typedef kodo::sliding_window_decoder<
+        fifi::binary8,kodo::enable_debug> decoder_debug_on;
 
-    //     EXPECT_TRUE(encoder->is_systematic_on());
+    EXPECT_TRUE(test_output<decoder_debug_off>() == "");
 
-    //     kodo::set_systematic_on(encoder);
-    //     EXPECT_TRUE(encoder->is_systematic_on());
-
-    //     kodo::set_systematic_off(encoder);
-    //     EXPECT_FALSE(encoder->is_systematic_on());
-
-    //     kodo::set_systematic_on(encoder);
-    //     EXPECT_TRUE(encoder->is_systematic_on());
-
-
-    // }
+    // We expect the debug on to produce some debug output
+    EXPECT_FALSE(test_output<decoder_debug_on>() == "");
 
 }
-
-
-
