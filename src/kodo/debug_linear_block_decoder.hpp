@@ -77,18 +77,17 @@ namespace kodo
 
     public:
 
-        /// @todo Put the layer::debug in the layers_doxygen file
         /// @copydoc layer::debug(std::ostream&)
         void debug(std::ostream& out)
         {
             print_decoder_state(out);
 
-            // // If the lower layers define the debug function forward it
-            // if (kodo::has_debug<SuperCoder>::value)
-            // {
-            //     SuperCoder& next = *this;
-            //     kodo::debug(next, out);
-            // }
+            // If the lower layers define the debug function forward it
+            if (kodo::has_debug<SuperCoder>::value)
+            {
+                SuperCoder& next = *this;
+                kodo::debug(next, out);
+            }
 
         }
 
@@ -132,4 +131,3 @@ namespace kodo
     };
 
 }
-

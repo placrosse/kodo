@@ -8,7 +8,7 @@
 #include <gtest/gtest.h>
 
 #include <kodo/has_debug.hpp>
-#include <kodo/rlnc/full_vector_codes.hpp>
+#include <kodo/rlnc/sliding_window_decoder.hpp>
 
 namespace kodo
 {
@@ -40,10 +40,12 @@ TEST(TestHasDebug, detect)
     EXPECT_TRUE(kodo::has_debug<kodo::dummy>::value);
     EXPECT_TRUE(kodo::has_debug<kodo::dummy_parent>::value);
 
-    /// @todo replace with sliding_window_decoder
-    // typedef kodo::full_rlnc_encoder<fifi::binary8> encoder_type;
-    // EXPECT_TRUE(kodo::has_debug<encoder_type::factory>::value);
+    typedef kodo::sliding_window_decoder<
+        fifi::binary8> decoder_debug_off;
+
+    typedef kodo::sliding_window_decoder<
+        fifi::binary8,kodo::enable_debug> decoder_debug_on;
+
+    EXPECT_FALSE(kodo::has_debug<decoder_debug_off>::value);
+    EXPECT_TRUE(kodo::has_debug<decoder_debug_on>::value);
 }
-
-
-

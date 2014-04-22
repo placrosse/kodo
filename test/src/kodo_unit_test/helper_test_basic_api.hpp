@@ -180,15 +180,14 @@ inline void test_basic_api(uint32_t symbols, uint32_t symbol_size)
             >(symbols, symbol_size);
     }
 
-    /// @todo enable
-    // {
-    //     SCOPED_TRACE(testing::Message() << "field = binary4");
-    //     test_basic_api_
-    //         <
-    //             Encoder<fifi::binary4>,
-    //             Decoder<fifi::binary4>
-    //         >(symbols, symbol_size);
-    // }
+    {
+        SCOPED_TRACE(testing::Message() << "field = binary4");
+        test_basic_api_
+            <
+                Encoder<fifi::binary4>,
+                Decoder<fifi::binary4>
+            >(symbols, symbol_size);
+    }
 
     {
         SCOPED_TRACE(testing::Message() << "field = binary8");

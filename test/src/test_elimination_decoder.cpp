@@ -7,6 +7,7 @@
 
 #include <gtest/gtest.h>
 
+
 #include <kodo/elimination_decoder.hpp>
 
 template<class Field>
@@ -247,11 +248,9 @@ inline void run_test()
 TEST(TestEliminationDecoder, api)
 {
     run_test<fifi::binary>();
+    ///run_test<fifi::binary4>();
     run_test<fifi::binary8>();
 
     /// @todo enable this unit test
     //run_test<fifi::binary16>();
 }
-
-
-

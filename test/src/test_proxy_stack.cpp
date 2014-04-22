@@ -5,7 +5,7 @@
 
 #include <cstdint>
 #include <gtest/gtest.h>
-#include <fifi/field_types.hpp>
+#include <fifi/binary8.hpp>
 
 #include <kodo/proxy_stack.hpp>
 #include <kodo/proxy_layer.hpp>
@@ -91,6 +91,3 @@ TEST(TestProxyStack, api)
     EXPECT_EQ(nested->symbols(), factory.m_symbols);
     EXPECT_EQ(nested->symbol_size(), factory.m_symbol_size);
 }
-
-
-

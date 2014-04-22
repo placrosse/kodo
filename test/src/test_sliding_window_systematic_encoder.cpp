@@ -94,13 +94,6 @@ namespace kodo
                 return m_symbols;
             }
 
-            /// @todo: Is this function needed now we have is_symbol_uncoded
-            bool is_symbol_pivot(uint32_t index) const
-            {
-                (void) index;
-                return m_is_symbol_pivot[index];
-            }
-
             bool is_symbol_uncoded(uint32_t index) const
             {
                 (void) index;
@@ -364,5 +357,3 @@ TEST(TestSlidingWindowSystematicEncoder, api)
     EXPECT_EQ(stack.m_systematic_index, 2U);
     EXPECT_EQ(stack.systematic_count(), 4U);
 }
-
-
