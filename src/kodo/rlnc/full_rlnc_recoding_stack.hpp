@@ -36,8 +36,8 @@
 #include "../storage_aware_encoder.hpp"
 #include "../encode_symbol_tracker.hpp"
 #include "../cached_symbol_decoder.hpp"
-#include "../debug_cached_symbol_decoder.hpp"
-#include "../debug_linear_block_decoder.hpp"
+#include "../trace_decode_symbol.hpp"
+#include "../trace_linear_block_decoder.hpp"
 #include "../rank_info.hpp"
 #include "../symbol_decoding_status_tracker.hpp"
 #include "../symbol_decoding_status_counter.hpp"
@@ -48,10 +48,12 @@
 #include "../linear_block_decoder_delayed.hpp"
 #include "../coefficient_value_access.hpp"
 #include "../pivot_aware_generator.hpp"
+#include "../forward_recode_to_encode.hpp"
 
 namespace kodo
 {
     /// @todo ingroup
+    ///
     /// Intermediate stack implementing the recoding functionality of a
     /// RLNC code. As can be seen we are able to reuse a great deal of
     /// layers from the encode stack. It is important that the symbols
@@ -64,6 +66,7 @@ namespace kodo
     template<class MainStack>
     class full_rlnc_recoding_stack
         : public // Payload API
+                 forward_recode_to_encode<
                  payload_encoder<
                  // Codec Header API
                  default_off_systematic_encoder<
@@ -82,6 +85,6 @@ namespace kodo
                  // Proxy
                  proxy_layer<
                  full_rlnc_recoding_stack<MainStack>, MainStack>
-                     > > > > > > > > > >
+                 > > > > > > > > > > >
     { };
 }

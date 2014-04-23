@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include "debug_linear_block_decoder.hpp"
+#include "trace_linear_block_decoder.hpp"
 #include "aligned_coefficients_decoder.hpp"
 #include "forward_linear_block_decoder.hpp"
 #include "rank_info.hpp"
@@ -20,9 +20,9 @@ namespace kodo
     /// @brief Template alias for a common selection of layers
     ///        full-filling the requirements for the Decoder API
     ///
-    template<class DebugTag, class SuperCoder>
+    template<class TraceTag, class SuperCoder>
     using common_decoder_layers =
-               debug_linear_block_decoder<DebugTag,
+               trace_linear_block_decoder<TraceTag,
                aligned_coefficients_decoder<
                forward_linear_block_decoder<
                rank_info<

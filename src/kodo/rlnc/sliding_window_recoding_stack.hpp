@@ -26,7 +26,8 @@
 
 namespace kodo
 {
-    /// @ingroup
+    /// @todo ingroup
+    ///
     /// Intermediate stack implementing the recoding functionality of
     /// a RLNC code. As can be seen we are able to reuse a great deal
     /// of layers from the encode stack. It is important that the

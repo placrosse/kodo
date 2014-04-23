@@ -25,8 +25,8 @@
 
 #include <kodo/rlnc/full_rlnc_codes.hpp>
 #include <kodo/cached_symbol_decoder.hpp>
-#include <kodo/debug_cached_symbol_decoder.hpp>
-#include <kodo/debug_linear_block_decoder.hpp>
+#include <kodo/trace_decode_symbol.hpp>
+#include <kodo/trace_linear_block_decoder.hpp>
 #include <kodo/debug_coefficient_storage.hpp>
 #include <kodo/debug_symbol_storage.hpp>
 
@@ -38,9 +38,9 @@ namespace kodo
     template<class Field>
     class rlnc_decoder
         : public // Decoder API
-                 debug_cached_symbol_decoder<
+                 trace_decode_symbol<
                  cached_symbol_decoder<
-                 debug_linear_block_decoder<enable_debug,
+                 trace_linear_block_decoder<enable_trace,
                  forward_linear_block_decoder<
                  symbol_decoding_status_counter<
                  symbol_decoding_status_tracker<

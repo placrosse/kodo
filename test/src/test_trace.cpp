@@ -8,7 +8,7 @@
 
 #include <gtest/gtest.h>
 
-#include <kodo/debug.hpp>
+#include <kodo/trace.hpp>
 #include <kodo/rlnc/sliding_window_encoder.hpp>
 #include <kodo/rlnc/sliding_window_decoder.hpp>
 
@@ -23,9 +23,9 @@ namespace kodo
 
         struct dummy_one
         {
-            void debug(std::ostream& out)
+            void trace(std::ostream& out)
             {
-                out << "in debug" << std::endl;
+                out << "in trace" << std::endl;
             }
 
         };
@@ -43,15 +43,15 @@ inline std::string test_output()
     auto decoder = factory.build();
 
     std::stringstream ss;
-    if (kodo::has_debug<Decoder>::value)
+    if (kodo::has_trace<Decoder>::value)
     {
-        kodo::debug(decoder, ss);
+        kodo::trace(decoder, ss);
     }
 
     return ss.str();
 }
 
-TEST(TestDebug, invoke)
+TEST(TestTrace, invoke)
 {
 
     {
@@ -59,31 +59,31 @@ TEST(TestDebug, invoke)
         kodo::dummy_one d;
         std::stringstream ss;
 
-        kodo::debug(d, ss);
-        EXPECT_EQ(ss.str(), std::string("in debug\n"));
+        kodo::trace(d, ss);
+        EXPECT_EQ(ss.str(), std::string("in trace\n"));
     }
 
     {
         // Check that the code compiles even with an object that
-        // does not have the debug function
+        // does not have the trace function
         kodo::dummy_two d;
 
-        if(kodo::has_debug<kodo::dummy_two>::value)
+        if(kodo::has_trace<kodo::dummy_two>::value)
         {
-            kodo::debug(d, std::cout);
+            kodo::trace(d, std::cout);
         }
     }
 
-    // Define two real stacks with debug on or off
+    // Define two real stacks with trace on or off
     typedef kodo::sliding_window_decoder<
-        fifi::binary8> decoder_debug_off;
+        fifi::binary8> decoder_trace_off;
 
     typedef kodo::sliding_window_decoder<
-        fifi::binary8,kodo::enable_debug> decoder_debug_on;
+        fifi::binary8,kodo::enable_trace> decoder_trace_on;
 
-    EXPECT_TRUE(test_output<decoder_debug_off>() == "");
+    EXPECT_TRUE(test_output<decoder_trace_off>() == "");
 
-    // We expect the debug on to produce some debug output
-    EXPECT_FALSE(test_output<decoder_debug_on>() == "");
+    // We expect the trace on to produce some trace output
+    EXPECT_FALSE(test_output<decoder_trace_on>() == "");
 
 }

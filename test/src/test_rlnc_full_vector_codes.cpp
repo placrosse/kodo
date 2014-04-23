@@ -151,7 +151,7 @@ namespace kodo
 namespace
 {
     template<class Field>
-    using decoder = kodo::full_rlnc_decoder<Field, kodo::disable_debug>;
+    using decoder = kodo::full_rlnc_decoder<Field, kodo::disable_trace>;
 }
 
 /// Tests the basic API functionality this mean basic encoding

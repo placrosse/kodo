@@ -131,7 +131,7 @@ def build(bld):
         bld.recurse('examples/switch_systematic_on_off')
         bld.recurse('examples/rank_callback')
         bld.recurse('examples/use_cached_symbol_decoder')
-        bld.recurse('examples/use_debug_layers')
+        bld.recurse('examples/use_trace_layers')
         bld.recurse('examples/sliding_window')
 
         bld.recurse('benchmark/throughput')
@@ -152,8 +152,3 @@ def build(bld):
     # easily available
     bld(export_includes = './test/src',
         name = 'kodo_unit_test_includes')
-
-
-
-
-

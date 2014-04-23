@@ -199,7 +199,7 @@ namespace
     using encoder = kodo::full_rlnc_encoder<Field>;
 
     template<class Field>
-    using decoder = kodo::full_rlnc_decoder<Field, kodo::disable_debug>;
+    using decoder = kodo::full_rlnc_decoder<Field, kodo::disable_trace>;
 }
 
 void test_random_annex_coders(uint32_t symbols, uint32_t symbol_size,

@@ -15,8 +15,8 @@
 #include <kodo/has_systematic_encoder.hpp>
 #include <kodo/set_systematic_off.hpp>
 
-#include <kodo/has_debug.hpp>
-#include <kodo/debug.hpp>
+#include <kodo/has_trace.hpp>
+#include <kodo/trace.hpp>
 
 /// Small helper structure holding the parameters needed for the
 /// recoding tests.
@@ -128,10 +128,10 @@ inline void invoke_recoding(recoding_parameters param)
 
         decoder_one->decode(payload.data());
 
-        if (kodo::has_debug<Decoder>::value)
+        if (kodo::has_trace<Decoder>::value)
         {
             std::cout << "Decoder one" << std::endl;
-            kodo::debug(decoder_one, std::cout);
+            kodo::trace(decoder_one, std::cout);
         }
 
         // Pass feedback if available
@@ -151,10 +151,10 @@ inline void invoke_recoding(recoding_parameters param)
 
         decoder_two->decode(payload.data());
 
-        if (kodo::has_debug<Decoder>::value)
+        if (kodo::has_trace<Decoder>::value)
         {
             std::cout << "Decoder two" << std::endl;
-            kodo::debug(decoder_two, std::cout);
+            kodo::trace(decoder_two, std::cout);
         }
 
         // Pass feedback if available
@@ -463,5 +463,3 @@ inline void test_recoding_relay()
 
     test_recoding_relay<Encoder,Decoder>(param);
 }
-
-

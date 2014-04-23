@@ -14,7 +14,7 @@
 #include <kodo/rlnc/full_rlnc_codes.hpp>
 #include <kodo/rlnc/on_the_fly_codes.hpp>
 
-#include <kodo/debug_linear_block_decoder.hpp>
+#include <kodo/trace_linear_block_decoder.hpp>
 #include <kodo/has_print_cached_symbol_coefficients.hpp>
 #include <kodo/print_cached_symbol_coefficients.hpp>
 

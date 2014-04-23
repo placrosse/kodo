@@ -9,24 +9,23 @@
 
 namespace kodo
 {
-
     /// @ingroup type_traits
-    /// @ingroup debug
     ///
     /// Type trait helper allows compile time detection of whether a
-    /// codec contains a layer with the member function debug(std::cout)
+    /// codec contains a layer with the member function decode_symbol(std::cout)
     ///
     /// Example:
     ///
     /// typedef kodo::full_rlnc8_encoder encoder_t;
     ///
-    /// if(kodo::has_debug<encoder_t>::value)
+    /// if (kodo::has_decode_symbol<encoder_t>::value)
     /// {
     ///     // Do something here
     /// }
     ///
+    /// @todo Should be true when all overloads exist
     template<typename T>
-    struct has_debug
+    struct has_decode_symbol
     {
     private:
         typedef std::true_type yes;
@@ -34,7 +33,7 @@ namespace kodo
 
         template<typename U>
         static auto test(int) ->
-            decltype(std::declval<U>().debug(std::cout), yes());
+            decltype(std::declval<U>().decode_symbol(nullptr,nullptr), yes());
 
         template<typename> static no test(...);
 
@@ -42,7 +41,4 @@ namespace kodo
 
         static const bool value = std::is_same<decltype(test<T>(0)),yes>::value;
     };
-
 }
-
-

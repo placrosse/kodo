@@ -2,8 +2,7 @@
 # encoding: utf-8
 
 bld.program(features = 'cxx',
-            source   = 'use_debug_layers.cpp',
-            target   = 'use_debug_layers',
+            source   = 'use_trace_layers.cpp',
+            target   = 'use_trace_layers',
             use      = ['kodo_includes', 'boost_includes',
                         'fifi_includes', 'sak_includes'])
-

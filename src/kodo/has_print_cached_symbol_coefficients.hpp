@@ -6,7 +6,7 @@
 #pragma once
 
 #include <iostream>
-#include "debug_cached_symbol_decoder.hpp"
+#include "trace_decode_symbol.hpp"
 
 namespace kodo
 {
@@ -51,5 +51,3 @@ namespace kodo
     };
 
 }
-
-

@@ -6,11 +6,11 @@
 #include <ctime>
 
 #include <kodo/rlnc/full_rlnc_codes.hpp>
-#include <kodo/debug.hpp>
+#include <kodo/trace.hpp>
 
-/// @example use_debug_layers.cpp
+/// @example use_trace_layers.cpp
 ///
-/// Simple example showing how to use some of the debug layers defined
+/// Simple example showing how to use some of the trace layers defined
 /// in Kodo.
 
 int main()
@@ -27,7 +27,7 @@ int main()
     typedef kodo::full_rlnc_encoder<fifi::binary8>
         rlnc_encoder;
 
-    typedef kodo::full_rlnc_decoder<fifi::binary8, kodo::enable_debug>
+    typedef kodo::full_rlnc_decoder<fifi::binary8, kodo::enable_trace>
         rlnc_decoder;
 
     // In the following we will make an encoder/decoder factory.
@@ -73,9 +73,9 @@ int main()
         // Pass that packet to the decoder
         decoder->decode( &payload[0] );
 
-        if (kodo::has_debug<rlnc_decoder>::value)
+        if (kodo::has_trace<rlnc_decoder>::value)
         {
-            kodo::debug(decoder, std::cout);
+            kodo::trace(decoder, std::cout);
         }
     }
 

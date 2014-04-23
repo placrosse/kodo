@@ -12,7 +12,7 @@
 
 namespace kodo
 {
-    /// @ingroup debug
+    /// @ingroup trace
     /// @ingroup coefficient_storage_layers
     ///
     /// @brief Print functions for coefficient storage
@@ -67,4 +67,3 @@ namespace kodo
     };
 
 }
-

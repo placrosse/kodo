@@ -13,28 +13,28 @@
 
 #include <fifi/fifi_utils.hpp>
 
-#include "enable_debug.hpp"
-#include "disable_debug.hpp"
-#include "debug.hpp"
+#include "enable_trace.hpp"
+#include "disable_trace.hpp"
+#include "trace.hpp"
 
 namespace kodo
 {
 
-    /// Fall-through case for the case where DebugTag is disable_debug
-    template<class DebugTag, class SuperCoder>
-    class debug_linear_block_decoder : public SuperCoder
+    /// Fall-through case for the case where TraceTag is disable_trace
+    template<class TraceTag, class SuperCoder>
+    class trace_linear_block_decoder : public SuperCoder
     {
-        static_assert(std::is_same<DebugTag, disable_debug>::value,
-                      "Unexpected DebugTag should be disable_debug in the "
+        static_assert(std::is_same<TraceTag, disable_trace>::value,
+                      "Unexpected TraceTag should be disable_trace in the "
                       "fall-through case.");
     };
 
-    /// @ingroup debug_layers
+    /// @ingroup trace_layers
     ///
-    /// @brief Debug layer which allows inspecting the state of a
+    /// @brief Trace layer which allows inspecting the state of a
     ///        linear block decoder.
     ///
-    /// The debug layer will print out the coding coefficients used by
+    /// The trace layer will print out the coding coefficients used by
     /// the decoder, when the print_decoder_state() function is called.
     ///
     /// This will print a matrix like the following (in the following
@@ -64,7 +64,7 @@ namespace kodo
     /// The coding coefficient values will depend on the chosen finite
     /// field
     template<class SuperCoder>
-    class debug_linear_block_decoder<enable_debug, SuperCoder> :
+    class trace_linear_block_decoder<enable_trace, SuperCoder> :
         public SuperCoder
     {
     public:
@@ -77,16 +77,16 @@ namespace kodo
 
     public:
 
-        /// @copydoc layer::debug(std::ostream&)
-        void debug(std::ostream& out)
+        /// @copydoc layer::trace(std::ostream&)
+        void trace(std::ostream& out)
         {
             print_decoder_state(out);
 
-            // If the lower layers define the debug function forward it
-            if (kodo::has_debug<SuperCoder>::value)
+            // If the lower layers define the trace function forward it
+            if (kodo::has_trace<SuperCoder>::value)
             {
                 SuperCoder& next = *this;
-                kodo::debug(next, out);
+                kodo::trace(next, out);
             }
 
         }

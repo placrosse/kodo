@@ -7,7 +7,7 @@
 
 #include <kodo/rlnc/sliding_window_encoder.hpp>
 #include <kodo/rlnc/sliding_window_decoder.hpp>
-#include <kodo/debug.hpp>
+#include <kodo/trace.hpp>
 
 /// @example sliding_window.cpp
 ///
@@ -64,9 +64,9 @@ int main()
     while( !decoder->is_complete() )
     {
 
-        if (kodo::has_debug<rlnc_decoder>::value )
+        if (kodo::has_trace<rlnc_decoder>::value )
         {
-            kodo::debug(decoder, std::cout);
+            kodo::trace(decoder, std::cout);
         }
 
         // Randomly choose to insert a symbol
@@ -137,4 +137,3 @@ int main()
     }
 
 }
-

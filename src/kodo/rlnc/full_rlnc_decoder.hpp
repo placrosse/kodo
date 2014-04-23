@@ -33,11 +33,13 @@
 #include "../uniform_generator.hpp"
 #include "../recoding_symbol_id.hpp"
 #include "../proxy_layer.hpp"
+#include "../proxy_stack.hpp"
+#include "../nested_payload_recoder.hpp"
 #include "../storage_aware_encoder.hpp"
 #include "../encode_symbol_tracker.hpp"
 #include "../cached_symbol_decoder.hpp"
-#include "../debug_cached_symbol_decoder.hpp"
-#include "../debug_linear_block_decoder.hpp"
+#include "../trace_decode_symbol.hpp"
+#include "../trace_linear_block_decoder.hpp"
 #include "../rank_info.hpp"
 #include "../symbol_decoding_status_tracker.hpp"
 #include "../symbol_decoding_status_counter.hpp"
@@ -61,10 +63,11 @@ namespace kodo
     /// described for the encoder):
     /// - Recoding using the recoding_stack
     /// - Linear block decoder using Gauss-Jordan elimination.
-    template<class Field, class DebugTag = kodo::disable_debug>
+    template<class Field, class TraceTag = kodo::disable_trace>
     class full_rlnc_decoder
         : public // Payload API
-                 payload_recoder<full_rlnc_recoding_stack,
+                 nested_payload_recoder<
+                 proxy_stack<proxy_args<>, full_rlnc_recoding_stack,
                  payload_decoder<
                  // Codec Header API
                  systematic_decoder<
@@ -72,7 +75,7 @@ namespace kodo
                  // Symbol ID API
                  plain_symbol_id_reader<
                  // Decoder API
-                 common_decoder_layers<DebugTag,
+                 common_decoder_layers<TraceTag,
                  // Coefficient Storage API
                  coefficient_value_access<
                  coefficient_storage<
@@ -87,8 +90,8 @@ namespace kodo
                  // Factory API
                  final_coder_factory_pool<
                  // Final type
-                 full_rlnc_decoder<Field>
-                     > > > > > > > > > > > > > > >
+                 full_rlnc_decoder<Field, TraceTag>
+                 > > > > > > > > > > > > > > > >
     { };
 
 }

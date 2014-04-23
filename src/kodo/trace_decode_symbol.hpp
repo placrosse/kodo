@@ -14,17 +14,24 @@
 
 #include <sak/storage.hpp>
 
+#include "trace.hpp"
+#include "cached_symbol_decoder.hpp"
+#include "final_coder_factory.hpp"
+#include "coefficient_info.hpp"
+#include "storage_block_info.hpp"
+#include "finite_field_info.hpp"
+
 namespace kodo
 {
 
     /// @todo Implement debug() function
 
-    /// @ingroup debug
+    /// @ingroup trace
     ///
     /// @brief This layer makes it easy to print the incoming coded symbol
     ///        and coding coefficients
     ///
-    /// The debug layer supports printing both the coded symbol data through
+    /// The layer supports printing both the coded symbol data through
     /// the print_cached_symbol_data() and the coding coefficients through the
     /// print_cached_symbol_coefficients().
     ///
@@ -41,7 +48,7 @@ namespace kodo
     ///    U denotes that the symbol is uncoded and the symbol index denotes
     ///    which original source symbol the data represents.
     template<class SuperCoder>
-    class debug_cached_symbol_decoder : public SuperCoder
+    class trace_decode_symbol : public SuperCoder
     {
     public:
 
@@ -51,7 +58,104 @@ namespace kodo
         /// @copydoc layer::value_type
         typedef typename field_type::value_type value_type;
 
+    protected:
+
+        /// Helper stack using the cache_symbol_decode to store the
+        /// symbol information for later processing
+        class cache : public
+            cached_symbol_decoder<
+            coefficient_info<
+            storage_block_info<
+            finite_field_info<field_type,
+            final_coder_factory<cache> > > > > { };
+
     public:
+
+        /// @ingroup factory_layers
+        ///
+        /// The factory layer associated with this coder.
+        class factory : public SuperCoder::factory
+        {
+        public:
+
+            /// @copydoc layer::factory::factory(uint32_t, uint32_t)
+            factory(uint32_t max_symbols, uint32_t max_symbol_size)
+                : SuperCoder::factory(max_symbols, max_symbol_size),
+                  m_cache(max_symbols, max_symbol_size)
+            { }
+
+        protected:
+
+            friend class trace_decode_symbol;
+
+            /// @todo docs
+            typename cache::factory& cache_factory()
+            {
+                return m_cache;
+            }
+
+        protected:
+
+            /// @todo docs
+            typename cache::factory m_cache;
+
+        };
+
+    public:
+
+        /// @copydoc layer::initialize(Factory&)
+        template<class Factory>
+        void initialize(Factory& the_factory)
+        {
+            SuperCoder::initialize(the_factory);
+
+            auto& cache_factory = the_factory.cache_factory();
+            cache_factory.set_symbols(the_factory.symbols());
+            cache_factory.set_symbol_size(the_factory.symbol_size());
+
+            if (!m_cache)
+            {
+                m_cache = cache_factory.build();
+                assert(m_cache);
+            }
+            else
+            {
+                assert(m_cache);
+                m_cache->initialize(cache_factory);
+            }
+        }
+
+        /// @copydoc layer::trace(std::ostream&)
+        void trace(std::ostream& out)
+        {
+            print_cached_symbol_data(out);
+
+            // If the lower layers define the trace function forward it
+            if (kodo::has_trace<SuperCoder>::value)
+            {
+                SuperCoder& next = *this;
+                kodo::trace(next, out);
+            }
+        }
+
+        /// @copydoc layer::decode_symbol(uint8_t*,uint8_t*)
+        void decode_symbol(uint8_t *symbol_data, uint8_t *coefficients)
+        {
+            assert(m_cache);
+            // m_cache->decode_symbol(symbol_data, coefficients);
+
+            SuperCoder::decode_symbol(symbol_data, coefficients);
+        }
+
+        /// @copydoc layer::decode_symbol(uint8_t*,uint32_t)
+        void decode_symbol(uint8_t *symbol_data, uint32_t symbol_index)
+        {
+            assert(m_cache);
+            // m_cache->decode_symbol(symbol_data, symbol_index);
+
+            SuperCoder::decode_symbol(symbol_data, symbol_index);
+        }
+
 
         /// Prints the decoder's state to the output stream
         /// @param out, the output stream
@@ -112,6 +216,11 @@ namespace kodo
 
             out << std::endl;
         }
+
+    private:
+
+        /// @todo docs
+        typename cache::pointer m_cache;
 
     };
 

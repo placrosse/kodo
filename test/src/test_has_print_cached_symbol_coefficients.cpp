@@ -3,8 +3,8 @@
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
 
-/// @file test_has_debug_cached_symbol_decoder.cpp Unit tests for the
-///       has_debug_cached_symbol_decoder class
+/// @file test_has_trace_decode_symbol.cpp Unit tests for the
+///       has_trace_decode_symbol class
 
 #include <cstdint>
 

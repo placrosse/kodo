@@ -14,36 +14,36 @@
 #include <kodo/rlnc/full_rlnc_codes.hpp>
 #include <kodo/rlnc/on_the_fly_codes.hpp>
 
-TEST(TestHasDebugLinearBlockDecoder, detect)
+TEST(TestHasTraceLinearBlockDecoder, detect)
 {
-    EXPECT_FALSE(kodo::has_debug_linear_block_decoder<
+    EXPECT_FALSE(kodo::has_trace_linear_block_decoder<
                      kodo::full_rlnc_encoder<fifi::binary> >::value);
 
-    EXPECT_FALSE(kodo::has_debug_linear_block_decoder<
+    EXPECT_FALSE(kodo::has_trace_linear_block_decoder<
                      kodo::full_rlnc_encoder<fifi::binary8> >::value);
 
-    EXPECT_TRUE(kodo::has_debug_linear_block_decoder<
+    EXPECT_TRUE(kodo::has_trace_linear_block_decoder<
                      kodo::full_rlnc_decoder<fifi::binary> >::value);
 
-    EXPECT_TRUE(kodo::has_debug_linear_block_decoder<
+    EXPECT_TRUE(kodo::has_trace_linear_block_decoder<
                      kodo::full_rlnc_decoder<fifi::binary8> >::value);
 
-    EXPECT_FALSE(kodo::has_debug_linear_block_decoder<
+    EXPECT_FALSE(kodo::has_trace_linear_block_decoder<
                      kodo::on_the_fly_encoder<fifi::binary> >::value);
 
-    EXPECT_FALSE(kodo::has_debug_linear_block_decoder<
+    EXPECT_FALSE(kodo::has_trace_linear_block_decoder<
                      kodo::on_the_fly_encoder<fifi::binary8> >::value);
 
-    EXPECT_FALSE(kodo::has_debug_linear_block_decoder<
+    EXPECT_FALSE(kodo::has_trace_linear_block_decoder<
                      kodo::on_the_fly_decoder<fifi::binary> >::value);
 
-    EXPECT_FALSE(kodo::has_debug_linear_block_decoder<
+    EXPECT_FALSE(kodo::has_trace_linear_block_decoder<
                      kodo::on_the_fly_decoder<fifi::binary8> >::value);
 
-    EXPECT_FALSE(kodo::has_debug_linear_block_decoder<
+    EXPECT_FALSE(kodo::has_trace_linear_block_decoder<
                      kodo::full_rlnc_encoder<fifi::binary> >::value);
 
-    EXPECT_FALSE(kodo::has_debug_linear_block_decoder<
+    EXPECT_FALSE(kodo::has_trace_linear_block_decoder<
                      kodo::full_rlnc_encoder<fifi::binary8> >::value);
 
 }

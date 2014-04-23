@@ -16,9 +16,6 @@
 #include <kodo/read_feedback.hpp>
 #include <kodo/feedback_size.hpp>
 
-#include <kodo/has_debug_linear_block_decoder.hpp>
-
-
 #include <kodo/has_print_cached_symbol_coefficients.hpp>
 #include <kodo/print_cached_symbol_coefficients.hpp>
 

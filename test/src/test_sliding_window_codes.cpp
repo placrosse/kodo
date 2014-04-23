@@ -29,7 +29,7 @@ namespace
 {
     template<class Field>
     class decoder : public kodo::sliding_window_decoder<
-        Field, kodo::disable_debug>
+        Field, kodo::disable_trace>
     { };
 
     template<class Field>

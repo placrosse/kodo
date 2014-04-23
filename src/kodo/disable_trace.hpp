@@ -7,11 +7,8 @@
 
 namespace kodo
 {
-    /// @ingroup debug
+    /// @ingroup trace
     ///
-    /// @copydoc enable_debug
-    struct disable_debug{};
+    /// @copydoc enable_trace
+    struct disable_trace{};
 }
-
-
-
