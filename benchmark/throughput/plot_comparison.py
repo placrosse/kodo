@@ -37,7 +37,7 @@ def plot(args):
     query_master = {
         "type": args.coder,
         "branch": "master",
-        "scheduler": "force kodo (benchmark)",
+        "scheduler": "kodo (nightly benchmark)",
         "utc_date": {
             "$gte": args.date - plot_helper.timedelta(1),
             "$lt": args.date}
