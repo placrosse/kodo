@@ -14,7 +14,7 @@ namespace kodo
     ///        incoming encoded payload into the encoded
     ///        symbol data and symbol id (the RLNC encoding vector).
     ///
-    ///        You can check the API of the cached_symbol_decoder to
+    ///        You can check the API of the cache_decode_symbol to
     ///        see how to access information about the coded symbol.
     ///
     ///        The info stack is created in such a way that it
@@ -33,7 +33,7 @@ namespace kodo
                  // Symbol ID API
                  plain_symbol_id_reader<
                  // Decoder API
-                 cached_symbol_decoder<  // <-- Cached symbol decoder
+                 cache_decode_symbol<  // <-- Cached symbol decoder
                  empty_decoder<
                  // Coefficient Storage API
                  coefficient_info<

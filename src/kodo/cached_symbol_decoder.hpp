@@ -14,6 +14,8 @@
 
 #include <sak/storage.hpp>
 
+#include "decode_symbol.hpp"
+
 namespace kodo
 {
 
@@ -41,7 +43,7 @@ namespace kodo
     /// example of how to the use cached_symbol_decoder.
     ///
     template<class SuperCoder>
-    class cached_symbol_decoder : public SuperCoder
+    class cache_decode_symbol : public SuperCoder
     {
     public:
 
@@ -76,7 +78,13 @@ namespace kodo
 
             m_symbol_coded = true;
 
-            SuperCoder::decode_symbol(symbol_data, symbol_coefficients);
+            // If the lower layers define the decode_symbol()
+            // functions forward the call
+            if (has_decode_symbol<SuperCoder>::value)
+            {
+                SuperCoder& next = *this;
+                kodo::decode_symbol(next, symbol_data, symbol_coefficients);
+            }
         }
 
         /// @copydoc layer::decode_symbol(uint8_t*,uint32_t)
@@ -95,7 +103,13 @@ namespace kodo
             m_symbol_index = symbol_index;
             m_symbol_coded =  false;
 
-            SuperCoder::decode_symbol(symbol_data, symbol_index);
+            // If the lower layers define the decode_symbol()
+            // functions forward the call
+            if (has_decode_symbol<SuperCoder>::value)
+            {
+                SuperCoder& next = *this;
+                kodo::decode_symbol(next, symbol_data, symbol_index);
+            }
         }
 
         /// @return True if the previous symbol was uncoded in that case
@@ -160,4 +174,3 @@ namespace kodo
     };
 
 }
-

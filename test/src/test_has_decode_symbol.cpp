@@ -25,17 +25,15 @@ namespace kodo
             void decode_symbol(uint8_t*, uint8_t*);
         };
 
-        // struct dummy_one
-        // {
-        //     void decode_symbol(uint8_t*, uint32_t symbol_index);
-        //     void decode_symbol(uint8_t*, uint8_t*);
-        // };
+        struct dummy_two
+        {
+            void decode_symbol(uint8_t*, uint32_t symbol_index);
+        };
 
-        // struct dummy_one
-        // {
-        //     void decode_symbol(uint8_t*, uint32_t symbol_index);
-        //     void decode_symbol(uint8_t*, uint8_t*);
-        // };
+        struct dummy_three
+        {
+            void decode_symbol(uint8_t*, uint8_t*);
+        };
 
 
         struct dummy_parent : public dummy_one
@@ -54,6 +52,11 @@ TEST(TestHasDecode_Symbol, detect)
     EXPECT_TRUE(kodo::has_decode_symbol<kodo::dummy_one>::value);
     EXPECT_TRUE(kodo::has_decode_symbol<kodo::dummy_parent>::value);
 
-    // EXPECT_FALSE(kodo::has_decode_symbol<decoder_decode_symbol_off>::value);
-    // EXPECT_TRUE(kodo::has_decode_symbol<decoder_trace_on>::value);
+    // False since they only provide one of the overloads
+    EXPECT_FALSE(kodo::has_decode_symbol<kodo::dummy_two>::value);
+    EXPECT_FALSE(kodo::has_decode_symbol<kodo::dummy_three>::value);
+
+    typedef kodo::sliding_window_decoder<fifi::binary> decoder;
+
+    EXPECT_TRUE(kodo::has_decode_symbol<decoder>::value);
 }

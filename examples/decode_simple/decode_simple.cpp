@@ -39,7 +39,7 @@ namespace kodo
     class rlnc_decoder
         : public // Decoder API
                  trace_decode_symbol<
-                 cached_symbol_decoder<
+                 cache_decode_symbol<
                  trace_linear_block_decoder<enable_trace,
                  forward_linear_block_decoder<
                  symbol_decoding_status_counter<

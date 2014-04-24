@@ -63,7 +63,7 @@ namespace kodo
         /// Helper stack using the cache_symbol_decode to store the
         /// symbol information for later processing
         class cache : public
-            cached_symbol_decoder<
+            cache_decode_symbol<
             coefficient_info<
             storage_block_info<
             finite_field_info<field_type,
@@ -103,6 +103,11 @@ namespace kodo
 
     public:
 
+        /// Constructor
+        trace_decode_symbol()
+            : m_max_print_bytes(0)
+        { }
+
         /// @copydoc layer::initialize(Factory&)
         template<class Factory>
         void initialize(Factory& the_factory)
@@ -123,11 +128,15 @@ namespace kodo
                 assert(m_cache);
                 m_cache->initialize(cache_factory);
             }
+
+            // Initialize the variables controlling the output
+            m_max_print_bytes = 32;
         }
 
         /// @copydoc layer::trace(std::ostream&)
         void trace(std::ostream& out)
         {
+            out << "input symbol data:" << std::endl;
             print_cached_symbol_data(out);
 
             // If the lower layers define the trace function forward it
@@ -142,7 +151,7 @@ namespace kodo
         void decode_symbol(uint8_t *symbol_data, uint8_t *coefficients)
         {
             assert(m_cache);
-            // m_cache->decode_symbol(symbol_data, coefficients);
+            m_cache->decode_symbol(symbol_data, coefficients);
 
             SuperCoder::decode_symbol(symbol_data, coefficients);
         }
@@ -151,38 +160,16 @@ namespace kodo
         void decode_symbol(uint8_t *symbol_data, uint32_t symbol_index)
         {
             assert(m_cache);
-            // m_cache->decode_symbol(symbol_data, symbol_index);
+            m_cache->decode_symbol(symbol_data, symbol_index);
 
             SuperCoder::decode_symbol(symbol_data, symbol_index);
         }
-
 
         /// Prints the decoder's state to the output stream
         /// @param out, the output stream
         void print_cached_symbol_data(std::ostream &out) const
         {
-            // We calculate the number of finite field elements that are
-            // stored in the symbols' data. In this case layer::symbol_length()
-            // does not yield the correct result for fields where multiple
-            // field elements are packed into the same value_type
-            uint32_t symbol_elements =
-                fifi::size_to_elements<field_type>(
-                    SuperCoder::symbol_size());
 
-            const value_type *s = reinterpret_cast<const value_type*>(
-                SuperCoder::cached_symbol_data());
-
-            for(uint32_t j = 0; j < symbol_elements; ++j)
-            {
-                value_type value = SuperCoder::coefficient_value(s, j);
-
-                static_assert(sizeof(uint32_t) >= sizeof(value_type),
-                              "value_type will overflow in this print");
-
-                out << (uint32_t) value << " ";
-            }
-
-            out << std::endl;
 
         }
 
@@ -217,10 +204,37 @@ namespace kodo
             out << std::endl;
         }
 
+
+    protected:
+
+        void print_array(std::ostream& out, const uint8_t* data, uint32_t size)
+        {
+            // assert(data);
+
+            // // Make sure we do not print more than specified
+            // size = std::min(size, m_max_symbols);
+            // assert(size > 0);
+
+            // // don't change formatting for out
+            // std::ostream s(out.rdbuf());
+            // s << std::hex << std::setfill('0');
+
+            // s << (uint32_t) data[0];
+
+            // for(uint32_t i = 1; i < size; ++i)
+            // {
+            //     out << ",";
+            //     out << (uint32_t) data[i];
+            // }
+        }
+
     private:
 
         /// @todo docs
         typename cache::pointer m_cache;
+
+        /// @todo docs
+        uint32_t m_max_print_bytes;
 
     };
 

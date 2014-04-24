@@ -26,7 +26,7 @@ namespace kodo
         /// Test stack for the cached_symbol_decoder
         template<class Field>
         class cached_symbol_decoder_stack :
-            public cached_symbol_decoder<
+            public cache_decode_symbol<
                    empty_decoder<
                    coefficient_info<
                    storage_block_info<
@@ -115,4 +115,3 @@ TEST(TestCachedSymbolDecoder, test_cached_symbol_decoder)
     }
 
 }
-

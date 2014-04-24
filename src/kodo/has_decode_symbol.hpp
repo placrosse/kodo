@@ -12,7 +12,8 @@ namespace kodo
     /// @ingroup type_traits
     ///
     /// Type trait helper allows compile time detection of whether a
-    /// codec contains a layer with the member function decode_symbol(std::cout)
+    /// codec contains a layer with the two layer::decode_symbol(..)
+    /// overloads.
     ///
     /// Example:
     ///
@@ -23,7 +24,8 @@ namespace kodo
     ///     // Do something here
     /// }
     ///
-    /// @todo Should be true when all overloads exist
+    /// Note: that the both overloads of layer::decode_symbol() should be
+    ///       available before value will be true
     template<typename T>
     struct has_decode_symbol
     {
@@ -33,7 +35,9 @@ namespace kodo
 
         template<typename U>
         static auto test(int) ->
-            decltype(std::declval<U>().decode_symbol(nullptr,nullptr), yes());
+            decltype(std::declval<U>().decode_symbol(nullptr,nullptr),
+                     std::declval<U>().decode_symbol(nullptr, uint32_t(1)),
+                     yes());
 
         template<typename> static no test(...);
 
