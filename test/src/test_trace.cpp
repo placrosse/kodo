@@ -85,5 +85,4 @@ TEST(TestTrace, invoke)
 
     // We expect the trace on to produce some trace output
     EXPECT_FALSE(test_output<decoder_trace_on>() == "");
-
 }

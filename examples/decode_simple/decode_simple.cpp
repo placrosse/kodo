@@ -38,7 +38,7 @@ namespace kodo
     template<class Field>
     class rlnc_decoder
         : public // Decoder API
-                 trace_decode_symbol<
+                 trace_decode_symbol<enable_trace,
                  cache_decode_symbol<
                  trace_linear_block_decoder<enable_trace,
                  forward_linear_block_decoder<

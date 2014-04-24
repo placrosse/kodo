@@ -19,6 +19,7 @@
 namespace kodo
 {
 
+    /// @todo review this class
     /// @ingroup decoder_layers
     ///
     /// @brief This layer extracts the symbol coefficients and symbol data

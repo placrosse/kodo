@@ -8,6 +8,7 @@
 #include <cstdint>
 #include <cassert>
 #include <iostream>
+#include <iomanip>
 #include <vector>
 
 #include <fifi/fifi_utils.hpp>
@@ -20,11 +21,21 @@
 #include "coefficient_info.hpp"
 #include "storage_block_info.hpp"
 #include "finite_field_info.hpp"
+#include "disable_trace.hpp"
+#include "enable_trace.hpp"
 
 namespace kodo
 {
 
-    /// @todo Implement debug() function
+    /// Fall-through case for the case where TraceTag is disable_trace
+    template<class TraceTag, class SuperCoder>
+    class trace_decode_symbol : public SuperCoder
+    {
+        static_assert(std::is_same<TraceTag, disable_trace>::value,
+                      "Unexpected TraceTag should be disable_trace in the "
+                      "fall-through case.");
+    };
+
 
     /// @ingroup trace
     ///
@@ -48,7 +59,7 @@ namespace kodo
     ///    U denotes that the symbol is uncoded and the symbol index denotes
     ///    which original source symbol the data represents.
     template<class SuperCoder>
-    class trace_decode_symbol : public SuperCoder
+    class trace_decode_symbol<enable_trace, SuperCoder> : public SuperCoder
     {
     public:
 
@@ -67,7 +78,8 @@ namespace kodo
             coefficient_info<
             storage_block_info<
             finite_field_info<field_type,
-            final_coder_factory<cache> > > > > { };
+            final_coder_factory<cache> > > > >
+        { };
 
     public:
 
@@ -179,7 +191,7 @@ namespace kodo
         {
             if(SuperCoder::cached_symbol_coded())
             {
-                out << "C:  ";
+                out << "C: ";
 
                 const value_type *c = reinterpret_cast<const value_type*>(
                     SuperCoder::cached_symbol_coefficients());
@@ -197,7 +209,7 @@ namespace kodo
             }
             else
             {
-                out << "U:  symbol index = "
+                out << "U: symbol index = "
                     << SuperCoder::cached_symbol_index() << std::endl;
             }
 
@@ -207,15 +219,47 @@ namespace kodo
 
     protected:
 
-        void print_array(std::ostream& out, const uint8_t* data, uint32_t size)
+        void print_array(std::ostream& out, const sak::const_storage& data)
         {
-            // assert(data);
+            assert(data.m_data);
+            assert(data.m_size > 0);
+
+            // don't change formatting for s
+            std::ostream s (out.rdbuf());
+            s << std::hex << std::setfill('0');
+
+            std::string buf;
+            buf.reserve(17); // premature optimization
+
+            for (uint32_t i = 0; i < data.m_size; ++i)
+            {
+                if ((i % 16) == 0)
+                {
+                    if (i)
+                    {
+                        s << "  " << buf << std::endl;
+                        buf.clear();
+                    }
+                    s << "  " << std::setw(4) << i << ' ';
+                }
+
+                uint8_t c = data.m_data[i];
+
+                s << ' ' << std::setw(2) << (uint32_t) c;
+                buf += (0x20 <= c && c <= 0x7e) ? c : '.';
+            }
+
+            if (data.m_size % 16)
+            {
+                out << std::string(3*(data.m_size % 16 ), ' ');
+            }
+            out << "  " << buf << std::endl;
 
             // // Make sure we do not print more than specified
             // size = std::min(size, m_max_symbols);
             // assert(size > 0);
 
-            // // don't change formatting for out
+            // don't change formatting for out
             // std::ostream s(out.rdbuf());
             // s << std::hex << std::setfill('0');
 
