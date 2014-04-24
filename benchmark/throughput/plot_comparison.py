@@ -28,10 +28,8 @@ def plot(args):
 
     query_branches = {
         "type": args.coder,
-        "scheduler": "kodo (force benchmark)",
-        "utc_date": {
-            "$gte": args.date - plot_helper.timedelta(1),
-            "$lt": args.date}
+        "scheduler": "force kodo (benchmark)",
+        "utc_date": {"$gte": args.date - plot_helper.timedelta(1)}
     }
 
     query_master = {
@@ -45,16 +43,20 @@ def plot(args):
 
     df_master = plotter.get_dataframe(query_master, "kodo_throughput")
     df_branches = plotter.get_dataframe(query_branches, "kodo_throughput")
-    df_all = df_master.append(df_branches)
+    df = df_master.append(df_branches)
 
-    df_all['mean'] = df_all['throughput'].apply(scipy.mean)
-    df_all['std'] = df_all['throughput'].apply(scipy.std)
-    groups = df_all.groupby(['slavename'])
+    df['mean'] = df['throughput'].apply(scipy.mean)
+    df['std'] = df['throughput'].apply(scipy.std)
+    df['field'] = df['benchmark'].apply(plot_helper.get_field)
+    df['algorithm'] = df['testcase'].apply(plot_helper.get_algorithm)
+    groups = df.groupby(['slavename'])
 
-    branches = list(scipy.unique(df_all['branch']))
+    branches = list(scipy.unique(df['branch']))
     if len(branches) == 1:
         print("Only recent benchmarks for the master branch in the database, "
               "no plots will be generated.")
+
+    plotter = plot_helper.plotter(args)
 
     for slavename, group in groups:
 
@@ -73,7 +75,6 @@ def plot(args):
             group['branch'] != "master"].groupby(by=['branch'])
 
         for branch, branch_group in branches_group:
-            plotter = plot_helper.plotter(args)
             plotter.set_branch(branch)
 
             # Calculate the difference compared to master of the latest build
@@ -86,33 +87,37 @@ def plot(args):
                 (branch_mean - master_mean) / master_mean * 100
 
             # Group by type of code; dense, sparse
-            dense = df[df['testcase'].isin(
+            dense = branch_group[branch_group['testcase'].isin(
                 plot_helper.codes['dense'])].groupby(by=['symbol_size'])
-            sparse = df[df['testcase'].isin(
+            sparse = branch_group[branch_group['testcase'].isin(
                 plot_helper.codes['sparse'])].groupby(by=['symbol_size'])
 
             def plot_setup(p):
                 pylab.ylabel("Throughput gain [\%]")
-                pylab.xticks(list(scipy.unique(group['symbols'])))
-                plotter.set_title(slavename)
+                pylab.xscale('log', basex=2)
+                pylab.xticks(
+                    list(scipy.unique(group['symbols'])),
+                    list(scipy.unique(group['symbols'])))
                 plotter.set_markers(p)
                 plotter.set_slave_info(slavename)
 
-            for key, g in sparse:
-                p = g.pivot_table(
+            for symbols, group in sparse:
+                p = group.pivot_table(
                     'gain',
                     rows='symbols',
-                    cols=['benchmark', 'density']).plot()
+                    cols=['field', 'density']).plot()
                 plot_setup(p)
-                plotter.write("spare", slavename)
+                plotter.set_legend_title("(Field, Density)")
+                plotter.write("sparse", slavename)
 
-            for key, g in dense:
-                p = g.pivot_table('gain',  rows='symbols',
-                                  cols=['benchmark', 'testcase']).plot()
+            for symbols, group in dense:
+                p = group.pivot_table('gain',  rows='symbols',
+                                  cols=['field', 'algorithm']).plot()
                 plot_setup(p)
+                plotter.set_legend_title("(Field, Algorithm)")
                 plotter.write("dense", slavename)
 
-    return df_all
+    return df
 
 if __name__ == '__main__':
     args = plot_helper.add_arguments(
