@@ -27,10 +27,12 @@
 #include <kodo/cached_symbol_decoder.hpp>
 #include <kodo/trace_decode_symbol.hpp>
 #include <kodo/trace_linear_block_decoder.hpp>
-#include <kodo/debug_coefficient_storage.hpp>
-#include <kodo/debug_symbol_storage.hpp>
+
+#include <kodo/trace_symbol_storage.hpp>
 
 #include <fifi/fifi_utils.hpp>
+
+/// @todo review this example
 
 namespace kodo
 {
@@ -45,12 +47,11 @@ namespace kodo
                  symbol_decoding_status_counter<
                  symbol_decoding_status_tracker<
                  // Coefficient Storage API
-                 debug_coefficient_storage<
                  coefficient_value_access<
                  coefficient_storage<
                  coefficient_info<
                  // Storage API
-                 debug_symbol_storage<
+                 trace_symbol_storage<enable_trace,
                  deep_symbol_storage<
                  storage_bytes_used<
                  storage_block_info<
@@ -61,7 +62,7 @@ namespace kodo
                  final_coder_factory_pool<
                  // Final type
                  rlnc_decoder<Field>
-                     > > > > > > > > > > > > > > > > >
+                 > > > > > > > > > > > > > > > >
     {};
 }
 
@@ -159,16 +160,16 @@ int main()
                 &symbol_coefficients[i*coefficients_size]);
 
         std::cout << "Coded symbol data:" << std::endl;
-        decoder->print_cached_symbol_data(std::cout);
+        // decoder->print_cached_symbol_data(std::cout);
 
         std::cout << "Coded symbol coefficients:" << std::endl;
-        decoder->print_cached_symbol_coefficients(std::cout);
+        // decoder->print_cached_symbol_coefficients(std::cout);
 
         std::cout << std::endl << "Decoding matrix:" << std::endl;
-        decoder->print_decoder_state(std::cout);
+        // decoder->print_decoder_state(std::cout);
 
         std::cout << "Symbol matrix:" << std::endl;
-        decoder->print_storage_value(std::cout);
+        // decoder->print_storage_value(std::cout);
         std::cout << std::endl;
     }
 

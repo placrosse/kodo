@@ -7,6 +7,7 @@
 
 #include <kodo/rlnc/full_rlnc_codes.hpp>
 #include <kodo/trace.hpp>
+#include <kodo/trace_filter.hpp>
 
 /// @example use_trace_layers.cpp
 ///
@@ -21,10 +22,10 @@ int main()
     // Set the number of symbols (i.e. the generation size in RLNC
     // terminology) and the size of a symbol in bytes
     uint32_t symbols = 8;
-    uint32_t symbol_size = 16;
+    uint32_t symbol_size = 33;
 
     // Typdefs for the encoder/decoder type we wish to use
-    typedef kodo::full_rlnc_encoder<fifi::binary8>
+    typedef kodo::full_rlnc_encoder<fifi::binary8, kodo::enable_trace>
         rlnc_encoder;
 
     typedef kodo::full_rlnc_decoder<fifi::binary8, kodo::enable_trace>
@@ -48,8 +49,7 @@ int main()
     std::vector<uint8_t> data_in(encoder->block_size());
 
     // Just for fun - fill the data with random data
-    for(auto &e: data_in)
-        e = rand() % 256;
+    std::generate_n(begin(data_in), data_in.size(), rand);
 
     // Assign the data buffer to the encoder so that we may start
     // to produce encoded symbols from it
@@ -58,7 +58,13 @@ int main()
     while( !decoder->is_complete() )
     {
         // Encode a packet into the payload buffer
-        encoder->encode( &payload[0] );
+        encoder->encode( payload.data() );
+
+        if (kodo::has_trace<rlnc_encoder>::value)
+        {
+            std::cout << "Trace encoder:" << std::endl;
+            kodo::trace(encoder, std::cout);
+        }
 
         // Here we "simulate" a packet loss of approximately 50%
         // by dropping half of the encoded packets.
@@ -71,10 +77,11 @@ int main()
             continue;
 
         // Pass that packet to the decoder
-        decoder->decode( &payload[0] );
+        decoder->decode( payload.data() );
 
         if (kodo::has_trace<rlnc_decoder>::value)
         {
+            std::cout << "Trace decoder:" << std::endl;
             kodo::trace(decoder, std::cout);
         }
     }
@@ -93,4 +100,11 @@ int main()
         std::cout << "Unexpected failure to decode "
                   << "please file a bug report :)" << std::endl;
     }
+
+kodo::trace_filter filter;
+filter("ok");
+
+kodo::trace_filter filter1([] (const std::string& zone)
+           { return zone == "decoder_state"; });
+
 }

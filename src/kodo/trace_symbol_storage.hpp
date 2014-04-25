@@ -13,8 +13,16 @@
 
 namespace kodo
 {
+    /// Fall-through case for the case where TraceTag is disable_trace
+    template<class TraceTag, class SuperCoder>
+    class trace_symbol_storage : public SuperCoder
+    {
+        static_assert(std::is_same<TraceTag, disable_trace>::value,
+                      "Unexpected TraceTag should be disable_trace in the "
+                      "fall-through case.");
+    };
 
-    /// @ingroup debug
+    /// @ingroup trace
     /// @ingroup symbol_storage_layers
     ///
     /// @brief Print functions for symbol storage. Using this layer
@@ -51,7 +59,7 @@ namespace kodo
     /// ?: No storage is available for this symbol.
     ///
     template<class SuperCoder>
-    class debug_symbol_storage : public SuperCoder
+    class trace_symbol_storage<enable_trace, SuperCoder> : public SuperCoder
     {
     public:
 
@@ -63,6 +71,20 @@ namespace kodo
 
     public:
 
+        /// @copydoc layer::trace(std::ostream&)
+        void trace(std::ostream& out)
+        {
+            out << "symbol_storage:" << std::endl;
+            print_storage(out);
+
+            // If the lower layers define the trace function forward it
+            if (kodo::has_trace<SuperCoder>::value)
+            {
+                SuperCoder& next = *this;
+                kodo::trace(next, out);
+            }
+        }
+
         /// Print all symbols stored in the storage where the symbol data
         /// is shown in bytes.
         /// @param out The output stream to print to
@@ -71,17 +93,6 @@ namespace kodo
             for(uint32_t i = 0; i < SuperCoder::symbols(); ++i)
             {
                 print_symbol(out, i);
-            }
-        }
-
-        /// Print all symbols stored in the storage where the symbol data
-        /// is shown in bytes.
-        /// @param out The output stream to print to
-        void print_storage_value(std::ostream& out) const
-        {
-            for(uint32_t i = 0; i < SuperCoder::symbols(); ++i)
-            {
-                print_symbol_value(out, i);
             }
         }
 
@@ -95,55 +106,18 @@ namespace kodo
 
             print_symbol_info(out, index);
 
+            uint32_t size = SuperCoder::symbol_size();
             if(SuperCoder::is_symbol_available(index))
             {
                 const uint8_t* symbol = SuperCoder::symbol(index);
+                auto storage = sak::storage(symbol, size);
 
-                for(uint32_t j = 0; j < SuperCoder::symbol_size(); ++j)
-                {
-                    out << (uint32_t) symbol[j] << " ";
-                }
+                hexdump hex(storage);
+                hex.set_max_size(32);
+
+                out << hex << std::endl;
             }
 
-            out << std::endl;
-        }
-
-        /// Print finite field elements of a specific symbol's data to the
-        /// output stream
-        /// @param out The output stream to print to
-        /// @param index The index of symbol to print
-        void print_symbol_value(std::ostream& out, uint32_t index) const
-        {
-            assert(index < SuperCoder::symbols());
-
-            print_symbol_info(out, index);
-
-            if(SuperCoder::is_symbol_available(index))
-            {
-
-                // We calculate the number of finite field elements that are
-                // stored in the symbols' data. In this case
-                // layer::symbol_length() does not yield the correct result
-                // for fields where multiple field elements are packed into
-                // the same value_type
-                uint32_t symbol_elements =
-                    fifi::size_to_elements<field_type>(
-                        SuperCoder::symbol_size());
-
-                const value_type* symbol = SuperCoder::symbol_value(index);
-
-                for(uint32_t j = 0; j < symbol_elements; ++j)
-                {
-                    value_type value = fifi::get_value<field_type>(symbol, j);
-
-                    static_assert(sizeof(uint32_t) >= sizeof(value_type),
-                                  "value_type will overflow in this print");
-
-                    out << (uint32_t) value << " ";
-                }
-            }
-
-            out << std::endl;
         }
 
     protected:

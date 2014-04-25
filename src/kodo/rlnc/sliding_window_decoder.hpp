@@ -19,7 +19,7 @@
 #include "../disable_trace.hpp"
 #include "../trace_linear_block_decoder.hpp"
 #include "../common_decoder_layers.hpp"
-#include "../common_coefficient_storage_layers.hpp"
+#include "../coefficient_storage_layers.hpp"
 
 namespace kodo
 {
@@ -57,7 +57,7 @@ namespace kodo
                pivot_status_writer<
                common_decoder_layers<TraceTag,
                // Coefficient Storage API
-               common_coefficient_storage_layers<
+               coefficient_storage_layers<
                // Storage API
                deep_symbol_storage<
                storage_bytes_used<

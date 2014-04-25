@@ -58,6 +58,17 @@ namespace kodo
             m_coefficients.resize(the_factory.max_coefficient_vector_size());
         }
 
+        /// @copydoc layer::initialize(Factory&)
+        template<class Factory>
+        void initialize(Factory& the_factory)
+        {
+            SuperCoder::initialize(the_factory);
+
+            // Mark the cache as invalid - since we do not yet have any
+            // cached data
+            m_valid = false;
+        }
+
         /// @copydoc layer::decode_symbol(uint8_t*,uint8_t*)
         void decode_symbol(uint8_t *symbol_data,
                            uint8_t *symbol_coefficients)
@@ -78,6 +89,7 @@ namespace kodo
             sak::copy_storage(coef_dest, coef_src);
 
             m_symbol_coded = true;
+            m_valid = true;
 
             // If the lower layers define the decode_symbol()
             // functions forward the call
@@ -102,7 +114,8 @@ namespace kodo
             sak::copy_storage(data_dest, data_src);
 
             m_symbol_index = symbol_index;
-            m_symbol_coded =  false;
+            m_symbol_coded = false;
+            m_valid = true;
 
             // If the lower layers define the decode_symbol()
             // functions forward the call
@@ -113,18 +126,27 @@ namespace kodo
             }
         }
 
+        /// @return True if the cache is valid otherwise false. If the
+        /// cache is not valid no other functions should be invoked.
+        bool is_cache_valid() const
+        {
+            return m_valid;
+        }
+
         /// @return True if the previous symbol was uncoded in that case
         ///         its index can be retrieved by calling symbol_index()
         ///         otherwise the symbol was coded and its coefficients
         ///         can be retried by calling symbol_coefficients()
         bool cached_symbol_coded() const
         {
+            assert(m_valid);
             return m_symbol_coded;
         }
 
         /// @return The index of the uncoded symbol
         uint32_t cached_symbol_index() const
         {
+            assert(m_valid);
             assert(!m_symbol_coded);
             return m_symbol_index;
         }
@@ -133,12 +155,14 @@ namespace kodo
         ///         bytes can be retried by calling layer::symbol_size()
         const uint8_t* cached_symbol_data() const
         {
+            assert(m_valid);
             return &m_data[0];
         }
 
         /// @copydoc cached_symbol_data() const
         uint8_t* cached_symbol_data()
         {
+            assert(m_valid);
             return &m_data[0];
         }
 
@@ -147,6 +171,7 @@ namespace kodo
         ///         retried by calling the layer::coefficient_vector_size()
         const uint8_t* cached_symbol_coefficients() const
         {
+            assert(m_valid);
             assert(m_symbol_coded);
             return &m_coefficients[0];
         }
@@ -154,6 +179,7 @@ namespace kodo
         /// @copydoc cached_symbol_coefficients() const
         uint8_t* cached_symbol_coefficients()
         {
+            assert(m_valid);
             assert(m_symbol_coded);
             return &m_coefficients[0];
         }
@@ -171,6 +197,9 @@ namespace kodo
 
         /// If coded stores the coefficients of the decoding symbol
         std::vector<uint8_t> m_coefficients;
+
+        /// Marks whether the cache is valid
+        bool m_valid;
 
     };
 

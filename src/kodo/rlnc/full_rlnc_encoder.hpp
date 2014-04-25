@@ -7,47 +7,21 @@
 
 #include <cstdint>
 
-#include <fifi/default_field.hpp>
-
-#include "../aligned_coefficients_decoder.hpp"
 #include "../final_coder_factory_pool.hpp"
-#include "../final_coder_factory.hpp"
-#include "../finite_field_math.hpp"
-#include "../finite_field_info.hpp"
 #include "../zero_symbol_encoder.hpp"
 #include "../default_on_systematic_encoder.hpp"
-#include "../default_off_systematic_encoder.hpp"
-#include "../systematic_decoder.hpp"
-#include "../storage_bytes_used.hpp"
-#include "../storage_block_info.hpp"
-#include "../deep_symbol_storage.hpp"
 #include "../payload_encoder.hpp"
-#include "../payload_recoder.hpp"
-#include "../payload_decoder.hpp"
 #include "../symbol_id_encoder.hpp"
-#include "../symbol_id_decoder.hpp"
 #include "../coefficient_storage.hpp"
 #include "../coefficient_info.hpp"
-#include "../plain_symbol_id_reader.hpp"
 #include "../plain_symbol_id_writer.hpp"
 #include "../uniform_generator.hpp"
-#include "../recoding_symbol_id.hpp"
-#include "../proxy_layer.hpp"
 #include "../storage_aware_encoder.hpp"
 #include "../encode_symbol_tracker.hpp"
-#include "../cached_symbol_decoder.hpp"
-#include "../trace_decode_symbol.hpp"
-#include "../trace_linear_block_decoder.hpp"
-#include "../rank_info.hpp"
-#include "../symbol_decoding_status_tracker.hpp"
-#include "../symbol_decoding_status_counter.hpp"
-#include "../common_decoder_layers.hpp"
-
 #include "../linear_block_encoder.hpp"
-#include "../forward_linear_block_decoder.hpp"
-#include "../linear_block_decoder_delayed.hpp"
 #include "../coefficient_value_access.hpp"
-#include "../pivot_aware_generator.hpp"
+#include "../deep_storage_layers.hpp"
+#include "../finite_field_layers.hpp"
 
 namespace kodo
 {
@@ -62,7 +36,7 @@ namespace kodo
     ///   Encoding vectors are generated using a random uniform generator.
     /// - Deep symbol storage which makes the encoder allocate its own
     ///   internal memory.
-    template<class Field>
+    template<class Field, class TraceTag = kodo::disable_trace>
     class full_rlnc_encoder :
         public // Payload Codec API
                payload_encoder<
@@ -82,16 +56,13 @@ namespace kodo
                coefficient_value_access<
                coefficient_info<
                // Symbol Storage API
-               deep_symbol_storage<
-               storage_bytes_used<
-               storage_block_info<
+               deep_storage_layers<TraceTag,
                // Finite Field API
-               finite_field_math<typename fifi::default_field<Field>::type,
-               finite_field_info<Field,
+               finite_field_layers<Field,
                // Factory API
                final_coder_factory_pool<
                // Final type
-               full_rlnc_encoder<Field
-                   > > > > > > > > > > > > > > > > > >
+               full_rlnc_encoder<Field, TraceTag>
+               > > > > > > > > > > > > > >
     { };
 }

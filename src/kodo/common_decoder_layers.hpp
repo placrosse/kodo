@@ -6,6 +6,7 @@
 #pragma once
 
 #include "trace_linear_block_decoder.hpp"
+#include "trace_decode_symbol.hpp"
 #include "aligned_coefficients_decoder.hpp"
 #include "forward_linear_block_decoder.hpp"
 #include "rank_info.hpp"
@@ -22,11 +23,12 @@ namespace kodo
     ///
     template<class TraceTag, class SuperCoder>
     using common_decoder_layers =
+               trace_decode_symbol<TraceTag,
                trace_linear_block_decoder<TraceTag,
                aligned_coefficients_decoder<
                forward_linear_block_decoder<
                rank_info<
                symbol_decoding_status_counter<
-               symbol_decoding_status_tracker<SuperCoder> > > > > >;
+               symbol_decoding_status_tracker<SuperCoder> > > > > > >;
 
 }

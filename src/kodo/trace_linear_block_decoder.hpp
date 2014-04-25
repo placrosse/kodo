@@ -80,6 +80,7 @@ namespace kodo
         /// @copydoc layer::trace(std::ostream&)
         void trace(std::ostream& out)
         {
+            out << "decoder_state:" << std::endl;
             print_decoder_state(out);
 
             // If the lower layers define the trace function forward it
@@ -125,6 +126,8 @@ namespace kodo
 
                 out << std::endl;
             }
+
+            out << std::endl;
 
         }
 

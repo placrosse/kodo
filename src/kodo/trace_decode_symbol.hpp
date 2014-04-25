@@ -23,6 +23,8 @@
 #include "finite_field_info.hpp"
 #include "disable_trace.hpp"
 #include "enable_trace.hpp"
+#include "hexdump.hpp"
+#include "coefficient_value_access.hpp"
 
 namespace kodo
 {
@@ -35,7 +37,6 @@ namespace kodo
                       "Unexpected TraceTag should be disable_trace in the "
                       "fall-through case.");
     };
-
 
     /// @ingroup trace
     ///
@@ -75,10 +76,11 @@ namespace kodo
         /// symbol information for later processing
         class cache : public
             cache_decode_symbol<
+            coefficient_value_access<
             coefficient_info<
             storage_block_info<
             finite_field_info<field_type,
-            final_coder_factory<cache> > > > >
+            final_coder_factory<cache> > > > > >
         { };
 
     public:
@@ -148,8 +150,16 @@ namespace kodo
         /// @copydoc layer::trace(std::ostream&)
         void trace(std::ostream& out)
         {
-            out << "input symbol data:" << std::endl;
-            print_cached_symbol_data(out);
+            assert(m_cache);
+
+            if (m_cache->is_cache_valid())
+            {
+                out << "input_symbol_data:" << std::endl;
+                print_cached_symbol_data(out);
+
+                out << "input_symbol_coefficients:" << std::endl;
+                print_cached_symbol_coefficients(out);
+            }
 
             // If the lower layers define the trace function forward it
             if (kodo::has_trace<SuperCoder>::value)
@@ -181,24 +191,33 @@ namespace kodo
         /// @param out, the output stream
         void print_cached_symbol_data(std::ostream &out) const
         {
+            assert(m_cache);
 
+            auto storage = sak::storage(m_cache->cached_symbol_data(),
+                                        m_cache->symbol_size());
 
+            hexdump hex(storage);
+            hex.set_max_size(32);
+
+            out << hex << std::endl;
         }
 
         /// Prints the cached symbol coefficients to the output stream
         /// @param out, the output stream
         void print_cached_symbol_coefficients(std::ostream &out) const
         {
-            if(SuperCoder::cached_symbol_coded())
+            assert(m_cache);
+
+            if(m_cache->cached_symbol_coded())
             {
                 out << "C: ";
 
                 const value_type *c = reinterpret_cast<const value_type*>(
-                    SuperCoder::cached_symbol_coefficients());
+                    m_cache->cached_symbol_coefficients());
 
-                for(uint32_t j = 0; j < SuperCoder::symbols(); ++j)
+                for(uint32_t j = 0; j < m_cache->symbols(); ++j)
                 {
-                    value_type value = SuperCoder::coefficient_value(c, j);
+                    value_type value = m_cache->coefficient_value(c, j);
 
                     static_assert(sizeof(uint32_t) >= sizeof(value_type),
                                   "value_type will overflow in this print");
@@ -206,11 +225,13 @@ namespace kodo
                     out << (uint32_t) value << " ";
 
                 }
+
+                out << std::endl;
             }
             else
             {
                 out << "U: symbol index = "
-                    << SuperCoder::cached_symbol_index() << std::endl;
+                    << m_cache->cached_symbol_index() << std::endl;
             }
 
             out << std::endl;

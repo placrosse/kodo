@@ -152,21 +152,21 @@ namespace
 {
     template<class Field>
     using decoder = kodo::full_rlnc_decoder<Field, kodo::disable_trace>;
+
+    template<class Field>
+    using encoder = kodo::full_rlnc_encoder<Field, kodo::disable_trace>;
 }
 
 /// Tests the basic API functionality this mean basic encoding
 /// and decoding
 TEST(TestRlncFullVectorCodes, test_basic_api)
 {
-    test_basic_api<kodo::shallow_full_rlnc_encoder,
-        decoder>();
+    test_basic_api<kodo::shallow_full_rlnc_encoder, decoder>();
 
-    test_basic_api<kodo::full_rlnc_encoder,
-        decoder>();
+    test_basic_api<encoder, decoder>();
 
     // The delayed decoders
-    test_basic_api<kodo::full_rlnc_encoder,
-        kodo::full_rlnc_decoder_delayed>();
+    test_basic_api<encoder, kodo::full_rlnc_decoder_delayed>();
 }
 
 
@@ -176,14 +176,13 @@ TEST(TestRlncFullVectorCodes, test_basic_api)
 /// can be safely reused.
 TEST(TestRlncFullVectorCodes, test_initialize)
 {
-    test_initialize<kodo::shallow_full_rlnc_encoder,
-        decoder>();
+    test_initialize<kodo::shallow_full_rlnc_encoder, decoder>();
 
-    test_initialize<kodo::full_rlnc_encoder,
+    test_initialize<encoder,
         decoder>();
 
     // The delayed decoders
-    test_initialize<kodo::full_rlnc_encoder,
+    test_initialize<encoder,
         kodo::full_rlnc_decoder_delayed>();
 
 }
@@ -192,10 +191,10 @@ TEST(TestRlncFullVectorCodes, test_initialize)
 /// correctly in the decoder.
 TEST(TestRlncFullVectorCodes, test_systematic)
 {
-    test_systematic<kodo::full_rlnc_encoder,
+    test_systematic<encoder,
         decoder>();
 
-    test_systematic<kodo::full_rlnc_encoder,
+    test_systematic<encoder,
         kodo::full_rlnc_decoder_delayed>();
 }
 
@@ -203,10 +202,10 @@ TEST(TestRlncFullVectorCodes, test_systematic)
 /// in the encoder and decoder.
 TEST(TestRlncFullVectorCodes, mix_uncoded)
 {
-    test_mix_uncoded<kodo::full_rlnc_encoder,
+    test_mix_uncoded<encoder,
         decoder>();
 
-    test_mix_uncoded<kodo::full_rlnc_encoder,
+    test_mix_uncoded<encoder,
         kodo::full_rlnc_decoder_delayed>();
 }
 
@@ -214,13 +213,13 @@ TEST(TestRlncFullVectorCodes, mix_uncoded)
 TEST(TestRlncFullVectorCodes, test_recoders_api)
 {
 
-    test_recoders<kodo::full_rlnc_encoder,
+    test_recoders<encoder,
         decoder>();
 
-    test_recoders<kodo::full_rlnc_encoder,
+    test_recoders<encoder,
         kodo::full_rlnc_decoder_delayed>();
 
-    test_recoders<kodo::full_rlnc_encoder,
+    test_recoders<encoder,
         kodo::full_rlnc_decoder_delayed_shallow>();
 
 }
@@ -229,13 +228,13 @@ TEST(TestRlncFullVectorCodes, test_recoders_api)
 TEST(TestRlncFullVectorCodes, test_recoding_relay)
 {
 
-    test_recoding_relay<kodo::full_rlnc_encoder,
+    test_recoding_relay<encoder,
         decoder>();
 
-    test_recoding_relay<kodo::full_rlnc_encoder,
+    test_recoding_relay<encoder,
         kodo::full_rlnc_decoder_delayed>();
 
-    test_recoding_relay<kodo::full_rlnc_encoder,
+    test_recoding_relay<encoder,
         kodo::full_rlnc_decoder_delayed_shallow>();
 
 }
@@ -249,12 +248,12 @@ TEST(TestRlncFullVectorCodes, test_reuse_api)
         decoder>();
 
     test_reuse<
-        kodo::full_rlnc_encoder,
+        encoder,
         decoder>();
 
     // The delayed decoders
     test_reuse<
-        kodo::full_rlnc_encoder,
+        encoder,
         kodo::full_rlnc_decoder_delayed>();
 }
 
@@ -267,11 +266,11 @@ TEST(TestRlncFullVectorCodes, test_reuse_incomplete_api)
         decoder>();
 
     test_reuse_incomplete<
-        kodo::full_rlnc_encoder,
+        encoder,
         decoder>();
 
     // The delayed decoders
     test_reuse_incomplete<
-        kodo::full_rlnc_encoder,
+        encoder,
         kodo::full_rlnc_decoder_delayed>();
 }

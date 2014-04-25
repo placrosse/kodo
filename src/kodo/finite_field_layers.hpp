@@ -5,24 +5,20 @@
 
 #pragma once
 
-#include "coefficient_value_access.hpp"
-#include "coefficient_storage.hpp"
-#include "coefficient_info.hpp"
+#include <fifi/default_field.hpp>
+
+#include "finite_field_math.hpp"
+#include "finite_field_info.hpp"
 
 namespace kodo
 {
-
+    /// @todo docs
     /// @ingroup coefficient_storage_layers
     ///
     /// @brief Template alias for the common set of coefficient
     ///        storage layers used in most stacks
-    template<class SuperCoder>
-    using common_coefficient_storage_layers =
-               coefficient_value_access<
-               coefficient_storage<
-               coefficient_info<SuperCoder> > >;
-
+    template<class Field, class SuperCoder>
+    using finite_field_layers =
+        finite_field_math<typename fifi::default_field<Field>::type,
+        finite_field_info<Field, SuperCoder> >;
 }
-
-
-
