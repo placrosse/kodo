@@ -178,12 +178,10 @@ TEST(TestRlncFullVectorCodes, test_initialize)
 {
     test_initialize<kodo::shallow_full_rlnc_encoder, decoder>();
 
-    test_initialize<encoder,
-        decoder>();
+    test_initialize<encoder, decoder>();
 
     // The delayed decoders
-    test_initialize<encoder,
-        kodo::full_rlnc_decoder_delayed>();
+    test_initialize<encoder, kodo::full_rlnc_decoder_delayed>();
 
 }
 

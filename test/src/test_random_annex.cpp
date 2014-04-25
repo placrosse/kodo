@@ -196,7 +196,7 @@ void invoke_random_annex_partial(uint32_t max_symbols,
 namespace
 {
     template<class Field>
-    using encoder = kodo::full_rlnc_encoder<Field>;
+    using encoder = kodo::full_rlnc_encoder<Field, kodo::disable_trace>;
 
     template<class Field>
     using decoder = kodo::full_rlnc_decoder<Field, kodo::disable_trace>;
