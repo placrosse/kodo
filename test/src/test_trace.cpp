@@ -23,8 +23,9 @@ namespace kodo
 
         struct dummy_one
         {
-            void trace(std::ostream& out)
+            void trace(std::ostream& out, const kodo::trace_filter& filter)
             {
+                (void) filter;
                 out << "in trace" << std::endl;
             }
 

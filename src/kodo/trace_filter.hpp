@@ -5,11 +5,14 @@
 
 #pragma once
 
+#include <memory>
+
 namespace kodo
 {
+    /// @todo docs+tests
     struct no_filter
     {
-        bool operator()(const std::string& zone)
+        bool operator()(const std::string& zone) const
         {
             (void) zone;
             return true;
@@ -29,14 +32,14 @@ namespace kodo
             : m_filter(new impl<T>(t))
         { }
 
-        bool operator()(const std::string& zone)
+        bool operator()(const std::string& zone) const
         {
             return m_filter->filter(zone);
         }
 
         struct model
         {
-            virtual bool filter(const std::string& zone) = 0;
+            virtual bool filter(const std::string&) const = 0;
         };
 
         template<class T>
@@ -49,7 +52,7 @@ namespace kodo
             impl()
             { }
 
-            bool filter(const std::string& zone)
+            bool filter(const std::string& zone) const
             {
                 return m_t(zone);
             }

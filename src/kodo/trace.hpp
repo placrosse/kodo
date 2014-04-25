@@ -13,6 +13,8 @@
 namespace kodo
 {
 
+    /// @todo review filter
+
     /// @ingroup generic_api
     /// @ingroup trace
     ///
@@ -27,7 +29,7 @@ namespace kodo
                       const trace_filter& filter = trace_filter())
     {
         (void) filter;
-        t.trace(out);
+        t.trace(out, filter);
     }
 
     /// @ingroup generic_api

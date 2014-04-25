@@ -148,24 +148,30 @@ namespace kodo
         }
 
         /// @copydoc layer::trace(std::ostream&)
-        void trace(std::ostream& out)
+        void trace(std::ostream& out, const trace_filter& filter)
         {
             assert(m_cache);
 
             if (m_cache->is_cache_valid())
             {
-                out << "input_symbol_data:" << std::endl;
-                print_cached_symbol_data(out);
+                if (filter("input_symbol_data"))
+                {
+                    out << "input_symbol_data:" << std::endl;
+                    print_cached_symbol_data(out);
+                }
 
-                out << "input_symbol_coefficients:" << std::endl;
-                print_cached_symbol_coefficients(out);
+                if (filter("input_symbol_coefficients"))
+                {
+                    out << "input_symbol_coefficients:" << std::endl;
+                    print_cached_symbol_coefficients(out);
+                }
             }
 
             // If the lower layers define the trace function forward it
             if (kodo::has_trace<SuperCoder>::value)
             {
                 SuperCoder& next = *this;
-                kodo::trace(next, out);
+                kodo::trace(next, out, filter);
             }
         }
 

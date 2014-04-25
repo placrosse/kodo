@@ -72,10 +72,13 @@ namespace kodo
     public:
 
         /// @copydoc layer::trace(std::ostream&)
-        void trace(std::ostream& out)
+        void trace(std::ostream& out, const trace_filter& filter)
         {
-            out << "symbol_storage:" << std::endl;
-            print_storage(out);
+            if (filter("symbol_storage"))
+            {
+                out << "symbol_storage:" << std::endl;
+                print_storage(out);
+            }
 
             // If the lower layers define the trace function forward it
             if (kodo::has_trace<SuperCoder>::value)

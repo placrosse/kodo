@@ -7,8 +7,11 @@
 
 #include <iostream>
 
+#include "trace_filter.hpp"
+
 namespace kodo
 {
+    /// @todo review trace filter
     /// @ingroup type_traits
     ///
     /// @ingroup trace
@@ -34,7 +37,7 @@ namespace kodo
 
         template<typename U>
         static auto test(int) ->
-            decltype(std::declval<U>().trace(std::cout), yes());
+            decltype(std::declval<U>().trace(std::cout,trace_filter()), yes());
 
         template<typename> static no test(...);
 

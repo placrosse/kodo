@@ -25,7 +25,7 @@ int main()
     uint32_t symbol_size = 33;
 
     // Typdefs for the encoder/decoder type we wish to use
-    typedef kodo::full_rlnc_encoder<fifi::binary8, kodo::enable_trace>
+    typedef kodo::full_rlnc_encoder<fifi::binary8, kodo::disable_trace>
         rlnc_encoder;
 
     typedef kodo::full_rlnc_decoder<fifi::binary8, kodo::enable_trace>
@@ -81,8 +81,13 @@ int main()
 
         if (kodo::has_trace<rlnc_decoder>::value)
         {
+            auto filter = [](const std::string& zone)
+            {
+                return zone == "decoder_state";
+            };
+
             std::cout << "Trace decoder:" << std::endl;
-            kodo::trace(decoder, std::cout);
+            kodo::trace(decoder, std::cout, filter);
         }
     }
 
@@ -100,11 +105,4 @@ int main()
         std::cout << "Unexpected failure to decode "
                   << "please file a bug report :)" << std::endl;
     }
-
-kodo::trace_filter filter;
-filter("ok");
-
-kodo::trace_filter filter1([] (const std::string& zone)
-           { return zone == "decoder_state"; });
-
 }

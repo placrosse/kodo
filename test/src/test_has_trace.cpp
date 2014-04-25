@@ -21,7 +21,7 @@ namespace kodo
 
         struct dummy
         {
-            void trace(std::ostream&);
+            void trace(std::ostream&, const kodo::trace_filter&);
         };
 
         struct dummy_parent : public dummy
