@@ -147,8 +147,11 @@ namespace kodo
             m_max_print_bytes = 32;
         }
 
-        /// @copydoc layer::trace(std::ostream&)
-        void trace(std::ostream& out, const trace_filter& filter)
+        /// @todo change trace function to template, then we can
+        /// remove the trace filter @copydoc
+        /// layer::trace(std::ostream&)
+        template<class Filter>
+        void trace(std::ostream& out, Filter filter)
         {
             assert(m_cache);
 
