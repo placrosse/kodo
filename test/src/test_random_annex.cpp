@@ -83,7 +83,7 @@ template
     class Decoder,
     class Partitioning
 >
-void invoke_random_annex_partial(uint32_t max_symbols,
+void run_test_random_annex_partial(uint32_t max_symbols,
                                  uint32_t max_symbol_size,
                                  uint32_t multiplier)
 {
@@ -171,22 +171,22 @@ template
     template <class> class Decoder,
     class Partitioning
 >
-void invoke_random_annex_partial(uint32_t max_symbols,
-                                 uint32_t max_symbol_size,
-                                 uint32_t multiplier)
+void test_random_annex_partial(uint32_t max_symbols,
+                               uint32_t max_symbol_size,
+                               uint32_t multiplier)
 {
 
-    invoke_random_annex_partial<
+    run_test_random_annex_partial<
         Encoder<fifi::binary>,
         Decoder<fifi::binary>,
         Partitioning>(max_symbols, max_symbol_size, multiplier);
 
-    invoke_random_annex_partial<
+    run_test_random_annex_partial<
         Encoder<fifi::binary8>,
         Decoder<fifi::binary8>,
         Partitioning>(max_symbols, max_symbol_size, multiplier);
 
-    invoke_random_annex_partial<
+    run_test_random_annex_partial<
         Encoder<fifi::binary16>,
         Decoder<fifi::binary16>,
         Partitioning>(max_symbols, max_symbol_size, multiplier);
@@ -208,7 +208,7 @@ void test_random_annex_coders(uint32_t symbols, uint32_t symbol_size,
 
 
 
-    invoke_random_annex_partial<
+    test_random_annex_partial<
         encoder,
         decoder,
         kodo::rfc5052_partitioning_scheme>(

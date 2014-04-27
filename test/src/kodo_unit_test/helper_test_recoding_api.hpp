@@ -273,7 +273,7 @@ inline void test_recoders()
 ///
 /// @param param The recoding parameters to use
 template<class Encoder, class Decoder>
-inline void test_recoding_relay(recoding_parameters param)
+inline void run_test_recoding_relay(recoding_parameters param)
 {
     // Common setting
     typename Encoder::factory encoder_factory(
@@ -368,21 +368,28 @@ inline void test_recoding_relay(recoding_parameters param)
 
     {
         SCOPED_TRACE(testing::Message() << "field = binary");
-        test_recoding_relay<
+        run_test_recoding_relay<
             Encoder<fifi::binary>,
             Decoder<fifi::binary> >(param);
     }
 
     {
+        SCOPED_TRACE(testing::Message() << "field = binary4");
+        run_test_recoding_relay<
+            Encoder<fifi::binary4>,
+            Decoder<fifi::binary4> >(param);
+    }
+
+    {
         SCOPED_TRACE(testing::Message() << "field = binary8");
-        test_recoding_relay<
+        run_test_recoding_relay<
             Encoder<fifi::binary8>,
             Decoder<fifi::binary8> >(param);
     }
 
     {
         SCOPED_TRACE(testing::Message() << "field = binary16");
-        test_recoding_relay<
+        run_test_recoding_relay<
             Encoder<fifi::binary16>,
             Decoder<fifi::binary16> >(param);
     }

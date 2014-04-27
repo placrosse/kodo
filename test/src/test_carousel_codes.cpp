@@ -16,7 +16,7 @@
 static void test_coders(uint32_t symbols, uint32_t symbol_size)
 {
 
-    test_basic_api_
+    run_test_basic_api
         <
             kodo::nocode_carousel_encoder,
             kodo::nocode_carousel_decoder
@@ -36,5 +36,3 @@ TEST(TestNoCodeCarouselCodes, basic_api)
 
     test_coders(symbols, symbol_size);
 }
-
-

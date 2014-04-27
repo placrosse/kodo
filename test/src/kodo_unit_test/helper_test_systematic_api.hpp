@@ -13,7 +13,7 @@
 
 
 template<class Encoder, class Decoder>
-inline void test_systematic(uint32_t symbols, uint32_t symbol_size)
+inline void run_test_systematic(uint32_t symbols, uint32_t symbol_size)
 {
     // Common setting
     typename Encoder::factory encoder_factory(symbols, symbol_size);
@@ -59,28 +59,46 @@ template
 <
     template <class...> class Encoder,
     template <class...> class Decoder
->
+    >
 inline void test_systematic(uint32_t symbols, uint32_t symbol_size)
 {
-    test_systematic
-        <
-        Encoder<fifi::binary>,
-        Decoder<fifi::binary>
-        >(symbols, symbol_size);
+    {
+        SCOPED_TRACE(testing::Message() << "field = binary");
+        run_test_systematic
+            <
+            Encoder<fifi::binary>,
+            Decoder<fifi::binary>
+            >(symbols, symbol_size);
+    }
 
-    test_systematic
-        <
-        Encoder<fifi::binary8>,
-        Decoder<fifi::binary8>
-        >(symbols, symbol_size);
+    {
+        SCOPED_TRACE(testing::Message() << "field = binary4");
+        run_test_systematic
+            <
+            Encoder<fifi::binary4>,
+            Decoder<fifi::binary4>
+            >(symbols, symbol_size);
+    }
 
-    test_systematic
-        <
-        Encoder<fifi::binary16>,
-        Decoder<fifi::binary16>
-        >(symbols, symbol_size);
+    {
+        SCOPED_TRACE(testing::Message() << "field = binary8");
+        run_test_systematic
+            <
+            Encoder<fifi::binary8>,
+            Decoder<fifi::binary8>
+            >(symbols, symbol_size);
+    }
+
+    {
+        SCOPED_TRACE(testing::Message() << "field = binary16");
+        run_test_systematic
+            <
+            Encoder<fifi::binary16>,
+            Decoder<fifi::binary16>
+            >(symbols, symbol_size);
+
+    }
 }
-
 template
 <
     template <class...> class Encoder,
@@ -96,9 +114,3 @@ inline void test_systematic()
 
     test_systematic<Encoder, Decoder>(symbols, symbol_size);
 }
-
-
-
-
-
-

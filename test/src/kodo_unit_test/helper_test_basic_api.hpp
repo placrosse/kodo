@@ -39,7 +39,7 @@
 /// Helper function which will invoke a number of checks on an encoder
 /// and decoder pair
 template<class Encoder, class Decoder>
-inline void test_basic_api_(uint32_t symbols, uint32_t symbol_size)
+inline void run_test_basic_api(uint32_t symbols, uint32_t symbol_size)
 {
 
     // Common setting
@@ -174,7 +174,7 @@ inline void test_basic_api(uint32_t symbols, uint32_t symbol_size)
 
     {
         SCOPED_TRACE(testing::Message() << "field = binary");
-        test_basic_api_
+        run_test_basic_api
             <
                 Encoder<fifi::binary>,
                 Decoder<fifi::binary>
@@ -183,7 +183,7 @@ inline void test_basic_api(uint32_t symbols, uint32_t symbol_size)
 
     {
         SCOPED_TRACE(testing::Message() << "field = binary4");
-        test_basic_api_
+        run_test_basic_api
             <
                 Encoder<fifi::binary4>,
                 Decoder<fifi::binary4>
@@ -192,7 +192,7 @@ inline void test_basic_api(uint32_t symbols, uint32_t symbol_size)
 
     {
         SCOPED_TRACE(testing::Message() << "field = binary8");
-        test_basic_api_
+        run_test_basic_api
             <
                 Encoder<fifi::binary8>,
                 Decoder<fifi::binary8>
@@ -201,7 +201,7 @@ inline void test_basic_api(uint32_t symbols, uint32_t symbol_size)
 
     {
         SCOPED_TRACE(testing::Message() << "field = binary16");
-        test_basic_api_
+        run_test_basic_api
             <
                 Encoder<fifi::binary16>,
                 Decoder<fifi::binary16>
@@ -210,7 +210,7 @@ inline void test_basic_api(uint32_t symbols, uint32_t symbol_size)
 
     {
         SCOPED_TRACE(testing::Message() << "field = prime2325");
-        test_basic_api_
+        run_test_basic_api
             <
                 Encoder<fifi::prime2325>,
                 Decoder<fifi::prime2325>

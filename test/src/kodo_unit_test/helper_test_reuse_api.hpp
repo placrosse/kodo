@@ -83,7 +83,7 @@ inline void test_reuse_helper(EncoderPointer encoder, DecoderPointer decoder)
 /// Test that instantiates a number of encoders and decoders from
 /// the same factories
 template<class Encoder, class Decoder>
-inline void test_reuse(uint32_t symbols, uint32_t symbol_size)
+inline void run_test_reuse(uint32_t symbols, uint32_t symbol_size)
 {
     // Common setting
     typename Encoder::factory encoder_factory(symbols, symbol_size);
@@ -150,19 +150,19 @@ template
 >
 inline void test_reuse(uint32_t symbols, uint32_t symbol_size)
 {
-    test_reuse
+    run_test_reuse
         <
             Encoder<fifi::binary>,
             Decoder<fifi::binary>
         >(symbols, symbol_size);
 
-    test_reuse
+    run_test_reuse
         <
             Encoder<fifi::binary8>,
             Decoder<fifi::binary8>
         >(symbols, symbol_size);
 
-    test_reuse
+    run_test_reuse
         <
             Encoder<fifi::binary16>,
             Decoder<fifi::binary16>
@@ -190,7 +190,7 @@ inline void test_reuse()
 /// Tests that encoders and decoders can be safely reused after incomplete
 /// encoding / decoding.
 template<class Encoder, class Decoder>
-inline void test_reuse_incomplete(uint32_t symbols, uint32_t symbol_size)
+inline void run_test_reuse_incomplete(uint32_t symbols, uint32_t symbol_size)
 {
 
     bool do_complete;
@@ -278,19 +278,19 @@ template
     >
 inline void test_reuse_incomplete(uint32_t symbols, uint32_t symbol_size)
 {
-    test_reuse_incomplete
+    run_test_reuse_incomplete
         <
             Encoder<fifi::binary>,
             Decoder<fifi::binary>
         >(symbols, symbol_size);
 
-    test_reuse_incomplete
+    run_test_reuse_incomplete
         <
             Encoder<fifi::binary8>,
             Decoder<fifi::binary8>
         >(symbols, symbol_size);
 
-    test_reuse_incomplete
+    run_test_reuse_incomplete
         <
             Encoder<fifi::binary16>,
             Decoder<fifi::binary16>

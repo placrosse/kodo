@@ -14,7 +14,7 @@
 /// Checks that the encoders and decoders are in a clean state after using
 /// the initialize function.
 template<class Encoder, class Decoder>
-inline void test_initialize(uint32_t symbols, uint32_t symbol_size)
+inline void run_test_initialize(uint32_t symbols, uint32_t symbol_size)
 {
 
     // Common setting
@@ -70,27 +70,44 @@ template
 <
     template <class> class Encoder,
     template <class> class Decoder
->
+    >
 inline void test_initialize(uint32_t symbols, uint32_t symbol_size)
 {
-
-    test_initialize
-        <
+    {
+        SCOPED_TRACE(testing::Message() << "field = binary");
+        run_test_initialize
+            <
             Encoder<fifi::binary>,
             Decoder<fifi::binary>
             >(symbols, symbol_size);
+    }
 
-    test_initialize
-        <
+    {
+        SCOPED_TRACE(testing::Message() << "field = binary4");
+        run_test_initialize
+            <
+            Encoder<fifi::binary4>,
+            Decoder<fifi::binary4>
+            >(symbols, symbol_size);
+    }
+
+    {
+        SCOPED_TRACE(testing::Message() << "field = binary8");
+        run_test_initialize
+            <
             Encoder<fifi::binary8>,
             Decoder<fifi::binary8>
             >(symbols, symbol_size);
+    }
 
-    test_initialize
-        <
+    {
+        SCOPED_TRACE(testing::Message() << "field = binary16");
+        run_test_initialize
+            <
             Encoder<fifi::binary16>,
             Decoder<fifi::binary16>
             >(symbols, symbol_size);
+    }
 }
 
 template
