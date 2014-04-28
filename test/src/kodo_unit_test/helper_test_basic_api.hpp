@@ -26,9 +26,7 @@
 #include <kodo/feedback_size.hpp>
 #include <kodo/set_systematic_off.hpp>
 
-#include <kodo/has_debug_linear_block_decoder.hpp>
-
-
+/// @todo remove these two classes
 #include <kodo/has_print_cached_symbol_coefficients.hpp>
 #include <kodo/print_cached_symbol_coefficients.hpp>
 

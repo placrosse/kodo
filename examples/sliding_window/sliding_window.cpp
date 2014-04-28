@@ -61,16 +61,16 @@ int main()
     auto symbol_storage =
         sak::split_storage(sak::storage(data_in), symbol_size);
 
-    while( !decoder->is_complete() )
+    while ( !decoder->is_complete() )
     {
 
-        if (kodo::has_trace<rlnc_decoder>::value )
+        if (kodo::has_trace<rlnc_decoder>::value)
         {
             kodo::trace(decoder, std::cout);
         }
 
         // Randomly choose to insert a symbol
-        if((rand() % 2) && (encoder->rank() < symbols))
+        if ((rand() % 2) && (encoder->rank() < symbols))
         {
             // For an encoder the rank specifies the number of symbols
             // it has available for encoding
@@ -89,7 +89,7 @@ int main()
 
         // Send the data to the decoders, here we just for fun
         // simulate that we are loosing 50% of the packets
-        if(rand() % 2)
+        if (rand() % 2)
         {
             std::cout << "Packet dropped on channel" << std::endl;
             continue;
@@ -110,7 +110,7 @@ int main()
         decoder->write_feedback(feedback.data());
 
         // Simulate loss of feedback
-        if(rand() % 2)
+        if (rand() % 2)
         {
             std::cout << "Lost feedback from decoder" << std::endl;
             continue;

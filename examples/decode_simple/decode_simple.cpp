@@ -24,7 +24,7 @@
 #include <vector>
 
 #include <kodo/rlnc/full_rlnc_codes.hpp>
-#include <kodo/cached_symbol_decoder.hpp>
+#include <kodo/cache_decode_symbol.hpp>
 #include <kodo/trace_decode_symbol.hpp>
 #include <kodo/trace_linear_block_decoder.hpp>
 

@@ -16,7 +16,7 @@
 #include <sak/storage.hpp>
 
 #include "trace.hpp"
-#include "cached_symbol_decoder.hpp"
+#include "cache_decode_symbol.hpp"
 #include "final_coder_factory.hpp"
 #include "coefficient_info.hpp"
 #include "storage_block_info.hpp"
@@ -28,7 +28,6 @@
 
 namespace kodo
 {
-
     /// Fall-through case for the case where TraceTag is disable_trace
     template<class TraceTag, class SuperCoder>
     class trace_decode_symbol : public SuperCoder
@@ -100,9 +99,11 @@ namespace kodo
 
         protected:
 
+            /// Ensure that our layer can access the function defined
+            /// in the factory
             friend class trace_decode_symbol;
 
-            /// @todo docs
+            /// @return The factory associated with the helper cache object
             typename cache::factory& cache_factory()
             {
                 return m_cache;
@@ -110,17 +111,12 @@ namespace kodo
 
         protected:
 
-            /// @todo docs
+            /// Stores the factory of the helper cache objects
             typename cache::factory m_cache;
 
         };
 
     public:
-
-        /// Constructor
-        trace_decode_symbol()
-            : m_max_print_bytes(0)
-        { }
 
         /// @copydoc layer::initialize(Factory&)
         template<class Factory>
@@ -142,16 +138,12 @@ namespace kodo
                 assert(m_cache);
                 m_cache->initialize(cache_factory);
             }
-
-            // Initialize the variables controlling the output
-            m_max_print_bytes = 32;
         }
 
-        /// @todo change trace function to template, then we can
-        /// remove the trace filter @copydoc
-        /// layer::trace(std::ostream&)
+
+        /// @copydoc layer::trace(std::ostream&, const Filter&)
         template<class Filter>
-        void trace(std::ostream& out, Filter filter)
+        void trace(std::ostream& out, const Filter& filter)
         {
             assert(m_cache);
 
@@ -161,12 +153,14 @@ namespace kodo
                 {
                     out << "input_symbol_data:" << std::endl;
                     print_cached_symbol_data(out);
+                    out << std::endl;
                 }
 
                 if (filter("input_symbol_coefficients"))
                 {
                     out << "input_symbol_coefficients:" << std::endl;
                     print_cached_symbol_coefficients(out);
+                    out << std::endl;
                 }
             }
 
@@ -208,7 +202,7 @@ namespace kodo
             hexdump hex(storage);
             hex.set_max_size(32);
 
-            out << hex << std::endl;
+            out << hex;
         }
 
         /// Prints the cached symbol coefficients to the output stream
@@ -243,73 +237,14 @@ namespace kodo
                     << m_cache->cached_symbol_index() << std::endl;
             }
 
-            out << std::endl;
-        }
-
-
-    protected:
-
-        void print_array(std::ostream& out, const sak::const_storage& data)
-        {
-            assert(data.m_data);
-            assert(data.m_size > 0);
-
-            // don't change formatting for s
-            std::ostream s (out.rdbuf());
-            s << std::hex << std::setfill('0');
-
-            std::string buf;
-            buf.reserve(17); // premature optimization
-
-            for (uint32_t i = 0; i < data.m_size; ++i)
-            {
-                if ((i % 16) == 0)
-                {
-                    if (i)
-                    {
-                        s << "  " << buf << std::endl;
-                        buf.clear();
-                    }
-                    s << "  " << std::setw(4) << i << ' ';
-                }
-
-                uint8_t c = data.m_data[i];
-
-                s << ' ' << std::setw(2) << (uint32_t) c;
-                buf += (0x20 <= c && c <= 0x7e) ? c : '.';
-            }
-
-            if (data.m_size % 16)
-            {
-                out << std::string(3*(data.m_size % 16 ), ' ');
-            }
-            out << "  " << buf << std::endl;
-
-            // // Make sure we do not print more than specified
-            // size = std::min(size, m_max_symbols);
-            // assert(size > 0);
-
-            // don't change formatting for out
-            // std::ostream s(out.rdbuf());
-            // s << std::hex << std::setfill('0');
-
-            // s << (uint32_t) data[0];
-
-            // for(uint32_t i = 1; i < size; ++i)
-            // {
-            //     out << ",";
-            //     out << (uint32_t) data[i];
-            // }
         }
 
     private:
 
-        /// @todo docs
+        /// Stores the cache helper object which stores the content of
+        /// the data buffers passed to the decode_symbol(...)
+        /// functions.
         typename cache::pointer m_cache;
 
-        /// @todo docs
-        uint32_t m_max_print_bytes;
-
     };
-
 }

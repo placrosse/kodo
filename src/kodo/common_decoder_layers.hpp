@@ -15,7 +15,6 @@
 
 namespace kodo
 {
-
     /// @ingroup decoder_layers
     ///
     /// @brief Template alias for a common selection of layers
@@ -30,5 +29,4 @@ namespace kodo
                rank_info<
                symbol_decoding_status_counter<
                symbol_decoding_status_tracker<SuperCoder> > > > > > >;
-
 }

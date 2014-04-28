@@ -4,10 +4,10 @@
 // http://www.steinwurf.com/licensing
 
 #include <ctime>
+#include <set>
 
 #include <kodo/rlnc/full_rlnc_codes.hpp>
 #include <kodo/trace.hpp>
-#include <kodo/trace_filter.hpp>
 
 /// @example use_trace_layers.cpp
 ///
@@ -55,7 +55,7 @@ int main()
     // to produce encoded symbols from it
     encoder->set_symbols(sak::storage(data_in));
 
-    while( !decoder->is_complete() )
+    while ( !decoder->is_complete() )
     {
         // Encode a packet into the payload buffer
         encoder->encode( payload.data() );
@@ -73,7 +73,7 @@ int main()
         // sending all symbols once uncoded, the encoder will switch
         // to full coding, in which case you will see the full encoding
         // vectors being sent and received.
-        if((rand() % 2) == 0)
+        if ((rand() % 2) == 0)
             continue;
 
         // Pass that packet to the decoder
@@ -83,11 +83,22 @@ int main()
         {
             auto filter = [](const std::string& zone)
             {
-                return zone == "decoder_state";
+                std::set<std::string> filters =
+                    {"decoder_state", "input_symbol_coefficients"};
+
+                return filters.count(zone);
             };
 
             std::cout << "Trace decoder:" << std::endl;
-            kodo::trace(decoder, std::cout, filter);
+
+
+            // Try to run without a filter to see the full amount of
+            // output produced by the trace function. You can then
+            // modify the filter to only view the information you are
+            // interested in.
+
+            // kodo::trace(decoder, std::cout, filter);
+            kodo::trace(decoder, std::cout);
         }
     }
 

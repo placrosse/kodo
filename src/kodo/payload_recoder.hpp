@@ -10,6 +10,7 @@
 namespace kodo
 {
 
+    /// @todo delete this class
     /// @ingroup payload_codec_layers
     /// @brief Implements the recode function for Network Codes.
     ///
@@ -146,5 +147,3 @@ namespace kodo
     };
 
 }
-
-

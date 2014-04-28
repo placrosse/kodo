@@ -25,6 +25,7 @@ namespace kodo
 
     /// @ingroup decoder_layers
     /// @ingroup codec_layers
+    ///
     /// @brief Implements basic linear block decoder.
     ///
     /// The linear block decoder
@@ -582,4 +583,3 @@ namespace kodo
     };
 
 }
-

@@ -4,8 +4,7 @@
 // http://www.steinwurf.com/licensing
 
 #include <kodo/rlnc/full_rlnc_codes.hpp>
-#include <kodo/cached_symbol_decoder.hpp>
-#include <kodo/empty_decoder.hpp>
+#include <kodo/cache_decode_symbol.hpp>
 
 namespace kodo
 {
@@ -34,7 +33,6 @@ namespace kodo
                  plain_symbol_id_reader<
                  // Decoder API
                  cache_decode_symbol<  // <-- Cached symbol decoder
-                 empty_decoder<
                  // Coefficient Storage API
                  coefficient_info<
                  // Storage API
@@ -46,16 +44,21 @@ namespace kodo
                  final_coder_factory_pool<
                  // Final type
                  symbol_info_decoder<Field>
-                     > > > > > > > > > > >
+                     > > > > > > > > > >
     { };
 
 }
 
-/// @example use_cached_symbol_decoder.cpp
+/// @example use_cache_decode_symbol.cpp
 ///
 /// This example shows how to use the cached symbol decoder to "extract"
 /// the symbol coding coefficients and the encoded symbol data from an
 /// incoming symbol.
+///
+/// Note, that if you are just interested in seeing the encoding
+/// vector used for the decoding you can also use the trace
+/// functionality which makes that type of information available. See
+/// the use_trace_layers example for more information.
 int main()
 {
     // The finite field we will use in the example. You can try
@@ -86,8 +89,8 @@ int main()
     rlnc_info_decoder::factory info_decoder_factory(symbols, symbol_size);
     auto info_decoder = info_decoder_factory.build();
 
-    // Allocate some storage for a "payload" the payload is what we would
-    // eventually send over a network
+    // Allocate some storage for a "payload" the payload is what we
+    // would eventually send over a network
     std::vector<uint8_t> payload(encoder->payload_size());
 
     // Allocate some data to encode. In this case we make a buffer
@@ -96,44 +99,47 @@ int main()
     std::vector<uint8_t> data_in(encoder->block_size());
 
     // Just for fun - fill the data with random data
-    for(auto &e: data_in)
-        e = rand() % 256;
+    std::generate(data_in.begin(), data_in.end(), rand);
 
-    // Assign the data buffer to the encoder so that we may start
-    // to produce encoded symbols from it
+    // Assign the data buffer to the encoder so that we may start to
+    // produce encoded symbols from it
     encoder->set_symbols(sak::storage(data_in));
 
-    while( !decoder->is_complete())
+    while (!decoder->is_complete())
     {
         // Encode a packet into the payload buffer
-        encoder->encode( &payload[0] );
+        encoder->encode( payload.data() );
 
-        // Here we "simulate" a packet loss of approximately 50%
-        // by dropping half of the encoded packets.
-        // When running this example you will notice that the initial
-        // symbols are received systematically (i.e. uncoded). After
-        // sending all symbols once uncoded, the encoder will switch
-        // to full coding, in which case you will see the full encoding
+        // Here we "simulate" a packet loss of approximately 50% by
+        // dropping half of the encoded packets.  When running this
+        // example you will notice that the initial symbols are
+        // received systematically (i.e. uncoded). After sending all
+        // symbols once uncoded, the encoder will switch to full
+        // coding, in which case you will see the full encoding
         // vectors being sent and received.
         if((rand() % 2) == 0)
             continue;
 
         // Pass the encoded packet to the info decoder. After this
         // information about the coded symbol can be fetched using the
-        // cached_symbol_decoder API
-        info_decoder->decode( &payload[0] );
+        // cache_decode_symbol API
+        info_decoder->decode( payload.data() );
 
-        if(!info_decoder->cached_symbol_coded())
+        // The cache should contain data now
+        assert(info_decoder->is_cache_valid());
+
+        if (!info_decoder->cached_symbol_coded())
         {
-            // The symbol was uncoded so we may ask the cache which of the
-            // original symbols we have received.
+            // The symbol was uncoded so we may ask the cache which of
+            // the original symbols we have received.
 
             std::cout << "Symbol was uncoded, index = "
                       << info_decoder->cached_symbol_index() << std::endl;
 
-            // Now we pass the data directly into our actual decoder. This is
-            // done using the "Codec API" directly, and not through the "Payload
-            // API" as we would typically do.
+            // Now we pass the data directly into our actual
+            // decoder. This is done using the "Codec API" directly,
+            // and not through the "Payload API" as we would typically
+            // do.
             decoder->decode_symbol( info_decoder->cached_symbol_data(),
                                     info_decoder->cached_symbol_index());
 
@@ -141,13 +147,15 @@ int main()
         else
         {
             // The symbol was coded so we may ask the cache to return
-            // the coding coefficients used to create the encoded symbol.
+            // the coding coefficients used to create the encoded
+            // symbol.
 
             std::cout << "Symbol was coded, encoding vector = ";
 
             const uint8_t* c = info_decoder->cached_symbol_coefficients();
 
-            // We loop through the coefficient buffer and print the coefficients
+            // We loop through the coefficient buffer and print the
+            // coefficients
             for(uint32_t i = 0; i < info_decoder->symbols(); ++i)
             {
                 std::cout << (uint32_t) fifi::get_value<finite_field>(c, i)
@@ -156,8 +164,8 @@ int main()
 
             std::cout << std::endl;
 
-            // Pass that packet to the decoder, as with the uncoded symbols
-            // above we pass it directly to the "Codec API"
+            // Pass that packet to the decoder, as with the uncoded
+            // symbols above we pass it directly to the "Codec API"
             decoder->decode_symbol(info_decoder->cached_symbol_data(),
                                    info_decoder->cached_symbol_coefficients());
 
@@ -169,7 +177,7 @@ int main()
     decoder->copy_symbols(sak::storage(data_out));
 
     // Check we properly decoded the data
-    if (std::equal(data_out.begin(), data_out.end(), data_in.begin()))
+    if (data_out == data_in)
     {
         std::cout << "Data decoded correctly" << std::endl;
     }

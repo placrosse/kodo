@@ -3,10 +3,6 @@
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
 
-
-/// @file test_rlnc_full_vector_codes.cpp Unit tests for the full
-///       vector codes (i.e. Network Coding encoders and decoders).
-
 #include <ctime>
 
 #include <gtest/gtest.h>

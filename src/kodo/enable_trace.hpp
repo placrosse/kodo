@@ -37,7 +37,8 @@ namespace kodo
     ///     {
     ///     public:
     ///
-    ///         void trace(std::ostream& out)
+    ///         tempalte<class Filter>
+    ///         void trace(std::ostream& out, const Filter&)
     ///         {
     ///              // print some useful information
     ///         }
@@ -47,9 +48,9 @@ namespace kodo
     /// and one specialization. The specialization kicks in when the
     /// TraceTag equaled enable_trace. In that case the
     /// trace_this_and_that will expose the
-    /// layer::trace(std::ostream&) function to the user of the
+    /// layer::trace(std::ostream&, const Filter&) function to the user of the
     /// stack. In the generic fall-through case no
-    /// layer::trace(std::ostream&) function would be exposed.
+    /// layer::trace(std::ostream&, const Filter&) function would be exposed.
     ///
     struct enable_trace{};
 }

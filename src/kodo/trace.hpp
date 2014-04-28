@@ -8,13 +8,9 @@
 #include <boost/shared_ptr.hpp>
 
 #include "has_trace.hpp"
-#include "trace_filter.hpp"
 
 namespace kodo
 {
-
-    /// @todo review filter
-
     /// @ingroup generic_api
     /// @ingroup trace
     ///
@@ -23,10 +19,11 @@ namespace kodo
     template
     <
         class T,
+        class Filter,
         typename std::enable_if<has_trace<T>::value, uint8_t>::type = 0
     >
     inline void trace(T& t, std::ostream& out,
-                      const trace_filter& filter = trace_filter())
+                      const Filter& filter)
     {
         (void) filter;
         t.trace(out, filter);
@@ -38,10 +35,11 @@ namespace kodo
     template
     <
         class T,
+        class Filter,
         typename std::enable_if<!has_trace<T>::value, uint8_t>::type = 0
     >
     inline void trace(T& t, std::ostream& out,
-                      const trace_filter& filter = trace_filter())
+                      const Filter& filter)
     {
         (void) t;
         (void) out;
@@ -58,10 +56,38 @@ namespace kodo
     /// @ingroup trace
     /// @copydoc trace(const T&, std::ostream&)
     template<class T>
-    inline void trace(boost::shared_ptr<T>& t, std::ostream& out,
-                      const trace_filter& filter = trace_filter())
+    inline void trace(T& t, std::ostream& out)
     {
-        trace(*t, out, filter);
+        // The default filter returns true for any zone
+        auto filter = [] (const std::string&){ return true; };
+        kodo::trace(t, out, filter);
     }
 
+    /// @ingroup generic_api
+    /// @ingroup trace
+    /// @copydoc trace(const T&, std::ostream&)
+    template
+    <
+        class T,
+        class Filter
+    >
+    inline void trace(boost::shared_ptr<T>& t, std::ostream& out,
+                      const Filter& filter)
+    {
+        kodo::trace(*t, out, filter);
+    }
+
+    /// @ingroup generic_api
+    /// @ingroup trace
+    /// @copydoc trace(const T&, std::ostream&)
+    template
+    <
+        class T
+    >
+    inline void trace(boost::shared_ptr<T>& t, std::ostream& out)
+    {
+        // The default filter returns true for any zone
+        auto filter = [] (const std::string&){ return true; };
+        kodo::trace(*t, out, filter);
+    }
 }

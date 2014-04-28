@@ -362,21 +362,19 @@
 /// @brief Implementations of the state API.
 
 //------------------------------------------------------------------
-// DEBUG
+// TRACE
 //------------------------------------------------------------------
 
-/// @defgroup debug Debug
+/// @defgroup trace Trace
 /// @ingroup api_layer
 ///
-/// @brief The debug API functions are functions that provide a way to
-///        debug codec stacks.
+/// @brief The trace API functions are functions that provide a way to
+///        trace codec stacks.
 
-/// @defgroup debug_api API
-/// @ingroup debug
-/// @brief The API used by the debug layers
+/// @defgroup trace_api API
+/// @ingroup trace
+/// @brief The API used by the trace layers
 
-/// @defgroup debug_layers Layers
-/// @ingroup debug
-/// @brief Implementations of the debug API.
-
-
+/// @defgroup trace_layers Layers
+/// @ingroup trace
+/// @brief Implementations of the trace API.

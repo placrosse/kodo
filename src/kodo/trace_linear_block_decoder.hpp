@@ -77,13 +77,15 @@ namespace kodo
 
     public:
 
-        /// @copydoc layer::trace(std::ostream&)
-        void trace(std::ostream& out, const trace_filter& filter)
+        /// @copydoc layer::trace(std::ostream&, const Filter&)
+        template<class Filter>
+        void trace(std::ostream& out, const Filter& filter)
         {
             if (filter("decoder_state"))
             {
                 out << "decoder_state:" << std::endl;
                 print_decoder_state(out);
+                out << std::endl;
             }
 
             // If the lower layers define the trace function forward it
@@ -92,27 +94,29 @@ namespace kodo
                 SuperCoder& next = *this;
                 kodo::trace(next, out, filter);
             }
-
         }
 
         /// Prints the decoder's state to the output stream
         /// @param out, the output stream
         void print_decoder_state(std::ostream &out) const
         {
+            // don't change formatting for out
+            std::ostream s(out.rdbuf());
+
             for(uint32_t i = 0; i < SuperCoder::symbols(); ++i)
             {
                 if (SuperCoder::is_symbol_missing(i))
                 {
-                    out << std::setfill(' ') << std::setw(3) << i << " ?:  ";
+                    s << std::setfill('0') << std::setw(3) << i << " ?:  ";
                 }
                 else if (SuperCoder::is_symbol_seen(i))
                 {
-                    out << std::setfill(' ') << std::setw(3) << i << " C:  ";
+                    s << std::setfill('0') << std::setw(3) << i << " C:  ";
                 }
                 else
                 {
                     assert(SuperCoder::is_symbol_uncoded(i));
-                    out << std::setfill(' ') << std::setw(3) << i << " U:  ";
+                    s << std::setfill('0') << std::setw(3) << i << " U:  ";
                 }
 
                 const value_type* c = SuperCoder::coefficient_vector_values(i);
@@ -124,13 +128,11 @@ namespace kodo
                                   "value_type will overflow in this print");
 
                     value_type value = SuperCoder::coefficient_value(c, j);
-                    out << (uint32_t)value << " ";
+                    s << (uint32_t)value << " ";
                 }
 
-                out << std::endl;
+                s << std::endl;
             }
-
-            out << std::endl;
 
         }
 

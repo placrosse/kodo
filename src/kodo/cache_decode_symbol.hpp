@@ -18,16 +18,14 @@
 
 namespace kodo
 {
-
-    /// @todo review this class
     /// @ingroup decoder_layers
     ///
-    /// @brief This layer extracts the symbol coefficients and symbol data
-    /// and makes it available for use. It does not perform any decoding on the
-    /// coefficients or the symbol.
+    /// @brief This layer extracts the symbol coefficients and symbol
+    ///        data and makes it available for use. It does not
+    ///        perform any decoding on the coefficients or the symbol.
     ///
     /// An encoder may produce either systematic (i.e. uncoded) or coded
-    /// symbols. The cached_symbol_decoder provides the cached_symbol_coded()
+    /// symbols. The cache_decode_symbol provides the cached_symbol_coded()
     /// function to differentiate between the two.
     /// If a symbol is systematic the cached_symbol_coded() will return false
     /// and you may use the cached_symbol_index() to determine which uncoded
@@ -40,8 +38,8 @@ namespace kodo
     /// Finally the data of the symbol may be retried using the
     /// cached_symbol_data() function.
     ///
-    /// You can check the example in use_cached_symbol_decoder.cpp to see an
-    /// example of how to the use cached_symbol_decoder.
+    /// You can check the example in use_cache_decode_symbol.cpp to see an
+    /// example of how to the use cache_decode_symbol layer.
     ///
     template<class SuperCoder>
     class cache_decode_symbol : public SuperCoder
@@ -200,7 +198,5 @@ namespace kodo
 
         /// Marks whether the cache is valid
         bool m_valid;
-
     };
-
 }

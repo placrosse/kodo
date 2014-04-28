@@ -7,17 +7,15 @@
 
 #include <iostream>
 
-#include "trace_filter.hpp"
-
 namespace kodo
 {
-    /// @todo review trace filter
     /// @ingroup type_traits
     ///
     /// @ingroup trace
     ///
     /// Type trait helper allows compile time detection of whether a
-    /// codec contains a layer with the member function trace(std::cout)
+    /// codec contains a layer with the member function
+    /// layer::trace(std::ostream&, const Filter&)
     ///
     /// Example:
     ///
@@ -35,9 +33,12 @@ namespace kodo
         typedef std::true_type yes;
         typedef std::false_type no;
 
+        // Since the trace function's filter parameter is a template
+        // argument we don't have any way here of checking the type of
+        // filter so we just pass zero
         template<typename U>
         static auto test(int) ->
-            decltype(std::declval<U>().trace(std::cout,trace_filter()), yes());
+            decltype(std::declval<U>().trace(std::cout, 0), yes());
 
         template<typename> static no test(...);
 

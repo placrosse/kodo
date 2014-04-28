@@ -796,18 +796,17 @@ nn    /// uint8_t as the value_type.
     bool remote_is_symbol_pivot(uint32_t index) const;
 
     //------------------------------------------------------------------
-    // DEBUG API
+    // TRACE API
     //------------------------------------------------------------------
 
-    /// @ingroup debug_api
+    /// @ingroup trace_api
     ///
-    /// @param out The output stream where the debugging information
-    ///        will be written.
-    void debug(std::ostream& out);
+    /// @param out The output stream where the trace information will
+    ///        be written.
+    ///
+    /// @param filter The "zone" filter which allows control over what
+    ///        output will be produced by the trace.
+    template<class Filter>
+    void trace(std::ostream& out, const Filter& filter);
 
 };
-
-
-
-
-

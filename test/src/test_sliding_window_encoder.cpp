@@ -4,7 +4,5 @@
 // http://www.steinwurf.com/licensing
 
 /// @file test_sliding_window_encoder.cpp The unit tests for the
-/// sliding_window_encoder stack is defined in the
-/// test_sliding_window_codes.cpp
-
-
+///       sliding_window_encoder stack is defined in the
+///       test_sliding_window_codes.cpp

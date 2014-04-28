@@ -13,8 +13,8 @@
 
 namespace kodo
 {
-
     /// @ingroup symbol_storage_layers
+    ///
     /// @brief The deep storage implementation. In this context deep
     ///        means that the symbol storage contains the entire coding
     ///        buffer internally.
@@ -252,6 +252,3 @@ namespace kodo
 
     };
 }
-
-
-

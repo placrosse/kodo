@@ -8,11 +8,6 @@
 #include "full_rlnc_decoder.hpp"
 #include "full_rlnc_encoder.hpp"
 
-/// @todo The stacks define in this header should be moved to separate
-///       headers and include here instead (according to the one class
-///       per file guideline).
-#include "full_rlnc_codes.hpp"
-
 #include "shallow_full_rlnc_encoder.hpp"
 #include "shallow_full_rlnc_decoder.hpp"
 

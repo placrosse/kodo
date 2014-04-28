@@ -12,11 +12,10 @@
 
 namespace kodo
 {
-    /// @todo docs
-    /// @ingroup coefficient_storage_layers
+    /// @ingroup finite_field_layers
     ///
-    /// @brief Template alias for the common set of coefficient
-    ///        storage layers used in most stacks
+    /// @brief Template alias for the common set of finite field
+    ///        layers used in most stacks
     template<class Field, class SuperCoder>
     using finite_field_layers =
         finite_field_math<typename fifi::default_field<Field>::type,

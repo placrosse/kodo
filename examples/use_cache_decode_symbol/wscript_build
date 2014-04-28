@@ -2,8 +2,7 @@
 # encoding: utf-8
 
 bld.program(features = 'cxx',
-            source   = 'use_cached_symbol_decoder.cpp',
-            target   = 'use_cached_symbol_decoder',
+            source   = 'use_cache_decode_symbol.cpp',
+            target   = 'use_cache_decode_symbol',
             use      = ['kodo_includes', 'boost_includes',
                         'fifi_includes', 'sak_includes'])
-

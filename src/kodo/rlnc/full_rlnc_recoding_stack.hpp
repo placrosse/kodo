@@ -35,7 +35,7 @@
 #include "../proxy_layer.hpp"
 #include "../storage_aware_encoder.hpp"
 #include "../encode_symbol_tracker.hpp"
-#include "../cached_symbol_decoder.hpp"
+#include "../cache_decode_symbol.hpp"
 #include "../trace_decode_symbol.hpp"
 #include "../trace_linear_block_decoder.hpp"
 #include "../rank_info.hpp"
@@ -52,7 +52,7 @@
 
 namespace kodo
 {
-    /// @todo ingroup
+    /// @todo ingroup clean up includes
     ///
     /// Intermediate stack implementing the recoding functionality of a
     /// RLNC code. As can be seen we are able to reuse a great deal of

@@ -12,11 +12,10 @@
 
 namespace kodo
 {
-    /// @todo docs
-    /// @ingroup coefficient_storage_layers
+    /// @ingroup symbol_storage_layers
     ///
-    /// @brief Template alias for the common set of coefficient
-    ///        storage layers used in most stacks
+    /// @brief Template alias for the common set of deep storage
+    ///        layers used in most stacks which utilize deep storage
     template<class TraceTag, class SuperCoder>
     using deep_storage_layers =
         trace_symbol_storage<TraceTag,

@@ -71,20 +71,22 @@ namespace kodo
 
     public:
 
-        /// @copydoc layer::trace(std::ostream&)
-        void trace(std::ostream& out, const trace_filter& filter)
+        /// @copydoc layer::trace(std::ostream&, const Filter&)
+        template<class Filter>
+        void trace(std::ostream& out, const Filter& filter)
         {
             if (filter("symbol_storage"))
             {
                 out << "symbol_storage:" << std::endl;
                 print_storage(out);
+                out << std::endl;
             }
 
             // If the lower layers define the trace function forward it
             if (kodo::has_trace<SuperCoder>::value)
             {
                 SuperCoder& next = *this;
-                kodo::trace(next, out);
+                kodo::trace(next, out, filter);
             }
         }
 
@@ -118,7 +120,7 @@ namespace kodo
                 hexdump hex(storage);
                 hex.set_max_size(32);
 
-                out << hex << std::endl;
+                out << hex;
             }
 
         }
@@ -137,17 +139,17 @@ namespace kodo
             {
                 if(SuperCoder::is_symbol_initialized(index))
                 {
-                    out << index << " I:  ";
+                    out << index << " I:  " << std::endl;
                 }
                 else
                 {
-                    out << index << " A:  ";
+                    out << index << " A:  " << std::endl;
                 }
 
             }
             else
             {
-                out << index << " ?:  -";
+                out << index << " ?:  -" << std::endl;
             }
         }
 
