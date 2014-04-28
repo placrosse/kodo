@@ -16,10 +16,6 @@
 #include <kodo/read_feedback.hpp>
 #include <kodo/feedback_size.hpp>
 
-#include <kodo/has_print_cached_symbol_coefficients.hpp>
-#include <kodo/print_cached_symbol_coefficients.hpp>
-
-
 /// Helper for the reuse test, ensures that all encoders and decoders
 /// produce valid data
 template<class EncoderPointer, class DecoderPointer>
@@ -240,18 +236,6 @@ inline void run_test_reuse_incomplete(uint32_t symbols, uint32_t symbol_size)
             assert(symbols > 2);
             if (!do_complete && decoder->rank() == (symbols - 2))
                 break;
-
-            // if(kodo::has_print_cached_symbol_coefficients<Decoder>::value)
-            // {
-            //     kodo::print_cached_symbol_coefficients(decoder, std::cout);
-            //     std::cout << std::endl;
-            // }
-
-            // if(kodo::has_debug_linear_block_decoder<Decoder>::value)
-            // {
-            //     kodo::print_decoder_state(decoder, std::cout);
-            //     std::cout << std::endl;
-            // }
 
         }
 

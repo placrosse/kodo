@@ -26,10 +26,6 @@
 #include <kodo/feedback_size.hpp>
 #include <kodo/set_systematic_off.hpp>
 
-/// @todo remove these two classes
-#include <kodo/has_print_cached_symbol_coefficients.hpp>
-#include <kodo/print_cached_symbol_coefficients.hpp>
-
 #include <kodo/has_rank.hpp>
 #include <kodo/rank.hpp>
 #include <kodo/proxy_args.hpp>
