@@ -26,7 +26,7 @@
 
 namespace kodo
 {
-    /// @todo ingroup
+    /// @ingroup fec_stacks
     ///
     /// Intermediate stack implementing the recoding functionality of
     /// a RLNC code. As can be seen we are able to reuse a great deal

@@ -10,6 +10,10 @@
 #include "../linear_block_decoder_delayed.hpp"
 #include "../partial_shallow_symbol_storage.hpp"
 #include "../shallow_symbol_storage.hpp"
+#include "../payload_recoder.hpp"
+#include "../common_decoder_layers.hpp"
+#include "../finite_field_layers.hpp"
+#include "../coefficient_storage_layers.hpp"
 
 namespace kodo
 {
@@ -19,10 +23,11 @@ namespace kodo
     ///
     /// The decoder is identical to the full_rlnc_decoder except for
     /// the fact that is uses a shallow storage layer.
-    template<class Field>
+    template<class Field, class TraceTag = kodo::disable_trace>
     class shallow_full_rlnc_decoder : public
         // Payload API
-        payload_recoder<full_rlnc_recoding_stack,
+        nested_payload_recoder<
+        proxy_stack<proxy_args<>, full_rlnc_recoding_stack,
         payload_decoder<
         // Codec Header API
         systematic_decoder<
@@ -30,25 +35,19 @@ namespace kodo
         // Symbol ID API
         plain_symbol_id_reader<
         // Decoder API
-        aligned_coefficients_decoder<
-        forward_linear_block_decoder<
-        symbol_decoding_status_counter<
-        symbol_decoding_status_tracker<
+        common_decoder_layers<TraceTag,
         // Coefficient Storage API
-        coefficient_value_access<
-        coefficient_storage<
-        coefficient_info<
+        coefficient_storage_layers<
         // Storage API
         mutable_shallow_symbol_storage<
         storage_bytes_used<
         storage_block_info<
         // Finite Field API
-        finite_field_math<typename fifi::default_field<Field>::type,
-        finite_field_info<Field,
+        finite_field_layers<Field,
         // Factory API
         final_coder_factory_pool<
         // Final type
-        shallow_full_rlnc_decoder<Field>
-        > > > > > > > > > > > > > > > > > >
+        shallow_full_rlnc_decoder<Field, TraceTag>
+        > > > > > > > > > > > > >
     { };
 }

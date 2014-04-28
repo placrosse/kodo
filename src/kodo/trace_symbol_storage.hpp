@@ -9,7 +9,10 @@
 #include <cassert>
 #include <iostream>
 
-#include <fifi/fifi_utils.hpp>
+#include "disable_trace.hpp"
+#include "enable_trace.hpp"
+#include "trace.hpp"
+#include "hexdump.hpp"
 
 namespace kodo
 {
@@ -21,6 +24,8 @@ namespace kodo
                       "Unexpected TraceTag should be disable_trace in the "
                       "fall-through case.");
     };
+
+    /// @todo documentation below is outdated
 
     /// @ingroup trace
     /// @ingroup symbol_storage_layers

@@ -6,7 +6,7 @@
 #include <ctime>
 
 #include <gtest/gtest.h>
-#include <kodo/rlnc/seed_codes.hpp>
+#include <kodo/rlnc/seed_rlnc_codes.hpp>
 
 #include "kodo_unit_test/basic_api_test_helper.hpp"
 
@@ -18,12 +18,24 @@
 #include "kodo_unit_test/helper_test_systematic_api.hpp"
 #include "kodo_unit_test/helper_test_mix_uncoded_api.hpp"
 
+/// @todo rename this file to test_seed_rlnc_codes.cpp + we need to
+/// add the dummy test files
+
+/// Define the stacks we will test
+namespace
+{
+    template<class Field>
+    using encoder = kodo::seed_rlnc_encoder<Field, kodo::disable_trace>;
+
+    template<class Field>
+    using decoder = kodo::seed_rlnc_decoder<Field, kodo::disable_trace>;
+}
 
 /// Tests the basic API functionality this mean basic encoding
 /// and decoding
 TEST(TestSeedCodes, test_basic_api)
 {
-    test_basic_api<kodo::seed_rlnc_encoder,kodo::seed_rlnc_decoder>();
+    test_basic_api<encoder,decoder>();
 }
 
 /// Test that the encoders and decoders initialize() function can be used
@@ -31,37 +43,33 @@ TEST(TestSeedCodes, test_basic_api)
 /// can be safely reused.
 TEST(TestSeedCodes, test_initialize_api)
 {
-    test_initialize<kodo::seed_rlnc_encoder,kodo::seed_rlnc_decoder>();
+    test_initialize<encoder,decoder>();
 }
 
 /// Tests that an encoder producing systematic packets is handled
 /// correctly in the decoder.
 TEST(TestSeedCodes, test_systematic_api)
 {
-    test_systematic<kodo::seed_rlnc_encoder,kodo::seed_rlnc_decoder>();
+    test_systematic<encoder,decoder>();
 }
 
 /// Tests whether mixed un-coded and coded packets are correctly handled
 /// in the encoder and decoder.
 TEST(TestSeedCodes, mix_uncoded_api)
 {
-    test_mix_uncoded<kodo::seed_rlnc_encoder, kodo::seed_rlnc_decoder>();
+    test_mix_uncoded<encoder,decoder>();
 }
 
 /// Tests that we can progressively set on symbol at-a-time on
 /// encoder
 TEST(TestSeedCodes, test_reuse_api)
 {
-    test_reuse<kodo::seed_rlnc_encoder, kodo::seed_rlnc_decoder>();
+    test_reuse<encoder,decoder>();
 }
 
 /// Tests that we can progressively set on symbol at-a-time on
 /// encoder
 TEST(TestSeedcodes, test_reuse_incomplete_api)
 {
-    test_reuse_incomplete<kodo::seed_rlnc_encoder, kodo::seed_rlnc_decoder>();
+    test_reuse_incomplete<encoder,decoder>();
 }
-
-
-
-
