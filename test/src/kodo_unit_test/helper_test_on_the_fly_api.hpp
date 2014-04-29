@@ -21,7 +21,7 @@ template
     class Encoder,
     class Decoder
 >
-inline void test_on_the_fly(uint32_t symbols, uint32_t symbol_size)
+inline void run_test_on_the_fly(uint32_t symbols, uint32_t symbol_size)
 {
 
     // Common setting
@@ -101,17 +101,17 @@ template
 inline void test_on_the_fly(uint32_t symbols, uint32_t symbol_size)
 {
 
-    test_on_the_fly<
+    run_test_on_the_fly<
         Encoder<fifi::binary>,
         Decoder<fifi::binary> >(
         symbols, symbol_size);
 
-    test_on_the_fly<
+    run_test_on_the_fly<
         Encoder<fifi::binary8>,
         Decoder<fifi::binary8> >(
         symbols, symbol_size);
 
-    test_on_the_fly<
+    run_test_on_the_fly<
         Encoder<fifi::binary16>,
         Decoder<fifi::binary16> >(
         symbols, symbol_size);
@@ -140,7 +140,7 @@ inline void test_on_the_fly()
 /// This class tests on-the-fly adding symbols to the encoding while
 /// using the systematic feature of the encoder
 template<class Encoder, class Decoder>
-inline void test_on_the_fly_systematic(uint32_t symbols, uint32_t symbol_size)
+inline void run_test_on_the_fly_systematic(uint32_t symbols, uint32_t symbol_size)
 {
     // Common setting
     typename Encoder::factory encoder_factory(symbols, symbol_size);
@@ -237,19 +237,19 @@ template
 >
 inline void test_on_the_fly_systematic(uint32_t symbols, uint32_t symbol_size)
 {
-    test_on_the_fly_systematic
+    run_test_on_the_fly_systematic
         <
         Encoder<fifi::binary>,
         Decoder<fifi::binary>
         >(symbols, symbol_size);
 
-    test_on_the_fly_systematic
+    run_test_on_the_fly_systematic
         <
         Encoder<fifi::binary8>,
         Decoder<fifi::binary8>
         >(symbols, symbol_size);
 
-    test_on_the_fly_systematic
+    run_test_on_the_fly_systematic
         <
         Encoder<fifi::binary16>,
         Decoder<fifi::binary16>
@@ -275,7 +275,7 @@ inline void test_on_the_fly_systematic()
 /// This class tests on-the-fly adding symbols to the encoding while
 /// using the systematic feature of the encoder
 template<class Encoder, class Decoder>
-inline void test_on_the_fly_systematic_no_errors(uint32_t symbols,
+inline void run_test_on_the_fly_systematic_no_errors(uint32_t symbols,
                                                  uint32_t symbol_size)
 {
     // Common setting
@@ -357,19 +357,19 @@ template
 inline void test_on_the_fly_systematic_no_errors(uint32_t symbols,
                                                  uint32_t symbol_size)
 {
-    test_on_the_fly_systematic_no_errors
+    run_test_on_the_fly_systematic_no_errors
         <
         Encoder<fifi::binary>,
         Decoder<fifi::binary>
         >(symbols, symbol_size);
 
-    test_on_the_fly_systematic_no_errors
+    run_test_on_the_fly_systematic_no_errors
         <
         Encoder<fifi::binary8>,
         Decoder<fifi::binary8>
         >(symbols, symbol_size);
 
-    test_on_the_fly_systematic_no_errors
+    run_test_on_the_fly_systematic_no_errors
         <
         Encoder<fifi::binary16>,
         Decoder<fifi::binary16>
