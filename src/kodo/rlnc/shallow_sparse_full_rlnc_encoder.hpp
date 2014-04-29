@@ -5,17 +5,17 @@
 
 #pragma once
 
-#include <kodo/default_on_systematic_encoder.hpp>
-#include <kodo/has_shallow_symbol_storage.hpp>
-#include <kodo/linear_block_decoder_delayed.hpp>
-#include <kodo/partial_shallow_symbol_storage.hpp>
-#include <kodo/rlnc/full_rlnc_codes.hpp>
-#include <kodo/shallow_symbol_storage.hpp>
-#include <kodo/sparse_uniform_generator.hpp>
+#include "../default_on_systematic_encoder.hpp"
+#include "../partial_shallow_storage_layers.hpp"
+#include "../sparse_uniform_generator.hpp"
+#include "../finite_field_layers.hpp"
 
 namespace kodo
 {
+    /// @todo is there a unit-test for this
+
     /// @ingroup fec_stacks
+    ///
     /// @brief Complete stack implementing a shallow storage sparse RLNC
     ///        decoder.
     ///
@@ -24,7 +24,7 @@ namespace kodo
     /// RLNC encoder using a density based random generator, which can be
     /// used to control the density i.e. the number of non-zero elements in
     /// the encoding vector.
-    template<class Field>
+    template<class Field, class TraceTag = kodo::disable_trace>
     class shallow_sparse_full_rlnc_encoder : public
         // Payload Codec API
         payload_encoder<
@@ -44,16 +44,13 @@ namespace kodo
         coefficient_value_access<
         coefficient_info<
         // Symbol Storage API
-        partial_shallow_symbol_storage<
-        storage_bytes_used<
-        storage_block_info<
+        partial_shallow_storage_layers<TraceTag,
         // Finite Field API
-        finite_field_math<typename fifi::default_field<Field>::type,
-        finite_field_info<Field,
+        finite_field_layers<Field,
         // Factory API
         final_coder_factory_pool<
         // Final type
-        shallow_sparse_full_rlnc_encoder<Field
-        > > > > > > > > > > > > > > > > > >
+        shallow_sparse_full_rlnc_encoder<Field, TraceTag>
+        > > > > > > > > > > > > > >
     { };
 }

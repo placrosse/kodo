@@ -15,6 +15,7 @@
 namespace kodo
 {
     /// @ingroup fec_stacks
+    ///
     /// @brief Complete stack implementing a shallow storage delayed RLNC
     ///        decoder.
     ///
@@ -29,8 +30,8 @@ namespace kodo
     /// fact that by performing row operations we may change an
     /// element previously zero into a non-zero element. Fill-in is
     /// also most often an effect seen with sparse codes.
-    template<class Field>
-    class shallow_full_delayed_rlnc_decoder : public
+    template<class Field, class TraceTag = kodo::disable_trace>
+    class shallow_delayed_full_rlnc_decoder : public
         // Payload API
         payload_recoder<full_rlnc_recoding_stack,
         payload_decoder<
@@ -46,20 +47,15 @@ namespace kodo
         symbol_decoding_status_counter<
         symbol_decoding_status_tracker<
         // Coefficient Storage API
-        coefficient_value_access<
-        coefficient_storage<
-        coefficient_info<
+        coefficient_storage_layers<
         // Storage API
-        mutable_shallow_symbol_storage<
-        storage_bytes_used<
-        storage_block_info<
+        mutable_shallow_storage_layers<TraceTag,
         // Finite Field API
-        finite_field_math<typename fifi::default_field<Field>::type,
-        finite_field_info<Field,
+        finite_field_layers<Field,
         // Factory API
         final_coder_factory_pool<
         // Final type
-        shallow_full_delayed_rlnc_decoder<Field>
-        > > > > > > > > > > > > > > > > > > >
+        shallow_delayed_full_rlnc_decoder<Field, TraceTag>
+        > > > > > > > > > > > > > >
     { };
 }

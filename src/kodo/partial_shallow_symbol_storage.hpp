@@ -8,12 +8,12 @@
 #include <cstdint>
 #include <vector>
 
-#include "shallow_symbol_storage.hpp"
+#include "const_shallow_symbol_storage.hpp"
 
 namespace kodo
 {
-
     /// @ingroup storage_layers
+    ///
     /// @brief Same as a shallow storage but supports storage object
     ///        with a total size less than the coding block size.
     ///
@@ -163,5 +163,3 @@ namespace kodo
     };
 
 }
-
-

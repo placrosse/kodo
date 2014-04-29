@@ -45,7 +45,7 @@ namespace kodo
                  // Factory API
                  final_coder_factory_pool<
                  // Final type
-                 seed_rlnc_decoder<Field>
+                 seed_rlnc_decoder<Field, TraceTag>
                  > > > > > > > > > >
     { };
 }

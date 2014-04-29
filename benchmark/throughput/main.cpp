@@ -627,7 +627,7 @@ BENCHMARK_F(setup_backward_rlnc_throughput2325, BackwardFullRLNC, Prime2325, 5)
 
 typedef throughput_benchmark<
    kodo::shallow_full_rlnc_encoder<fifi::binary>,
-   kodo::shallow_full_delayed_rlnc_decoder<fifi::binary> >
+   kodo::shallow_delayed_full_rlnc_decoder<fifi::binary> >
    setup_delayed_rlnc_throughput;
 
 BENCHMARK_F(setup_delayed_rlnc_throughput, FullDelayedRLNC, Binary, 5)
@@ -637,7 +637,7 @@ BENCHMARK_F(setup_delayed_rlnc_throughput, FullDelayedRLNC, Binary, 5)
 
 typedef throughput_benchmark<
    kodo::shallow_full_rlnc_encoder<fifi::binary8>,
-   kodo::shallow_full_delayed_rlnc_decoder<fifi::binary8> >
+   kodo::shallow_delayed_full_rlnc_decoder<fifi::binary8> >
    setup_delayed_rlnc_throughput8;
 
 BENCHMARK_F(setup_delayed_rlnc_throughput8, FullDelayedRLNC, Binary8, 5)
@@ -647,7 +647,7 @@ BENCHMARK_F(setup_delayed_rlnc_throughput8, FullDelayedRLNC, Binary8, 5)
 
 typedef throughput_benchmark<
    kodo::shallow_full_rlnc_encoder<fifi::binary16>,
-   kodo::shallow_full_delayed_rlnc_decoder<fifi::binary16> >
+   kodo::shallow_delayed_full_rlnc_decoder<fifi::binary16> >
    setup_delayed_rlnc_throughput16;
 
 BENCHMARK_F(setup_delayed_rlnc_throughput16, FullDelayedRLNC, Binary16, 5)
@@ -657,7 +657,7 @@ BENCHMARK_F(setup_delayed_rlnc_throughput16, FullDelayedRLNC, Binary16, 5)
 
 typedef throughput_benchmark<
    kodo::shallow_full_rlnc_encoder<fifi::prime2325>,
-   kodo::shallow_full_delayed_rlnc_decoder<fifi::prime2325> >
+   kodo::shallow_delayed_full_rlnc_decoder<fifi::prime2325> >
    setup_delayed_rlnc_throughput2325;
 
 BENCHMARK_F(setup_delayed_rlnc_throughput2325, FullDelayedRLNC, Prime2325, 5)

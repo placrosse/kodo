@@ -148,9 +148,7 @@ inline void run_test_basic_api(uint32_t symbols, uint32_t symbol_size)
         fifi::apply_prefix(sak::storage(data_out), ~prefix);
     }
 
-    EXPECT_TRUE(std::equal(data_out.begin(),
-                           data_out.end(),
-                           data_in.begin()));
+    EXPECT_TRUE(data_out == data_in);
 }
 
 /// Helper function that invokes the test_basic_api using a number of

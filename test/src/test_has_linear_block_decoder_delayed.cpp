@@ -48,9 +48,9 @@ TEST(TestHasLinearBlockDecoderDelayed, detect)
                  kodo::full_rlnc_encoder<fifi::binary8> >::value);
 
     EXPECT_TRUE(kodo::has_linear_block_decoder_delayed<
-                kodo::shallow_full_delayed_rlnc_decoder<fifi::binary> >::value);
+                kodo::shallow_delayed_full_rlnc_decoder<fifi::binary> >::value);
 
     EXPECT_TRUE(kodo::has_linear_block_decoder_delayed<
-                kodo::shallow_full_delayed_rlnc_decoder<fifi::binary8> >::value);
+                kodo::shallow_delayed_full_rlnc_decoder<fifi::binary8> >::value);
 
 }

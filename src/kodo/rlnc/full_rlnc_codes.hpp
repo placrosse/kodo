@@ -12,5 +12,5 @@
 #include "shallow_full_rlnc_decoder.hpp"
 
 #include "shallow_backward_full_rlnc_decoder.hpp"
-#include "shallow_full_delayed_rlnc_decoder.hpp"
+#include "shallow_delayed_full_rlnc_decoder.hpp"
 #include "shallow_sparse_full_rlnc_encoder.hpp"

@@ -5,25 +5,27 @@
 
 #pragma once
 
-#include <cstdint>
-
-#include "full_rlnc_codes.hpp"
 #include "on_the_fly_generator.hpp"
-#include "../partial_decoding_tracker.hpp"
+#include "../final_coder_factory_pool.hpp"
 #include "../rank_info.hpp"
+#include "../payload_encoder.hpp"
 #include "../payload_rank_encoder.hpp"
-#include "../payload_rank_decoder.hpp"
-#include "../payload_rank_recoder.hpp"
-#include "../proxy_remote_rank.hpp"
+#include "../plain_symbol_id_writer.hpp"
 #include "../coefficient_value_access.hpp"
-#include "../rank_symbol_decoding_status_updater.hpp"
+#include "../coefficient_info.hpp"
+#include "../default_on_systematic_encoder.hpp"
+#include "../deep_storage_layers.hpp"
+#include "../encode_symbol_tracker.hpp"
+#include "../finite_field_layers.hpp"
+#include "../linear_block_encoder.hpp"
+#include "../symbol_id_encoder.hpp"
+#include "../storage_aware_encoder.hpp"
+#include "../zero_symbol_encoder.hpp"
 
 namespace kodo
 {
-    /// @todo Apply the one class per file guide line here. Futher
-    /// more these stacks can be simplified using the common stacks.
-
     /// @ingroup fec_stacks
+    ///
     /// @brief Complete stack implementing a full RLNC on-the-fly encoder.
     ///
     /// The on-the-fly encoder has the advantage that symbols can be
@@ -37,7 +39,7 @@ namespace kodo
     /// coefficients for the missing symbols, the storage aware
     /// encoder provides the generator with information about how many
     /// symbols have been specified.
-    template<class Field>
+    template<class Field, class TraceTag = kodo::disable_trace>
     class on_the_fly_encoder :
         public // Payload Codec API
                payload_rank_encoder<
@@ -59,16 +61,13 @@ namespace kodo
                coefficient_value_access<
                coefficient_info<
                // Symbol Storage API
-               deep_symbol_storage<
-               storage_bytes_used<
-               storage_block_info<
+               deep_storage_layers<TraceTag,
                // Finite Field API
-               finite_field_math<typename fifi::default_field<Field>::type,
-               finite_field_info<Field,
+               finite_field_layers<Field,
                // Factory API
                final_coder_factory_pool<
                // Final type
-               on_the_fly_encoder<Field>
-                   > > > > > > > > > > > > > > > > > > >
+               on_the_fly_encoder<Field, TraceTag>
+               > > > > > > > > > > > > > > > >
     { };
 }

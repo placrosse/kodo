@@ -9,7 +9,7 @@
 #include "../has_shallow_symbol_storage.hpp"
 #include "../linear_block_decoder_delayed.hpp"
 #include "../partial_shallow_symbol_storage.hpp"
-#include "../shallow_symbol_storage.hpp"
+#include "../mutable_shallow_storage_layers.hpp"
 #include "../payload_recoder.hpp"
 #include "../common_decoder_layers.hpp"
 #include "../finite_field_layers.hpp"
@@ -39,15 +39,13 @@ namespace kodo
         // Coefficient Storage API
         coefficient_storage_layers<
         // Storage API
-        mutable_shallow_symbol_storage<
-        storage_bytes_used<
-        storage_block_info<
+        mutable_shallow_storage_layers<TraceTag,
         // Finite Field API
         finite_field_layers<Field,
         // Factory API
         final_coder_factory_pool<
         // Final type
         shallow_full_rlnc_decoder<Field, TraceTag>
-        > > > > > > > > > > > > >
+        > > > > > > > > > > >
     { };
 }

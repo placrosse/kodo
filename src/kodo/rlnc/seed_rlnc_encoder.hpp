@@ -23,11 +23,6 @@
 
 namespace kodo
 {
-    /// @todo This file should be renamed to
-    ///       seed_rlnc_codes.hpp. Furthermore the classes define here
-    ///       should be moved to their own files (per the one class
-    ///       per file guideline)
-
     /// @ingroup fec_stacks
     ///
     /// @brief Complete stack implementing a seed based RLNC encoder.
@@ -66,7 +61,7 @@ namespace kodo
                  // Factory API
                  final_coder_factory_pool<
                  // Final type
-                 seed_rlnc_encoder<Field>
+                 seed_rlnc_encoder<Field, TraceTag>
                  > > > > > > > > > > > > > >
     { };
 }
