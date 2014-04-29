@@ -137,14 +137,9 @@ namespace
 TEST(TestRlncFullVectorCodes, test_basic_api)
 {
     test_basic_api<shallow_encoder, decoder>();
-
     test_basic_api<encoder, decoder>();
-
-    // The delayed decoders
-    // test_basic_api<encoder, shallow_delayed_decoder>();
+    test_basic_api<encoder, shallow_delayed_decoder>();
 }
-
-
 
 /// Test that the encoders and decoders initialize() function can be used
 /// to reset the state of an encoder and decoder and that they therefore
@@ -152,12 +147,8 @@ TEST(TestRlncFullVectorCodes, test_basic_api)
 TEST(TestRlncFullVectorCodes, test_initialize)
 {
     test_initialize<shallow_encoder, decoder>();
-
     test_initialize<encoder, decoder>();
-
-    // The delayed decoders
-    // test_initialize<encoder, shallow_delayed_decoder>();
-
+    test_initialize<encoder, shallow_delayed_decoder>();
 }
 
 /// Tests that an encoder producing systematic packets is handled

@@ -27,8 +27,10 @@
 
 namespace kodo
 {
+    /// @todo split into separate files
 
     /// @ingroup fec_stacks
+    ///
     /// @brief For testing purposes this encoder implements a simple repetition
     ///        code i.e. the symbols are the original source symbols produced
     ///        by the encoder in a round-robin fashion.
@@ -53,6 +55,7 @@ namespace kodo
     { };
 
     /// @ingroup fec_stacks
+    ///
     /// @brief For testing purposes this decoder will takes symbols produced by
     ///        the carousel encoder and put them in the right order until all
     ///        symbols have been received.
@@ -77,6 +80,3 @@ namespace kodo
     { };
 
 }
-
-
-

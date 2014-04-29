@@ -3,7 +3,6 @@
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
 
-
 /// @file test_rlnc_on_the_fly_codes.cpp Unit tests for the full
 ///       vector codes (i.e. Network Coding encoders and decoders).
 
@@ -16,7 +15,6 @@
 template<class Encoder, class Decoder>
 inline void run_test_initialize(uint32_t symbols, uint32_t symbol_size)
 {
-
     // Common setting
     typename Encoder::factory encoder_factory(symbols, symbol_size);
     auto encoder = encoder_factory.build();
@@ -24,8 +22,7 @@ inline void run_test_initialize(uint32_t symbols, uint32_t symbol_size)
     typename Decoder::factory decoder_factory(symbols, symbol_size);
     auto decoder = decoder_factory.build();
 
-
-    for(uint32_t i = 0; i < 3; ++i)
+    for (uint32_t i = 0; i < 3; ++i)
     {
         encoder->initialize(encoder_factory);
         decoder->initialize(decoder_factory);
@@ -37,14 +34,22 @@ inline void run_test_initialize(uint32_t symbols, uint32_t symbol_size)
         uint32_t block_size = rand_nonzero(encoder->block_size());
 
         std::vector<uint8_t> data_in = random_vector(block_size);
+        std::vector<uint8_t> data_out(decoder->block_size(), '\0');
 
         encoder->set_symbols(sak::storage(data_in));
 
-        // Set the encoder non-systematic
-        if(kodo::has_systematic_encoder<Encoder>::value)
-            kodo::set_systematic_off(encoder);
+        if (kodo::has_shallow_symbol_storage<Decoder>::value)
+        {
+            decoder->set_symbols(sak::storage(data_out));
+        }
 
-        while( !decoder->is_complete() )
+        // Set the encoder non-systematic
+        if (kodo::has_systematic_encoder<Encoder>::value)
+        {
+            kodo::set_systematic_off(encoder);
+        }
+
+        while (!decoder->is_complete())
         {
             uint32_t payload_used = encoder->encode( &payload[0] );
             EXPECT_TRUE(payload_used <= encoder->payload_size());
@@ -52,14 +57,12 @@ inline void run_test_initialize(uint32_t symbols, uint32_t symbol_size)
             decoder->decode( &payload[0] );
         }
 
-        std::vector<uint8_t> data_out(block_size, '\0');
-        decoder->copy_symbols(sak::storage(data_out));
+        if (kodo::has<Decoder, kodo::deep_symbol_storage>::value)
+        {
+            decoder->copy_symbols(sak::storage(data_out));
+        }
 
-        bool data_equal = sak::equal(sak::storage(data_out),
-                                     sak::storage(data_in));
-
-        ASSERT_TRUE(data_equal);
-
+        ASSERT_TRUE(data_out == data_in);
     }
 
 }
@@ -73,6 +76,9 @@ template
     >
 inline void test_initialize(uint32_t symbols, uint32_t symbol_size)
 {
+    SCOPED_TRACE(testing::Message() << "symbols = " << symbols);
+    SCOPED_TRACE(testing::Message() << "symbols_size = " << symbol_size);
+
     {
         SCOPED_TRACE(testing::Message() << "field = binary");
         run_test_initialize

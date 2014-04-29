@@ -24,6 +24,9 @@
 #include <kodo/read_feedback.hpp>
 #include <kodo/feedback_size.hpp>
 #include <kodo/set_systematic_off.hpp>
+#include <kodo/has_shallow_symbol_storage.hpp>
+#include <kodo/has_deep_symbol_storage.hpp>
+#include <kodo/has.hpp>
 
 #include <kodo/has_rank.hpp>
 #include <kodo/rank.hpp>
@@ -34,7 +37,6 @@
 template<class Encoder, class Decoder>
 inline void run_test_basic_api(uint32_t symbols, uint32_t symbol_size)
 {
-
     // Common setting
     typename Encoder::factory encoder_factory(symbols, symbol_size);
     auto encoder = encoder_factory.build();
@@ -75,7 +77,7 @@ inline void run_test_basic_api(uint32_t symbols, uint32_t symbol_size)
 
     uint32_t feedback_size = 0;
 
-    if(kodo::has_write_feedback<Decoder>::value)
+    if (kodo::has_write_feedback<Decoder>::value)
     {
         EXPECT_EQ(kodo::feedback_size(encoder),
                   kodo::feedback_size(decoder));
@@ -91,7 +93,12 @@ inline void run_test_basic_api(uint32_t symbols, uint32_t symbol_size)
     std::vector<uint8_t> data_in = random_vector(encoder->block_size());
     std::vector<uint8_t> data_in_copy(data_in);
 
+    std::vector<uint8_t> data_out(decoder->block_size(), '\0');
+
     sak::mutable_storage storage_in = sak::storage(data_in);
+
+    // We take a copy of the data_in so that we can apply the prefix
+    // for prime2325 but still keep the unmodified input data
     sak::mutable_storage storage_in_copy = sak::storage(data_in_copy);
 
     EXPECT_TRUE(sak::equal(storage_in, storage_in_copy));
@@ -100,7 +107,7 @@ inline void run_test_basic_api(uint32_t symbols, uint32_t symbol_size)
     // this less intrusive
     uint32_t prefix = 0;
 
-    if(fifi::is_prime2325<typename Encoder::field_type>::value)
+    if (fifi::is_prime2325<typename Encoder::field_type>::value)
     {
         // This field only works for multiple of uint32_t
         assert((encoder->block_size() % 4) == 0);
@@ -118,31 +125,42 @@ inline void run_test_basic_api(uint32_t symbols, uint32_t symbol_size)
     encoder->set_symbols(storage_in_copy);
 
     // Set the encoder non-systematic
-   if(kodo::has_systematic_encoder<Encoder>::value)
-       kodo::set_systematic_off(encoder);
-
-    while( !decoder->is_complete() )
+    if (kodo::has_systematic_encoder<Encoder>::value)
     {
-        uint32_t payload_used = encoder->encode( &payload[0] );
+        kodo::set_systematic_off(encoder);
+    }
+
+    // If the decoder is shallow we need to specify the buffer will be decoded
+    if (kodo::has_shallow_symbol_storage<Decoder>::value)
+    {
+        decoder->set_symbols(sak::storage(data_out));
+    }
+
+    while (!decoder->is_complete())
+    {
+        uint32_t payload_used = encoder->encode(payload.data());
         EXPECT_TRUE(payload_used <= encoder->payload_size());
 
-        decoder->decode( &payload[0] );
+        decoder->decode(payload.data());
 
-        if(kodo::has_write_feedback<Decoder>::value)
+        if (kodo::has_write_feedback<Decoder>::value)
         {
-            uint32_t written = kodo::write_feedback(decoder, &feedback[0]);
+            uint32_t written = kodo::write_feedback(decoder, feedback.data());
             EXPECT_TRUE(written > 0);
 
             // Pass to the encoder
-            kodo::read_feedback(encoder, &feedback[0]);
+            kodo::read_feedback(encoder, feedback.data());
         }
 
     }
 
-    std::vector<uint8_t> data_out(decoder->block_size(), '\0');
-    decoder->copy_symbols(sak::storage(data_out));
+    // If the decoder uses deep storage we need to copy out the decoded data
+    if (kodo::has<Decoder, kodo::deep_symbol_storage>::value)
+    {
+        decoder->copy_symbols(sak::storage(data_out));
+    }
 
-    if(fifi::is_prime2325<typename Encoder::field_type>::value)
+    if (fifi::is_prime2325<typename Encoder::field_type>::value)
     {
         // Now we have to apply the negated prefix to the decoded data
         fifi::apply_prefix(sak::storage(data_out), ~prefix);
