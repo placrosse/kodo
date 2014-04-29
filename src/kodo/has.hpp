@@ -15,21 +15,21 @@ namespace kodo
     template<typename B, template <class...> class D, typename Sfinae = void>
     struct has : public std::false_type {};
 
-    template<class T>
-    void has_helper(T *){}
+    // template<class T>
+    // void has_helper(T *){}
 
-    template<template <class> class T, class Args>
-    void has_helper(T<Args> *){}
+    template<template <class...> class T, class... Args>
+    void has_helper(T<Args...> *){}
 
-    template<template <class, class> class T, class Arg1, class Arg2>
-    void has_helper(T<Arg1, Arg2> *){}
+    // template<template <class, class> class T, class Arg1, class Arg2>
+    // void has_helper(T<Arg1, Arg2> *){}
 
-    template
-    <
-        template <class, class, class> class T,
-        class Arg1, class Arg2, class Arg3
-        >
-    void has_helper(T<Arg1, Arg2, Arg3> *){}
+    // template
+    // <
+    //     template <class, class, class> class T,
+    //     class Arg1, class Arg2, class Arg3
+    //     >
+    // void has_helper(T<Arg1, Arg2, Arg3> *){}
 
     template<typename B, template <class...> class  D>
     struct has<B, D,
