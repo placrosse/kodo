@@ -7,11 +7,11 @@ Obtain a License for Kodo
 -------------------------
 Before you download or use Kodo you **MUST** first obtain a valid license.
 
-* If you will use Kodo for **research and educational** purposes, please 
+* If you will use Kodo for **research and educational** purposes, please
   fill out this form_ to obtain a research license.
 
-* If you will **evaluate or test** Kodo in a commercial context you can 
-  obtain a 30 days trial license by filling out this form_ or contact us 
+* If you will **evaluate or test** Kodo in a commercial context you can
+  obtain a 30 days trial license by filling out this form_ or contact us
   at sales@steinwurf.com.
 
 * For a general **commercial license** contact us at sales@steinwurf.com
@@ -94,20 +94,20 @@ Download Tools (Mac OSX)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 **C++11 compliant compiler:** You need a working C++ compiler. We have
-tested using `XCode`_ 4.6.2 and the Apple LLVM 4.2 compiler which can be
+tested using `XCode`_ 5.1.1 and the Apple LLVM 5.1 compiler which can be
 downloaded free of charge. Newer versions should also be fine.
 
-Option A:
+On Mountain Lion (OSX 10.8):
    1. Download and install `XCode`_ from the Mac App Store
    2. Open XCode Preferences/Downloads and install **Command Line Tools**
 
-Option B:
-   1. Install **Command Line Tools** without XCode from the
-   `Apple Open Source download page`_
+On Mavericks (OSX 10.9):
+   1. Installing `XCode`_ from the App Store is optional
+   2. Install the standalone **Command Line Tools** package::
 
+        xcode-select --install
 
-.. _`Apple Open Source download page`:
-   https://developer.apple.com/opensource/
+   This command will open a GUI window (do not use it over SSH).
 
 .. _`XCode`:
    https://developer.apple.com/xcode/
