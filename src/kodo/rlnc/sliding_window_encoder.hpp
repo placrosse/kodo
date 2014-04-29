@@ -26,6 +26,7 @@
 
 namespace kodo
 {
+    /// @todo fix common layers
 
     /// @ingroup fec_stacks
     /// @brief Implementation of a complete RLNC sliding window encoder

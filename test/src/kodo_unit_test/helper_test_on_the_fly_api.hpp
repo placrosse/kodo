@@ -397,7 +397,7 @@ inline void test_on_the_fly_systematic_no_errors()
 /// This test checks that the systematic packets that are received are
 /// correctly reported as decoded
 template<class Encoder, class Decoder>
-inline void test_systematic_packets_decode()
+inline void run_test_systematic_packets_decode()
 {
     uint32_t symbols = 5;
     uint32_t symbol_size = 1400;
@@ -501,14 +501,12 @@ template
 >
 inline void test_systematic_packets_decode()
 {
-    test_systematic_packets_decode<
+    run_test_systematic_packets_decode<
         Encoder<fifi::binary>, Decoder<fifi::binary> >();
 
-    test_systematic_packets_decode<
+    run_test_systematic_packets_decode<
         Encoder<fifi::binary8>, Decoder<fifi::binary8> >();
 
-    test_systematic_packets_decode<
+    run_test_systematic_packets_decode<
         Encoder<fifi::binary16>, Decoder<fifi::binary16> >();
 }
-
-
