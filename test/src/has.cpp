@@ -52,7 +52,7 @@ namespace
 
 TEST(TestHas, detect)
 {
-    bool test = !kodo::has<decoder, kodo::deep_symbol_storage>::value;
+    bool test = kodo::has<decoder, kodo::deep_symbol_storage>::value;
 
     EXPECT_TRUE(test);//kodo::has<decoder,kodo::deep_symbol_storage>::value);
 
