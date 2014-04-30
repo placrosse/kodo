@@ -15,8 +15,9 @@
 #include <kodo/write_feedback.hpp>
 #include <kodo/read_feedback.hpp>
 #include <kodo/feedback_size.hpp>
-#include <kodo/has.hpp>
+
 #include <kodo/has_shallow_symbol_storage.hpp>
+#include <kodo/has_deep_symbol_storage.hpp>
 
 /// Helper for the reuse test, ensures that all encoders and decoders
 /// produce valid data
@@ -82,7 +83,7 @@ inline void test_reuse_helper(EncoderPointer encoder, DecoderPointer decoder)
 
     // If the decoder uses deep storage we need to copy out the
     // decoded data
-    if (kodo::has<decoder_type, kodo::deep_symbol_storage>::value)
+    if (kodo::has_deep_symbol_storage<decoder_type>::value)
     {
         decoder->copy_symbols(sak::storage(data_out));
     }
@@ -270,7 +271,7 @@ inline void run_test_reuse_incomplete(uint32_t symbols, uint32_t symbol_size)
         {
             // If the decoder uses deep storage we need to copy out the
             // decoded data
-            if (kodo::has<Decoder, kodo::deep_symbol_storage>::value)
+            if (kodo::has_deep_symbol_storage<Decoder>::value)
             {
                 decoder->copy_symbols(sak::storage(data_out));
             }

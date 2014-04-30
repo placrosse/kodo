@@ -28,91 +28,6 @@
 
 /// @todo rename this file like the sliding window files
 
-namespace kodo
-{
-
-    // Put dummy layers and tests classes in an anonymous namespace
-    // to avoid violations of ODF (one-definition-rule) in other
-    // translation units
-    namespace
-    {
-
-        /// Implementation of RLNC decode using the delayed
-        /// backwards substitution layer.
-        template<class Field>
-        class full_rlnc_decoder_delayed
-            : public // Payload API
-                     payload_recoder<full_rlnc_recoding_stack,
-                     payload_decoder<
-                     // Codec Header API
-                     systematic_decoder<
-                     symbol_id_decoder<
-                     // Symbol ID API
-                     plain_symbol_id_reader<
-                     // Decoder API
-                     aligned_coefficients_decoder<
-                     linear_block_decoder_delayed<
-                     forward_linear_block_decoder<
-                     symbol_decoding_status_counter<
-                     symbol_decoding_status_tracker<
-                     // Coefficient Storage API
-                     coefficient_value_access<
-                     coefficient_storage<
-                     coefficient_info<
-                     // Storage API
-                     deep_symbol_storage<
-                     storage_bytes_used<
-                     storage_block_info<
-                     // Finite Field Math API
-                     finite_field_math<typename fifi::default_field<Field>::type,
-                     finite_field_info<Field,
-                     // Factory API
-                     final_coder_factory_pool<
-                     // Final type
-                     full_rlnc_decoder_delayed<Field>
-                         > > > > > > > > > > > > > > > > > > >
-        {};
-
-        /// Implementation of RLNC decode using the delayed
-        /// backwards substitution layer.
-        template<class Field>
-        class full_rlnc_decoder_delayed_shallow
-            : public // Payload API
-                     payload_recoder<full_rlnc_recoding_stack,
-                     payload_decoder<
-                     // Codec Header API
-                     systematic_decoder<
-                     symbol_id_decoder<
-                     // Symbol ID API
-                     plain_symbol_id_reader<
-                     // Decoder API
-                     aligned_coefficients_decoder<
-                     linear_block_decoder_delayed<
-                     forward_linear_block_decoder<
-                     symbol_decoding_status_counter<
-                     symbol_decoding_status_tracker<
-                     // Coefficient Storage API
-                     coefficient_value_access<
-                     coefficient_storage<
-                     coefficient_info<
-                     // Storage API
-                     mutable_shallow_symbol_storage<
-                     storage_bytes_used<
-                     storage_block_info<
-                     // Finite Field Math API
-                     finite_field_math<typename fifi::default_field<Field>::type,
-                     finite_field_info<Field,
-                     // Factory API
-                     final_coder_factory_pool<
-                     // Final type
-                     full_rlnc_decoder_delayed_shallow<Field>
-                         > > > > > > > > > > > > > > > > > > >
-        {};
-    }
-
-}
-
-
 namespace
 {
     template<class Field>
@@ -129,8 +44,6 @@ namespace
     using shallow_delayed_decoder =
         kodo::shallow_delayed_full_rlnc_decoder<Field, kodo::disable_trace>;
 }
-
-/// @todo enable all the shallow decoders
 
 /// Tests the basic API functionality this mean basic encoding
 /// and decoding
@@ -155,6 +68,7 @@ TEST(TestRlncFullVectorCodes, test_initialize)
 /// correctly in the decoder.
 TEST(TestRlncFullVectorCodes, test_systematic)
 {
+    test_systematic<shallow_encoder,decoder>();
     test_systematic<encoder, decoder>();
     test_systematic<encoder, shallow_delayed_decoder>();
 }
@@ -163,6 +77,7 @@ TEST(TestRlncFullVectorCodes, test_systematic)
 /// in the encoder and decoder.
 TEST(TestRlncFullVectorCodes, mix_uncoded)
 {
+    test_mix_uncoded<shallow_encoder,decoder>();
     test_mix_uncoded<encoder,decoder>();
     test_mix_uncoded<encoder,shallow_delayed_decoder>();
 }
@@ -170,6 +85,7 @@ TEST(TestRlncFullVectorCodes, mix_uncoded)
 /// The recoding
 TEST(TestRlncFullVectorCodes, test_recoders_api)
 {
+    test_recoders<shallow_encoder,decoder>();
     test_recoders<encoder,decoder>();
     test_recoders<encoder,shallow_delayed_decoder>();
 }
@@ -177,6 +93,7 @@ TEST(TestRlncFullVectorCodes, test_recoders_api)
 /// The recoding
 TEST(TestRlncFullVectorCodes, test_recoding_relay)
 {
+    test_recoding_relay<shallow_encoder,decoder>();
     test_recoding_relay<encoder,decoder>();
     test_recoding_relay<encoder,shallow_delayed_decoder>();
 }

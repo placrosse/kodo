@@ -24,31 +24,32 @@ namespace kodo
     /// - Recoding using the recoding_stack
     /// - Linear block decoder using Gauss-Jordan elimination.
     template<class Field, class TraceTag = kodo::disable_trace>
-    class on_the_fly_decoder :
-        public // Payload API
-               nested_payload_recoder<
-               proxy_stack<proxy_args<>, on_the_fly_recoding_stack,
-               partial_decoding_tracker<
-               rank_symbol_decoding_status_updater<
-               payload_rank_decoder<
-               payload_decoder<
-               // Codec Header API
-               systematic_decoder<
-               symbol_id_decoder<
-               // Symbol ID API
-               plain_symbol_id_reader<
-               // Decoder API
-               common_decoder_layers<TraceTag,
-               // Coefficient Storage API
-               coefficient_storage_layers<
-               // Storage API
-               deep_storage_layers<TraceTag,
-               // Finite Field API
-               finite_field_layers<Field,
-               // Factory API
-               final_coder_factory_pool<
-               // Final type
-               on_the_fly_decoder<Field, TraceTag>
-               > > > > > > > > > > > > > >
+    class on_the_fly_decoder : public
+        // Payload API
+        nested_payload_recoder<
+        proxy_stack<proxy_args<>, on_the_fly_recoding_stack,
+        partial_decoding_tracker<
+        rank_symbol_decoding_status_updater<
+        payload_rank_decoder<
+        payload_decoder<
+        // Codec Header API
+        systematic_decoder<
+        symbol_id_decoder<
+        // Symbol ID API
+        plain_symbol_id_reader<
+        // Decoder API
+        common_decoder_layers<TraceTag,
+        // Coefficient Storage API
+        coefficient_storage_layers<
+        // Storage API
+        deep_storage_layers<TraceTag,
+        // Finite Field API
+        finite_field_layers<Field,
+        // Factory API
+        final_coder_factory_pool<
+        // Final type
+        on_the_fly_decoder<Field, TraceTag>
+        > > > > > > > > > > > > > >
+
     { };
 }

@@ -54,7 +54,7 @@ inline void run_test_systematic(uint32_t symbols, uint32_t symbol_size)
 
     // If the decoder uses deep storage we need to copy out the
     // decoded data
-    if (kodo::has<Decoder, kodo::deep_symbol_storage>::value)
+    if (kodo::has_deep_symbol_storage<Decoder>::value)
     {
         decoder->copy_symbols(sak::storage(data_out));
     }
