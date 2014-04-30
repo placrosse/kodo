@@ -18,9 +18,6 @@
 #include "kodo_unit_test/helper_test_systematic_api.hpp"
 #include "kodo_unit_test/helper_test_mix_uncoded_api.hpp"
 
-/// @todo rename this file to test_seed_rlnc_codes.cpp + we need to
-/// add the dummy test files
-
 /// Define the stacks we will test
 namespace
 {

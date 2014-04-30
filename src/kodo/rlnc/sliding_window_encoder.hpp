@@ -26,8 +26,6 @@
 
 namespace kodo
 {
-    /// @todo fix common layers
-
     /// @ingroup fec_stacks
     ///
     /// @brief Implementation of a complete RLNC sliding window encoder
@@ -39,7 +37,7 @@ namespace kodo
     /// this feature there is an example in the
     /// kodo/examples/sliding_window which demonstrates the use fo the
     /// feedback API.
-    template<class Field>
+    template<class Field, class TraceTag = kodo::disable_trace>
     class sliding_window_encoder : public
         // Feedback API
         feedback_pivot_status_reader<
@@ -65,17 +63,13 @@ namespace kodo
         coefficient_value_access<
         coefficient_info<
         // Symbol Storage API
-        deep_symbol_storage<
-        storage_bytes_used<
-        storage_block_info<
+        deep_storage_layers<TraceTag,
         // Finite Field API
-        finite_field_math<typename fifi::default_field<Field>::type,
-        finite_field_info<Field,
+        finite_field_layers<Field,
         // Factory API
         final_coder_factory_pool<
         // Final type
-        sliding_window_encoder<Field>
-        > > > > > > > > > > > > > > > > > > > > > >
+        sliding_window_encoder<Field, TraceTag>
+        > > > > > > > > > > > > > > > > > > >
     { };
-
 }

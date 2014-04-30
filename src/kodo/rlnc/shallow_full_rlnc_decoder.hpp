@@ -10,7 +10,7 @@
 #include "../linear_block_decoder_delayed.hpp"
 #include "../partial_shallow_symbol_storage.hpp"
 #include "../mutable_shallow_storage_layers.hpp"
-#include "../payload_recoder.hpp"
+
 #include "../common_decoder_layers.hpp"
 #include "../finite_field_layers.hpp"
 #include "../coefficient_storage_layers.hpp"

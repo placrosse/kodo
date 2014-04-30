@@ -12,8 +12,6 @@
 
 namespace kodo
 {
-    /// @todo is there a unit-test for this
-
     /// @ingroup fec_stacks
     ///
     /// @brief Complete stack implementing a shallow storage sparse RLNC

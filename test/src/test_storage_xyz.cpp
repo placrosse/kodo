@@ -19,54 +19,6 @@
 
 #include "kodo_unit_test/basic_api_test_helper.hpp"
 
-namespace kodo
-{
-
-    // Put dummy layers and tests classes in an anonymous namespace
-    // to avoid violations of ODF (one-definition-rule) in other
-    // translation units
-    namespace
-    {
-
-        /// Decoder stack with shallow storage as required by the
-        /// storage decoder.
-        template<class Field>
-        class shallow_rlnc_decoder :
-            public // Payload API
-                  payload_recoder<full_rlnc_recoding_stack,
-                  payload_decoder<
-                  // Codec Header API
-                  systematic_decoder<
-                  symbol_id_decoder<
-                  // Symbol ID API
-                  plain_symbol_id_reader<
-                  // Decoder API
-                  aligned_coefficients_decoder<
-                  forward_linear_block_decoder<
-                  symbol_decoding_status_counter<
-                  symbol_decoding_status_tracker<
-                  // Coefficient Storage API
-                  coefficient_value_access<
-                  coefficient_storage<
-                  coefficient_info<
-                  // Storage API
-                  mutable_shallow_symbol_storage<
-                  storage_bytes_used<
-                  storage_block_info<
-                  // Finite Field API
-                  finite_field_math<typename fifi::default_field<Field>::type,
-                  finite_field_info<Field,
-                  // Factory API
-                  final_coder_factory_pool<
-                  // Final type
-                  shallow_rlnc_decoder<Field>
-                   > > > > > > > > > > > > > > > > > >
-        { };
-
-    }
-}
-
-
 template
 <
    class Encoder,
@@ -209,19 +161,19 @@ void test_shallow_decoder(uint32_t symbols,
 
     invoke_shallow_decoder<
         kodo::full_rlnc_encoder<fifi::binary>,
-        kodo::shallow_rlnc_decoder<fifi::binary>,
+        kodo::shallow_full_rlnc_decoder<fifi::binary>,
         kodo::rfc5052_partitioning_scheme>(
             symbols, symbol_size, object_size);
 
     invoke_shallow_decoder<
         kodo::full_rlnc_encoder<fifi::binary8>,
-        kodo::shallow_rlnc_decoder<fifi::binary8>,
+        kodo::shallow_full_rlnc_decoder<fifi::binary8>,
         kodo::rfc5052_partitioning_scheme>(
             symbols, symbol_size, object_size);
 
     invoke_shallow_decoder<
         kodo::full_rlnc_encoder<fifi::binary16>,
-        kodo::shallow_rlnc_decoder<fifi::binary16>,
+        kodo::shallow_full_rlnc_decoder<fifi::binary16>,
         kodo::rfc5052_partitioning_scheme>(
             symbols, symbol_size, object_size);
 
@@ -248,19 +200,19 @@ void test_deep_decoder(uint32_t symbols,
 
     invoke_deep_decoder<
         kodo::full_rlnc_encoder<fifi::binary>,
-        kodo::shallow_rlnc_decoder<fifi::binary>,
+        kodo::shallow_full_rlnc_decoder<fifi::binary>,
         kodo::rfc5052_partitioning_scheme>(
             symbols, symbol_size, object_size);
 
     invoke_deep_decoder<
         kodo::full_rlnc_encoder<fifi::binary8>,
-        kodo::shallow_rlnc_decoder<fifi::binary8>,
+        kodo::shallow_full_rlnc_decoder<fifi::binary8>,
         kodo::rfc5052_partitioning_scheme>(
             symbols, symbol_size, object_size);
 
     invoke_deep_decoder<
         kodo::full_rlnc_encoder<fifi::binary16>,
-        kodo::shallow_rlnc_decoder<fifi::binary16>,
+        kodo::shallow_full_rlnc_decoder<fifi::binary16>,
         kodo::rfc5052_partitioning_scheme>(
             symbols, symbol_size, object_size);
 

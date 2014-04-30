@@ -33,7 +33,8 @@ namespace kodo
     template<class Field, class TraceTag = kodo::disable_trace>
     class shallow_delayed_full_rlnc_decoder : public
         // Payload API
-        payload_recoder<full_rlnc_recoding_stack,
+        nested_payload_recoder<
+        proxy_stack<proxy_args<>, full_rlnc_recoding_stack,
         payload_decoder<
         // Codec Header API
         systematic_decoder<
@@ -56,6 +57,6 @@ namespace kodo
         final_coder_factory_pool<
         // Final type
         shallow_delayed_full_rlnc_decoder<Field, TraceTag>
-        > > > > > > > > > > > > > >
+        > > > > > > > > > > > > > > >
     { };
 }

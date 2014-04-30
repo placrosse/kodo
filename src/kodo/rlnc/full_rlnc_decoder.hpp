@@ -32,28 +32,28 @@ namespace kodo
     /// - Recoding using the recoding_stack
     /// - Linear block decoder using Gauss-Jordan elimination.
     template<class Field, class TraceTag = kodo::disable_trace>
-    class full_rlnc_decoder
-        : public // Payload API
-                 nested_payload_recoder<
-                 proxy_stack<proxy_args<>, full_rlnc_recoding_stack,
-                 payload_decoder<
-                 // Codec Header API
-                 systematic_decoder<
-                 symbol_id_decoder<
-                 // Symbol ID API
-                 plain_symbol_id_reader<
-                 // Decoder API
-                 common_decoder_layers<TraceTag,
-                 // Coefficient Storage API
-                 coefficient_storage_layers<
-                 // Storage API
-                 deep_storage_layers<TraceTag,
-                 // Finite Field API
-                 finite_field_layers<Field,
-                 // Factory API
-                 final_coder_factory_pool<
-                 // Final type
-                 full_rlnc_decoder<Field, TraceTag>
-                 > > > > > > > > > > >
+    class full_rlnc_decoder : public
+        // Payload API
+        nested_payload_recoder<
+        proxy_stack<proxy_args<>, full_rlnc_recoding_stack,
+        payload_decoder<
+        // Codec Header API
+        systematic_decoder<
+        symbol_id_decoder<
+        // Symbol ID API
+        plain_symbol_id_reader<
+        // Decoder API
+        common_decoder_layers<TraceTag,
+        // Coefficient Storage API
+        coefficient_storage_layers<
+        // Storage API
+        deep_storage_layers<TraceTag,
+        // Finite Field API
+        finite_field_layers<Field,
+        // Factory API
+        final_coder_factory_pool<
+        // Final type
+        full_rlnc_decoder<Field, TraceTag>
+        > > > > > > > > > > >
     { };
 }
