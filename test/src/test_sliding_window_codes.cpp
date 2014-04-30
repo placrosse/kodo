@@ -43,14 +43,13 @@ namespace
 // and decoding
 TEST(TestSlidingWindowCodes, test_basic_api)
 {
-
     test_basic_api<encoder, decoder>();
 }
 
 // Test that the encoders and decoders initialize() function can be used
 // to reset the state of an encoder and decoder and that they therefore
 // can be safely reused.
-TEST(TestSlidingWindwoCodes, test_initialize)
+TEST(TestSlidingWindowCodes, test_initialize)
 {
     test_initialize<encoder, decoder>();
 }

@@ -15,6 +15,8 @@
 #include <kodo/write_feedback.hpp>
 #include <kodo/read_feedback.hpp>
 #include <kodo/feedback_size.hpp>
+#include <kodo/has.hpp>
+#include <kodo/has_shallow_symbol_storage.hpp>
 
 /// Helper for the reuse test, ensures that all encoders and decoders
 /// produce valid data
@@ -24,6 +26,8 @@ inline void test_reuse_helper(EncoderPointer encoder, DecoderPointer decoder)
     std::vector<uint8_t> payload(encoder->payload_size());
 
     std::vector<uint8_t> data_in = random_vector(encoder->block_size());
+    std::vector<uint8_t> data_out(decoder->block_size(), '\0');
+
     sak::mutable_storage storage_in = sak::storage(data_in);
 
     encoder->set_symbols(storage_in);
@@ -34,7 +38,7 @@ inline void test_reuse_helper(EncoderPointer encoder, DecoderPointer decoder)
 
     uint32_t feedback_size = 0;
 
-    if(kodo::has_write_feedback<decoder_type>::value)
+    if (kodo::has_write_feedback<decoder_type>::value)
     {
         EXPECT_EQ(kodo::feedback_size(encoder),
                   kodo::feedback_size(decoder));
@@ -46,18 +50,27 @@ inline void test_reuse_helper(EncoderPointer encoder, DecoderPointer decoder)
     std::vector<uint8_t> feedback(feedback_size);
 
 
-    // Set the encoder non-systematic
-    if(kodo::has_set_systematic_off<encoder_type>::value)
-        kodo::set_systematic_off(encoder);
+    // If the decoder uses shallow storage we have to initialize
+    // it's decoding buffers
+    if (kodo::has_shallow_symbol_storage<decoder_type>::value)
+    {
+        decoder->set_symbols(sak::storage(data_out));
+    }
 
-    while( !decoder->is_complete() )
+    // Set the encoder non-systematic
+    if (kodo::has_set_systematic_off<encoder_type>::value)
+    {
+        kodo::set_systematic_off(encoder);
+    }
+
+    while (!decoder->is_complete())
     {
         uint32_t payload_used = encoder->encode( &payload[0] );
         EXPECT_TRUE(payload_used <= encoder->payload_size());
 
         decoder->decode( &payload[0] );
 
-        if(kodo::has_write_feedback<decoder_type>::value)
+        if (kodo::has_write_feedback<decoder_type>::value)
         {
             uint32_t written = kodo::write_feedback(decoder, &feedback[0]);
             EXPECT_TRUE(written > 0);
@@ -67,12 +80,14 @@ inline void test_reuse_helper(EncoderPointer encoder, DecoderPointer decoder)
         }
     }
 
-    std::vector<uint8_t> data_out(decoder->block_size(), '\0');
-    decoder->copy_symbols(sak::storage(data_out));
+    // If the decoder uses deep storage we need to copy out the
+    // decoded data
+    if (kodo::has<decoder_type, kodo::deep_symbol_storage>::value)
+    {
+        decoder->copy_symbols(sak::storage(data_out));
+    }
 
-    EXPECT_TRUE(std::equal(data_out.begin(),
-                           data_out.end(),
-                           data_in.begin()));
+    EXPECT_TRUE(data_in == data_out);
 
 }
 
@@ -85,21 +100,21 @@ inline void run_test_reuse(uint32_t symbols, uint32_t symbol_size)
     typename Encoder::factory encoder_factory(symbols, symbol_size);
     typename Decoder::factory decoder_factory(symbols, symbol_size);
 
-    for(uint32_t i = 0; i < 3; ++i)
+    for (uint32_t i = 0; i < 3; ++i)
     {
         uint32_t coders = rand_nonzero(5);
 
         std::vector<typename Encoder::pointer> encoders;
         std::vector<typename Decoder::pointer> decoders;
 
-        for(uint32_t j = 0; j < coders; ++j)
+        for (uint32_t j = 0; j < coders; ++j)
         {
             encoders.push_back(encoder_factory.build());
             decoders.push_back(decoder_factory.build());
 
         }
 
-        for(uint32_t j = 0; j < coders; ++j)
+        for (uint32_t j = 0; j < coders; ++j)
         {
             test_reuse_helper(encoders[j], decoders[j]);
         }
@@ -107,14 +122,14 @@ inline void run_test_reuse(uint32_t symbols, uint32_t symbol_size)
     }
 
     // Test with differing symbols and symbol sizes
-    for(uint32_t i = 0; i < 2; ++i)
+    for (uint32_t i = 0; i < 2; ++i)
     {
         uint32_t coders = rand_nonzero(3);
 
         std::vector<typename Encoder::pointer> encoders;
         std::vector<typename Decoder::pointer> decoders;
 
-        for(uint32_t j = 0; j < coders; ++j)
+        for (uint32_t j = 0; j < coders; ++j)
         {
             uint32_t s = rand_symbols(encoder_factory.max_symbols());
             uint32_t l = rand_symbol_size(encoder_factory.max_symbol_size());
@@ -128,7 +143,7 @@ inline void run_test_reuse(uint32_t symbols, uint32_t symbol_size)
             decoders.push_back(decoder_factory.build());
         }
 
-        for(uint32_t j = 0; j < coders; ++j)
+        for (uint32_t j = 0; j < coders; ++j)
         {
             test_reuse_helper(encoders[j], decoders[j]);
         }
@@ -204,13 +219,20 @@ inline void run_test_reuse_incomplete(uint32_t symbols, uint32_t symbol_size)
         // Prepare buffers
         std::vector<uint8_t> payload(encoder->payload_size());
         std::vector<uint8_t> data_in(encoder->block_size());
+        std::vector<uint8_t> data_out(decoder->block_size());
 
         // Fill with random data
-        for (auto &e: data_in)
-            e = rand() % 256;
+        std::generate(data_in.begin(), data_in.end(), rand);
 
         // Put data in encoder
         encoder->set_symbols(sak::storage(data_in));
+
+        // If the decoder uses shallow storage we have to initialize
+        // it's decoding buffers
+        if (kodo::has_shallow_symbol_storage<Decoder>::value)
+        {
+            decoder->set_symbols(sak::storage(data_out));
+        }
 
         if (rand() % 100 > 90)
         {
@@ -228,25 +250,32 @@ inline void run_test_reuse_incomplete(uint32_t symbols, uint32_t symbol_size)
 
             // Loose a packet with probability
             if (rand() % 100 > 90)
+            {
                 continue;
+            }
 
             decoder->decode(&payload[0]);
 
             // Stop decoding after a while with probability
             assert(symbols > 2);
             if (!do_complete && decoder->rank() == (symbols - 2))
+            {
                 break;
+            }
 
         }
 
         // Check if completed decoders are correct
         if (decoder->is_complete())
         {
-            std::vector<uint8_t> data_out(decoder->block_size());
-            decoder->copy_symbols(sak::storage(data_out));
+            // If the decoder uses deep storage we need to copy out the
+            // decoded data
+            if (kodo::has<Decoder, kodo::deep_symbol_storage>::value)
+            {
+                decoder->copy_symbols(sak::storage(data_out));
+            }
 
-            ASSERT_TRUE(sak::equal(sak::storage(data_out),
-                                   sak::storage(data_in)));
+            EXPECT_TRUE(data_in == data_out);
         }
     }
 

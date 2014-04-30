@@ -25,36 +25,38 @@ namespace kodo
                       "fall-through case.");
     };
 
-    /// @todo documentation below is outdated
-
     /// @ingroup trace
     /// @ingroup symbol_storage_layers
     ///
     /// @brief Print functions for symbol storage. Using this layer
     ///        the content of the symbol storage can be printed.
     ///
-    /// This layer provides two different ways of printing the symbol
-    /// data:
-    /// 1) Using the print_storage() and print_symbol() functions, the
-    ///    data will be printed using the numeric value of the bytes stored
-    /// 2) Using the print_storage_value() and print_symbol_value() functions,
-    ///    the data will be printed using the numeric value of the finite field
-    ///    used
+    /// Using the trace(std::ostream&,const Filter&) function, the
+    ///    byte values of the symbol storage will be dumped to the
+    ///    ostream in a human readable format.
     ///
-    /// 0 I:  23 35 222 35 0 10
-    /// 1 A:  33 22 19 01 10 15
-    /// 2 ?:  -
+    ///     0 I:
+    ///     0000  c6 04 14 7d *** 9c 30 b7 dc  ...} *** .0..
+    ///     ....
+    ///
+    ///     1 A:
+    ///     0000  e4 9a ac 91 *** da 6b 4e cf  .... *** .kN.
+    ///     ....
+    ///
+    ///     2 ?: -
     ///
     /// The lines should be interpret as in the following example:
     ///
-    ///   1 A:  33 22 19 01 10 15
-    ///   ^ ^   ^
-    ///   | |   |
-    ///   | |   |
-    ///   | |   +--+  The values of the symbol storage (format depends on
-    ///   | |          the print function used either bytes or finite field)
-    ///   | +------+  The symbol state
-    ///   +--------+  The symbol's pivot position
+    ///   +--> 1 A:
+    ///   |    0000  e4 9a ac 91 *** da 6b 4e cf  .... *** .kN.
+    ///   |                      ^
+    ///   |       +--------------+
+    ///   |       |
+    ///   |       |
+    ///   |       +  Hex dump of the symbol's storage
+    ///   |
+    ///   |
+    ///   +--------+  The symbol's index position & storage state
     ///
     /// A symbol's storage can be in 3 states:
     ///
@@ -95,6 +97,8 @@ namespace kodo
             }
         }
 
+    protected:
+
         /// Print all symbols stored in the storage where the symbol data
         /// is shown in bytes.
         /// @param out The output stream to print to
@@ -129,8 +133,6 @@ namespace kodo
             }
 
         }
-
-    protected:
 
         /// Print the bytes of a symbol at a specific index to the
         /// output stream

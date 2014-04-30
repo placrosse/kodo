@@ -38,6 +38,8 @@ inline void run_test_initialize(uint32_t symbols, uint32_t symbol_size)
 
         encoder->set_symbols(sak::storage(data_in));
 
+        // If the decoder uses shallow storage we have to initialize
+        // it's decoding buffers
         if (kodo::has_shallow_symbol_storage<Decoder>::value)
         {
             decoder->set_symbols(sak::storage(data_out));
@@ -57,17 +59,23 @@ inline void run_test_initialize(uint32_t symbols, uint32_t symbol_size)
             decoder->decode( &payload[0] );
         }
 
+        // If the decoder uses deep storage we need to copy out the
+        // decoded data
         if (kodo::has<Decoder, kodo::deep_symbol_storage>::value)
         {
             decoder->copy_symbols(sak::storage(data_out));
         }
 
-        ASSERT_TRUE(data_out == data_in);
+        // Adjust the size of data_out since it may be larger than
+        // data_in std::vector::resize should be fine, since it just
+        // drops the excess bytes at the end.
+        EXPECT_TRUE(data_in.size() <= data_out.size());
+        data_out.resize(data_in.size());
+
+        EXPECT_TRUE(data_out == data_in);
     }
 
 }
-
-
 
 template
 <

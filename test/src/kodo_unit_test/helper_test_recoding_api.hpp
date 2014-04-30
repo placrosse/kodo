@@ -83,7 +83,9 @@ inline void invoke_recoding(recoding_parameters param)
     std::vector<uint8_t> buffer_decoder_one(decoder_one->block_size(), '\0');
     std::vector<uint8_t> buffer_decoder_two(decoder_two->block_size(), '\0');
 
-    if(kodo::has_shallow_symbol_storage<Decoder>::value)
+    // If the decoder uses shallow storage we have to initialize
+    // it's decoding buffers
+    if (kodo::has_shallow_symbol_storage<Decoder>::value)
     {
         decoder_one->set_symbols(sak::storage(buffer_decoder_one));
         decoder_two->set_symbols(sak::storage(buffer_decoder_two));
@@ -92,7 +94,7 @@ inline void invoke_recoding(recoding_parameters param)
     // In case our encoder/decoders support feedback
     std::vector<uint8_t> feedback;
 
-    if(kodo::has_feedback_size<Encoder>::value)
+    if (kodo::has_feedback_size<Encoder>::value)
     {
         // If encoder has the feedback size so should the decoder
         ASSERT_TRUE(kodo::has_feedback_size<Decoder>::value);

@@ -156,8 +156,7 @@ TEST(TestRlncFullVectorCodes, test_initialize)
 TEST(TestRlncFullVectorCodes, test_systematic)
 {
     test_systematic<encoder, decoder>();
-
-    // test_systematic<encoder, shallow_delayed_decoder>();
+    test_systematic<encoder, shallow_delayed_decoder>();
 }
 
 /// Tests whether mixed un-coded and coded packets are correctly handled
@@ -165,29 +164,21 @@ TEST(TestRlncFullVectorCodes, test_systematic)
 TEST(TestRlncFullVectorCodes, mix_uncoded)
 {
     test_mix_uncoded<encoder,decoder>();
-
-    // test_mix_uncoded<encoder,shallow_delayed_decoder>();
+    test_mix_uncoded<encoder,shallow_delayed_decoder>();
 }
 
 /// The recoding
 TEST(TestRlncFullVectorCodes, test_recoders_api)
 {
     test_recoders<encoder,decoder>();
-
-    // test_recoders<encoder,shallow_delayed_decoder>();
-
-    // test_recoders<encoder,shallow_delayed_decoder>();
+    test_recoders<encoder,shallow_delayed_decoder>();
 }
 
 /// The recoding
 TEST(TestRlncFullVectorCodes, test_recoding_relay)
 {
     test_recoding_relay<encoder,decoder>();
-
-    // test_recoding_relay<encoder,shallow_delayed_decoder>();
-
-    // test_recoding_relay<encoder,shallow_delayed_decoder>();
-
+    test_recoding_relay<encoder,shallow_delayed_decoder>();
 }
 
 /// Tests the basic API functionality this mean basic encoding
@@ -195,11 +186,8 @@ TEST(TestRlncFullVectorCodes, test_recoding_relay)
 TEST(TestRlncFullVectorCodes, test_reuse_api)
 {
     test_reuse<shallow_encoder,decoder>();
-
     test_reuse<encoder,decoder>();
-
-    // The delayed decoders
-    // test_reuse<encoder,shallow_delayed_decoder>();
+    test_reuse<encoder,shallow_delayed_decoder>();
 }
 
 /// Tests the basic API functionality this mean basic encoding
@@ -207,9 +195,6 @@ TEST(TestRlncFullVectorCodes, test_reuse_api)
 TEST(TestRlncFullVectorCodes, test_reuse_incomplete_api)
 {
     test_reuse_incomplete<shallow_encoder, decoder>();
-
     test_reuse_incomplete<encoder, decoder>();
-
-    // The delayed decoders
-    // test_reuse_incomplete<encoder, shallow_delayed_decoder>();
+    test_reuse_incomplete<encoder, shallow_delayed_decoder>();
 }

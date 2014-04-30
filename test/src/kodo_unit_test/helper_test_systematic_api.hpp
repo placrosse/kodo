@@ -3,14 +3,12 @@
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
 
-
 /// @file test_rlnc_on_the_fly_codes.cpp Unit tests for the full
 ///       vector codes (i.e. Network Coding encoders and decoders).
 
 #include <ctime>
 
 #include <gtest/gtest.h>
-
 
 template<class Encoder, class Decoder>
 inline void run_test_systematic(uint32_t symbols, uint32_t symbol_size)
@@ -27,6 +25,14 @@ inline void run_test_systematic(uint32_t symbols, uint32_t symbol_size)
 
     std::vector<uint8_t> payload(encoder->payload_size());
     std::vector<uint8_t> data_in = random_vector(encoder->block_size());
+    std::vector<uint8_t> data_out(decoder->block_size(), '\0');
+
+    // If the decoder uses shallow storage we have to initialize
+    // it's decoding buffers
+    if (kodo::has_shallow_symbol_storage<Decoder>::value)
+    {
+        decoder->set_symbols(sak::storage(data_out));
+    }
 
     encoder->set_symbols(sak::storage(data_in));
 
@@ -36,7 +42,7 @@ inline void run_test_systematic(uint32_t symbols, uint32_t symbol_size)
 
     uint32_t pkg_count = 0;
 
-    while( !decoder->is_complete() )
+    while (!decoder->is_complete())
     {
         encoder->encode( &payload[0] );
         decoder->decode( &payload[0] );
@@ -46,12 +52,14 @@ inline void run_test_systematic(uint32_t symbols, uint32_t symbol_size)
 
     EXPECT_TRUE(pkg_count == encoder->symbols());
 
-    std::vector<uint8_t> data_out(decoder->block_size(), '\0');
-    decoder->copy_symbols(sak::storage(data_out));
+    // If the decoder uses deep storage we need to copy out the
+    // decoded data
+    if (kodo::has<Decoder, kodo::deep_symbol_storage>::value)
+    {
+        decoder->copy_symbols(sak::storage(data_out));
+    }
 
-    EXPECT_TRUE(std::equal(data_out.begin(),
-                           data_out.end(),
-                           data_in.begin()));
+    EXPECT_TRUE(data_out == data_in);
 
 }
 
@@ -59,7 +67,7 @@ template
 <
     template <class...> class Encoder,
     template <class...> class Decoder
-    >
+>
 inline void test_systematic(uint32_t symbols, uint32_t symbol_size)
 {
     {
