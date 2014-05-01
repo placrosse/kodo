@@ -28,15 +28,10 @@
 namespace
 {
     template<class Field>
-    class decoder : public kodo::sliding_window_decoder<
-        Field, kodo::disable_trace>
-    { };
+    using encoder = kodo::sliding_window_encoder<Field, kodo::disable_trace>;
 
     template<class Field>
-    class encoder : public kodo::sliding_window_encoder<
-        Field>
-    { };
-
+    using decoder = kodo::sliding_window_decoder<Field, kodo::disable_trace>;
 }
 
 // Tests the basic API functionality this mean basic encoding

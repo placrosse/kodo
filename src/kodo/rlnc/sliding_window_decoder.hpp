@@ -36,40 +36,37 @@ namespace kodo
     /// kodo/examples/sliding_window which demonstrates the use fo the
     /// feedback API.
     template<class Field, class TraceTag = disable_trace>
-    class sliding_window_decoder :
-        public // Feedback API
-               nested_feedback_reader<
-               feedback_pivot_status_writer<
-               final_feedback_writer<
-               // Payload API
-               partial_decoding_tracker<
-               rank_symbol_decoding_status_updater<
-               nested_payload_recoder<
-               proxy_stack<proxy_args<>, sliding_window_recoding_stack,
-               payload_rank_decoder<
-               payload_decoder<
-               // Codec Header API
-               systematic_decoder<
-               symbol_id_decoder<
-               // Symbol ID API
-               plain_symbol_id_reader<
-               // Decoder API
-               pivot_status_writer<
-               common_decoder_layers<TraceTag,
-               // Coefficient Storage API
-               coefficient_storage_layers<
-               // Storage API
-               deep_symbol_storage<
-               storage_bytes_used<
-               storage_block_info<
-               // Finite Field API
-               finite_field_math<typename fifi::default_field<Field>::type,
-               finite_field_info<Field,
-               // Factory API
-               final_coder_factory_pool<
-               // Final type
-               sliding_window_decoder<Field, TraceTag>
-               > > > > > > > > > > > > > > > > > > > > >
+    class sliding_window_decoder : public
+        // Feedback API
+        nested_feedback_reader<
+        feedback_pivot_status_writer<
+        final_feedback_writer<
+        // Payload API
+        partial_decoding_tracker<
+        rank_symbol_decoding_status_updater<
+        nested_payload_recoder<
+        proxy_stack<proxy_args<>, sliding_window_recoding_stack,
+        payload_rank_decoder<
+        payload_decoder<
+        // Codec Header API
+        systematic_decoder<
+        symbol_id_decoder<
+        // Symbol ID API
+        plain_symbol_id_reader<
+        // Decoder API
+        pivot_status_writer<
+        common_decoder_layers<TraceTag,
+        // Coefficient Storage API
+        coefficient_storage_layers<
+        // Storage API
+        deep_storage_layers<TraceTag,
+        // Finite Field API
+        finite_field_layers<Field,
+        // Factory API
+        final_coder_factory_pool<
+        // Final type
+        sliding_window_decoder<Field, TraceTag>
+        > > > > > > > > > > > > > > > > > >
     { };
 
 }

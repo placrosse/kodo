@@ -22,9 +22,9 @@
 #include <kodo/encode_symbol_tracker.hpp>
 #include <kodo/finite_field_math.hpp>
 #include <kodo/finite_field_info.hpp>
-#include <kodo/rs/reed_solomon_symbol_id_writer.hpp>
-#include <kodo/rs/reed_solomon_symbol_id_reader.hpp>
-#include <kodo/rs/vandermonde_matrix.hpp>
+#include <kodo/reed_solomon/reed_solomon_symbol_id_writer.hpp>
+#include <kodo/reed_solomon/reed_solomon_symbol_id_reader.hpp>
+#include <kodo/reed_solomon/vandermonde_matrix.hpp>
 
 #include "kodo_unit_test/basic_api_test_helper.hpp"
 
@@ -192,4 +192,3 @@ TEST(TestSymbolId, test_rs_stack)
     test.run();
 
 }
-

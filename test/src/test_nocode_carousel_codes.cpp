@@ -9,27 +9,25 @@
 
 #include <gtest/gtest.h>
 
-#include <kodo/nocode/carousel_codes.hpp>
+#include <kodo/nocode/nocode_carousel_codes.hpp>
 
 #include "kodo_unit_test/helper_test_basic_api.hpp"
 
-static void test_coders(uint32_t symbols, uint32_t symbol_size)
+namespace
 {
-
-    run_test_basic_api
-        <
-            kodo::nocode_carousel_encoder,
-            kodo::nocode_carousel_decoder
-        >(symbols, symbol_size);
+    using encoder = kodo::nocode_carousel_encoder<kodo::disable_trace>;
+    using decoder = kodo::nocode_carousel_decoder<kodo::disable_trace>;
 }
 
+static void test_coders(uint32_t symbols, uint32_t symbol_size)
+{
+    run_test_basic_api<encoder,decoder>(symbols, symbol_size);
+}
 
 TEST(TestNoCodeCarouselCodes, basic_api)
 {
     test_coders(32, 1600);
     test_coders(1, 1600);
-
-    srand(static_cast<uint32_t>(time(0)));
 
     uint32_t symbols = rand_symbols();
     uint32_t symbol_size = rand_symbol_size();

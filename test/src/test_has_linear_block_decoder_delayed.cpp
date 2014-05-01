@@ -14,43 +14,36 @@
 #include <kodo/rlnc/full_rlnc_codes.hpp>
 #include <kodo/rlnc/on_the_fly_codes.hpp>
 
-/// @todo review this unit tests
+namespace
+{
+    template<class Field>
+    using decoder = kodo::full_rlnc_decoder<Field, kodo::disable_trace>;
+
+    template<class Field>
+    using encoder = kodo::full_rlnc_encoder<Field, kodo::disable_trace>;
+
+    template<class Field>
+    using shallow_delayed_decoder =
+        kodo::shallow_delayed_full_rlnc_decoder<Field, kodo::disable_trace>;
+}
+
 TEST(TestHasLinearBlockDecoderDelayed, detect)
 {
     EXPECT_FALSE(kodo::has_linear_block_decoder_delayed<
-                 kodo::full_rlnc_encoder<fifi::binary> >::value);
+                     encoder<fifi::binary> >::value);
 
     EXPECT_FALSE(kodo::has_linear_block_decoder_delayed<
-                 kodo::full_rlnc_encoder<fifi::binary8> >::value);
+                     encoder<fifi::binary8> >::value);
 
     EXPECT_FALSE(kodo::has_linear_block_decoder_delayed<
-                 kodo::full_rlnc_decoder<fifi::binary> >::value);
+                     decoder<fifi::binary> >::value);
 
     EXPECT_FALSE(kodo::has_linear_block_decoder_delayed<
-                 kodo::full_rlnc_decoder<fifi::binary8> >::value);
-
-    EXPECT_FALSE(kodo::has_linear_block_decoder_delayed<
-                 kodo::on_the_fly_encoder<fifi::binary> >::value);
-
-    EXPECT_FALSE(kodo::has_linear_block_decoder_delayed<
-                 kodo::on_the_fly_encoder<fifi::binary8> >::value);
-
-    EXPECT_FALSE(kodo::has_linear_block_decoder_delayed<
-                 kodo::on_the_fly_decoder<fifi::binary> >::value);
-
-    EXPECT_FALSE(kodo::has_linear_block_decoder_delayed<
-                 kodo::on_the_fly_decoder<fifi::binary8> >::value);
-
-    EXPECT_FALSE(kodo::has_linear_block_decoder_delayed<
-                 kodo::full_rlnc_encoder<fifi::binary> >::value);
-
-    EXPECT_FALSE(kodo::has_linear_block_decoder_delayed<
-                 kodo::full_rlnc_encoder<fifi::binary8> >::value);
+                     decoder<fifi::binary8> >::value);
 
     EXPECT_TRUE(kodo::has_linear_block_decoder_delayed<
-                kodo::shallow_delayed_full_rlnc_decoder<fifi::binary> >::value);
+                    shallow_delayed_decoder<fifi::binary> >::value);
 
     EXPECT_TRUE(kodo::has_linear_block_decoder_delayed<
-                kodo::shallow_delayed_full_rlnc_decoder<fifi::binary8> >::value);
-
+                    shallow_delayed_decoder<fifi::binary8> >::value);
 }

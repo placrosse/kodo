@@ -14,6 +14,7 @@ template<class Field>
 inline void run_test()
 {
     typedef Field field_type;
+    typedef typename field_type::value_type value_type;
 
     typedef kodo::elimination_decoder<field_type> decoder_type;
 
@@ -42,19 +43,19 @@ inline void run_test()
     EXPECT_EQ(d->symbols(), symbols);
     EXPECT_EQ(d->elimination_offset(), symbols_offset);
 
-    std::vector<uint8_t> coefficients(d->coefficient_vector_size());
+    std::vector<value_type> coefficients(d->coefficient_vector_size());
 
     // Create an encoding vector looking like this: 01 1001 remember
     // we will only look at the last 4 coefficients
     std::fill(coefficients.begin(), coefficients.end(), 0);
-    fifi::set_value<field_type>(&coefficients[0], 1, 1U);
-    fifi::set_value<field_type>(&coefficients[0], 2, 1U);
-    fifi::set_value<field_type>(&coefficients[0], 5, 1U);
+    fifi::set_value<field_type>(coefficients.data(), 1, 1U);
+    fifi::set_value<field_type>(coefficients.data(), 2, 1U);
+    fifi::set_value<field_type>(coefficients.data(), 5, 1U);
 
     // Create a dummy symbol
-    std::vector<uint8_t> symbol(d->symbol_size(), 'x');
+    std::vector<value_type> symbol(d->symbol_size(), 'x');
 
-    d->decode_symbol(&symbol[0], &coefficients[0]);
+    d->decode_symbol(symbol.data(), coefficients.data());
 
     // Decoding matrix status:
     // Row 1: 01 1001
@@ -72,21 +73,21 @@ inline void run_test()
     // Create an encoding vector looking like this: 11 0000
     std::fill(coefficients.begin(), coefficients.end(), 0);
     std::fill(symbol.begin(), symbol.end(), 'z');
-    fifi::set_value<field_type>(&coefficients[0], 0, 1U);
-    fifi::set_value<field_type>(&coefficients[0], 1, 1U);
+    fifi::set_value<field_type>(coefficients.data(), 0, 1U);
+    fifi::set_value<field_type>(coefficients.data(), 1, 1U);
 
-    d->decode_symbol(&symbol[0], &coefficients[0]);
+    d->decode_symbol(symbol.data(), coefficients.data());
 
     // Rank should not have increased since we only had non-zero in the
     // offset - in fact the buffers should also be untouched
     EXPECT_EQ(d->rank(), 1U);
 
-    EXPECT_EQ(fifi::get_value<field_type>(&coefficients[0], 0U), 1U);
-    EXPECT_EQ(fifi::get_value<field_type>(&coefficients[0], 1U), 1U);
-    EXPECT_EQ(fifi::get_value<field_type>(&coefficients[0], 2U), 0U);
-    EXPECT_EQ(fifi::get_value<field_type>(&coefficients[0], 3U), 0U);
-    EXPECT_EQ(fifi::get_value<field_type>(&coefficients[0], 4U), 0U);
-    EXPECT_EQ(fifi::get_value<field_type>(&coefficients[0], 5U), 0U);
+    EXPECT_EQ(fifi::get_value<field_type>(coefficients.data(), 0U), 1U);
+    EXPECT_EQ(fifi::get_value<field_type>(coefficients.data(), 1U), 1U);
+    EXPECT_EQ(fifi::get_value<field_type>(coefficients.data(), 2U), 0U);
+    EXPECT_EQ(fifi::get_value<field_type>(coefficients.data(), 3U), 0U);
+    EXPECT_EQ(fifi::get_value<field_type>(coefficients.data(), 4U), 0U);
+    EXPECT_EQ(fifi::get_value<field_type>(coefficients.data(), 5U), 0U);
 
     for(const auto& c : symbol)
         EXPECT_EQ(c, 'z');
@@ -94,11 +95,11 @@ inline void run_test()
     // Create an encoding vector looking like this: 10 1100
 
     std::fill(coefficients.begin(), coefficients.end(), 0);
-    fifi::set_value<field_type>(&coefficients[0], 0, 1U);
-    fifi::set_value<field_type>(&coefficients[0], 2, 1U);
-    fifi::set_value<field_type>(&coefficients[0], 3, 1U);
+    fifi::set_value<field_type>(coefficients.data(), 0, 1U);
+    fifi::set_value<field_type>(coefficients.data(), 2, 1U);
+    fifi::set_value<field_type>(coefficients.data(), 3, 1U);
 
-    d->decode_symbol(&symbol[0], &coefficients[0]);
+    d->decode_symbol(symbol.data(), coefficients.data());
 
     // Decoding matrix status:
     // Row 1: 01 1001
@@ -111,13 +112,13 @@ inline void run_test()
     // Create an encoding vector looking like this: 11 1101
 
     std::fill(coefficients.begin(), coefficients.end(), 0);
-    fifi::set_value<field_type>(&coefficients[0], 0, 1U);
-    fifi::set_value<field_type>(&coefficients[0], 1, 1U);
-    fifi::set_value<field_type>(&coefficients[0], 2, 1U);
-    fifi::set_value<field_type>(&coefficients[0], 3, 1U);
-    fifi::set_value<field_type>(&coefficients[0], 5, 1U);
+    fifi::set_value<field_type>(coefficients.data(), 0, 1U);
+    fifi::set_value<field_type>(coefficients.data(), 1, 1U);
+    fifi::set_value<field_type>(coefficients.data(), 2, 1U);
+    fifi::set_value<field_type>(coefficients.data(), 3, 1U);
+    fifi::set_value<field_type>(coefficients.data(), 5, 1U);
 
-    d->decode_symbol(&symbol[0], &coefficients[0]);
+    d->decode_symbol(symbol.data(), coefficients.data());
 
     // Decoding matrix status:
     // Row 1: 00 1000 -> 10 0100
@@ -127,21 +128,21 @@ inline void run_test()
 
     EXPECT_EQ(d->rank(), 3U);
 
-    EXPECT_EQ(fifi::get_value<field_type>(&coefficients[0], 0U), 0U);
-    EXPECT_EQ(fifi::get_value<field_type>(&coefficients[0], 1U), 1U);
-    EXPECT_EQ(fifi::get_value<field_type>(&coefficients[0], 2U), 0U);
-    EXPECT_EQ(fifi::get_value<field_type>(&coefficients[0], 3U), 0U);
-    EXPECT_EQ(fifi::get_value<field_type>(&coefficients[0], 4U), 0U);
-    EXPECT_EQ(fifi::get_value<field_type>(&coefficients[0], 5U), 1U);
+    EXPECT_EQ(fifi::get_value<field_type>(coefficients.data(), 0U), 0U);
+    EXPECT_EQ(fifi::get_value<field_type>(coefficients.data(), 1U), 1U);
+    EXPECT_EQ(fifi::get_value<field_type>(coefficients.data(), 2U), 0U);
+    EXPECT_EQ(fifi::get_value<field_type>(coefficients.data(), 3U), 0U);
+    EXPECT_EQ(fifi::get_value<field_type>(coefficients.data(), 4U), 0U);
+    EXPECT_EQ(fifi::get_value<field_type>(coefficients.data(), 5U), 1U);
 
     // Create an encoding vector looking like this: 001101
 
     std::fill(coefficients.begin(), coefficients.end(), 0);
-    fifi::set_value<field_type>(&coefficients[0], 2, 1U);
-    fifi::set_value<field_type>(&coefficients[0], 3, 1U);
-    fifi::set_value<field_type>(&coefficients[0], 5, 1U);
+    fifi::set_value<field_type>(coefficients.data(), 2, 1U);
+    fifi::set_value<field_type>(coefficients.data(), 3, 1U);
+    fifi::set_value<field_type>(coefficients.data(), 5, 1U);
 
-    d->decode_symbol(&symbol[0], &coefficients[0]);
+    d->decode_symbol(symbol.data(), coefficients.data());
 
     // Decoding matrix status:
     // Row 1: 00 1000 -> 00 0101
@@ -151,20 +152,20 @@ inline void run_test()
 
     EXPECT_EQ(d->rank(), 3U);
 
-    EXPECT_EQ(fifi::get_value<field_type>(&coefficients[0], 0U), 1U);
-    EXPECT_EQ(fifi::get_value<field_type>(&coefficients[0], 1U), 1U);
-    EXPECT_EQ(fifi::get_value<field_type>(&coefficients[0], 2U), 0U);
-    EXPECT_EQ(fifi::get_value<field_type>(&coefficients[0], 3U), 0U);
-    EXPECT_EQ(fifi::get_value<field_type>(&coefficients[0], 4U), 0U);
-    EXPECT_EQ(fifi::get_value<field_type>(&coefficients[0], 5U), 0U);
+    EXPECT_EQ(fifi::get_value<field_type>(coefficients.data(), 0U), 1U);
+    EXPECT_EQ(fifi::get_value<field_type>(coefficients.data(), 1U), 1U);
+    EXPECT_EQ(fifi::get_value<field_type>(coefficients.data(), 2U), 0U);
+    EXPECT_EQ(fifi::get_value<field_type>(coefficients.data(), 3U), 0U);
+    EXPECT_EQ(fifi::get_value<field_type>(coefficients.data(), 4U), 0U);
+    EXPECT_EQ(fifi::get_value<field_type>(coefficients.data(), 5U), 0U);
 
     // Create an encoding vector looking like this: 000011
 
     std::fill(coefficients.begin(), coefficients.end(), 0);
-    fifi::set_value<field_type>(&coefficients[0], 4, 1U);
-    fifi::set_value<field_type>(&coefficients[0], 5, 1U);
+    fifi::set_value<field_type>(coefficients.data(), 4, 1U);
+    fifi::set_value<field_type>(coefficients.data(), 5, 1U);
 
-    d->decode_symbol(&symbol[0], &coefficients[0]);
+    d->decode_symbol(symbol.data(), coefficients.data());
 
     // Decoding matrix status:
     // Row 1: 00 1000
@@ -177,14 +178,14 @@ inline void run_test()
     // Create an encoding vector looking like this: 111111
 
     std::fill(coefficients.begin(), coefficients.end(), 0);
-    fifi::set_value<field_type>(&coefficients[0], 0, 1U);
-    fifi::set_value<field_type>(&coefficients[0], 1, 1U);
-    fifi::set_value<field_type>(&coefficients[0], 2, 1U);
-    fifi::set_value<field_type>(&coefficients[0], 3, 1U);
-    fifi::set_value<field_type>(&coefficients[0], 4, 1U);
-    fifi::set_value<field_type>(&coefficients[0], 5, 1U);
+    fifi::set_value<field_type>(coefficients.data(), 0, 1U);
+    fifi::set_value<field_type>(coefficients.data(), 1, 1U);
+    fifi::set_value<field_type>(coefficients.data(), 2, 1U);
+    fifi::set_value<field_type>(coefficients.data(), 3, 1U);
+    fifi::set_value<field_type>(coefficients.data(), 4, 1U);
+    fifi::set_value<field_type>(coefficients.data(), 5, 1U);
 
-    d->decode_symbol(&symbol[0], &coefficients[0]);
+    d->decode_symbol(symbol.data(), coefficients.data());
 
     // Decoding matrix status:
     // Row 1: 00 1000 -> 11 0111
@@ -195,12 +196,12 @@ inline void run_test()
     EXPECT_EQ(d->rank(), 4U);
 
     // Check the output coefficients after passing the data to the decoder
-    EXPECT_EQ(fifi::get_value<field_type>(&coefficients[0], 0U), 0U);
-    EXPECT_EQ(fifi::get_value<field_type>(&coefficients[0], 1U), 1U);
-    EXPECT_EQ(fifi::get_value<field_type>(&coefficients[0], 2U), 0U);
-    EXPECT_EQ(fifi::get_value<field_type>(&coefficients[0], 3U), 0U);
-    EXPECT_EQ(fifi::get_value<field_type>(&coefficients[0], 4U), 0U);
-    EXPECT_EQ(fifi::get_value<field_type>(&coefficients[0], 5U), 0U);
+    EXPECT_EQ(fifi::get_value<field_type>(coefficients.data(), 0U), 0U);
+    EXPECT_EQ(fifi::get_value<field_type>(coefficients.data(), 1U), 1U);
+    EXPECT_EQ(fifi::get_value<field_type>(coefficients.data(), 2U), 0U);
+    EXPECT_EQ(fifi::get_value<field_type>(coefficients.data(), 3U), 0U);
+    EXPECT_EQ(fifi::get_value<field_type>(coefficients.data(), 4U), 0U);
+    EXPECT_EQ(fifi::get_value<field_type>(coefficients.data(), 5U), 0U);
 
     // Check that the decoding matrix looks as expected
     // Row 1:
@@ -252,5 +253,5 @@ TEST(TestEliminationDecoder, api)
     run_test<fifi::binary8>();
 
     /// @todo enable this unit test
-    //run_test<fifi::binary16>();
+    run_test<fifi::binary16>();
 }
