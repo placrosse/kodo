@@ -12,7 +12,6 @@
 
 namespace kodo
 {
-
     /// @ingroup encoder_layers
     ///
     /// @brief Implements a systematic encoder where systematic
@@ -26,7 +25,4 @@ namespace kodo
         default_systematic_phase<true,
         remote_pivot_aware_systematic_phase<
         storage_aware_systematic_phase<SuperCoder> > > >;
-
 }
-
-

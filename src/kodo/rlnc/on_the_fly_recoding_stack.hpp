@@ -19,6 +19,8 @@
 
 namespace kodo
 {
+    /// @ingroup fec_stacks
+    ///
     /// Intermediate stack implementing the recoding functionality of
     /// a RLNC code. As can be seen we are able to reuse a great deal
     /// of layers from the encode stack. It is important that the
@@ -30,30 +32,30 @@ namespace kodo
     /// proxy_layer which forwards any calls not implemented in the
     /// recoding stack to the MainStack.
     template<class MainStack>
-    class on_the_fly_recoding_stack
-        : public // Payload API
-                 forward_recode_to_encode<
-                 payload_rank_recoder<
-                 payload_encoder<
-                 // Codec Header API
-                 default_off_systematic_encoder<
-                 symbol_id_encoder<
-                 // Symbol ID API
-                 recoding_symbol_id<
-                 // Coefficient Generator API
-                 uniform_generator<
-                 pivot_aware_generator<
-                 // Encoder API
-                 encode_symbol_tracker<
-                 zero_symbol_encoder<
-                 linear_block_encoder<
-                 rank_info<
-                 // Coefficient Storage API
-                 coefficient_value_access<
-                 // Proxy
-                 proxy_remote_rank<
-                 proxy_layer<
-                 on_the_fly_recoding_stack<MainStack>,
-                 MainStack> > > > > > > > > > > > > > >
+    class on_the_fly_recoding_stack : public
+        // Payload API
+        forward_recode_to_encode<
+        payload_rank_recoder<
+        payload_encoder<
+        // Codec Header API
+        default_off_systematic_encoder<
+        symbol_id_encoder<
+        // Symbol ID API
+        recoding_symbol_id<
+        // Coefficient Generator API
+        uniform_generator<
+        pivot_aware_generator<
+        // Encoder API
+        encode_symbol_tracker<
+        zero_symbol_encoder<
+        linear_block_encoder<
+        rank_info<
+        // Coefficient Storage API
+        coefficient_value_access<
+        // Proxy
+        proxy_remote_rank<
+        proxy_layer<
+        on_the_fly_recoding_stack<MainStack>,
+        MainStack> > > > > > > > > > > > > > >
     { };
 }

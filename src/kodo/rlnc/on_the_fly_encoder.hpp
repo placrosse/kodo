@@ -40,34 +40,34 @@ namespace kodo
     /// encoder provides the generator with information about how many
     /// symbols have been specified.
     template<class Field, class TraceTag = kodo::disable_trace>
-    class on_the_fly_encoder :
-        public // Payload Codec API
-               payload_rank_encoder<
-               payload_encoder<
-               // Codec Header API
-               default_on_systematic_encoder<
-               symbol_id_encoder<
-               // Symbol ID API
-               plain_symbol_id_writer<
-               // Coefficient Generator API
-               on_the_fly_generator<
-               // Encoder API
-               encode_symbol_tracker<
-               zero_symbol_encoder<
-               linear_block_encoder<
-               storage_aware_encoder<
-               rank_info<
-               // Coefficient Storage API
-               coefficient_value_access<
-               coefficient_info<
-               // Symbol Storage API
-               deep_storage_layers<TraceTag,
-               // Finite Field API
-               finite_field_layers<Field,
-               // Factory API
-               final_coder_factory_pool<
-               // Final type
-               on_the_fly_encoder<Field, TraceTag>
-               > > > > > > > > > > > > > > > >
+    class on_the_fly_encoder : public
+        // Payload Codec API
+        payload_rank_encoder<
+        payload_encoder<
+        // Codec Header API
+        default_on_systematic_encoder<
+        symbol_id_encoder<
+        // Symbol ID API
+        plain_symbol_id_writer<
+        // Coefficient Generator API
+        on_the_fly_generator<
+        // Encoder API
+        encode_symbol_tracker<
+        zero_symbol_encoder<
+        linear_block_encoder<
+        storage_aware_encoder<
+        rank_info<
+        // Coefficient Storage API
+        coefficient_value_access<
+        coefficient_info<
+        // Symbol Storage API
+        deep_storage_layers<TraceTag,
+        // Finite Field API
+        finite_field_layers<Field,
+        // Factory API
+        final_coder_factory_pool<
+        // Final type
+        on_the_fly_encoder<Field, TraceTag>
+        > > > > > > > > > > > > > > > >
     { };
 }

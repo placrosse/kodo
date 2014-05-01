@@ -14,7 +14,6 @@
 
 namespace kodo
 {
-
     /// @ingroup coefficient_generator_layers
     ///
     /// @brief Generates an uniform random coefficient (from the
@@ -30,7 +29,4 @@ namespace kodo
         remote_pivot_aware_generator<
         pivot_aware_generator<
         SuperCoder> > > >;
-
 }
-
-

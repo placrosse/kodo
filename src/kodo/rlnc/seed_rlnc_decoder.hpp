@@ -24,28 +24,28 @@ namespace kodo
     /// the encoder):
     /// - Linear block decoder using Gauss-Jordan elimination.
     template<class Field, class TraceTag = kodo::disable_trace>
-    class seed_rlnc_decoder
-        : public // Payload API
-                 payload_decoder<
-                 // Codec Header API
-                 systematic_decoder<
-                 symbol_id_decoder<
-                 // Symbol ID API
-                 seed_symbol_id_reader<
-                 // Coefficient Generator API
-                 uniform_generator<
-                 // Decoder API
-                 common_decoder_layers<TraceTag,
-                 // Coefficient Storage API
-                 coefficient_storage_layers<
-                 // Storage API
-                 deep_storage_layers<TraceTag,
-                 // Finite Field Math API
-                 finite_field_layers<Field,
-                 // Factory API
-                 final_coder_factory_pool<
-                 // Final type
-                 seed_rlnc_decoder<Field, TraceTag>
-                 > > > > > > > > > >
+    class seed_rlnc_decoder : public
+        // Payload API
+        payload_decoder<
+        // Codec Header API
+        systematic_decoder<
+        symbol_id_decoder<
+        // Symbol ID API
+        seed_symbol_id_reader<
+        // Coefficient Generator API
+        uniform_generator<
+        // Decoder API
+        common_decoder_layers<TraceTag,
+        // Coefficient Storage API
+        coefficient_storage_layers<
+        // Storage API
+        deep_storage_layers<TraceTag,
+        // Finite Field Math API
+        finite_field_layers<Field,
+        // Factory API
+        final_coder_factory_pool<
+        // Final type
+        seed_rlnc_decoder<Field, TraceTag>
+        > > > > > > > > > >
     { };
 }

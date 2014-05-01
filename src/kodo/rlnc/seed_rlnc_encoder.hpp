@@ -36,32 +36,32 @@ namespace kodo
     /// - Deep symbol storage which makes the encoder allocate its own
     ///   internal memory.
     template<class Field, class TraceTag = kodo::disable_trace>
-    class seed_rlnc_encoder
-        : public // Payload Codec API
-                 payload_encoder<
-                 // Codec Header API
-                 default_on_systematic_encoder<
-                 symbol_id_encoder<
-                 // Symbol ID API
-                 seed_symbol_id_writer<
-                 // Coefficient Generator API
-                 uniform_generator<
-                 // Encoder API
-                 encode_symbol_tracker<
-                 zero_symbol_encoder<
-                 linear_block_encoder<
-                 storage_aware_encoder<
-                 // Coefficient Storage API
-                 coefficient_value_access<
-                 coefficient_info<
-                 // Symbol Storage API
-                 deep_storage_layers<TraceTag,
-                 // Finite Field API
-                 finite_field_layers<Field,
-                 // Factory API
-                 final_coder_factory_pool<
-                 // Final type
-                 seed_rlnc_encoder<Field, TraceTag>
-                 > > > > > > > > > > > > > >
+    class seed_rlnc_encoder : public
+        // Payload Codec API
+        payload_encoder<
+        // Codec Header API
+        default_on_systematic_encoder<
+        symbol_id_encoder<
+        // Symbol ID API
+        seed_symbol_id_writer<
+        // Coefficient Generator API
+        uniform_generator<
+        // Encoder API
+        encode_symbol_tracker<
+        zero_symbol_encoder<
+        linear_block_encoder<
+        storage_aware_encoder<
+        // Coefficient Storage API
+        coefficient_value_access<
+        coefficient_info<
+        // Symbol Storage API
+        deep_storage_layers<TraceTag,
+        // Finite Field API
+        finite_field_layers<Field,
+        // Factory API
+        final_coder_factory_pool<
+        // Final type
+        seed_rlnc_encoder<Field, TraceTag>
+        > > > > > > > > > > > > > >
     { };
 }
