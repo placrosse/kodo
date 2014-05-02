@@ -25,15 +25,12 @@ assert pandas.version.version.split(".")[:2] >= ['0', '12'],\
 
 import datetime
 
-
 def now():
     return datetime.datetime.utcnow()
-
 
 def today():
     today = now().date()
     return datetime.datetime(today.year, today.month, today.day)
-
 
 def timedelta(arg):
     return datetime.timedelta(arg)
@@ -44,7 +41,6 @@ markers = {
     "$2$": "o",
     "$2^{32}-5$": "*",
 }
-
 
 def get_marker(key):
     if key in markers:
@@ -57,7 +53,6 @@ fields = {
     "Prime2325": "$2^{32}-5$",
 }
 
-
 def get_field(key):
     if key in fields:
         return fields[key]
@@ -67,7 +62,6 @@ algorithms = {
     "FullDelayedRLNC": "Delayed",
     "FullRLNC": "Standard",
 }
-
 
 def get_algorithm(key):
     if key in algorithms:
@@ -99,9 +93,12 @@ slaves = {
     "mac3": {"OS": "MacOS, 10.8.5, x86-64", "CPU": "i5-3210M CPU @ 2.50GHz"},
 }
 
+def fix_slavename(name):
+    return name.replace("_", "-")
 
-def get_slave(name):
-    result = "ID: {0}".format(name.replace("_", "-"))
+def get_slave_info(name):
+    name = fix_slavename(name)
+    result = "ID: {0}".format(name)
     if name in slaves:
         result += "\nOS: {0}\nCPU: {1}".format(
             slaves[name]['OS'], slaves[name]['CPU'])
@@ -112,7 +109,6 @@ codes = {
     "sparse": ["SparseFullRLNC"],
     }
 
-
 def set_common_params():
     pl.rcParams.update({
         'figure.autolayout': True,
@@ -120,14 +116,12 @@ def set_common_params():
         'loc': "upper left",
         'fontsize': "x-small"})
 
-
 def mkdir_p(path):
     try:
         os.makedirs(path)
     except OSError as e:
         if e.errno != 17:
             raise
-
 
 def connect_database(address="176.28.49.184",
                      username="guest",
@@ -141,7 +135,6 @@ def connect_database(address="176.28.49.184",
     db = client[database]
     db.authenticate(username, password)
     return db
-
 
 class plotter(object):
 
@@ -157,6 +150,7 @@ class plotter(object):
         else:
             self.from_json = False
         self.legend_title = False
+        self.legend_columns = 4
         self.branch = False
         pl.close('all')
         self.pdf = False
@@ -210,7 +204,7 @@ class plotter(object):
                    horizontalalignment="left", fontsize="x-small")
 
     def set_slave_info(self, slavename):
-        self.set_info_box(get_slave(slavename))
+        self.set_info_box(get_slave_info(slavename))
 
     def set_markers(self, plot):
         """
@@ -224,9 +218,12 @@ class plotter(object):
     def set_legend_title(self, title):
         self.legend_title = title
 
+    def set_legend_columns(self, columns):
+        self.legend_columns = columns
+
     def write(self, subdirectory, filename):
 
-        pl.legend(fontsize="x-small", ncol=4,
+        pl.legend(fontsize="x-small", ncol=self.legend_columns,
                   mode="expand", title=self.legend_title)
         if not self.pdf:
             pdf_path = os.path.join(self.get_base_path(), "all.pdf")
@@ -237,7 +234,6 @@ class plotter(object):
         pl.savefig(figure_path)
         print("wrote: {}".format(figure_path))
         pl.close('all')
-
 
 def add_arguments(argument_list):
     """
@@ -265,13 +261,11 @@ def add_arguments(argument_list):
     args = parser.parse_args()
     return args
 
-
 def add_argument_json(parser):
     parser.add_argument(
         '--json', dest='json', action='store',
         help='the .json file written by gauge benchmark, if non provided\
     plots from the database', default=False)
-
 
 def add_argument_coder(parser):
     parser.add_argument(
@@ -282,12 +276,10 @@ def add_argument_coder(parser):
         default='decoder',
         help='Whether to consider the encoding or decoding performance')
 
-
 def add_argument_output_format(parser):
     parser.add_argument(
         '--output-format', dest='output_format', action='store', default='png',
         help='The format of the generated figures, e.g. eps, pdf')
-
 
 def add_argument_date(parser):
     parser.add_argument(
@@ -298,7 +290,6 @@ def add_argument_date(parser):
         default=today(),
         help='What data to use when accessing the database, '
              'must be of type datetime.datetime')
-
 
 def add_argument_days(parser):
     parser.add_argument(
