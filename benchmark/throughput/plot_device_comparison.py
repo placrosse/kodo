@@ -56,17 +56,21 @@ def plot(args):
         plotter.set_legend_columns(3)
 
     for (field, density, symbols), group in sparse:
-        p = group.pivot_table('mean', rows='symbols', cols=['slavename',]).plot()
+        p = group.pivot_table(
+            'mean', rows='symbols', cols=['slavename',]).plot()
         plot_setup(p)
-        plotter.set_legend_title("Field size: " + str(field) +
-            ", Density: " + str(density) + ", Symbols: " + str(symbols))
+        plotter.set_legend_title(
+            "Field size: {0}, Density: {1}, Symbols: {2}".format(
+            str(field), str(density),str(symbols)))
         plotter.write("sparse", field + "_" + str(density))
 
     for (field, algorithm, symbols), group in dense:
-        p = group.pivot_table('mean', rows='symbols', cols=['slavename']).plot()
+        p = group.pivot_table(
+            'mean', rows='symbols', cols=['slavename']).plot()
         plot_setup(p)
-        plotter.set_legend_title("Field size: " + str(field) +
-            ", Algorithm: " + str(algorithm) + ", Symbols: " + str(symbols))
+        plotter.set_legend_title(
+            "Field size: {0}, Algorithm: {1}, Symbols: {2}".format(
+            str(field), str(algorithm),str(symbols)))
         plotter.write("dense", field + "_" + algorithm)
 
     return df
