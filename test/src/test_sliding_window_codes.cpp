@@ -88,3 +88,53 @@ TEST(TestSlidingWindowCodes, test_reuse_incomplete_api)
 {
     test_reuse_incomplete<encoder, decoder>();
 }
+
+// Tests that when recoding we get a systematic packet
+TEST(TestSlidingWindowCodes, test_systematic_recoding)
+{
+    uint32_t symbols = 16;
+    uint32_t symbol_size = 1600;
+
+    encoder<fifi::binary8>::factory encoder_factory(symbols, symbol_size);
+    decoder<fifi::binary8>::factory decoder_factory(symbols, symbol_size);
+
+    auto encoder = encoder_factory.build();
+    auto recoder = decoder_factory.build();
+    auto decoder = decoder_factory.build();
+
+    std::vector<uint8_t> data_in = random_vector(encoder->block_size());
+
+    auto symbol_sequence = sak::split_storage(
+        sak::storage(data_in), symbol_size);
+
+    // Set the two symbol on the encoder
+    encoder->set_symbol(0, symbol_sequence[0]);
+    encoder->set_symbol(1, symbol_sequence[1]);
+
+    std::vector<uint8_t> payload(encoder->payload_size());
+
+    // The first call to encode should deliver the first symbol uncoded
+    encoder->encode(payload.data());
+
+    recoder->decode(payload.data());
+    EXPECT_EQ(recoder->symbols_uncoded(), 1U);
+
+    recoder->recode(payload.data());
+    decoder->decode(payload.data());
+
+    EXPECT_EQ(decoder->symbols_uncoded(), 1U);
+
+    // The second call should do deliver the next
+    encoder->encode(payload.data());
+
+    recoder->decode(payload.data());
+    EXPECT_EQ(recoder->symbols_uncoded(), 2U);
+
+    recoder->recode(payload.data());
+    decoder->decode(payload.data());
+
+    EXPECT_EQ(decoder->symbols_uncoded(), 2U);
+
+
+
+}
