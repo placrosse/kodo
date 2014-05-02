@@ -78,7 +78,7 @@ namespace kodo
         /// However this is not sufficient if the decoder also
         /// receives packets from another source. This function
         /// therefore loops over all the local pivots and checks
-        /// whether it only has one pivot not seen by the deocder if
+        /// whether it only has one pivot not seen by the decoder if
         /// this is the case it returns that a single symbol is
         /// available.
         ///
@@ -111,4 +111,3 @@ namespace kodo
     };
 
 }
-
