@@ -206,5 +206,63 @@ TEST(TestDebugOnTheFlyCodes, test_reuse_incomplete_api)
 }
 
 
+/// Unit test added in response to a bug report regarding the remote_rank().
+///
+/// A bug in the proxy_remote_rank layer meant that the it when
+/// initialized it would use the main stack pointer of the previously
+/// built decoder. In the code below both decoder_1 and decoder_2
+/// would use decoder_3 as main stack when initialized again.
+///
+/// This means that when decoder_1 recodes it will put the remote_rank
+/// of decoder_3 in the packet which we in this unit test makes sure is full.
+TEST(TestOnTheFlyCodes, test_recode_remote_rank)
+{
+    uint32_t symbols = 10;
+    uint32_t symbol_size = 1600;
+
+    kodo::on_the_fly_encoder<fifi::binary>::factory encoder_factory(
+        symbols, symbol_size);
+
+    kodo::on_the_fly_decoder<fifi::binary>::factory decoder_factory(
+        symbols, symbol_size);
 
 
+    auto encoder = encoder_factory.build();
+    auto decoder_1 = decoder_factory.build();
+    auto decoder_2 = decoder_factory.build();
+    auto decoder_3 = decoder_factory.build();
+
+    std::vector<uint8_t> data_in = random_vector(encoder->block_size());
+    std::vector<uint8_t> payload(encoder->payload_size());
+
+    encoder->set_symbols(sak::storage(data_in));
+
+    while(!decoder_3->is_complete())
+    {
+        encoder->encode(payload.data());
+        decoder_3->decode(payload.data());
+    }
+
+    auto symbol_sequence = sak::split_storage(
+        sak::storage(data_in), symbol_size);
+
+    encoder->initialize(encoder_factory);
+    decoder_1->initialize(decoder_factory);
+    decoder_2->initialize(decoder_factory);
+
+    // Only set the first symbol on the encoder
+    encoder->set_symbol(0, symbol_sequence[0]);
+    EXPECT_EQ(encoder->rank(), 1U);
+
+    encoder->encode(payload.data());
+
+    decoder_1->decode(payload.data());
+    decoder_1->recode(payload.data());
+    EXPECT_EQ(decoder_1->rank(), 1U);
+    EXPECT_EQ(decoder_1->remote_rank(), 1U);
+
+    decoder_2->decode(payload.data());
+
+    // In presence of the bug the remote_rank here is 10
+    EXPECT_EQ(decoder_2->remote_rank(), 1U);
+}
