@@ -6,6 +6,17 @@ detailed list of every change, see the Git log.
 
 Latest
 ------
+* Major: Added tracing functionality to most of the coding
+  stacks. Enabling or disabling support for tracing is done via a
+  compile time constant. When tracing is enabled it is possible to get
+  human readable information about the encoding and decoding progress
+  at run time. This replaces the debug layers functionality. An
+  example can be found in the use_trace_layers example.
+* Bug: Fixed bug in the proxy_remote_rank layer. The state was
+  incorrectly updated causing the remote rank to be erroneous. This
+  bug was reported by Jonas Hansen <jonas@hrjonashansen.dk>
+* Major: Updated terminology in the proxy_layer and proxy_stack layers
+  to more consistently use the terms main- and proxy-stack.
 * Major: Started to use C++11 features only available in: gcc/g++-4.7
   and later and Microsoft Visual Studio 2013.
 * Major: Update to Fifi version 11, which brings in hardware
