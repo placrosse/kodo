@@ -97,8 +97,8 @@ int main()
             // modify the filter to only view the information you are
             // interested in.
 
-            // kodo::trace(decoder, std::cout, filter);
-            kodo::trace(decoder, std::cout);
+            kodo::trace(decoder, std::cout, filter);
+            //kodo::trace(decoder, std::cout);
         }
     }
 
