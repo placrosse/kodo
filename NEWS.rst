@@ -4,7 +4,7 @@ News for Kodo
 This file lists the major changes between versions. For a more
 detailed list of every change, see the Git log.
 
-Latest
+17.0.0
 ------
 * Major: Added tracing functionality to most of the coding
   stacks. Enabling or disabling support for tracing is done via a
