@@ -34,7 +34,6 @@ Latest
 * Major: Several optimizations to the systematic_encoder layer and
   related layers which allows finer control over which packets should
   be sent systematically and which should not.
-* Minor: Added debug API
 
 16.2.0
 ------
