@@ -13,8 +13,9 @@
 
 namespace kodo
 {
-
-    /// @ingroup payload_codec_layers state_layers
+    /// @ingroup payload_codec_layers
+    /// @ingroup state_layers
+    ///
     /// @brief The payload rank recoder writes the rank of the encoder into
     ///        the payload buffer.
     ///
@@ -26,6 +27,4 @@ namespace kodo
     template<class SuperCoder>
     using payload_rank_recoder =
         payload_rank_writer<remote_rank_writer<SuperCoder> >;
-
 }
-
