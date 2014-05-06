@@ -10,8 +10,9 @@
 
 namespace kodo
 {
-
-    /// @todo docs
+    /// @todo docs + test and find a way to avoid replicating
+    ///       functionality between the standard proxy and nested
+    ///       stacks and the fulcrum ones.
     template
     <
         template <class> class ProxyStack,
@@ -20,5 +21,4 @@ namespace kodo
     class fulcrum_proxy_stack
         : public proxy_stack<ProxyStack, fulcrum_nested_stack, SuperCoder>
     { };
-
 }
