@@ -30,7 +30,7 @@ namespace kodo
         class NestedStack,
         class SuperCoder
     >
-    class nested_stack : public SuperCoder
+    class nested_stack_container : public SuperCoder
     {
     public:
 
@@ -60,7 +60,7 @@ namespace kodo
         public:
 
             /// Make the layer a friend of the factory
-            friend class nested_stack;
+            friend class nested_stack_container;
 
             /// @return A reference to the nested factory
             nested_factory_type& nested()
@@ -135,5 +135,14 @@ namespace kodo
 
     };
 
-}
 
+    template
+    <
+        class NestedStack,
+        class SuperCoder
+    >
+    class nested_stack : public nested_stack_container<NestedStack, SuperCoder>
+    {
+    public:
+    };
+}
