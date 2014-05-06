@@ -219,7 +219,7 @@ detailed list of every change, see the Git log.
 
 9.0.1
 -----
-* Bug: Fix behavior or deep_symbol_storage::set_symbols() to set all
+* Bug: Fix behavior of deep_symbol_storage::set_symbols() to set all
   symbols.
 * Bug: When reusing decoders contaning the linear_block_decoder layer
   systematic symbols where not correctly initialized. A fix was added
