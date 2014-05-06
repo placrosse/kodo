@@ -8,9 +8,8 @@
 #include <cstdint>
 #include <algorithm>
 
-#include <sak/aligned_allocator.hpp>
-#include <fifi/field_types.hpp>
 #include <fifi/fifi_utils.hpp>
+#include <sak/aligned_allocator.hpp>
 
 namespace kodo
 {

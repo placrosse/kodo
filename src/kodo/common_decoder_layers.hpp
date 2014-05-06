@@ -22,11 +22,12 @@ namespace kodo
     ///
     template<class TraceTag, class SuperCoder>
     using common_decoder_layers =
-               trace_decode_symbol<TraceTag,
-               trace_linear_block_decoder<TraceTag,
-               aligned_coefficients_decoder<
-               forward_linear_block_decoder<
-               rank_info<
-               symbol_decoding_status_counter<
-               symbol_decoding_status_tracker<SuperCoder> > > > > > >;
+        trace_decode_symbol<TraceTag,
+        trace_linear_block_decoder<TraceTag,
+        aligned_coefficients_decoder<
+        forward_linear_block_decoder<
+        rank_info<
+        symbol_decoding_status_counter<
+        symbol_decoding_status_tracker<SuperCoder>
+        > > > > > >;
 }

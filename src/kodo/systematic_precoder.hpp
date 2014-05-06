@@ -5,6 +5,8 @@
 
 #pragma once
 
+#include <sak/storage.hpp>
+
 namespace kodo
 {
 

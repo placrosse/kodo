@@ -8,6 +8,8 @@
 #include <cstdint>
 #include <vector>
 
+#include <memory>
+
 #include "const_shallow_symbol_storage.hpp"
 
 namespace kodo
@@ -33,18 +35,14 @@ namespace kodo
         /// The actual SuperCoder type
         typedef const_shallow_symbol_storage<SuperCoder> Super;
 
-        /// Pointer produced by the factory
-        typedef typename Super::pointer pointer;
-
-        /// Pointer to the type of this layer
-        typedef boost::shared_ptr<
-            partial_shallow_symbol_storage> this_pointer;
+        // /// Pointer produced by the factory
+        // typedef typename Super::pointer pointer;
 
         /// Partial and zero symbol types
         typedef std::vector<uint8_t> symbol_type;
 
         /// Symbol data wrapped in smart ptr
-        typedef boost::shared_ptr<symbol_type> symbol_ptr;
+        typedef std::shared_ptr<symbol_type> symbol_ptr;
 
         /// Access to the SuperCoder mapping variable
         using Super::m_data;
@@ -65,7 +63,7 @@ namespace kodo
             {
                 assert(max_symbol_size > 0);
 
-                m_zero_symbol = boost::make_shared<symbol_type>();
+                m_zero_symbol = std::make_shared<symbol_type>();
                 m_zero_symbol->resize(max_symbol_size, 0);
             }
 
@@ -90,7 +88,7 @@ namespace kodo
             assert(the_factory.max_symbol_size() > 0);
 
             m_zero_symbol = the_factory.m_zero_symbol;
-            m_partial_symbol = boost::make_shared<symbol_type>();
+            m_partial_symbol = std::make_shared<symbol_type>();
             m_partial_symbol->resize(the_factory.max_symbol_size(), 0);
         }
 

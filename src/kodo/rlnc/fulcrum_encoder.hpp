@@ -5,14 +5,15 @@
 
 #pragma once
 
-#include "shallow_full_rlnc_encoder.hpp"
-
 #include "../nested_toggle_systematic.hpp"
 #include "../payload_precoder.hpp"
 #include "../systematic_precoder.hpp"
 #include "../systematic_coefficient_mapper.hpp"
 #include "../nested_payload_encoder.hpp"
-#include "../fulcrum_nested_stack.hpp"
+
+#include "shallow_full_rlnc_encoder.hpp"
+#include "fulcrum_nested_stack.hpp"
+#include "fulcrum_info.hpp"
 
 namespace kodo
 {
@@ -49,6 +50,4 @@ namespace kodo
         fulcrum_encoder<Field, TraceTag>
         > > > > > > > > > > > > > > > > >
     { };
-
-
 }

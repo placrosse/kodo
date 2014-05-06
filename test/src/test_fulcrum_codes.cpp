@@ -15,23 +15,35 @@
 #include "kodo_unit_test/helper_test_reuse_api.hpp"
 #include "kodo_unit_test/helper_test_initialize_api.hpp"
 
+
+namespace
+{
+    template<class Field>
+    using encoder = kodo::fulcrum_encoder<Field, kodo::disable_trace>;
+
+    template<class Field>
+    using inner_decoder = kodo::fulcrum_inner_decoder<Field>;
+
+}
+
+
 TEST(TestFulcrum, inner)
 {
-    test_basic_api<kodo::fulcrum_encoder<fifi::binary8>,
+    run_test_basic_api<
+        encoder<fifi::binary8>,
+        inner_decoder<fifi::binary> >(10, 1000);
+
+    run_test_reuse<
+        kodo::fulcrum_encoder<fifi::binary8>,
         kodo::fulcrum_inner_decoder<fifi::binary> >(10, 1000);
 
-    // test_reuse<
-    //     kodo::fulcrum_encoder<fifi::binary8>,
-    //     kodo::fulcrum_inner_decoder<fifi::binary> >(10, 1000);
+    run_test_reuse_incomplete<
+        kodo::fulcrum_encoder<fifi::binary8>,
+        kodo::fulcrum_inner_decoder<fifi::binary> >(10, 1000);
 
-    // test_reuse_incomplete<
-    //     kodo::fulcrum_encoder<fifi::binary8>,
-    //     kodo::fulcrum_inner_decoder<fifi::binary> >(10, 1000);
-
-    // test_initialize<
-    //     kodo::fulcrum_encoder<fifi::binary8>,
-    //     kodo::fulcrum_inner_decoder<fifi::binary> >(10, 1000);
-
+    run_test_initialize<
+        kodo::fulcrum_encoder<fifi::binary8>,
+        kodo::fulcrum_inner_decoder<fifi::binary> >(10, 1000);
 }
 
 

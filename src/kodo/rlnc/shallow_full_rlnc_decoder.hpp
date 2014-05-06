@@ -5,15 +5,8 @@
 
 #pragma once
 
-#include "../default_on_systematic_encoder.hpp"
-#include "../has_shallow_symbol_storage.hpp"
-#include "../linear_block_decoder_delayed.hpp"
-#include "../partial_shallow_symbol_storage.hpp"
+#include "full_rlnc_decoder.hpp"
 #include "../mutable_shallow_storage_layers.hpp"
-
-#include "../common_decoder_layers.hpp"
-#include "../finite_field_layers.hpp"
-#include "../coefficient_storage_layers.hpp"
 
 namespace kodo
 {
