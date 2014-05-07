@@ -13,7 +13,7 @@
 #include "../pivot_status_writer.hpp"
 #include "../feedback_pivot_status_writer.hpp"
 #include "../final_feedback_writer.hpp"
-#include "../proxy_stack.hpp"
+#include "../basic_proxy_stack.hpp"
 #include "../nested_payload_recoder.hpp"
 #include "../nested_feedback_reader.hpp"
 #include "../disable_trace.hpp"
@@ -44,7 +44,7 @@ namespace kodo
         partial_decoding_tracker<
         rank_symbol_decoding_status_updater<
         nested_payload_recoder<
-        proxy_stack<proxy_args<>, sliding_window_recoding_stack,
+        basic_proxy_stack<proxy_args<>, sliding_window_recoding_stack,
         payload_rank_decoder<
         payload_decoder<
         // Codec Header API

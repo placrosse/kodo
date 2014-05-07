@@ -17,7 +17,7 @@ namespace kodo
     class full_delayed_rlnc_decoder : public
         // Payload API
         nested_payload_recoder<
-        proxy_stack<proxy_args<>, full_rlnc_recoding_stack,
+        basic_proxy_stack<proxy_args<>, full_rlnc_recoding_stack,
         payload_decoder<
         // Codec Header API
         systematic_decoder<
@@ -47,7 +47,7 @@ namespace kodo
     class full_rlnc_decoder_unsystematic : public
         // Payload API
         nested_payload_recoder<
-        proxy_stack<proxy_args<>, full_rlnc_recoding_stack,
+        basic_proxy_stack<proxy_args<>, full_rlnc_recoding_stack,
         payload_decoder<
         // Codec Header API
         symbol_id_decoder<

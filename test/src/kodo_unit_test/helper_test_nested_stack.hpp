@@ -9,7 +9,7 @@
 
 #include <gtest/gtest.h>
 
-#include <kodo/nested_stack.hpp>
+#include <kodo/basic_nested_stack.hpp>
 
 namespace kodo
 {
@@ -150,10 +150,9 @@ namespace kodo
 
         /// The stack used in unit test
         class helper_test_nested_stack
-            : public nested_stack<helper_nested_stack, helper_nested_layer>
+            : public basic_nested_stack<helper_nested_stack, helper_nested_layer>
         { };
 
     }
 
 }
-

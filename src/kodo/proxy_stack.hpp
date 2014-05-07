@@ -5,12 +5,10 @@
 
 #pragma once
 
-#include "nested_stack.hpp"
 #include "proxy_args.hpp"
 
 namespace kodo
 {
-
     /// @ingroup utility
     ///
     /// @brief The proxy stack layer supports advanced compositions of
@@ -98,6 +96,7 @@ namespace kodo
     ///
     template
     <
+        template <class...> class NestedImpl,
         class Args,
         template <class...> class NestedStack,
         class SuperCoder
@@ -109,17 +108,18 @@ namespace kodo
     /// the proxy stack
     template
     <
+        template <class...> class NestedImpl,
         class... Args,
         template <class...> class NestedStack,
         class SuperCoder
     >
-    class proxy_stack<proxy_args<Args...>, NestedStack, SuperCoder> :
-        public nested_stack<NestedStack<SuperCoder, Args...>,SuperCoder>
+    class proxy_stack<NestedImpl, proxy_args<Args...>, NestedStack, SuperCoder> :
+        public NestedImpl<NestedStack<SuperCoder, Args...>,SuperCoder>
     {
     public:
 
         /// Typedef of the "actual" SuperCoder type
-        typedef nested_stack<NestedStack<SuperCoder, Args...>,SuperCoder> Super;
+        typedef NestedImpl<NestedStack<SuperCoder, Args...>,SuperCoder> Super;
 
     public:
 
@@ -165,5 +165,4 @@ namespace kodo
         }
 
     };
-
 }

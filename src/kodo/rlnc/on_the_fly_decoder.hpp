@@ -27,7 +27,7 @@ namespace kodo
     class on_the_fly_decoder : public
         // Payload API
         nested_payload_recoder<
-        proxy_stack<proxy_args<>, on_the_fly_recoding_stack,
+        basic_proxy_stack<proxy_args<>, on_the_fly_recoding_stack,
         partial_decoding_tracker<
         rank_symbol_decoding_status_updater<
         payload_rank_decoder<

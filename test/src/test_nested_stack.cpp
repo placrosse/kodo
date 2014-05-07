@@ -8,7 +8,7 @@
 
 #include <gtest/gtest.h>
 
-#include <kodo/nested_stack.hpp>
+#include <kodo/basic_nested_stack.hpp>
 #include "kodo_unit_test/helper_test_nested_stack.hpp"
 
 TEST(TestNestedStack, api)
@@ -47,6 +47,4 @@ TEST(TestNestedStack, api)
 
     EXPECT_EQ(nested->m_symbols, factory.m_symbols);
     EXPECT_EQ(nested->m_symbol_size, factory.m_symbol_size);
-
 }
-

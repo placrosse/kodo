@@ -10,6 +10,8 @@
 
 namespace kodo
 {
+    /// @todo docs + test
+    ///
     /// @ingroup utility
     ///
     /// @brief The nested stack layer provides a way of "nesting" a
@@ -30,7 +32,7 @@ namespace kodo
         class NestedStack,
         class SuperCoder
     >
-    class nested_stack_container : public SuperCoder
+    class nested_stack : public SuperCoder
     {
     public:
 
@@ -54,7 +56,8 @@ namespace kodo
             /// @copydoc layer::factory::factory(uint32_t,uint32_t)
             factory(uint32_t max_symbols, uint32_t max_symbol_size) :
                 SuperCoder::factory(max_symbols, max_symbol_size),
-                m_nested_factory(max_symbols, max_symbol_size)
+                m_nested_factory(SuperCoder::factory::nested_max_symbols(),
+                                 SuperCoder::factory::nested_max_symbol_size())
             { }
 
         public:
@@ -92,18 +95,19 @@ namespace kodo
             // Use the Kodo generic API to set the symbols and
             // symbol_size if the nested stack supports it
 
-            if(has_set_symbols<nested_factory_type>::value)
+            if (has_set_symbols<nested_factory_type>::value)
             {
-                kodo::set_symbols(nested_factory, the_factory.symbols());
+                kodo::set_symbols(nested_factory,
+                                  SuperCoder::nested_symbols());
             }
 
-            if(has_set_symbol_size<nested_factory_type>::value)
+            if (has_set_symbol_size<nested_factory_type>::value)
             {
                 kodo::set_symbol_size(nested_factory,
-                                      the_factory.symbol_size());
+                                      SuperCoder::nested_symbol_size());
             }
 
-            if(!m_nested_stack)
+            if (!m_nested_stack)
             {
                 m_nested_stack = nested_factory.build();
             }
@@ -132,17 +136,5 @@ namespace kodo
 
         /// Pointer to the nested decoder
         nested_pointer m_nested_stack;
-
-    };
-
-
-    template
-    <
-        class NestedStack,
-        class SuperCoder
-    >
-    class nested_stack : public nested_stack_container<NestedStack, SuperCoder>
-    {
-    public:
     };
 }

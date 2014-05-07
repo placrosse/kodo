@@ -10,7 +10,7 @@
 #include "../payload_decoder.hpp"
 #include "../symbol_id_decoder.hpp"
 #include "../plain_symbol_id_reader.hpp"
-#include "../proxy_stack.hpp"
+#include "../basic_proxy_stack.hpp"
 #include "../nested_payload_recoder.hpp"
 #include "../common_decoder_layers.hpp"
 #include "../coefficient_storage_layers.hpp"
@@ -35,7 +35,7 @@ namespace kodo
     class shallow_backward_full_rlnc_decoder : public
         // Payload API
         nested_payload_recoder<
-        proxy_stack<proxy_args<>, full_rlnc_recoding_stack,
+        basic_proxy_stack<proxy_args<>, full_rlnc_recoding_stack,
         payload_decoder<
         // Codec Header API
         systematic_decoder<

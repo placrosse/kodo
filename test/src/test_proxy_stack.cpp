@@ -7,7 +7,7 @@
 #include <gtest/gtest.h>
 #include <fifi/binary8.hpp>
 
-#include <kodo/proxy_stack.hpp>
+#include <kodo/basic_proxy_stack.hpp>
 #include <kodo/proxy_layer.hpp>
 
 #include "kodo_unit_test/helper_test_nested_stack.hpp"
@@ -41,7 +41,7 @@ namespace kodo
 
         /// The stack represents the main stack used in unit test
         class dummy_stack : public
-        proxy_stack<proxy_args<>, dummy_proxy_stack,
+        basic_proxy_stack<proxy_args<>, dummy_proxy_stack,
             main_stack_types<helper_nested_layer> >
         { };
 
