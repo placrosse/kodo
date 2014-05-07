@@ -1,10 +1,9 @@
 #! /usr/bin/env python
 # encoding: utf-8
 
-import os
-
 APPNAME = 'kodo'
 VERSION = '17.0.0'
+
 
 def recurse_helper(ctx, name):
     if not ctx.has_dependency_path(name):
@@ -13,66 +12,58 @@ def recurse_helper(ctx, name):
         p = ctx.dependency_path(name)
         ctx.recurse([p])
 
+
 def options(opt):
 
     import waflib.extras.wurf_dependency_bundle as bundle
     import waflib.extras.wurf_dependency_resolve as resolve
-    import waflib.extras.wurf_configure_output
 
-    bundle.add_dependency(opt,
-        resolve.ResolveGitMajorVersion(
-            name = 'fifi',
-            git_repository = 'github.com/steinwurf/fifi.git',
-            major_version = 11))
+    bundle.add_dependency(opt, resolve.ResolveGitMajorVersion(
+        name='fifi',
+        git_repository='github.com/steinwurf/fifi.git',
+        major_version=11))
 
-    bundle.add_dependency(opt,
-        resolve.ResolveGitMajorVersion(
-            name = 'sak',
-            git_repository = 'github.com/steinwurf/sak.git',
-            major_version = 10))
+    bundle.add_dependency(opt, resolve.ResolveGitMajorVersion(
+        name='sak',
+        git_repository='github.com/steinwurf/sak.git',
+        major_version=10))
 
-    bundle.add_dependency(opt,
-        resolve.ResolveGitMajorVersion(
-            name = 'boost',
-            git_repository = 'github.com/steinwurf/external-boost-light.git',
-            major_version = 1))
+    bundle.add_dependency(opt, resolve.ResolveGitMajorVersion(
+        name='boost',
+        git_repository='github.com/steinwurf/external-boost-light.git',
+        major_version=1))
 
-    bundle.add_dependency(opt,
-        resolve.ResolveGitMajorVersion(
-            name = 'waf-tools',
-            git_repository = 'github.com/steinwurf/external-waf-tools.git',
-            major_version = 2))
+    bundle.add_dependency(opt, resolve.ResolveGitMajorVersion(
+        name='waf-tools',
+        git_repository='github.com/steinwurf/external-waf-tools.git',
+        major_version=2))
 
-    bundle.add_dependency(opt,
-        resolve.ResolveGitMajorVersion(
-            name = 'gtest',
-            git_repository = 'github.com/steinwurf/external-gtest.git',
-            major_version = 2))
+    bundle.add_dependency(opt, resolve.ResolveGitMajorVersion(
+        name='gtest',
+        git_repository='github.com/steinwurf/external-gtest.git',
+        major_version=2))
 
-    bundle.add_dependency(opt,
-        resolve.ResolveGitMajorVersion(
-            name = 'gauge',
-            git_repository = 'github.com/steinwurf/cxx-gauge.git',
-            major_version = 7))
+    bundle.add_dependency(opt, resolve.ResolveGitMajorVersion(
+        name='gauge',
+        git_repository='github.com/steinwurf/cxx-gauge.git',
+        major_version=7))
 
-    bundle.add_dependency(opt,
-        resolve.ResolveGitMajorVersion(
-            name = 'tables',
-            git_repository = 'github.com/steinwurf/tables.git',
-            major_version = 4))
+    bundle.add_dependency(opt, resolve.ResolveGitMajorVersion(
+        name='tables',
+        git_repository='github.com/steinwurf/tables.git',
+        major_version=4))
 
-    bundle.add_dependency(opt,
-        resolve.ResolveGitMajorVersion(
-            name = 'cpuid',
-            git_repository = 'github.com/steinwurf/cpuid.git',
-            major_version = 3))
+    bundle.add_dependency(opt, resolve.ResolveGitMajorVersion(
+        name='cpuid',
+        git_repository='github.com/steinwurf/cpuid.git',
+        major_version=3))
 
-    bundle.add_dependency(opt,
-        resolve.ResolveGitMajorVersion(
-            name = 'platform',
-            git_repository = 'github.com/steinwurf/platform.git',
-            major_version = 1))
+    bundle.add_dependency(opt, resolve.ResolveGitMajorVersion(
+        name='platform',
+        git_repository='github.com/steinwurf/platform.git',
+        major_version=1))
 
+    opt.load("wurf_configure_output")
     opt.load('wurf_dependency_resolve')
     opt.load('wurf_dependency_bundle')
     opt.load('wurf_tools')
@@ -100,6 +91,7 @@ def configure(conf):
         recurse_helper(conf, 'platform')
 
         conf.recurse('examples/sample_makefile')
+
 
 def build(bld):
 
@@ -140,15 +132,15 @@ def build(bld):
         bld.recurse('benchmark/decoding_probability')
 
     # Export own includes
-    bld(name = 'kodo_includes',
-        includes = './src',
-        export_includes = './src',
-        use = ['cpuid', 'fifi'])
+    bld(name='kodo_includes',
+        includes='./src',
+        export_includes='./src',
+        use=['cpuid', 'fifi'])
 
     # Export unit test includes, these files are useful for testing
     # the correctness of encoders and decoders. Since users of kodo
     # may define custom encoders and decoders in their own libraries
     # or applications we expose the unittest headers here to make them
     # easily available
-    bld(export_includes = './test/src',
-        name = 'kodo_unit_test_includes')
+    bld(export_includes='./test/src',
+        name='kodo_unit_test_includes')

@@ -2,9 +2,9 @@
 # encoding: utf-8
 
 bld.program(
-    features = 'cxx benchmark',
-    source   = ['main.cpp'],
-    target   = 'kodo_overhead',
-    use = ['kodo_includes', 'fifi_includes', 'sak_includes',
+    features='cxx benchmark',
+    source=['main.cpp'],
+    target='kodo_overhead',
+    use=['kodo_includes', 'fifi_includes', 'sak_includes',
            'gtest', 'boost_includes', 'boost_system', 'boost_timer',
            'boost_chrono', 'gauge'])
