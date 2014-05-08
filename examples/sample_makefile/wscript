@@ -9,22 +9,24 @@ import types
 
 from waflib import Task
 
+
 def configure(conf):
     # Check if make is installed on the system
     try:
         conf.find_program('make')
         conf.env.MAKE_INSTALLED = True
-    except conf.errors.ConfigurationError as e:
+    except conf.errors.ConfigurationError:
         conf.env.MAKE_INSTALLED = False
+
 
 def build(bld):
 
     # Build the example with waf to test if the source compiles
-    bld.program(features = 'cxx',
-                source   = 'main.cpp',
-                target   = 'example_waf',
-                use      = ['kodo_includes', 'boost_includes',
-                            'fifi_includes', 'sak_includes'])
+    bld.program(features='cxx',
+                source='main.cpp',
+                target='example_waf',
+                use=['kodo_includes', 'boost_includes', 'fifi_includes',
+                     'sak_includes'])
 
     # Add a manual dependency to rebuild the example if the makefile changes
     bld.add_manual_dependency(
@@ -45,9 +47,9 @@ def build(bld):
         args += ['CXX=' + bld.env.get_flat('CXX')]
 
         # Set the path for the dependencies
-        sak_dir = os.path.join(bld.dependency_path('sak'),'src')
+        sak_dir = os.path.join(bld.dependency_path('sak'), 'src')
         args += ['SAK_DIR=' + sak_dir]
-        fifi_dir = os.path.join(bld.dependency_path('fifi'),'src')
+        fifi_dir = os.path.join(bld.dependency_path('fifi'), 'src')
         args += ['FIFI_DIR=' + fifi_dir]
         boost_dir = bld.dependency_path('boost')
         args += ['BOOST_DIR=' + boost_dir]
@@ -80,16 +82,14 @@ def build(bld):
     # Build the example with make (only if make is installed)
     if bld.env.MAKE_INSTALLED:
         # Get the task generator
-        tgen = bld(rule     = invoke_make,
-                   name     = 'sample_makefile',
-                   #always   = True,
-                   source   = 'main.cpp',
-                   target   = 'example_make')
+        tgen = bld(rule=invoke_make,
+                   name='sample_makefile',
+                   #always=True,
+                   source='main.cpp',
+                   target='example_make')
         # Make sure that the tasks are generated
         tgen.post()
         # Get the first task
         tsk = tgen.tasks[0]
         # Redefine the runnable_status method for that task
         tsk.runnable_status = types.MethodType(runnable_status, tsk)
-
-
