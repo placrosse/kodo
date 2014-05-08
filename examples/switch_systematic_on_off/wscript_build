@@ -4,5 +4,5 @@
 bld.program(features='cxx',
             source='switch_systematic_on_off.cpp',
             target='switch_systematic_on_off',
-            use=['kodo_includes', 'boost_includes',
-                 'fifi_includes', 'sak_includes'])
+            use=['kodo_includes', 'boost_includes', 'fifi_includes',
+                 'sak_includes'])

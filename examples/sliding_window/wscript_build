@@ -4,5 +4,5 @@
 bld.program(features='cxx',
             source='sliding_window.cpp',
             target='sliding_window',
-            use=['kodo_includes', 'boost_includes',
-                 'fifi_includes', 'sak_includes'])
+            use=['kodo_includes', 'boost_includes', 'fifi_includes',
+                 'sak_includes'])
