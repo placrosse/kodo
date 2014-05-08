@@ -26,7 +26,8 @@ namespace kodo
     /// policy.
     ///
     /// In this case the nested stack factory will be constructed
-    /// using the same parameters as the "main" stack.
+    /// using the parameters provided by the nested_max_symbols(),
+    /// nested_max_symbol_size(), etc. functions.
     template
     <
         class NestedStack,

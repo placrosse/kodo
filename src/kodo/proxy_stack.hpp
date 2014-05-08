@@ -52,7 +52,7 @@ namespace kodo
     ///
     /// The proxy_stack will setup the call forwarding by invoking the
     /// set_main_factory() and set_main_stack() functions in the
-    /// nested stack.  In addition the proxy_stack will assume that
+    /// nested stack. In addition the proxy_stack will assume that
     /// the nested stack takes as first template argument the main
     /// stack type.
     ///
@@ -84,7 +84,7 @@ namespace kodo
     ///
     /// Example:
     ///
-    ///     template<class Another, class MainStack>
+    ///     template<class MainStack, class Another>
     ///     class my_nested_stack : public
     ///         ...
     ///
@@ -96,7 +96,7 @@ namespace kodo
     ///
     template
     <
-        template <class...> class NestedImpl,
+        template <class,class> class ProxySuper,
         class Args,
         template <class...> class NestedStack,
         class SuperCoder
@@ -108,18 +108,18 @@ namespace kodo
     /// the proxy stack
     template
     <
-        template <class...> class NestedImpl,
+        template <class,class> class ProxySuper,
         class... Args,
         template <class...> class NestedStack,
         class SuperCoder
     >
-    class proxy_stack<NestedImpl, proxy_args<Args...>, NestedStack, SuperCoder> :
-        public NestedImpl<NestedStack<SuperCoder, Args...>,SuperCoder>
+    class proxy_stack<ProxySuper, proxy_args<Args...>, NestedStack, SuperCoder>
+        : public ProxySuper<NestedStack<SuperCoder, Args...>, SuperCoder>
     {
     public:
 
         /// Typedef of the "actual" SuperCoder type
-        typedef NestedImpl<NestedStack<SuperCoder, Args...>,SuperCoder> Super;
+        using Super = ProxySuper<NestedStack<SuperCoder, Args...>,SuperCoder>;
 
     public:
 
@@ -135,7 +135,6 @@ namespace kodo
             {
                 Super::factory::nested().set_main_factory(this);
             }
-
         };
 
     public:
@@ -153,16 +152,12 @@ namespace kodo
             // case the nested/proxy stack is held withing the main
             // stack we therefore have to set the state.
             auto& nested_factory = the_factory.nested();
-
             assert(nested_factory.main_factory() == &the_factory);
 
             nested_factory.set_main_stack(this);
 
             Super::initialize(the_factory);
-
             assert(Super::nested()->main_stack() == this);
-
         }
-
     };
 }
