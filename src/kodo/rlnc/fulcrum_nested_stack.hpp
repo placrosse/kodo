@@ -10,6 +10,8 @@
 namespace kodo
 {
 
+    /// @todo maybe rely on factory an constructor for info - since
+    /// then we don't require the storage_block_info layer to be below
     template<class SuperCoder>
     class fulcrum_nested_stack_info : public SuperCoder
     {
