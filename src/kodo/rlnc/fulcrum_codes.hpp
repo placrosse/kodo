@@ -7,4 +7,5 @@
 
 #include "fulcrum_encoder.hpp"
 #include "fulcrum_inner_decoder.hpp"
-// #include "fulcrum_outer_decoder.hpp"
+#include "fulcrum_outer_decoder.hpp"
+#include "fulcrum_combined_decoder.hpp"

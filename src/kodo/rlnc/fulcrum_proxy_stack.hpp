@@ -15,10 +15,10 @@ namespace kodo
     ///       stacks and the fulcrum ones.
     template
     <
-        template <class> class ProxyStack,
+        class Args,
+        template <class...> class NestedStack,
         class SuperCoder
     >
-    class fulcrum_proxy_stack
-        : public proxy_stack<ProxyStack, fulcrum_nested_stack, SuperCoder>
-    { };
+    using fulcrum_proxy_stack = proxy_stack<
+        fulcrum_nested_stack, Args, NestedStack, SuperCoder>;
 }

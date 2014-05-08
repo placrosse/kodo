@@ -24,8 +24,13 @@ namespace
     template<class Field>
     using inner_decoder = kodo::fulcrum_inner_decoder<Field>;
 
-}
+    template<class Field>
+    using outer_decoder = kodo::fulcrum_outer_decoder<Field>;
 
+    template<class Field>
+    using combined_decoder = kodo::fulcrum_combined_decoder<Field>;
+
+}
 
 TEST(TestFulcrum, inner)
 {
@@ -34,43 +39,44 @@ TEST(TestFulcrum, inner)
         inner_decoder<fifi::binary> >(10, 1000);
 
     run_test_reuse<
-        kodo::fulcrum_encoder<fifi::binary8>,
-        kodo::fulcrum_inner_decoder<fifi::binary> >(10, 1000);
+        encoder<fifi::binary8>,
+        inner_decoder<fifi::binary> >(10, 1000);
 
     run_test_reuse_incomplete<
-        kodo::fulcrum_encoder<fifi::binary8>,
-        kodo::fulcrum_inner_decoder<fifi::binary> >(10, 1000);
+        encoder<fifi::binary8>,
+        inner_decoder<fifi::binary> >(10, 1000);
 
     run_test_initialize<
-        kodo::fulcrum_encoder<fifi::binary8>,
-        kodo::fulcrum_inner_decoder<fifi::binary> >(10, 1000);
+        encoder<fifi::binary8>,
+        inner_decoder<fifi::binary> >(10, 1000);
 }
 
 
-// TEST(TestFulcrum, outer)
-// {
-//     test_basic_api<kodo::fulcrum_encoder<fifi::binary8>,
-//         kodo::fulcrum_outer_decoder<fifi::binary8> >(10, 1000);
+TEST(TestFulcrum, outer)
+{
+    run_test_basic_api<
+        encoder<fifi::binary8>,
+        outer_decoder<fifi::binary8> >(10, 1000);
 
-//     test_reuse<
-//         kodo::fulcrum_encoder<fifi::binary8>,
-//         kodo::fulcrum_outer_decoder<fifi::binary8> >(10, 1000);
+    run_test_reuse<
+        encoder<fifi::binary8>,
+        outer_decoder<fifi::binary8> >(10, 1000);
 
-//     test_reuse_incomplete<
-//         kodo::fulcrum_encoder<fifi::binary8>,
-//         kodo::fulcrum_outer_decoder<fifi::binary8> >(10, 1000);
-// }
+    run_test_reuse_incomplete<
+        encoder<fifi::binary8>,
+        outer_decoder<fifi::binary8> >(10, 1000);
+}
 
-// TEST(TestFulcrum, combined)
-// {
-//     test_basic_api<kodo::fulcrum_encoder<fifi::binary8>,
-//         kodo::fulcrum_combined_decoder<fifi::binary8> >(10, 1000);
+TEST(TestFulcrum, combined)
+{
+    run_test_basic_api<encoder<fifi::binary8>,
+        combined_decoder<fifi::binary8> >(10, 1000);
 
-//     test_reuse<
-//         kodo::fulcrum_encoder<fifi::binary8>,
-//         kodo::fulcrum_combined_decoder<fifi::binary8> >(10, 1000);
+    run_test_reuse<
+        encoder<fifi::binary8>,
+        combined_decoder<fifi::binary8> >(10, 1000);
 
-//     test_reuse_incomplete<
-//         kodo::fulcrum_encoder<fifi::binary8>,
-//         kodo::fulcrum_combined_decoder<fifi::binary8> >(10, 1000);
-// }
+    run_test_reuse_incomplete<
+        encoder<fifi::binary8>,
+        combined_decoder<fifi::binary8> >(10, 1000);
+}

@@ -15,7 +15,7 @@
 
 #include "fulcrum_info.hpp"
 #include "fulcrum_payload_decoder.hpp"
-#include "fulcrum_nested_proxy_stack.hpp"
+#include "fulcrum_proxy_stack.hpp"
 
 #include "fulcrum_outer_symbol_mapper.hpp"
 
@@ -26,7 +26,7 @@ namespace kodo
     class fulcrum_outer_decoder : public
         // Payload API
         nested_payload_decoder<
-        fulcrum_nested_proxy_stack<fulcrum_payload_decoder,
+        fulcrum_proxy_stack<proxy_args<>, fulcrum_payload_decoder,
         // Decoder API
         fulcrum_outer_symbol_mapper<
         systematic_coefficient_mapper<
