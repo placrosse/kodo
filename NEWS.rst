@@ -4,6 +4,10 @@ News for Kodo
 This file lists the major changes between versions. For a more
 detailed list of every change, see the Git log.
 
+Latest
+------
+* Major: Removed unused file ``test/src/kodo_unit_test/test_reuse.hpp``.
+
 17.0.0
 ------
 * Major: Added tracing functionality to most of the coding
