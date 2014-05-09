@@ -12,8 +12,13 @@
 
 namespace kodo
 {
-
+    /// @todo Should we add the is_symbol_pivot here. is_symbol_pivot
+    ///       would be all symbols either seen or uncoded.  The
+    ///       function can then be removed from
+    ///       bidirectional_linear_block_decoder.hpp
+    ///
     /// @ingroup decoder_api
+    ///
     /// @brief The symbol decoding status tracker stores information about
     ///        the status of the different symbols contained within a decoder.
     template<class SuperCoder>
@@ -111,5 +116,3 @@ namespace kodo
     };
 
 }
-
-
