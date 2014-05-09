@@ -28,7 +28,6 @@
 
 namespace kodo
 {
-
     /// @ingroup fec_stacks
     ///
     /// @brief The elimination decoder uses a non-square decoding
@@ -40,35 +39,29 @@ namespace kodo
     ///        the encoding, while still producing valid encoded
     ///        symbols.
     template<class Field>
-    class elimination_decoder :
-        public // Decoder API
-               forward_linear_block_decoder<
-               symbol_decoding_status_counter<
-               symbol_decoding_status_tracker<
-               // Coefficient Storage API
-               coefficient_storage<
-               elimination_coefficient_value_access<
-               elimination_coefficient_info<
-               elimination_coefficient_offset<
-               coefficient_value_access<
-               coefficient_info<
-               // Storage API
-               deep_symbol_storage<
-               storage_bytes_used<
-               storage_block_info<
-               // Finite Field API
-               finite_field_math<typename fifi::default_field<Field>::type,
-               finite_field_info<Field,
-               // Factory API
-               final_coder_factory_pool<
-               // Final type
-               elimination_decoder<Field>
-               > > > > > > > > > > > > > > >
+    class elimination_decoder : public
+        // Decoder API
+        forward_linear_block_decoder<
+        symbol_decoding_status_counter<
+        symbol_decoding_status_tracker<
+        // Coefficient Storage API
+        coefficient_storage<
+        elimination_coefficient_value_access<
+        elimination_coefficient_info<
+        elimination_coefficient_offset<
+        coefficient_value_access<
+        coefficient_info<
+        // Storage API
+        deep_symbol_storage<
+        storage_bytes_used<
+        storage_block_info<
+        // Finite Field API
+        finite_field_math<typename fifi::default_field<Field>::type,
+        finite_field_info<Field,
+        // Factory API
+        final_coder_factory_pool<
+        // Final type
+        elimination_decoder<Field>
+        > > > > > > > > > > > > > > >
     { };
-
 }
-
-
-
-
-

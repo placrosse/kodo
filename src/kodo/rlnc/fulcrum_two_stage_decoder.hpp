@@ -142,6 +142,7 @@ namespace kodo
 
                 if(symbol_index < SuperCoder::symbols())
                 {
+                    m_stage_one_decoder_copied[symbol_index] = true;
                     SuperCoder::decode_symbol(symbol_data, symbol_index);
                 }
 
