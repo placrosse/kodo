@@ -3,31 +3,24 @@
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
 
-#include <cstdint>
 #include <gtest/gtest.h>
-#include <fifi/binary8.hpp>
 
-#include <kodo/basic_proxy_stack.hpp>
-#include <kodo/proxy_layer.hpp>
-
-#include "kodo_unit_test/helper_test_nested_stack.hpp"
+#include <kodo/proxy_stack.hpp>
 
 namespace kodo
 {
-
     // Put dummy layers and tests classes in an anonymous namespace
     // to avoid violations of ODF (one-definition-rule) in other
     // translation units
     namespace
     {
-        // The proxy_stack takes a number of templates here is an
-        // overview of what types are expected where:
+        // We have tried to make this unit test as stand-alone and
+        // compact as possible.
         //
-        // ProxySuper<T,V>
-        //     where T is the stack to be nested an V will
-        //     be the SuperCoder of ProxySuper.
+        // The dummy_proxy_super layer "fakes" both the nested stack
+        // and the nested stack layer. So that is why the nested()
+        // function returns this.
         //
-        //     The ProxySuper should define a factory with a nested() function
         template<class NestedStack, class SuperCoder>
         class dummy_proxy_super
         {
@@ -101,10 +94,16 @@ namespace kodo
 
         };
 
+        // This class fakes the "nested stack" under proper usage the
+        // template parameter V would be the main stack type. Which
+        // would be used to specify the type of the "back" pointer
+        // from the nested stack to the main stack.
         template<class V>
         class dummy_nested
         {};
 
+        // This dummy layer fakes the SuperCoder which would be used
+        // in the nested layer
         class dummy_super
         {};
 
@@ -115,11 +114,8 @@ namespace kodo
                         dummy_nested,
                         dummy_super>
         { };
-
     }
-
 }
-
 
 TEST(TestProxyStack, api)
 {
@@ -137,6 +133,4 @@ TEST(TestProxyStack, api)
     EXPECT_TRUE(factory.m_main_stack != nullptr);
 
     EXPECT_TRUE(stack.m_main_stack != nullptr);
-
-
 }
