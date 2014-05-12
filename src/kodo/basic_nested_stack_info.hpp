@@ -49,11 +49,15 @@ namespace kodo
                 SuperCoder::factory(max_symbols, max_symbol_size)
             { }
 
+            /// @return The maximum number of symbols that the nested
+            ///         stack should support
             uint32_t nested_max_symbols() const
             {
                 return SuperCoder::factory::max_symbols();
             }
 
+            /// @return The symbol size in bytes that the nested stack
+            ///         should support
             uint32_t nested_max_symbol_size() const
             {
                 return SuperCoder::factory::max_symbol_size();
@@ -63,11 +67,15 @@ namespace kodo
 
     public:
 
+        /// @return The number of symbols that the nested stack should
+        ///         be configured with
         uint32_t nested_symbols() const
         {
             return SuperCoder::symbols();
         }
 
+        /// @return The symbol size in bytes that the nested stack should
+        ///         be configured with
         uint32_t nested_symbol_size() const
         {
             return SuperCoder::symbol_size();

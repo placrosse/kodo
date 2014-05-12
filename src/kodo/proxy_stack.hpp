@@ -146,7 +146,7 @@ namespace kodo
             // Here perform a bit of work before calling
             // Super::initialize(...) which is not typical. In this
             // case we have to make sure the nested factory is in the
-            // correct state - in general the user (i.e you ;)) are
+            // correct state - in general the user (i.e you ;)) is
             // the one responsible for configuring the state of a
             // factory before building a new coder. However, in this
             // case the nested/proxy stack is held withing the main

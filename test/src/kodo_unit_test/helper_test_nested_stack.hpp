@@ -147,13 +147,5 @@ namespace kodo
             uint32_t m_symbols;
             uint32_t m_symbol_size;
         };
-
-        /// The stack used in unit test
-        class helper_test_nested_stack : public
-            basic_nested_stack<
-            helper_nested_stack, helper_nested_layer>
-        { };
-
     }
-
 }

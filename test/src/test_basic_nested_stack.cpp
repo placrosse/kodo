@@ -11,16 +11,27 @@
 #include <kodo/basic_nested_stack.hpp>
 #include "kodo_unit_test/helper_test_nested_stack.hpp"
 
-// The helper_test_nested_stack.hpp defines a stack called
-// helper_test_nested_stack which utilizes the basic_nested_stack and
-// thereby also the nested_stack we utilize there to unit test
+namespace kodo
+{
+    // Put dummy layers and tests classes in an anonymous namespace
+    // to avoid violations of ODF (one-definition-rule) in other
+    // translation units
+    namespace
+    {
+        /// The stack used in unit test
+        class dummy_stack : public
+            basic_nested_stack<
+            helper_nested_stack, helper_nested_layer>
+        { };
+    }
+}
 
 TEST(TestBasicNestedStack, api)
 {
     uint32_t symbols = 16;
     uint32_t symbol_size = 1400;
 
-    kodo::helper_test_nested_stack::factory factory(symbols, symbol_size);
+    kodo::dummy_stack::factory factory(symbols, symbol_size);
     EXPECT_EQ(factory.m_max_symbols, symbols);
     EXPECT_EQ(factory.m_max_symbol_size, symbol_size);
 
@@ -28,7 +39,7 @@ TEST(TestBasicNestedStack, api)
     EXPECT_EQ(nested_factory.m_max_symbols, symbols);
     EXPECT_EQ(nested_factory.m_max_symbol_size, symbol_size);
 
-    kodo::helper_test_nested_stack stack;
+    kodo::dummy_stack stack;
 
     stack.initialize(factory);
 

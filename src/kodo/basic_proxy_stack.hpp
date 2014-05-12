@@ -10,7 +10,17 @@
 
 namespace kodo
 {
-    /// @todo test + docs
+    /// @ingroup utility
+    ///
+    /// @brief The basic proxy stack creates a proxy stack based on
+    ///        the basic_nested_stack layer.
+    ///
+    /// The proxy stack supports embedding a stack within a stack, see
+    /// more details in the main proxy stack header
+    /// (proxy_stack.hpp). The proxy stack builds on a nested stack,
+    /// the basic proxy stack is a template alias for a common
+    /// configuration namely where the basic_nested_layer is used to
+    /// embed the stack.
     template
     <
         class Args,
@@ -19,6 +29,4 @@ namespace kodo
     >
     using basic_proxy_stack = proxy_stack<
         basic_nested_stack, Args, NestedStack, SuperCoder>;
-
-
 }
