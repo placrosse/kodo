@@ -149,8 +149,9 @@ namespace kodo
         };
 
         /// The stack used in unit test
-        class helper_test_nested_stack
-            : public basic_nested_stack<helper_nested_stack, helper_nested_layer>
+        class helper_test_nested_stack : public
+            basic_nested_stack<
+            helper_nested_stack, helper_nested_layer>
         { };
 
     }
