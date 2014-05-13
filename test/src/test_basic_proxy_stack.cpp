@@ -101,4 +101,14 @@ TEST(TestBasicProxyStack, api)
     EXPECT_EQ(nested->symbols(), factory.m_symbols);
     EXPECT_EQ(nested->symbol_size(), factory.m_symbol_size);
     EXPECT_EQ(nested->block_size(), 100U);
+
+    stack.initialize(factory);
+
+    nested = stack.nested();
+    assert(nested);
+
+    EXPECT_EQ(nested->main_stack(), &stack);
+    EXPECT_EQ(nested->symbols(), factory.m_symbols);
+    EXPECT_EQ(nested->symbol_size(), factory.m_symbol_size);
+    EXPECT_EQ(nested->block_size(), 100U);
 }
