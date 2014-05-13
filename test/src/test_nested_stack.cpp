@@ -43,7 +43,13 @@ namespace kodo
                 uint32_t m_max_symbol_size;
             };
 
-            uint32_t nested_symbol() const
+            template<class Factory>
+            void initialize(const Factory& the_factory)
+            {
+                (void) the_factory;
+            }
+
+            uint32_t nested_symbols() const
             {
                 return 2;
             }
@@ -74,4 +80,10 @@ TEST(TestNestedStack, api)
     EXPECT_EQ(factory.nested().m_max_symbols, 5U);
     EXPECT_EQ(factory.nested().m_max_symbol_size, 9U);
 
+    kodo::dummy_stack stack;
+    stack.initialize(factory);
+
+    EXPECT_TRUE(stack.nested() != 0);
+    EXPECT_EQ(stack.nested()->m_symbols, 2U);
+    EXPECT_EQ(stack.nested()->m_symbol_size, 7U);
 }

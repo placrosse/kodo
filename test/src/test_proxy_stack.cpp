@@ -3,52 +3,119 @@
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
 
-#include <cstdint>
 #include <gtest/gtest.h>
-#include <fifi/binary8.hpp>
 
-#include <kodo/basic_proxy_stack.hpp>
-#include <kodo/proxy_layer.hpp>
-
-#include "kodo_unit_test/helper_test_nested_stack.hpp"
+#include <kodo/proxy_stack.hpp>
 
 namespace kodo
 {
-
     // Put dummy layers and tests classes in an anonymous namespace
     // to avoid violations of ODF (one-definition-rule) in other
     // translation units
     namespace
     {
-
-        /// The proxy_layer class which provides the API required by
-        /// the proxy_stack code requires the "main stack" to provide
-        /// two typedefs (which are th ones added here)
-        template<class SuperCoder>
-        class main_stack_types : public SuperCoder
+        // We have tried to make this unit test as stand-alone and
+        // compact as possible.
+        //
+        // The dummy_proxy_super layer "fakes" both the nested stack
+        // and the nested stack layer. So that is why the nested()
+        // function returns this.
+        //
+        template<class NestedStack, class SuperCoder>
+        class dummy_proxy_super
         {
         public:
-            typedef fifi::binary8 field_type;
-            typedef field_type::value_type value_type;
+
+            class factory
+            {
+            public:
+
+                factory(uint32_t max_symbols, uint32_t max_symbol_size)
+                    : m_main_factory(nullptr),
+                      m_main_stack(nullptr)
+
+                {
+                    (void) max_symbols;
+                    (void) max_symbol_size;
+                }
+
+                factory& nested()
+                {
+                    return *this;
+                }
+
+                void* main_factory()
+                {
+                    return m_main_factory;
+                }
+
+                void* main_stack()
+                {
+                    return m_main_stack;
+                }
+
+                void set_main_factory(void* main_factory)
+                {
+                    m_main_factory = main_factory;
+                }
+
+                void set_main_stack(void* main_stack)
+                {
+                    m_main_stack = main_stack;
+                }
+
+                void* m_main_factory;
+                void* m_main_stack;
+            };
+
+        public:
+
+            dummy_proxy_super()
+                : m_main_stack(nullptr)
+            { }
+
+            template<class Factory>
+            void initialize(Factory& the_factory)
+            {
+                m_main_stack = the_factory.main_stack();
+            }
+
+            dummy_proxy_super* nested()
+            {
+                return this;
+            }
+
+            void* main_stack()
+            {
+                return m_main_stack;
+            }
+
+            void* m_main_stack;
+
         };
 
-        /// This stack is the proxy stack i.e. the stack which is
-        /// embedded with the main stack.
-        template<class MainStack>
-        class dummy_proxy_stack : public
-              proxy_layer<dummy_proxy_stack<MainStack>, MainStack>
-        { };
+        // This class fakes the "nested stack" under proper usage the
+        // template parameter V would be the main stack type. Which
+        // would be used to specify the type of the "back" pointer
+        // from the nested stack to the main stack.
+        template<class V>
+        class dummy_nested
+        {};
+
+        // This dummy layer fakes the SuperCoder which would be used
+        // in the nested layer
+        class dummy_super
+        {};
 
         /// The stack represents the main stack used in unit test
         class dummy_stack : public
-        basic_proxy_stack<proxy_args<>, dummy_proxy_stack,
-            main_stack_types<helper_nested_layer> >
+            proxy_stack<dummy_proxy_super,
+                        proxy_args<>,
+                        dummy_nested,
+                        dummy_super>
         { };
-
     }
-
 }
-
 
 TEST(TestProxyStack, api)
 {
@@ -56,38 +123,14 @@ TEST(TestProxyStack, api)
     uint32_t symbol_size = 1400;
 
     kodo::dummy_stack::factory factory(symbols, symbol_size);
-    EXPECT_EQ(factory.m_max_symbols, symbols);
-    EXPECT_EQ(factory.m_max_symbol_size, symbol_size);
-
-    auto& nested_factory = factory.nested();
-    EXPECT_EQ(nested_factory.max_symbols(), symbols);
-    EXPECT_EQ(nested_factory.max_symbol_size(), symbol_size);
+    EXPECT_TRUE(factory.m_main_factory != nullptr);
+    EXPECT_TRUE(factory.m_main_stack == nullptr);
 
     kodo::dummy_stack stack;
-
-    stack.construct(factory);
     stack.initialize(factory);
 
-    auto nested = stack.nested();
-    assert(nested);
+    EXPECT_TRUE(factory.m_main_factory != nullptr);
+    EXPECT_TRUE(factory.m_main_stack != nullptr);
 
-    EXPECT_EQ(nested->main_stack(), &stack);
-
-    EXPECT_EQ(nested->symbols(), symbols);
-    EXPECT_EQ(nested->symbol_size(), symbol_size);
-
-    // Try to adjust the symbols and symbol size. If we now initialize
-    // the stack again we should see the change refelected in the
-    // nested stack
-    factory.m_symbols = 10;
-    factory.m_symbol_size = 100;
-
-    stack.initialize(factory);
-
-    nested = stack.nested();
-    assert(nested);
-
-    EXPECT_EQ(nested->main_stack(), &stack);
-    EXPECT_EQ(nested->symbols(), factory.m_symbols);
-    EXPECT_EQ(nested->symbol_size(), factory.m_symbol_size);
+    EXPECT_TRUE(stack.m_main_stack != nullptr);
 }
