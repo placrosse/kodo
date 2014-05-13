@@ -9,6 +9,7 @@
 #include "coefficient_storage_layers.hpp"
 #include "deep_storage_layers.hpp"
 #include "finite_field_layers.hpp"
+#include "final_coder_factory_pool.hpp"
 
 namespace kodo
 {

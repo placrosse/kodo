@@ -3,6 +3,9 @@
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
 
+#include <fifi/fifi_utils.hpp>
+#include "basic_api_test_helper.hpp"
+
 // The function runs through a complete decoding scenario using
 // manually constructed encoding vectors.
 template<template <class> class Stack>

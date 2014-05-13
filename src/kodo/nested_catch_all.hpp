@@ -7,6 +7,8 @@
 
 #include <cstdint>
 
+#include <sak/storage.hpp>
+
 namespace kodo
 {
     /// @todo tests + docs
