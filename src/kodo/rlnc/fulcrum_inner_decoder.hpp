@@ -16,7 +16,7 @@
 
 namespace kodo
 {
-    /// @todo docs + tests
+    /// @todo docs
     template<class Field>
     class fulcrum_inner_decoder : public
         // Payload API
