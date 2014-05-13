@@ -103,13 +103,11 @@ slaves = {
     "mac3": {"OS": "MacOS, 10.8.5, x86-64", "CPU": "i5-3210M CPU @ 2.50GHz"},
 }
 
-
-def fix_slavename(name):
-    return name.replace("_", "-")
-
+def replace_underscore(str):
+    return str.replace("_", "-")
 
 def get_slave_info(name):
-    name = fix_slavename(name)
+    name = replace_underscore(name)
     result = "ID: {0}".format(name)
     if name in slaves:
         result += "\nOS: {0}\nCPU: {1}".format(
