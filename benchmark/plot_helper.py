@@ -38,6 +38,7 @@ def today():
 def timedelta(arg):
     return datetime.timedelta(arg)
 
+
 markers = {
     "$2^8$": "v",
     "$2^{16}$": "^",
@@ -49,6 +50,7 @@ markers = {
 def get_marker(key):
     if key in markers:
         return markers[key]
+
 
 fields = {
     "Binary8": "$2^8$",
@@ -62,6 +64,7 @@ def get_field(key):
     if key in fields:
         return fields[key]
 
+
 algorithms = {
     "BackwardFullRLNC": "Backwards",
     "FullDelayedRLNC": "Delayed",
@@ -72,6 +75,7 @@ algorithms = {
 def get_algorithm(key):
     if key in algorithms:
         return algorithms[key]
+
 
 slaves = {
     "debian0": {"OS": "", "CPU": ""},
@@ -100,12 +104,18 @@ slaves = {
 }
 
 
-def get_slave(name):
-    result = "ID: {0}".format(name.replace("_", "-"))
+def fix_slavename(name):
+    return name.replace("_", "-")
+
+
+def get_slave_info(name):
+    name = fix_slavename(name)
+    result = "ID: {0}".format(name)
     if name in slaves:
         result += "\nOS: {0}\nCPU: {1}".format(
             slaves[name]['OS'], slaves[name]['CPU'])
     return result
+
 
 codes = {
     "dense": ["FullRLNC", "BackwardFullRLNC", "FullDelayedRLNC"],
@@ -157,6 +167,7 @@ class plotter(object):
         else:
             self.from_json = False
         self.legend_title = False
+        self.legend_columns = 4
         self.branch = False
         pl.close('all')
         self.pdf = False
@@ -210,7 +221,7 @@ class plotter(object):
                    horizontalalignment="left", fontsize="x-small")
 
     def set_slave_info(self, slavename):
-        self.set_info_box(get_slave(slavename))
+        self.set_info_box(get_slave_info(slavename))
 
     def set_markers(self, plot):
         """
@@ -224,9 +235,12 @@ class plotter(object):
     def set_legend_title(self, title):
         self.legend_title = title
 
+    def set_legend_columns(self, columns):
+        self.legend_columns = columns
+
     def write(self, subdirectory, filename):
 
-        pl.legend(fontsize="x-small", ncol=4,
+        pl.legend(fontsize="x-small", ncol=self.legend_columns,
                   mode="expand", title=self.legend_title)
         if not self.pdf:
             pdf_path = os.path.join(self.get_base_path(), "all.pdf")
