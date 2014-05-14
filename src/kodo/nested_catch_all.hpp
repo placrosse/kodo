@@ -15,16 +15,13 @@ namespace kodo
     ///
     /// @brief Special layer which takes all (or at least most)
     ///        function calls and forwards it to the a defined nested
-    ///        stack
+    ///        stack.
     template<class SuperCoder>
     class nested_catch_all : public SuperCoder
     {
     public:
 
         typedef typename SuperCoder::nested_stack_type nested_stack_type;
-
-        /// @copydoc layer::field_type
-        typedef typename nested_stack_type::field_type field_type;
 
         /// @copydoc layer::value_type
         typedef typename nested_stack_type::value_type value_type;
@@ -46,7 +43,6 @@ namespace kodo
             uint32_t max_symbols() const
             {
                 const auto& nested = SuperCoder::factory::nested();
-                assert(nested);
                 return nested.max_symbols();
             }
 
@@ -54,7 +50,6 @@ namespace kodo
             uint32_t max_symbol_size() const
             {
                 const auto& nested = SuperCoder::factory::nested();
-                assert(nested);
                 return nested.max_symbol_size();
             }
 
@@ -62,7 +57,6 @@ namespace kodo
             uint32_t max_block_size() const
             {
                 const auto& nested = SuperCoder::factory::nested();
-                assert(nested);
                 return nested.max_block_size();
             }
 
@@ -70,7 +64,6 @@ namespace kodo
             uint32_t max_header_size() const
             {
                 const auto& nested = SuperCoder::factory::nested();
-                assert(nested);
                 return nested.max_header_size();
             }
 
@@ -78,7 +71,6 @@ namespace kodo
             uint32_t max_id_size() const
             {
                 const auto& nested = SuperCoder::factory::nested();
-                assert(nested);
                 return nested.max_id_size();
             }
 
@@ -86,7 +78,6 @@ namespace kodo
             uint32_t max_payload_size() const
             {
                 const auto& nested = SuperCoder::factory::nested();
-                assert(nested);
                 return nested.max_payload_size();
             }
 
@@ -94,7 +85,6 @@ namespace kodo
             uint32_t max_coefficient_vector_size() const
             {
                 const auto& nested = SuperCoder::factory::nested();
-                assert(nested);
                 return nested.max_coefficient_vector_size();
             }
 
@@ -102,7 +92,6 @@ namespace kodo
             uint32_t symbols() const
             {
                 const auto& nested = SuperCoder::factory::nested();
-                assert(nested);
                 return nested.symbols();
             }
 
@@ -110,7 +99,6 @@ namespace kodo
             uint32_t symbol_size() const
             {
                 const auto& nested = SuperCoder::factory::nested();
-                assert(nested);
                 return nested.symbol_size();
             }
 

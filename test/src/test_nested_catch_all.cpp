@@ -14,33 +14,230 @@
 // translation units
 namespace
 {
-
-    // This layer will provide all the functions invoked by the
-    // nested_catch_all layer so that we can check that all calls are
-    // correctly forwarded.
-    class dummy_layer
+    template<class R>
+    class return_handler
     {
     public:
 
-        // Three typedefs are required
+        return_handler()
+            : m_position(0)
+        {}
 
+        void set_return(const R& value)
+        {
+            m_returns.push_back(value);
+        }
+
+        void set_returns(const std::initializer_list<R>& values)
+        {
+            m_returns.insert(m_returns.end(),
+                             values.begin(), values.end());
+        }
+
+        R operator()() const
+        {
+            assert(m_position < m_returns.size());
+
+            R value = m_returns[m_position];
+            ++m_position;
+
+            return value;
+        }
+
+        mutable uint32_t m_position;
+        std::vector<R> m_returns;
+    };
+
+    template<typename T> class call;
+
+    template<typename R, typename... Args> class call<R (Args...)>
+    {
     public:
 
-        class factory
+        call()
+            : m_calls(0)
+        { }
+
+        R operator()(Args... args) const
         {
-            factory(uint32_t max_symbols, uint32_t max_symbol_size)
-            { }
+            ++m_calls;
+            //m_argumentHandler.AddCall(args...);
+            return m_return_handler();
+        }
+
+        void set_return(const R& return_value)
+        {
+            m_return_handler.set_return(return_value);
+        }
+
+        void set_returns(const std::initializer_list<R> &returns)
+        {
+            m_return_handler.set_returns(returns);
+        }
+
+        mutable uint32_t m_calls;
+        return_handler<R> m_return_handler;
+    };
+
+
+        // This class with "act" as the nested stack in our unit test.
+        class dummy_nested
+        {
+        public:
+
+            // The nested stack must specify the value_type used
+            using value_type = uint8_t;
+
+        public:
+
+            // Since all calls forward to the nested factory simply return
+            // an uint32_t we just make each of them return a different
+            // value in that way we can check that the correct one was
+            // called (the value sort of serves as an id).
+            class factory
+            {
+            public:
+
+                uint32_t max_symbols() const
+                {
+                    return m_call_max_symbols();
+                }
+
+                uint32_t max_symbol_size() const
+                {
+                    return 2U;
+                }
+
+                uint32_t max_block_size() const
+                {
+                    return 3U;
+                }
+
+                uint32_t max_header_size() const
+                {
+                    return 4U;
+                }
+
+                uint32_t max_id_size() const
+                {
+                    return 5U;
+                }
+
+                uint32_t max_payload_size() const
+                {
+                    return 6U;
+                }
+
+                uint32_t max_coefficient_vector_size() const
+                {
+                    return 7U;
+                }
+
+                uint32_t symbols() const
+                {
+                    return 8U;
+                }
+
+                uint32_t symbol_size() const
+                {
+                    return 9U;
+                }
+
+                call<uint32_t ()> m_call_max_symbols;
+
+            };
+
+        public:
+
+
+
+
+
         };
 
-    public:
+        // This layer will provide all the functions invoked by the
+        // nested_catch_all layer so that we can check that all calls are
+        // correctly forwarded.
+        class dummy_layer
+        {
+        public:
+
+            // The nested_catch_all layer requires that the nested stack
+            // is typified
+            using nested_stack_type = dummy_nested;
+
+        public:
+
+            class factory
+            {
+            public:
+
+                factory(uint32_t max_symbols, uint32_t max_symbol_size)
+                    : m_max_symbols(max_symbols),
+                      m_max_symbol_size(max_symbol_size)
+                { }
+
+                const nested_stack_type::factory& nested() const
+                {
+                    return m_nested;
+                }
+
+            public:
+
+                uint32_t m_max_symbols;
+                uint32_t m_max_symbol_size;
+
+                nested_stack_type::factory m_nested;
+
+            };
+
+        public: // The nested stack accessors
+
+            nested_stack_type* nested()
+            {
+                return &m_nested;
+            }
+
+            const nested_stack_type* nested() const
+            {
+                return &m_nested;
+            }
+
+        public:
+
+            nested_stack_type m_nested;
+
+        };
+
+        // Dummy stack for testing the nested_catch_all layer
+        using dummy_stack = kodo::nested_catch_all<dummy_layer>;
+
+    }
+
+    /// Run the tests typical coefficients stack
+        TEST(TestNestedCatchAll, api)
+        {
+            uint32_t max_symbols = 1U;
+            uint32_t max_symbol_size = 10U;
+
+            // Test the factory
+            dummy_stack::factory factory(max_symbols, max_symbol_size);
+            EXPECT_EQ(factory.m_max_symbols, max_symbols);
+            EXPECT_EQ(factory.m_max_symbol_size, max_symbol_size);
+
+            auto& nested_factory = factory.m_nested;
+            nested_factory.m_call_max_symbols.set_return(1U);
+
+            EXPECT_EQ(factory.max_symbols(), 1U);
+            EXPECT_EQ(factory.max_symbol_size(), 2U);
+            EXPECT_EQ(factory.max_block_size(), 3U);
+            EXPECT_EQ(factory.max_header_size(), 4U);
+            EXPECT_EQ(factory.max_id_size(), 5U);
+            EXPECT_EQ(factory.max_payload_size(), 6U);
+            EXPECT_EQ(factory.max_coefficient_vector_size(), 7U);
+            EXPECT_EQ(factory.symbols(), 8U);
+            EXPECT_EQ(factory.symbol_size(), 9U);
 
 
 
-    };
-}
-
-/// Run the tests typical coefficients stack
-TEST(TestNestedCatchAll, api)
-{
-    ///  @todo implement test
-}
+        }
