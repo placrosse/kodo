@@ -48,6 +48,21 @@ namespace
         std::vector<R> m_returns;
     };
 
+    template<class... Args>
+    class call_handler
+    {
+    public:
+
+        using arguments = std::tuple<Args...>;
+
+        void add_call(Args... args) const
+        {
+            m_calls.emplace_back(args...);
+        }
+
+        mutable std::vector<arguments> m_calls;
+    };
+
     template<typename T> class call;
 
     template<typename R, typename... Args> class call<R (Args...)>
@@ -61,7 +76,7 @@ namespace
         R operator()(Args... args) const
         {
             ++m_calls;
-            //m_argumentHandler.AddCall(args...);
+            m_call_handler.add_call(args...);
             return m_return_handler();
         }
 
@@ -77,6 +92,7 @@ namespace
 
         mutable uint32_t m_calls;
         return_handler<R> m_return_handler;
+        call_handler<Args...> m_call_handler;
     };
 
 
@@ -225,10 +241,33 @@ namespace
             EXPECT_EQ(factory.m_max_symbols, max_symbols);
             EXPECT_EQ(factory.m_max_symbol_size, max_symbol_size);
 
-            auto& nested_factory = factory.m_nested;
-            nested_factory.m_call_max_symbols.set_return(1U);
+            {
+                uint32_t r = 1U;
+                factory.m_max_symbols.set_return(r);
+                EXPECT_EQ(factory.max_symbols(), r);
 
-            EXPECT_EQ(factory.max_symbols(), 1U);
+                expected_factory_calls.m_max_symbols.add_call().set_return(r);
+                EXPECT_EQ(expected_factory_calls, );
+
+
+
+
+                call<uint32_t()> reference_call;
+                call<uint32_t()> expected_call;
+
+                expected_call.add_call().set_return(1U);
+                reference_call.set_return(
+
+                expected_call.set_return(1U);
+
+                EXPECT_EQ(factory.max_symbols(), 1U);
+            }
+
+            // call<uint32_t()> call_max_symbols;
+            // call_max_symbols.add_call().set_return(1U);
+            // EXPECT_EQ(nested_factory.m_call_max_symbols, call_max_symbols);
+            //
+
             EXPECT_EQ(factory.max_symbol_size(), 2U);
             EXPECT_EQ(factory.max_block_size(), 3U);
             EXPECT_EQ(factory.max_header_size(), 4U);
