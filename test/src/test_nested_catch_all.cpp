@@ -9,173 +9,10 @@
 
 #include <kodo/nested_catch_all.hpp>
 
-namespace sak
-{
-    bool operator==(const sak::const_storage& a, const sak::const_storage& b)
-    {
-        return equal(a,b);
-    }
-}
+#include "stub.hpp"
 
-
-// Put dummy layers and tests classes in an anonymous namespace
-// to avoid violations of ODF (one-definition-rule) in other
-// translation units
 namespace
 {
-    template<class R>
-    class return_handler
-    {
-    public:
-
-        return_handler()
-            : m_position(0)
-        {}
-
-        void set_return(const R& value)
-        {
-            m_returns.push_back(value);
-        }
-
-        void set_returns(const std::initializer_list<R>& values)
-        {
-            m_returns.insert(m_returns.end(),
-                             values.begin(), values.end());
-        }
-
-        R operator()() const
-        {
-            assert(m_position < m_returns.size());
-
-            R value = m_returns[m_position];
-            ++m_position;
-
-            return value;
-        }
-
-        mutable uint32_t m_position;
-        std::vector<R> m_returns;
-    };
-
-    template<>
-    class return_handler<void>
-    {
-    public:
-
-        void operator()() const
-        {
-        }
-    };
-
-    template<class... Args>
-    class call_handler
-    {
-    public:
-
-        using arguments = std::tuple<Args...>;
-
-        void add_call(Args... args) const
-        {
-            m_calls.emplace_back(args...);
-        }
-
-        bool called_once_with(Args... args) const
-        {
-            auto p = [](const arguments& a, const arguments& b) -> bool
-                { return a == b; };
-
-            return called_once_with(args..., p);
-        }
-
-
-        template<class BinaryPredicate>
-        bool called_once_with(Args... args,
-                              const BinaryPredicate& predicate) const
-        {
-            if (m_calls.size() != 1U)
-            {
-                return false;
-            }
-
-            return called_with(args..., predicate);
-        }
-
-        bool called_with(Args... args) const
-        {
-            auto p = [](const arguments& a, const arguments& b) -> bool
-                { return a == b; };
-
-            return called_with(args..., p);
-        }
-
-        template<class BinaryPredicate>
-        bool called_with(Args... args,
-                         const BinaryPredicate& predicate) const
-        {
-            assert(m_calls.size() > 0);
-
-            // We know there is one element in the list
-            const auto& stored_args = m_calls.back();
-            const auto& reference_args = std::make_tuple(args...);
-
-            return predicate(stored_args,reference_args);
-        }
-
-        mutable std::vector<arguments> m_calls;
-    };
-
-    template<typename T> class call;
-
-    template<typename R, typename... Args> class call<R (Args...)>
-    {
-    public:
-
-        R operator()(Args... args) const
-        {
-            m_call_handler.add_call(args...);
-            return m_return_handler();
-        }
-
-        template<class T>
-        void set_return(const T& return_value)
-        {
-            m_return_handler.set_return(return_value);
-        }
-
-        template<class T>
-        void set_returns(const std::initializer_list<T> &returns)
-        {
-            m_return_handler.set_returns(returns);
-        }
-
-        bool called_once_with(Args... args) const
-        {
-            return m_call_handler.called_once_with(args...);
-        }
-
-        template<class BinaryPredicate>
-        bool called_once_with(
-            Args... args, const BinaryPredicate& predicate) const
-        {
-            return m_call_handler.called_once_with(args..., predicate);
-        }
-
-        bool called_with(Args... args) const
-        {
-            return m_call_handler.called_with(args...);
-        }
-
-        template<class BinaryPredicate>
-        bool called_with(
-            Args... args, const BinaryPredicate& predicate) const
-        {
-            return m_call_handler.called_with(args..., predicate);
-        }
-
-        return_handler<R> m_return_handler;
-        call_handler<Args...> m_call_handler;
-    };
-
 
     // This class with "act" as the nested stack in our unit test.
     class dummy_nested
@@ -240,33 +77,290 @@ namespace
                 return m_symbol_size();
             }
 
-            call<uint32_t ()> m_max_symbols;
-            call<uint32_t ()> m_max_symbol_size;
-            call<uint32_t ()> m_max_block_size;
-            call<uint32_t ()> m_max_header_size;
-            call<uint32_t ()> m_max_id_size;
-            call<uint32_t ()> m_max_payload_size;
-            call<uint32_t ()> m_max_coefficient_vector_size;
-            call<uint32_t ()> m_symbols;
-            call<uint32_t ()> m_symbol_size;
+            stub::call<uint32_t ()> m_max_symbols;
+            stub::call<uint32_t ()> m_max_symbol_size;
+            stub::call<uint32_t ()> m_max_block_size;
+            stub::call<uint32_t ()> m_max_header_size;
+            stub::call<uint32_t ()> m_max_id_size;
+            stub::call<uint32_t ()> m_max_payload_size;
+            stub::call<uint32_t ()> m_max_coefficient_vector_size;
+            stub::call<uint32_t ()> m_symbols;
+            stub::call<uint32_t ()> m_symbol_size;
         };
 
     public:
 
+        //------------------------------------------------------------------
+        // SYMBOL STORAGE API
+        //------------------------------------------------------------------
 
         void copy_symbols(const sak::mutable_storage& dest) const
         {
             m_copy_symbols(dest);
         }
 
-        void copy_symbol(uint32_t index,
-                         const sak::mutable_storage &dest) const
+        void copy_symbol(uint32_t index, const sak::mutable_storage &dest) const
         {
             m_copy_symbol(index, dest);
         }
 
-        call<void (const sak::mutable_storage&)> m_copy_symbols;
-        call<void (uint32_t,const sak::mutable_storage&)> m_copy_symbol;
+        uint8_t* symbol(uint32_t index)
+        {
+            return m_symbol(index);
+        }
+
+        const uint8_t* symbol(uint32_t index) const
+        {
+            return m_symbol_const(index);
+        }
+
+        value_type* symbol_value(uint32_t index)
+        {
+            return m_symbol_value(index);
+        }
+
+        const value_type* symbol_value(uint32_t index) const
+        {
+            return m_symbol_value_const(index);
+        }
+
+        uint32_t symbols() const
+        {
+            return m_symbols();
+        }
+
+        uint32_t symbol_size() const
+        {
+            return m_symbol_size();
+        }
+
+        uint32_t symbol_length() const
+        {
+            return m_symbol_length();
+        }
+
+        uint32_t block_size() const
+        {
+            return m_block_size();
+        }
+
+        uint32_t symbols_available() const
+        {
+            return m_symbols_available();
+        }
+
+        uint32_t symbols_initialized() const
+        {
+            return m_symbols_initialized();
+        }
+
+        bool is_symbols_available() const
+        {
+            return m_is_symbols_available();
+        }
+
+        bool is_symbols_initialized() const
+        {
+            return m_is_symbols_initialized();
+        }
+
+        bool is_symbol_available(uint32_t symbol_index) const
+        {
+            return m_is_symbol_available(symbol_index);
+        }
+
+        bool is_symbol_initialized(uint32_t symbol_index) const
+        {
+            return m_is_symbol_initialized(symbol_index);
+        }
+
+        //------------------------------------------------------------------
+        // COEFFICIENT STORAGE API
+        //------------------------------------------------------------------
+
+        uint32_t coefficient_vector_size() const
+        {
+            return m_coefficient_vector_size();
+        }
+
+        uint32_t coefficient_vector_length() const
+        {
+            return m_coefficient_vector_length();
+        }
+
+        value_type* coefficient_vector_values(uint32_t index)
+        {
+            return m_coefficient_vector_values(index);
+        }
+
+        const value_type* coefficient_vector_values(uint32_t index) const
+        {
+            return m_coefficient_vector_values_const(index);
+        }
+
+        uint8_t* coefficient_vector_data(uint32_t index)
+        {
+            return m_coefficient_vector_data(index);
+        }
+
+        const uint8_t* coefficient_vector_data(uint32_t index) const
+        {
+            return m_coefficient_vector_data_const(index);
+        }
+
+        //------------------------------------------------------------------
+        // FINITE FIELD API
+        //------------------------------------------------------------------
+
+        void multiply(value_type* symbol_dest, value_type coefficient,
+                      uint32_t symbol_length)
+        {
+            m_multiply(symbol_dest, coefficient, symbol_length);
+        }
+
+        void multiply_add(value_type* symbol_dest, const value_type* symbol_src,
+                          value_type coefficient, uint32_t symbol_length)
+        {
+            m_multiply_add(symbol_dest, symbol_src, coefficient, symbol_length);
+        }
+
+        void add(value_type* symbol_dest, const value_type* symbol_src,
+                 uint32_t symbol_length)
+        {
+            m_add(symbol_dest, symbol_src, symbol_length);
+        }
+
+        void multiply_subtract(value_type* symbol_dest, const value_type* symbol_src,
+                               value_type coefficient, uint32_t symbol_length)
+        {
+            m_multiply_substract(symbol_dest, symbol_src,
+                                 coefficient, symbol_length);
+        }
+
+        void subtract(value_type* symbol_dest, const value_type* symbol_src,
+                      uint32_t symbol_length)
+        {
+            m_substract(symbol_dest, symbol_src, symbol_length);
+        }
+
+        value_type invert(value_type value)
+        {
+            return m_invert(value);
+        }
+
+        //------------------------------------------------------------------
+        // CODEC API
+        //------------------------------------------------------------------
+
+        void encode_symbol(uint8_t *symbol_data, uint8_t *coefficients)
+        {
+            m_encode_symbol(symbol_data, coefficients);
+        }
+
+        void encode_symbol(uint8_t *symbol_data, uint32_t symbol_index)
+        {
+            m_encode_symbol_index(symbol_data, symbol_index);
+        }
+
+        void decode_symbol(uint8_t *symbol_data, uint8_t *coefficients)
+        {
+            m_decode_symbol(symbol_data, coefficients);
+        }
+
+        void decode_symbol(uint8_t *symbol_data, uint32_t symbol_index)
+        {
+            m_decode_symbol_index(symbol_data, symbol_index);
+        }
+
+        bool is_complete() const
+        {
+            return m_is_complete();
+        }
+
+        uint32_t rank() const
+        {
+            return m_rank();
+        }
+
+        bool is_symbol_pivot(uint32_t index) const
+        {
+            return m_is_symbol_pivot(index);
+        }
+
+
+        //------------------------------------------------------------------
+        // SYMBOL STORAGE API
+        //------------------------------------------------------------------
+
+        stub::call<void (const sak::mutable_storage&)> m_copy_symbols;
+        stub::call<void (uint32_t,const sak::mutable_storage&)> m_copy_symbol;
+        stub::call<uint8_t*(uint32_t)> m_symbol;
+        stub::call<const uint8_t*(uint32_t)> m_symbol_const;
+        stub::call<value_type*(uint32_t)> m_symbol_value;
+        stub::call<const value_type*(uint32_t)> m_symbol_value_const;
+        stub::call<uint32_t ()> m_symbols;
+        stub::call<uint32_t ()> m_symbol_size;
+        stub::call<uint32_t ()> m_symbol_length;
+        stub::call<uint32_t ()> m_block_size;
+        stub::call<uint32_t ()> m_symbols_available;
+        stub::call<uint32_t ()> m_symbols_initialized;
+        stub::call<bool ()> m_is_symbols_available;
+        stub::call<bool ()> m_is_symbols_initialized;
+        stub::call<bool (uint32_t)> m_is_symbol_available;
+        stub::call<bool (uint32_t)> m_is_symbol_initialized;
+
+        //------------------------------------------------------------------
+        // COEFFICIENT STORAGE API
+        //------------------------------------------------------------------
+
+        /// @todo When writing these functions I noticed that they are
+        ///       not very consistent with the symbol storage
+        ///       API. I.e. here we have coefficient_vector_values
+        ///       whereas for symbols we have symbol_value
+
+        stub::call<uint32_t ()> m_coefficient_vector_size;
+        stub::call<uint32_t ()> m_coefficient_vector_length;
+        stub::call<value_type* (uint32_t)> m_coefficient_vector_values;
+        stub::call<const value_type* (uint32_t)> m_coefficient_vector_values_const;
+        stub::call<uint8_t* (uint32_t)> m_coefficient_vector_data;
+        stub::call<const uint8_t* (uint32_t)> m_coefficient_vector_data_const;
+
+        //------------------------------------------------------------------
+        // FINITE FIELD API
+        //------------------------------------------------------------------
+
+        stub::call<void (value_type*, value_type, uint32_t)>
+            m_multiply;
+
+        stub::call<void (value_type*, const value_type*, value_type, uint32_t)>
+            m_multiply_add;
+
+        stub::call<void (value_type*, const value_type*, uint32_t)>
+            m_add;
+
+        stub::call<void (value_type*, const value_type*, value_type, uint32_t)>
+            m_multiply_substract;
+
+        stub::call<void (value_type*, const value_type*, uint32_t)>
+            m_substract;
+
+        stub::call<value_type (value_type)>
+            m_invert;
+
+        //------------------------------------------------------------------
+        // CODEC API
+        //------------------------------------------------------------------
+
+        stub::call<void (uint8_t*, uint8_t*)> m_encode_symbol;
+        stub::call<void (uint8_t*, uint32_t)> m_encode_symbol_index;
+        stub::call<void (uint8_t*, uint8_t*)> m_decode_symbol;
+        stub::call<void (uint8_t*, uint32_t)> m_decode_symbol_index;
+        stub::call<bool ()> m_is_complete;
+        stub::call<uint32_t ()> m_rank;
+
+        /// @todo The is_pivot should be move to the symbol storage API
+        stub::call<bool (uint32_t)> m_is_symbol_pivot;
+
     };
 
     // This layer will provide all the functions invoked by the

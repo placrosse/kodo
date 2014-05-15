@@ -297,7 +297,7 @@ namespace kodo
         //------------------------------------------------------------------
 
         /// @copydoc layer::multiply(value_type*,value_type,uint32_t)
-        void multiply(value_type *symbol_dest, value_type coefficient,
+        void multiply(value_type* symbol_dest, value_type coefficient,
                       uint32_t symbol_length)
         {
             const auto& nested = SuperCoder::nested();
@@ -308,7 +308,7 @@ namespace kodo
         /// @copydoc layer::multipy_add(value_type *, const value_type*,
         ///                             value_type, uint32_t)
         void multiply_add(
-            value_type *symbol_dest, const value_type *symbol_src,
+            value_type* symbol_dest, const value_type* symbol_src,
             value_type coefficient, uint32_t symbol_length)
         {
             const auto& nested = SuperCoder::nested();
@@ -318,7 +318,7 @@ namespace kodo
         }
 
         /// @copydoc layer::add(value_type*, const value_type *, uint32_t)
-        void add(value_type *symbol_dest, const value_type *symbol_src,
+        void add(value_type* symbol_dest, const value_type* symbol_src,
                  uint32_t symbol_length)
         {
             const auto& nested = SuperCoder::nested();
@@ -330,7 +330,7 @@ namespace kodo
         ///                                   const value_type*,
         ///                                   value_type, uint32_t)
         void multiply_subtract(
-            value_type *symbol_dest, const value_type *symbol_src,
+            value_type* symbol_dest, const value_type* symbol_src,
             value_type coefficient, uint32_t symbol_length)
         {
             const auto& nested = SuperCoder::nested();
@@ -341,7 +341,7 @@ namespace kodo
 
         /// @copydoc layer::subtract(
         ///              value_type*,const value_type*, uint32_t)
-        void subtract(value_type *symbol_dest, const value_type *symbol_src,
+        void subtract(value_type* symbol_dest, const value_type* symbol_src,
                       uint32_t symbol_length)
         {
             const auto& nested = SuperCoder::nested();
