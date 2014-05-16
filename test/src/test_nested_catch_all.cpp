@@ -233,14 +233,14 @@ namespace
         void multiply_subtract(value_type* symbol_dest, const value_type* symbol_src,
                                value_type coefficient, uint32_t symbol_length)
         {
-            m_multiply_substract(symbol_dest, symbol_src,
+            m_multiply_subtract(symbol_dest, symbol_src,
                                  coefficient, symbol_length);
         }
 
         void subtract(value_type* symbol_dest, const value_type* symbol_src,
                       uint32_t symbol_length)
         {
-            m_substract(symbol_dest, symbol_src, symbol_length);
+            m_subtract(symbol_dest, symbol_src, symbol_length);
         }
 
         value_type invert(value_type value)
@@ -357,10 +357,10 @@ namespace
             m_add;
 
         stub::call<void (value_type*, const value_type*, value_type, uint32_t)>
-            m_multiply_substract;
+            m_multiply_subtract;
 
         stub::call<void (value_type*, const value_type*, uint32_t)>
-            m_substract;
+            m_subtract;
 
         stub::call<value_type (value_type)>
             m_invert;
@@ -502,40 +502,47 @@ TEST(TestNestedCatchAll, api)
     // Test the stack
     {
         dummy_stack stack;
+        const dummy_stack& stack_const = stack;
+
+        using value_type = dummy_stack::value_type;
 
         auto& nested = stack.m_nested;
 
         std::vector<uint8_t> data(200, 'z');
         std::vector<uint8_t> data1(200, 'z');
 
+        //------------------------------------------------------------------
+        // SYMBOL STORAGE API
+        //------------------------------------------------------------------
+
         auto compare_stoarge = [](std::tuple<sak::mutable_storage> a,
                                   std::tuple<sak::mutable_storage> b)
-        {
-            auto aa = std::get<0>(a);
-            auto bb = std::get<0>(b);
-            if(aa.m_data != bb.m_data)
-                return false;
-            if(aa.m_size != bb.m_size)
-                return false;
-            return true;
-        };
+            {
+                auto aa = std::get<0>(a);
+                auto bb = std::get<0>(b);
+                if(aa.m_data != bb.m_data)
+                    return false;
+                if(aa.m_size != bb.m_size)
+                    return false;
+                return true;
+            };
 
         auto check_copy_symbol = [](std::tuple<uint32_t, sak::mutable_storage> a,
-                                  std::tuple<uint32_t, sak::mutable_storage> b)
-        {
-            if(std::get<0>(a) != std::get<0>(b))
+                                    std::tuple<uint32_t, sak::mutable_storage> b)
             {
-                return false;
-            }
+                if(std::get<0>(a) != std::get<0>(b))
+                {
+                    return false;
+                }
 
-            auto aa = std::get<1>(a);
-            auto bb = std::get<1>(b);
-            if(aa.m_data != bb.m_data)
-                return false;
-            if(aa.m_size != bb.m_size)
-                return false;
-            return true;
-        };
+                auto aa = std::get<1>(a);
+                auto bb = std::get<1>(b);
+                if(aa.m_data != bb.m_data)
+                    return false;
+                if(aa.m_size != bb.m_size)
+                    return false;
+                return true;
+            };
 
 
         stack.copy_symbols(sak::storage(data));
@@ -545,6 +552,116 @@ TEST(TestNestedCatchAll, api)
         stack.copy_symbol(10U, sak::storage(data));
         EXPECT_TRUE(nested.m_copy_symbol.called_once_with(
                         10U, sak::storage(data), check_copy_symbol));
+
+        nested.m_symbol.set_return((uint8_t*)0xdeadbeef);
+        EXPECT_EQ(stack.symbol(1U), (uint8_t*)0xdeadbeef);
+        EXPECT_TRUE(nested.m_symbol.called_once_with(1U));
+
+        nested.m_symbol_const.set_return((const uint8_t*)0xdeadbeef);
+        EXPECT_EQ(stack_const.symbol(2U), (const uint8_t*)0xdeadbeef);
+        EXPECT_TRUE(nested.m_symbol_const.called_once_with(2U));
+
+        nested.m_symbol_value.set_return((value_type*)0xdeadbeef);
+        EXPECT_EQ(stack.symbol_value(3U), (value_type*)0xdeadbeef);
+        EXPECT_TRUE(nested.m_symbol_value.called_once_with(3U));
+
+        nested.m_symbol_value_const.set_return((const value_type*)0xdeadbeef);
+        EXPECT_EQ(stack_const.symbol_value(4U), (const value_type*)0xdeadbeef);
+        EXPECT_TRUE(nested.m_symbol_value_const.called_once_with(4U));
+
+        nested.m_symbols.set_return(8U);
+        EXPECT_EQ(stack.symbols(), 8U);
+        EXPECT_TRUE(nested.m_symbols.called_once_with());
+
+        nested.m_symbol_size.set_return(89U);
+        EXPECT_EQ(stack.symbol_size(), 89U);
+        EXPECT_TRUE(nested.m_symbol_size.called_once_with());
+
+        nested.m_symbol_length.set_return(66U);
+        EXPECT_EQ(stack.symbol_length(), 66U);
+        EXPECT_TRUE(nested.m_symbol_length.called_once_with());
+
+        nested.m_block_size.set_return(11U);
+        EXPECT_EQ(stack.block_size(), 11U);
+        EXPECT_TRUE(nested.m_block_size.called_once_with());
+
+        nested.m_symbols_available.set_return(112U);
+        EXPECT_EQ(stack.symbols_available(), 112U);
+        EXPECT_TRUE(nested.m_symbols_available.called_once_with());
+
+        nested.m_symbols_initialized.set_return(131U);
+        EXPECT_EQ(stack.symbols_initialized(), 131U);
+        EXPECT_TRUE(nested.m_symbols_initialized.called_once_with());
+
+        nested.m_is_symbols_available.set_return(true);
+        EXPECT_EQ(stack.is_symbols_available(), true);
+        EXPECT_TRUE(nested.m_is_symbols_available.called_once_with());
+
+        nested.m_is_symbols_initialized.set_return(false);
+        EXPECT_EQ(stack.is_symbols_initialized(), false);
+        EXPECT_TRUE(nested.m_is_symbols_initialized.called_once_with());
+
+        nested.m_is_symbol_available.set_return(true);
+        EXPECT_EQ(stack.is_symbol_available(42U), true);
+        EXPECT_TRUE(nested.m_is_symbol_available.called_once_with(42U));
+
+        nested.m_is_symbol_initialized.set_return(false);
+        EXPECT_EQ(stack.is_symbol_initialized(23U), false);
+        EXPECT_TRUE(nested.m_is_symbol_initialized.called_once_with(23U));
+
+        //------------------------------------------------------------------
+        // COEFFICIENT STORAGE API
+        //------------------------------------------------------------------
+
+        nested.m_coefficient_vector_size.set_return(8U);
+        EXPECT_EQ(stack.coefficient_vector_size(), 8U);
+        EXPECT_TRUE(nested.m_symbols.called_once_with());
+
+        nested.m_coefficient_vector_length.set_return(89U);
+        EXPECT_EQ(stack.coefficient_vector_length(), 89U);
+        EXPECT_TRUE(nested.m_coefficient_vector_length.called_once_with());
+
+        nested.m_coefficient_vector_data.set_return((uint8_t*)0xdeadbeef);
+        EXPECT_EQ(stack.coefficient_vector_data(1U), (uint8_t*)0xdeadbeef);
+        EXPECT_TRUE(nested.m_coefficient_vector_data.called_once_with(1U));
+
+        nested.m_coefficient_vector_data_const.set_return((uint8_t*)0xdeef);
+        EXPECT_EQ(stack_const.coefficient_vector_data(2U), (uint8_t*)0xdeef);
+        EXPECT_TRUE(nested.m_coefficient_vector_data_const.called_once_with(2U));
+
+        nested.m_coefficient_vector_values.set_return((value_type*)0xdeadbeef);
+        EXPECT_EQ(stack.coefficient_vector_values(3U), (value_type*)0xdeadbeef);
+        EXPECT_TRUE(nested.m_coefficient_vector_values.called_once_with(3U));
+
+        nested.m_coefficient_vector_values_const.set_return((value_type*)0xd);
+        EXPECT_EQ(stack_const.coefficient_vector_values(4U), (value_type*)0xd);
+        EXPECT_TRUE(nested.m_coefficient_vector_values_const.called_once_with(4U));
+
+        //------------------------------------------------------------------
+        // FINITE FIELD API
+        //------------------------------------------------------------------
+
+        stack.multiply((value_type*)0xa, (value_type)1U, 3U);
+        EXPECT_TRUE(nested.m_multiply.called_once_with((value_type*)0xa, (value_type)1U, 3U));
+
+        stack.multiply_add((value_type*)0xa, (value_type*)0xb, (value_type)1U, 3U);
+        EXPECT_TRUE(nested.m_multiply_add.called_once_with((value_type*)0xa, (value_type*)0xb, (value_type)1U, 3U));
+
+        stack.add((value_type*)0xa, (value_type*)0xc, 3U);
+        EXPECT_TRUE(nested.m_add.called_once_with((value_type*)0xa, (value_type*)0xc, 3U));
+
+        stack.multiply_subtract((value_type*)0xa, (value_type*)0xb, (value_type)1U, 3U);
+        EXPECT_TRUE(nested.m_multiply_subtract.called_once_with((value_type*)0xa, (value_type*)0xb, (value_type)1U, 3U));
+
+        stack.subtract((value_type*)0xa, (value_type*)0xc, 3U);
+        EXPECT_TRUE(nested.m_subtract.called_once_with((value_type*)0xa, (value_type*)0xc, 3U));
+
+        //------------------------------------------------------------------
+        // CODEC API
+        //------------------------------------------------------------------
+
+        stack.encode_symbol((uint8_t*)0xa, (uint8_t*)0xb);
+        EXPECT_TRUE(nested.m_encode_symbol.called_once_with((uint8_t*)0xa, (uint8_t*)0xb));
 
     }
 
