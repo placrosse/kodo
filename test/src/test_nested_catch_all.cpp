@@ -287,6 +287,24 @@ namespace
             return m_is_symbol_pivot(index);
         }
 
+        //------------------------------------------------------------------
+        // COEFFICIENT GENERATOR API
+        //------------------------------------------------------------------
+
+        void generate(uint8_t *symbol_coefficients)
+        {
+            m_generate(symbol_coefficients);
+        }
+
+        void generate_partial(uint8_t *symbol_coefficients)
+        {
+            m_generate_partial(symbol_coefficients);
+        }
+
+        void seed(uint64_t seed_value)
+        {
+            m_seed(seed_value);
+        }
 
         //------------------------------------------------------------------
         // SYMBOL STORAGE API
@@ -294,10 +312,10 @@ namespace
 
         stub::call<void (const sak::mutable_storage&)> m_copy_symbols;
         stub::call<void (uint32_t,const sak::mutable_storage&)> m_copy_symbol;
-        stub::call<uint8_t*(uint32_t)> m_symbol;
-        stub::call<const uint8_t*(uint32_t)> m_symbol_const;
-        stub::call<value_type*(uint32_t)> m_symbol_value;
-        stub::call<const value_type*(uint32_t)> m_symbol_value_const;
+        stub::call<uint8_t* (uint32_t)> m_symbol;
+        stub::call<const uint8_t* (uint32_t)> m_symbol_const;
+        stub::call<value_type* (uint32_t)> m_symbol_value;
+        stub::call<const value_type* (uint32_t)> m_symbol_value_const;
         stub::call<uint32_t ()> m_symbols;
         stub::call<uint32_t ()> m_symbol_size;
         stub::call<uint32_t ()> m_symbol_length;
@@ -360,6 +378,14 @@ namespace
 
         /// @todo The is_pivot should be move to the symbol storage API
         stub::call<bool (uint32_t)> m_is_symbol_pivot;
+
+        //------------------------------------------------------------------
+        // COEFFICIENT GENERATOR API
+        //------------------------------------------------------------------
+
+        stub::call<void (uint8_t*)> m_generate;
+        stub::call<void (uint8_t*)> m_generate_partial;
+        stub::call<void (uint64_t)> m_seed;
 
     };
 
