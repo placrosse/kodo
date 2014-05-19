@@ -13,13 +13,18 @@
 #include <gauge/csv_printer.hpp>
 #include <gauge/json_printer.hpp>
 
+#include <fifi/is_prime2325.hpp>
+#include <fifi/prime2325_binary_search.hpp>
+#include <fifi/prime2325_apply_prefix.hpp>
+
 #include <kodo/has_systematic_encoder.hpp>
 #include <kodo/set_systematic_off.hpp>
 #include <kodo/rlnc/full_rlnc_codes.hpp>
 
-#include <fifi/is_prime2325.hpp>
-#include <fifi/prime2325_binary_search.hpp>
-#include <fifi/prime2325_apply_prefix.hpp>
+#include <kodo/fulcrum/fulcrum_inner_decoder.hpp>
+#include <kodo/fulcrum/fulcrum_outer_decoder.hpp>
+#include <kodo/fulcrum/fulcrum_combined_decoder.hpp>
+#include <kodo/fulcrum/fulcrum_encoder.hpp>
 
 #include <tables/table.hpp>
 
@@ -260,12 +265,11 @@ struct throughput_benchmark : public gauge::time_benchmark
     {
         for (const auto& payload : m_payloads)
         {
-
             /// @todo This copy would typically not be performed by an
             /// actual application, however since the benchmark
-            /// performs several iterations decoding the same data we
-            /// have to copy the input data to avoid corrupting
-            /// it. The decoder works on data "in-place" therefore we
+            /// performs several iterations while decoding the same data we
+            /// have to copy the input data to avoid corrupting it.
+            /// The decoder works on the data "in-place", therefore we
             /// would corrupt the payloads if we did not copy them.
             ///
             /// Changing this would most likely improve the throughput
@@ -449,7 +453,7 @@ public:
                         cs.set_value<uint32_t>("symbol_size", p);
                         cs.set_value<std::string>("type", t);
 
-                        // Add the calculated density easier output usage
+                        // Add the calculated density
                         cs.set_value<double>("density", d);
 
                         Super::add_configuration(cs);
@@ -466,6 +470,117 @@ public:
         gauge::config_set cs = Super::get_current_configuration();
         double symbols = cs.get_value<double>("density");
         m_encoder->set_density(symbols);
+    }
+};
+
+
+/// A test block represents an encoder and decoder pair
+template<class Encoder, class Decoder>
+struct fulcrum_throughput_benchmark :
+    public throughput_benchmark<Encoder,Decoder>
+{
+public:
+
+    /// The type of the base benchmark
+    typedef throughput_benchmark<Encoder,Decoder> Super;
+
+    /// We need access to the encoder built to adjust the average number of
+    /// nonzero symbols
+    using Super::m_encoder_factory;
+    using Super::m_decoder_factory;
+    using Super::m_encoder;
+    using Super::m_decoder;
+    using Super::m_encoded_data;
+    using Super::m_payloads;
+    using Super::m_temp_payload;
+    using Super::m_factor;
+
+public:
+
+    void get_options(gauge::po::variables_map& options)
+    {
+        auto symbols = options["symbols"].as<std::vector<uint32_t> >();
+        auto symbol_size = options["symbol_size"].as<std::vector<uint32_t> >();
+        auto types = options["type"].as<std::vector<std::string> >();
+        auto expansion = options["expansion"].as<std::vector<uint32_t> >();
+
+        assert(symbols.size() > 0);
+        assert(symbol_size.size() > 0);
+        assert(types.size() > 0);
+        assert(expansion.size() > 0);
+
+        for(const auto& s : symbols)
+        {
+            for(const auto& p : symbol_size)
+            {
+                for(const auto& t : types)
+                {
+                    for(const auto& e: expansion)
+                    {
+                        gauge::config_set cs;
+                        cs.set_value<uint32_t>("symbols", s);
+                        cs.set_value<uint32_t>("symbol_size", p);
+                        cs.set_value<std::string>("type", t);
+
+                        // Fulcrum expansion
+                        cs.set_value<uint32_t>("expansion", e);
+
+                        Super::add_configuration(cs);
+                    }
+                }
+            }
+        }
+    }
+
+    /// @todo Combine setup functions
+    void setup()
+    {
+        gauge::config_set cs = Super::get_current_configuration();
+
+        uint32_t symbols = cs.get_value<uint32_t>("symbols");
+        uint32_t symbol_size = cs.get_value<uint32_t>("symbol_size");
+        uint32_t expansion = cs.get_value<uint32_t>("expansion");
+
+        // Make the factories fit perfectly otherwise there seems to
+        // be problems with memory access i.e. when using a factory
+        // with max symbols 1024 with a symbols 16
+        m_decoder_factory = std::make_shared<typename Super::decoder_factory>(
+            symbols, symbol_size);
+
+        m_encoder_factory = std::make_shared<typename Super::encoder_factory>(
+            symbols, symbol_size);
+
+        m_decoder_factory->set_symbols(symbols);
+        m_decoder_factory->set_symbol_size(symbol_size);
+        m_decoder_factory->set_expansion(expansion);
+
+        m_encoder_factory->set_symbols(symbols);
+        m_encoder_factory->set_symbol_size(symbol_size);
+        m_encoder_factory->set_expansion(expansion);
+
+        m_encoder = m_encoder_factory->build();
+        m_decoder = m_decoder_factory->build();
+
+        // Prepare the data to be encoded
+        m_encoded_data.resize(m_encoder->block_size());
+
+        for(uint8_t &e : m_encoded_data)
+        {
+            e = rand() % 256;
+        }
+
+        m_encoder->set_symbols(sak::storage(m_encoded_data));
+
+        // Prepare storage to the encoded payloads
+        uint32_t payload_count = symbols * m_factor;
+
+        m_payloads.resize(payload_count);
+        for(uint32_t i = 0; i < payload_count; ++i)
+        {
+            m_payloads[i].resize( m_encoder->payload_size() );
+        }
+
+        m_temp_payload.resize( m_encoder->payload_size() );
     }
 };
 
@@ -533,6 +648,27 @@ BENCHMARK_OPTION(sparse_density_options)
 
     options.add_options()
         ("density", default_density, "Set the density of the sparse codes");
+
+    gauge::runner::instance().register_options(options);
+}
+
+BENCHMARK_OPTION(expansion_options)
+{
+    gauge::po::options_description options;
+
+    std::vector<uint32_t> expansion;
+    expansion.push_back(1);
+    expansion.push_back(2);
+    expansion.push_back(3);
+    expansion.push_back(4);
+
+    auto default_expansion =
+        gauge::po::value<std::vector<uint32_t> >()->default_value(
+            expansion, "")->multitoken();
+
+    options.add_options()
+        ("expansion", default_expansion,
+         "Set the expansion of the fulcrum codes");
 
     gauge::runner::instance().register_options(options);
 }
@@ -695,6 +831,40 @@ typedef sparse_throughput_benchmark<
     setup_sparse_rlnc_throughput16;
 
 BENCHMARK_F(setup_sparse_rlnc_throughput16, SparseFullRLNC, Binary16, 5)
+{
+    run_benchmark();
+}
+
+//------------------------------------------------------------------
+// Fulcrum
+//------------------------------------------------------------------
+
+typedef fulcrum_throughput_benchmark<
+    kodo::fulcrum_encoder<fifi::binary8>,
+    kodo::fulcrum_inner_decoder<fifi::binary>>
+    setup_fulcrum_inner_throughput;
+
+BENCHMARK_F(setup_fulcrum_inner_throughput, FulcrumInner, Binary, 5)
+{
+    run_benchmark();
+}
+
+typedef fulcrum_throughput_benchmark<
+    kodo::fulcrum_encoder<fifi::binary8>,
+    kodo::fulcrum_outer_decoder<fifi::binary8>>
+    setup_fulcrum_outer_throughput;
+
+BENCHMARK_F(setup_fulcrum_outer_throughput, FulcrumOuter, Binary8, 5)
+{
+    run_benchmark();
+}
+
+typedef fulcrum_throughput_benchmark<
+    kodo::fulcrum_encoder<fifi::binary8>,
+    kodo::fulcrum_combined_decoder<fifi::binary8>>
+    setup_fulcrum_combined_throughput;
+
+BENCHMARK_F(setup_fulcrum_combined_throughput, FulcrumCombined, Binary8, 5)
 {
     run_benchmark();
 }
