@@ -20,11 +20,7 @@
 #include <kodo/has_systematic_encoder.hpp>
 #include <kodo/set_systematic_off.hpp>
 #include <kodo/rlnc/full_rlnc_codes.hpp>
-
-#include <kodo/fulcrum/fulcrum_inner_decoder.hpp>
-#include <kodo/fulcrum/fulcrum_outer_decoder.hpp>
-#include <kodo/fulcrum/fulcrum_combined_decoder.hpp>
-#include <kodo/fulcrum/fulcrum_encoder.hpp>
+#include <kodo/rlnc/fulcrum_codes.hpp>
 
 #include <tables/table.hpp>
 
