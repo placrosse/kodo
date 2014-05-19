@@ -1,8 +1,8 @@
 #! /usr/bin/env python
 # encoding: utf-8
 
-bld.program(features = 'cxx',
-            source   = 'use_cache_decode_symbol.cpp',
-            target   = 'use_cache_decode_symbol',
-            use      = ['kodo_includes', 'boost_includes',
-                        'fifi_includes', 'sak_includes'])
+bld.program(features='cxx',
+            source='use_cache_decode_symbol.cpp',
+            target='use_cache_decode_symbol',
+            use=['kodo_includes', 'boost_includes', 'fifi_includes',
+                 'sak_includes'])

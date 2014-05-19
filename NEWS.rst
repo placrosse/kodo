@@ -4,6 +4,12 @@ News for Kodo
 This file lists the major changes between versions. For a more
 detailed list of every change, see the Git log.
 
+Latest
+------
+* Minor: Update to waf 1.8.0-pre1
+* Minor: Made python files comply with pep8
+* Major: Removed unused file ``test/src/kodo_unit_test/test_reuse.hpp``.
+
 17.0.0
 ------
 * Major: Added tracing functionality to most of the coding
@@ -219,9 +225,9 @@ detailed list of every change, see the Git log.
 
 9.0.1
 -----
-* Bug: Fix behavior or deep_symbol_storage::set_symbols() to set all
+* Bug: Fix behavior of deep_symbol_storage::set_symbols() to set all
   symbols.
-* Bug: When reusing decoders contaning the linear_block_decoder layer
+* Bug: When reusing decoders containing the linear_block_decoder layer
   systematic symbols where not correctly initialized. A fix was added
   to the linear_block_decoder and the unit test test_reuse_incomplete
   now checks for this issue.
