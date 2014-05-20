@@ -486,7 +486,7 @@ public:
     using Super::m_decoder_factory;
     using Super::m_encoder;
     using Super::m_decoder;
-    using Super::m_encoded_data;
+    using Super::m_data_in;
     using Super::m_payloads;
     using Super::m_temp_payload;
     using Super::m_factor;
@@ -558,14 +558,14 @@ public:
         m_decoder = m_decoder_factory->build();
 
         // Prepare the data to be encoded
-        m_encoded_data.resize(m_encoder->block_size());
+        m_data_in.resize(m_encoder->block_size());
 
-        for(uint8_t &e : m_encoded_data)
+        for(uint8_t &e : m_data_in)
         {
             e = rand() % 256;
         }
 
-        m_encoder->set_symbols(sak::storage(m_encoded_data));
+        m_encoder->set_symbols(sak::storage(m_data_in));
 
         // Prepare storage to the encoded payloads
         uint32_t payload_count = symbols * m_factor;
