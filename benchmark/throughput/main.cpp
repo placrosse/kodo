@@ -16,6 +16,8 @@
 #include <kodo/has_systematic_encoder.hpp>
 #include <kodo/set_systematic_off.hpp>
 #include <kodo/rlnc/full_rlnc_codes.hpp>
+#include <kodo/thread_decoder.hpp>
+#include <kodo/has_deep_symbol_storage.hpp>
 
 #include <fifi/is_prime2325.hpp>
 #include <fifi/prime2325_binary_search.hpp>
@@ -341,6 +343,15 @@ struct throughput_benchmark : public gauge::time_benchmark
             // Decode the payloads
             decode_payloads();
         }
+
+        // If the decoder uses deep storage we need to copy out the
+        // decoded data, we do not measure this as shallow decoding
+        // would be the prefereed for performance reasons. We just use
+        // it as a sanity check in accept_measurement
+        // if (kodo::has_deep_symbol_storage<Decoder>::value)
+        // {
+        //     m_decoder->copy_symbols(sak::storage(m_data_out));
+        // }
     }
 
     void run_benchmark()
@@ -536,6 +547,26 @@ BENCHMARK_OPTION(sparse_density_options)
 
     gauge::runner::instance().register_options(options);
 }
+
+typedef throughput_benchmark<
+    kodo::shallow_full_rlnc_encoder<fifi::binary>,
+    kodo::thread_decoder<fifi::binary> > setup_thread_throughput;
+
+BENCHMARK_F(setup_thread_throughput, Thread, Binary, 5)
+{
+    run_benchmark();
+}
+
+typedef throughput_benchmark<
+    kodo::shallow_full_rlnc_encoder<fifi::binary8>,
+    kodo::thread_decoder<fifi::binary8> > setup_thread_throughput8;
+
+BENCHMARK_F(setup_thread_throughput, Thread, Binary8, 5)
+{
+    run_benchmark();
+}
+
+
 
 //------------------------------------------------------------------
 // Shallow FullRLNC
