@@ -14,7 +14,7 @@
 namespace kodo
 {
     template<uint32_t Threads, class Stack, class SuperCoder>
-    class thread_decoder_impl : public SuperCoder
+    class thread_encoder_impl : public SuperCoder
     {
     public:
 
@@ -28,7 +28,7 @@ namespace kodo
             /// @copydoc layer::factory::factory(uint32_t,uint32_t)
             factory(uint32_t max_symbols, uint32_t max_symbol_size)
                 : SuperCoder::factory(max_symbols, max_symbol_size),
-                  m_stack_factory(max_symbols, max_symbol_size / Threads)
+                m_stack_factory(max_symbols, max_symbol_size / Threads)
             {
                 assert(max_symbol_size > 0);
                 assert((max_symbol_size % Threads) == 0);
@@ -36,7 +36,7 @@ namespace kodo
 
         protected:
 
-            friend class thread_decoder_impl;
+            friend class thread_encoder_impl;
 
             typename Stack::factory& stack_factory()
             {
@@ -100,17 +100,16 @@ namespace kodo
 
                 for(uint32_t j = 0; j < SuperCoder::symbols(); ++j)
                 {
-                    uint8_t* symbol_j = SuperCoder::symbol(j);
+                    const uint8_t* symbol_j = SuperCoder::symbol(j);
                     auto s = sak::storage(symbol_j + (i * thread_symbol_size),
-                                          thread_symbol_size);
+                        thread_symbol_size);
 
                     m_stacks[i]->set_symbol(j, s);
                 }
             }
         }
 
-        void decode_symbol(uint8_t *symbol_data,
-                           uint8_t *symbol_coefficients)
+        void encode_symbol(uint8_t *symbol_data, uint8_t *symbol_coefficients)
         {
 
             for(auto& c: m_coefficients)
@@ -125,7 +124,7 @@ namespace kodo
             for(uint32_t i = 0; i < Threads; ++i)
             {
                 uint8_t* thread_symbol =
-                    symbol_data + (i*m_stacks[i]->symbol_size());
+                    symbol_data + (i * m_stacks[i]->symbol_size());
 
                 uint8_t* thread_coefficients = m_coefficients[i].data();
 
@@ -133,8 +132,8 @@ namespace kodo
 
                 t[i] = std::thread([d, thread_symbol, thread_coefficients]()
                 {
-                        assert(d);
-                        d->decode_symbol(thread_symbol, thread_coefficients);
+                    assert(d);
+                    d->encode_symbol(thread_symbol, thread_coefficients);
                 });
             }
 
@@ -145,22 +144,21 @@ namespace kodo
         }
 
         /// @copydoc layer::decode_symbol(uint8_t*, uint32_t)
-        void decode_symbol(uint8_t *symbol_data,
-                           uint32_t symbol_index)
+        void encode_symbol(uint8_t *symbol_data, uint32_t symbol_index)
         {
             std::thread t[Threads];
 
             for(uint32_t i = 0; i < Threads; ++i)
             {
                 uint8_t* thread_symbol =
-                    symbol_data + (i*m_stacks[i]->symbol_size());
+                    symbol_data + (i * m_stacks[i]->symbol_size());
 
                 auto& d = m_stacks[i];
 
                 t[i] = std::thread([d, thread_symbol, symbol_index]()
                 {
-                        assert(d);
-                        d->decode_symbol(thread_symbol, symbol_index);
+                    assert(d);
+                    d->encode_symbol(thread_symbol, symbol_index);
                 });
             }
 
@@ -186,26 +184,30 @@ namespace kodo
 
 
     template<class Field, class TraceTag = kodo::disable_trace>
-    class thread_decoder : public
-        // Payload API
-        payload_decoder<
+    class thread_encoder : public
+        // Payload Codec API
+        payload_encoder<
         // Codec Header API
-        systematic_decoder<
-        symbol_id_decoder<
+        default_on_systematic_encoder<
+        symbol_id_encoder<
         // Symbol ID API
-        plain_symbol_id_reader<
-        // Decoder API
-        thread_decoder_impl<4, shallow_full_rlnc_decoder<Field, TraceTag>,
+        plain_symbol_id_writer<
+        // Coefficient Generator API
+        uniform_generator<
+        // Encoder API
+        thread_encoder_impl<4, shallow_full_rlnc_encoder<Field, TraceTag>,
+        storage_aware_encoder<
         // Coefficient Storage API
-        coefficient_storage_layers<
-        // Storage API
-        mutable_shallow_storage_layers<TraceTag,
+        coefficient_value_access<
+        coefficient_info<
+        // Symbol Storage API
+        partial_shallow_storage_layers<TraceTag,
         // Finite Field API
         finite_field_layers<Field,
         // Factory API
         final_coder_factory_pool<
         // Final type
-        thread_decoder<Field, TraceTag>
-        > > > > > > > > >
+        thread_encoder<Field, TraceTag>
+        > > > > > > > > > > > >
     { };
 }

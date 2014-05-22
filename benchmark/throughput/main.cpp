@@ -16,6 +16,7 @@
 #include <kodo/has_systematic_encoder.hpp>
 #include <kodo/set_systematic_off.hpp>
 #include <kodo/rlnc/full_rlnc_codes.hpp>
+#include <kodo/thread_encoder.hpp>
 #include <kodo/thread_decoder.hpp>
 #include <kodo/has_deep_symbol_storage.hpp>
 
@@ -548,8 +549,12 @@ BENCHMARK_OPTION(sparse_density_options)
     gauge::runner::instance().register_options(options);
 }
 
+//------------------------------------------------------------------
+// Threaded RLNC
+//------------------------------------------------------------------
+
 typedef throughput_benchmark<
-    kodo::shallow_full_rlnc_encoder<fifi::binary>,
+    kodo::thread_encoder<fifi::binary>,
     kodo::thread_decoder<fifi::binary> > setup_thread_throughput;
 
 BENCHMARK_F(setup_thread_throughput, Thread, Binary, 5)
@@ -558,7 +563,7 @@ BENCHMARK_F(setup_thread_throughput, Thread, Binary, 5)
 }
 
 typedef throughput_benchmark<
-    kodo::shallow_full_rlnc_encoder<fifi::binary8>,
+    kodo::thread_encoder<fifi::binary8>,
     kodo::thread_decoder<fifi::binary8> > setup_thread_throughput8;
 
 BENCHMARK_F(setup_thread_throughput8, Thread, Binary8, 5)
