@@ -193,9 +193,9 @@ namespace kodo
         // Symbol ID API
         plain_symbol_id_writer<
         // Coefficient Generator API
-        uniform_generator<
+        sparse_uniform_generator<
         // Encoder API
-        thread_encoder_impl<8, shallow_full_rlnc_encoder<Field, TraceTag>,
+        thread_encoder_impl<8, shallow_sparse_full_rlnc_encoder<Field, TraceTag>,
         storage_aware_encoder<
         // Coefficient Storage API
         coefficient_value_access<
