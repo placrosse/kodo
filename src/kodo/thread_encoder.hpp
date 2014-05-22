@@ -195,7 +195,7 @@ namespace kodo
         // Coefficient Generator API
         uniform_generator<
         // Encoder API
-        thread_encoder_impl<4, shallow_full_rlnc_encoder<Field, TraceTag>,
+        thread_encoder_impl<8, shallow_full_rlnc_encoder<Field, TraceTag>,
         storage_aware_encoder<
         // Coefficient Storage API
         coefficient_value_access<

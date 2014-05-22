@@ -195,7 +195,7 @@ namespace kodo
         // Symbol ID API
         plain_symbol_id_reader<
         // Decoder API
-        thread_decoder_impl<4, shallow_full_rlnc_decoder<Field, TraceTag>,
+        thread_decoder_impl<8, shallow_full_rlnc_decoder<Field, TraceTag>,
         // Coefficient Storage API
         coefficient_storage_layers<
         // Storage API
