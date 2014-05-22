@@ -561,7 +561,7 @@ typedef throughput_benchmark<
     kodo::shallow_full_rlnc_encoder<fifi::binary8>,
     kodo::thread_decoder<fifi::binary8> > setup_thread_throughput8;
 
-BENCHMARK_F(setup_thread_throughput, Thread, Binary8, 5)
+BENCHMARK_F(setup_thread_throughput8, Thread, Binary8, 5)
 {
     run_benchmark();
 }
