@@ -193,6 +193,34 @@ namespace kodo
         // Symbol ID API
         plain_symbol_id_writer<
         // Coefficient Generator API
+        uniform_generator<
+        // Encoder API
+        thread_encoder_impl<8, shallow_full_rlnc_encoder<Field, TraceTag>,
+        storage_aware_encoder<
+        // Coefficient Storage API
+        coefficient_value_access<
+        coefficient_info<
+        // Symbol Storage API
+        partial_shallow_storage_layers<TraceTag,
+        // Finite Field API
+        finite_field_layers<Field,
+        // Factory API
+        final_coder_factory_pool<
+        // Final type
+        thread_encoder<Field, TraceTag>
+        > > > > > > > > > > > >
+    { };
+
+    template<class Field, class TraceTag = kodo::disable_trace>
+    class sparse_thread_encoder : public
+        // Payload Codec API
+        payload_encoder<
+        // Codec Header API
+        default_on_systematic_encoder<
+        symbol_id_encoder<
+        // Symbol ID API
+        plain_symbol_id_writer<
+        // Coefficient Generator API
         sparse_uniform_generator<
         // Encoder API
         thread_encoder_impl<8, shallow_sparse_full_rlnc_encoder<Field, TraceTag>,
@@ -207,7 +235,7 @@ namespace kodo
         // Factory API
         final_coder_factory_pool<
         // Final type
-        thread_encoder<Field, TraceTag>
+        sparse_thread_encoder<Field, TraceTag>
         > > > > > > > > > > > >
     { };
 }

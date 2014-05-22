@@ -550,27 +550,48 @@ BENCHMARK_OPTION(sparse_density_options)
 }
 
 //------------------------------------------------------------------
-// Threaded RLNC
+// Multi-Threaded RLNC
 //------------------------------------------------------------------
 
-typedef sparse_throughput_benchmark<
+typedef throughput_benchmark<
     kodo::thread_encoder<fifi::binary>,
-    kodo::thread_decoder<fifi::binary> > setup_thread_throughput;
+    kodo::thread_decoder<fifi::binary>>
+    setup_thread_throughput;
 
 BENCHMARK_F(setup_thread_throughput, Thread, Binary, 5)
 {
     run_benchmark();
 }
 
-typedef sparse_throughput_benchmark<
+typedef throughput_benchmark<
     kodo::thread_encoder<fifi::binary8>,
-    kodo::thread_decoder<fifi::binary8> > setup_thread_throughput8;
+    kodo::thread_decoder<fifi::binary8>>
+    setup_thread_throughput8;
 
 BENCHMARK_F(setup_thread_throughput8, Thread, Binary8, 5)
 {
     run_benchmark();
 }
 
+typedef sparse_throughput_benchmark<
+    kodo::sparse_thread_encoder<fifi::binary>,
+    kodo::thread_decoder<fifi::binary>>
+    setup_sparse_thread_throughput;
+
+BENCHMARK_F(setup_sparse_thread_throughput, SparseThread, Binary, 5)
+{
+    run_benchmark();
+}
+
+typedef sparse_throughput_benchmark<
+    kodo::sparse_thread_encoder<fifi::binary8>,
+    kodo::thread_decoder<fifi::binary8>>
+    setup_sparse_thread_throughput8;
+
+BENCHMARK_F(setup_sparse_thread_throughput8, SparseThread, Binary8, 5)
+{
+    run_benchmark();
+}
 
 
 //------------------------------------------------------------------
