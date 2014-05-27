@@ -7,8 +7,9 @@
 ///       coefficient generators
 
 #include <fifi/is_binary.hpp>
+#include <kodo/perpetual/perpetual_generator.hpp>
+
 #include "kodo_unit_test/coefficient_generator_helper.hpp"
-#include "../../src/kodo/perpetual/perpetual_generator.hpp"
 
 namespace kodo
 {
@@ -17,7 +18,6 @@ namespace kodo
     // translation units
     namespace
     {
-
         // Perpetual generator
         template<class Field>
         class perpetual_generator_stack :
