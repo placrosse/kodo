@@ -424,7 +424,8 @@ namespace kodo
 
             uint32_t symbols = SuperCoder::symbols();
 
-            for (uint32_t dest = symbols - 2; dest >= 0; --dest)
+            // Note: we need to use a signed when counting down to zero
+            for (int32_t dest = symbols - 1; dest >= 0; --dest)
             {
                 if (SuperCoder::is_symbol_decoded(dest))
                     continue;
@@ -437,9 +438,9 @@ namespace kodo
         /// The perpetual decoder uses a modified version of the backward
         /// substitute to avoid inspecting the many 0 elements
         /// @param dest the index of the row to substitute into
-        void backward_substitute(uint32_t dest)
+        void backward_substitute(int32_t dest)
         {
-            uint32_t symbols = SuperCoder::symbols();
+            int32_t symbols = SuperCoder::symbols();
             assert(dest < symbols);
 
             value_type *vector_dest =
@@ -447,11 +448,12 @@ namespace kodo
             value_type *symbol_dest =
                 SuperCoder::symbol_value(dest);
 
-            uint32_t highest_index = dest + max_width();
+            int32_t highest_index = dest + max_width();
             if (highest_index >= symbols)
-                highest_index = symbols;
+                highest_index = symbols - 1;
 
-            for (uint32_t i = highest_index - 1; i > dest; --dest)
+            // Note: we need to use a signed when counting down to zero
+            for (int32_t i = highest_index; i > dest; --i)
             {
                 value_type value =
                     SuperCoder::coefficient_value(vector_dest, i);
