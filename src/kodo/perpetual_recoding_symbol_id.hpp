@@ -14,7 +14,6 @@
 
 namespace kodo
 {
-
     /// @ingroup symbol_id_layers
     /// @brief Randomly recombines existing coding coefficients to
     ///        allow a decoder to produce recoded packets.
@@ -93,7 +92,7 @@ namespace kodo
             // Check the number of symbols stored
             uint32_t symbol_count = SuperCoder::rank();
 
-            if(symbol_count == 0)
+            if (symbol_count == 0)
             {
                 // Nothing to return zero symbol and vector
                 *coefficients = symbol_id;
@@ -102,7 +101,7 @@ namespace kodo
 
                 return m_id_size;
             }
-            else if(symbol_count < SuperCoder::symbols())
+            else if (symbol_count < SuperCoder::symbols())
             {
                 SuperCoder::generate_recode(&m_coefficients[0]);
             }
@@ -112,18 +111,18 @@ namespace kodo
             }
 
             // Create the recoded symbol id
-            value_type *recode_id
-                = reinterpret_cast<value_type*>(&m_recode_id[0]);
+            value_type *recode_id =
+                reinterpret_cast<value_type*>(&m_recode_id[0]);
 
-            value_type *recode_coefficients
-                = reinterpret_cast<value_type*>(&m_coefficients[0]);
+            value_type *recode_coefficients =
+                reinterpret_cast<value_type*>(&m_coefficients[0]);
 
-            for(uint32_t i = 0; i < SuperCoder::symbols(); ++i)
+            for (uint32_t i = 0; i < SuperCoder::symbols(); ++i)
             {
-                value_type c = SuperCoder::coefficient_value(
-                    recode_coefficients, i);
+                value_type c =
+                    SuperCoder::coefficient_value(recode_coefficients, i);
 
-                if(!c)
+                if (!c)
                 {
                     continue;
                 }
@@ -131,9 +130,9 @@ namespace kodo
                 assert(SuperCoder::is_symbol_pivot(i));
 
                 const value_type *source_id =
-                    SuperCoder::coefficient_vector_values( i );
+                    SuperCoder::coefficient_vector_values(i);
 
-                if(fifi::is_binary<field_type>::value)
+                if (fifi::is_binary<field_type>::value)
                 {
                     SuperCoder::add(recode_id, source_id,
                                     SuperCoder::coefficient_vector_length());
@@ -154,7 +153,6 @@ namespace kodo
             return m_id_size;
         }
 
-
         /// @copydoc layer::id_size()
         uint32_t id_size() const
         {
@@ -171,7 +169,7 @@ namespace kodo
         /// since if the coefficients are multibyte data types was have
         /// to ensure the de-referencing the pointers are safe.
         typedef std::vector<uint8_t, sak::aligned_allocator<uint8_t> >
-        aligned_vector;
+            aligned_vector;
 
         /// Buffer for the recoding coefficients
         aligned_vector m_coefficients;
@@ -179,5 +177,4 @@ namespace kodo
         /// Buffer for the recoded id
         aligned_vector m_recode_id;
     };
-
 }
