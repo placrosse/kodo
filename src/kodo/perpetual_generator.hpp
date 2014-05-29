@@ -40,7 +40,8 @@ namespace kodo
         /// Constructor
         perpetual_generator() :
             m_symbol_distribution(field_type::min_value, field_type::max_value),
-            m_pivot_distribution()
+            m_pivot_distribution(),
+            m_density(0.1)
         { }
 
         /// @copydoc layer::initialize(Factory&)
@@ -55,7 +56,8 @@ namespace kodo
                 boost::random::uniform_int_distribution<uint32_t>(
                     0, SuperCoder::symbols() - 1);
 
-            m_width = std::max(1U, SuperCoder::symbols() / 10);
+            m_width =
+                std::max(1U, (uint32_t)(SuperCoder::symbols() * m_density));
             m_generated = 0;
 
             assert(m_width <= SuperCoder::symbols());
@@ -156,6 +158,8 @@ namespace kodo
             boost::optional<uint32_t> back =
                 find_back(coefficients_index, (pivot + m_width) % symbols);
 
+            assert(back != boost::none);
+
             uint32_t max_back = back.get();
 
             value_type* c = reinterpret_cast<value_type*>(coefficients);
@@ -175,16 +179,16 @@ namespace kodo
                 boost::optional<uint32_t> back =
                     find_back(coefficients_index, (index + m_width) % symbols);
 
-                if(back == boost::none)
+                if (back == boost::none)
                     continue;
 
                 // if the last non-zero element in the coding vector under
                 // consideration protrudes beyond the maximum width defined it
                 // is not used
-                if(calc_width(pivot, back.get()) > m_width)
+                if (calc_width(pivot, back.get()) > m_width)
                     continue;
 
-                if(calc_width(pivot, back.get()) > calc_width(pivot, max_back))
+                if (calc_width(pivot, back.get()) > calc_width(pivot, max_back))
                     max_back = back.get();
 
                 value_type coefficient =
@@ -232,12 +236,26 @@ namespace kodo
             m_random_generator.seed(seed_value);
         }
 
-        /// Set the width
-        /// @param width the number of non-zero coefficients after the pivot
-        void set_width(uint32_t width)
+        /// Set the density that is used to calculate the number of
+        /// non-zero coefficients after the pivot
+        /// @param density coefficients density
+        void set_density(double density)
         {
-            assert(width <= SuperCoder::symbols());
-            m_width = width;
+            assert(density > 0);
+            // If binary, the density should be below 1
+            assert(!fifi::is_binary<field_type>::value || density < 1);
+
+            // Save the density and recalculate the width
+            m_density = density;
+            m_width =
+                std::max(1U, (uint32_t)(SuperCoder::symbols() * m_density));
+        }
+
+        /// Get the density of the coefficients generated
+        /// @return the density of the generator
+        double density() const
+        {
+            return m_density;
         }
 
         /// Get the width
@@ -319,6 +337,9 @@ namespace kodo
 
         /// The random generator
         boost::random::mt19937 m_random_generator;
+
+        /// The density that is used to calculate the width
+        double m_density;
 
         /// The number of non-zero values following the pivot
         uint32_t m_width;
