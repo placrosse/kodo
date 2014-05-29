@@ -13,13 +13,14 @@
 #include <kodo/rlnc/perpetual_codes.hpp>
 
 #include "kodo_unit_test/basic_api_test_helper.hpp"
-//#include "kodo_unit_test/helper_test_reuse_api.hpp"
-//#include "kodo_unit_test/helper_test_recoding_api.hpp"
-// #include "kodo_unit_test/helper_test_on_the_fly_api.hpp"
+
+#include "kodo_unit_test/helper_test_reuse_api.hpp"
+#include "kodo_unit_test/helper_test_recoding_api.hpp"
+#include "kodo_unit_test/helper_test_on_the_fly_api.hpp"
 #include "kodo_unit_test/helper_test_basic_api.hpp"
 #include "kodo_unit_test/helper_test_initialize_api.hpp"
-// #include "kodo_unit_test/helper_test_systematic_api.hpp"
-//#include "kodo_unit_test/helper_test_mix_uncoded_api.hpp"
+//#include "kodo_unit_test/helper_test_systematic_api.hpp"
+#include "kodo_unit_test/helper_test_mix_uncoded_api.hpp"
 
 namespace
 {
@@ -31,11 +32,11 @@ namespace
 
 //     template<class Field>
 //     using shallow_encoder =
-//         kodo::shallow_full_rlnc_encoder<Field, kodo::disable_trace>;
+//         kodo::shallow_perpetual_encoder<Field, kodo::disable_trace>;
 //
 //     template<class Field>
 //     using shallow_decoder =
-//         kodo::shallow_full_rlnc_decoder<Field, kodo::disable_trace>;
+//         kodo::shallow_perpetual_decoder<Field, kodo::disable_trace>;
 }
 
 
@@ -64,31 +65,31 @@ TEST(TestPerpetualCodes, test_initialize)
 
 /// Tests whether mixed un-coded and coded packets are correctly handled
 /// in the encoder and decoder.
-// TEST(TestPerpetualCodes, mix_uncoded)
-// {
-//     test_mix_uncoded<encoder, decoder>();
-// }
-//
-// /// The recoding
-// TEST(TestPerpetualCodes, test_recoders_api)
-// {
-//     test_recoders<encoder, decoder>();
-// }
-//
-// /// The recoding
-// TEST(TestPerpetualCodes, test_recoding_relay)
-// {
-//     test_recoding_relay<encoder, decoder>();
-// }
-//
-// /// Tests the basic API functionality this mean basic encoding and decoding
-// TEST(TestPerpetualCodes, test_reuse_api)
-// {
-//     test_reuse<encoder, decoder>();
-// }
-//
-// /// Tests the basic API functionality this mean basic encoding and decoding
-// TEST(TestPerpetualCodes, test_reuse_incomplete_api)
-// {
-//     test_reuse_incomplete<encoder, decoder>();
-// }
+TEST(TestPerpetualCodes, mix_uncoded)
+{
+    test_mix_uncoded<encoder, decoder>();
+}
+
+/// The recoding
+TEST(TestPerpetualCodes, test_recoders_api)
+{
+    test_recoders<encoder, decoder>();
+}
+
+/// The recoding
+TEST(TestPerpetualCodes, test_recoding_relay)
+{
+    test_recoding_relay<encoder, decoder>();
+}
+
+/// Tests the basic API functionality this mean basic encoding and decoding
+TEST(TestPerpetualCodes, test_reuse_api)
+{
+    test_reuse<encoder, decoder>();
+}
+
+/// Tests the basic API functionality this mean basic encoding and decoding
+TEST(TestPerpetualCodes, test_reuse_incomplete_api)
+{
+    test_reuse_incomplete<encoder, decoder>();
+}
