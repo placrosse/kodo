@@ -234,7 +234,7 @@ namespace kodo
 
         /// Set the width
         /// @param width the number of non-zero coefficients after the pivot
-        void set_width(double width)
+        void set_width(uint32_t width)
         {
             assert(width <= SuperCoder::symbols());
             m_width = width;

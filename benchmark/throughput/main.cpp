@@ -461,8 +461,6 @@ public:
                         cs.set_value<uint32_t>("symbols", s);
                         cs.set_value<uint32_t>("symbol_size", p);
                         cs.set_value<std::string>("type", t);
-
-                        // Add the calculated density easier output usage
                         cs.set_value<double>("density", d);
 
                         Super::add_configuration(cs);
@@ -482,6 +480,68 @@ public:
     }
 };
 
+/// A test block represents an encoder and decoder pair
+template<class Encoder, class Decoder>
+struct perpetual_throughput_benchmark :
+    public throughput_benchmark<Encoder,Decoder>
+{
+public:
+
+    /// The type of the base benchmark
+    typedef throughput_benchmark<Encoder,Decoder> Super;
+
+    /// We need access to the encoder built to adjust the average number of
+    /// nonzero symbols
+    using Super::m_encoder;
+
+public:
+
+    void get_options(gauge::po::variables_map& options)
+    {
+        auto symbols = options["symbols"].as<std::vector<uint32_t> >();
+        auto symbol_size = options["symbol_size"].as<std::vector<uint32_t> >();
+        auto types = options["type"].as<std::vector<std::string> >();
+        auto width_ratio = options["width_ratio"].as<std::vector<double> >();
+
+        assert(symbols.size() > 0);
+        assert(symbol_size.size() > 0);
+        assert(types.size() > 0);
+        assert(width_ratio.size() > 0);
+
+        for (const auto& s : symbols)
+        {
+            for (const auto& p : symbol_size)
+            {
+                for (const auto& t : types)
+                {
+                    for (const auto& w: width_ratio)
+                    {
+                        gauge::config_set cs;
+                        cs.set_value<uint32_t>("symbols", s);
+                        cs.set_value<uint32_t>("symbol_size", p);
+                        cs.set_value<std::string>("type", t);
+                        cs.set_value<double>("width_ratio", w);
+
+                        // Add the calculated width
+                        uint32_t width = (uint32_t)std::ceil(s * w);
+                        cs.set_value<uint32_t>("width", width);
+
+                        Super::add_configuration(cs);
+                    }
+                }
+            }
+        }
+    }
+
+    void setup()
+    {
+        Super::setup();
+
+        gauge::config_set cs = Super::get_current_configuration();
+        uint32_t width = cs.get_value<uint32_t>("width");
+        m_encoder->set_width(width);
+    }
+};
 
 
 /// Using this macro we may specify options. For specifying options
@@ -546,6 +606,25 @@ BENCHMARK_OPTION(sparse_density_options)
 
     options.add_options()
         ("density", default_density, "Set the density of the sparse codes");
+
+    gauge::runner::instance().register_options(options);
+}
+
+BENCHMARK_OPTION(perpetual_options)
+{
+    gauge::po::options_description options;
+
+    std::vector<double> width_ratio;
+    width_ratio.push_back(0.05);
+    width_ratio.push_back(0.1);
+
+    auto default_width_ratio =
+        gauge::po::value<std::vector<double> >()->default_value(
+            width_ratio, "")->multitoken();
+
+    options.add_options()
+        ("width_ratio", default_width_ratio,
+         "Set the width for perpetual codes (in percentage)");
 
     gauge::runner::instance().register_options(options);
 }
@@ -716,7 +795,7 @@ BENCHMARK_F(setup_sparse_rlnc_throughput16, SparseFullRLNC, Binary16, 5)
 // Shallow Perpetual RLNC
 //------------------------------------------------------------------
 
-typedef throughput_benchmark<
+typedef perpetual_throughput_benchmark<
     kodo::shallow_perpetual_encoder<fifi::binary>,
     kodo::shallow_perpetual_decoder<fifi::binary>>
     setup_perpetual_throughput;
@@ -726,7 +805,7 @@ BENCHMARK_F(setup_perpetual_throughput, Perpetual, Binary, 5)
     run_benchmark();
 }
 
-typedef throughput_benchmark<
+typedef perpetual_throughput_benchmark<
     kodo::shallow_perpetual_encoder<fifi::binary8>,
     kodo::shallow_perpetual_decoder<fifi::binary8>>
     setup_perpetual_throughput8;
@@ -736,7 +815,7 @@ BENCHMARK_F(setup_perpetual_throughput8, Perpetual, Binary8, 5)
     run_benchmark();
 }
 
-typedef throughput_benchmark<
+typedef perpetual_throughput_benchmark<
     kodo::shallow_perpetual_encoder<fifi::binary16>,
     kodo::shallow_perpetual_decoder<fifi::binary16>>
     setup_perpetual_throughput16;
@@ -746,7 +825,7 @@ BENCHMARK_F(setup_perpetual_throughput16, Perpetual, Binary16, 5)
     run_benchmark();
 }
 
-typedef throughput_benchmark<
+typedef perpetual_throughput_benchmark<
     kodo::shallow_perpetual_encoder<fifi::prime2325>,
     kodo::shallow_perpetual_decoder<fifi::prime2325>>
     setup_perpetual_throughput2325;
