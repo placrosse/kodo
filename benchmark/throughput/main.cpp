@@ -13,6 +13,8 @@
 #include <gauge/csv_printer.hpp>
 #include <gauge/json_printer.hpp>
 
+#include <kodo/has_deep_symbol_storage.hpp>
+#include <kodo/has_shallow_symbol_storage.hpp>
 #include <kodo/has_systematic_encoder.hpp>
 #include <kodo/set_systematic_off.hpp>
 #include <kodo/rlnc/full_rlnc_codes.hpp>
@@ -112,6 +114,13 @@ struct throughput_benchmark : public gauge::time_benchmark
                 return false;
             }
 
+            // If the decoder uses deep storage, we have to copy
+            // its decoding buffers for verification
+            if (kodo::has_deep_symbol_storage<Decoder>::value)
+            {
+                m_decoder->copy_symbols(sak::storage(m_data_out));
+            }
+
             // At this point, the output data should be equal to the input data
             assert(m_data_out == m_data_in);
         }
@@ -185,13 +194,12 @@ struct throughput_benchmark : public gauge::time_benchmark
 
         m_encoder->set_symbols(sak::storage(m_data_in));
 
-        // This step is not needed for deep storage decoders, but also
-        // does not hurt :) For shallow decoders it will provide the
-        // memory that we will decode into, whereas a deep storage
-        // decoder already has its own memory (in this case the deep
-        // storage decoder will just gets its internal memory
-        // initialized by m_data_out)
-        m_decoder->set_symbols(sak::storage(m_data_out));
+        // If the decoder uses shallow storage we have to initialize
+        // its decoding buffers
+        if (kodo::has_shallow_symbol_storage<Decoder>::value)
+        {
+            m_decoder->set_symbols(sak::storage(m_data_out));
+        }
 
         // Create the payload buffer
         m_temp_payload.resize(m_decoder->payload_size());
@@ -310,7 +318,6 @@ struct throughput_benchmark : public gauge::time_benchmark
 
             encode_payloads();
         }
-
     }
 
     /// Run the decoder
@@ -337,7 +344,10 @@ struct throughput_benchmark : public gauge::time_benchmark
             // i.e. no symbols already decoded.
             m_decoder->initialize(*m_decoder_factory);
 
-            m_decoder->set_symbols(sak::storage(m_data_out));
+            if (kodo::has_shallow_symbol_storage<Decoder>::value)
+            {
+                m_decoder->set_symbols(sak::storage(m_data_out));
+            }
 
             // Decode the payloads
             decode_payloads();
