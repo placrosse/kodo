@@ -114,13 +114,6 @@ struct throughput_benchmark : public gauge::time_benchmark
                 return false;
             }
 
-            // If the decoder uses deep storage, we have to copy
-            // its decoding buffers for verification
-            if (kodo::has_deep_symbol_storage<Decoder>::value)
-            {
-                m_decoder->copy_symbols(sak::storage(m_data_out));
-            }
-
             // At this point, the output data should be equal to the input data
             assert(m_data_out == m_data_in);
         }
@@ -287,6 +280,15 @@ struct throughput_benchmark : public gauge::time_benchmark
 
             if (m_decoder->is_complete())
             {
+                // If the decoder uses deep storage, we have to copy
+                // its decoding buffers for verification.
+                // This would also be necessary in real applications, so it
+                // should be part of the timed benchmark.
+                if (kodo::has_deep_symbol_storage<Decoder>::value)
+                {
+                    m_decoder->copy_symbols(sak::storage(m_data_out));
+                }
+
                 if(fifi::is_prime2325<typename Decoder::field_type>::value)
                 {
                     // Now we have to apply the negated prefix to the
