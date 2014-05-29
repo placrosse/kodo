@@ -713,12 +713,12 @@ BENCHMARK_F(setup_sparse_rlnc_throughput16, SparseFullRLNC, Binary16, 5)
 }
 
 //------------------------------------------------------------------
-// Perpetual RLNC
+// Shallow Perpetual RLNC
 //------------------------------------------------------------------
 
 typedef throughput_benchmark<
-    kodo::perpetual_encoder<fifi::binary>,
-    kodo::perpetual_decoder<fifi::binary>>
+    kodo::shallow_perpetual_encoder<fifi::binary>,
+    kodo::shallow_perpetual_decoder<fifi::binary>>
     setup_perpetual_throughput;
 
 BENCHMARK_F(setup_perpetual_throughput, Perpetual, Binary, 5)
@@ -727,8 +727,8 @@ BENCHMARK_F(setup_perpetual_throughput, Perpetual, Binary, 5)
 }
 
 typedef throughput_benchmark<
-    kodo::perpetual_encoder<fifi::binary8>,
-    kodo::perpetual_decoder<fifi::binary8>>
+    kodo::shallow_perpetual_encoder<fifi::binary8>,
+    kodo::shallow_perpetual_decoder<fifi::binary8>>
     setup_perpetual_throughput8;
 
 BENCHMARK_F(setup_perpetual_throughput8, Perpetual, Binary8, 5)
@@ -737,8 +737,8 @@ BENCHMARK_F(setup_perpetual_throughput8, Perpetual, Binary8, 5)
 }
 
 typedef throughput_benchmark<
-    kodo::perpetual_encoder<fifi::binary16>,
-    kodo::perpetual_decoder<fifi::binary16>>
+    kodo::shallow_perpetual_encoder<fifi::binary16>,
+    kodo::shallow_perpetual_decoder<fifi::binary16>>
     setup_perpetual_throughput16;
 
 BENCHMARK_F(setup_perpetual_throughput16, Perpetual, Binary16, 5)
@@ -747,8 +747,8 @@ BENCHMARK_F(setup_perpetual_throughput16, Perpetual, Binary16, 5)
 }
 
 typedef throughput_benchmark<
-    kodo::perpetual_encoder<fifi::prime2325>,
-    kodo::perpetual_decoder<fifi::prime2325>>
+    kodo::shallow_perpetual_encoder<fifi::prime2325>,
+    kodo::shallow_perpetual_decoder<fifi::prime2325>>
     setup_perpetual_throughput2325;
 
 BENCHMARK_F(setup_perpetual_throughput2325, Perpetual, Prime2325, 5)

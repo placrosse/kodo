@@ -7,3 +7,6 @@
 
 #include "perpetual_encoder.hpp"
 #include "perpetual_decoder.hpp"
+
+#include "shallow_perpetual_encoder.hpp"
+#include "shallow_perpetual_decoder.hpp"

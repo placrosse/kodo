@@ -8,9 +8,9 @@
 #include <cstdint>
 
 #include "../coefficient_storage_layers.hpp"
-#include "../deep_storage_layers.hpp"
 #include "../final_coder_factory_pool.hpp"
 #include "../finite_field_layers.hpp"
+#include "../mutable_shallow_storage_layers.hpp"
 #include "../nested_payload_recoder.hpp"
 #include "../payload_decoder.hpp"
 #include "../perpetual_decoder_layers.hpp"
@@ -24,14 +24,12 @@ namespace kodo
 {
     /// @ingroup fec_stacks
     ///
-    /// @brief Implementation of a complete perpetual decoder
+    /// @brief Implementation of a shallow perpetual decoder
     ///
-    /// This configuration adds the following features (including those
-    /// described for the encoder):
-    /// - Recoding using the recoding_stack
-    /// - Linear block decoder using Gauss-Jordan elimination.
+    /// The decoder is identical to the perpetual_decoder except for
+    /// the fact that is uses a shallow storage layer.
     template<class Field, class TraceTag = kodo::disable_trace>
-    class perpetual_decoder : public
+    class shallow_perpetual_decoder : public
         // Payload API
         nested_payload_recoder<
         proxy_stack<proxy_args<>, perpetual_recoding_stack,
@@ -45,13 +43,13 @@ namespace kodo
         // Coefficient Storage API
         coefficient_storage_layers<
         // Storage API
-        deep_storage_layers<TraceTag,
+        mutable_shallow_storage_layers<TraceTag,
         // Finite Field API
         finite_field_layers<Field,
         // Factory API
         final_coder_factory_pool<
         // Final type
-        perpetual_decoder<Field, TraceTag>
+        shallow_perpetual_decoder<Field, TraceTag>
         > > > > > > > > > >
     { };
 }

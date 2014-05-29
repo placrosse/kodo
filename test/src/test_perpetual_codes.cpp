@@ -30,13 +30,13 @@ namespace
     template<class Field>
     using decoder = kodo::perpetual_decoder<Field, kodo::disable_trace>;
 
-//     template<class Field>
-//     using shallow_encoder =
-//         kodo::shallow_perpetual_encoder<Field, kodo::disable_trace>;
-//
-//     template<class Field>
-//     using shallow_decoder =
-//         kodo::shallow_perpetual_decoder<Field, kodo::disable_trace>;
+    template<class Field>
+    using shallow_encoder =
+        kodo::shallow_perpetual_encoder<Field, kodo::disable_trace>;
+
+    template<class Field>
+    using shallow_decoder =
+        kodo::shallow_perpetual_decoder<Field, kodo::disable_trace>;
 }
 
 
@@ -45,6 +45,7 @@ namespace
 TEST(TestPerpetualCodes, test_basic_api)
 {
     test_basic_api<encoder, decoder>();
+    test_basic_api<shallow_encoder, shallow_decoder>();
 }
 
 /// Test that the encoders and decoders initialize() function can be used
@@ -53,6 +54,7 @@ TEST(TestPerpetualCodes, test_basic_api)
 TEST(TestPerpetualCodes, test_initialize)
 {
     test_initialize<encoder, decoder>();
+    test_initialize<shallow_encoder, shallow_decoder>();
 }
 
 /// Tests that an encoder producing systematic packets is handled
@@ -68,28 +70,33 @@ TEST(TestPerpetualCodes, test_initialize)
 TEST(TestPerpetualCodes, mix_uncoded)
 {
     test_mix_uncoded<encoder, decoder>();
+    test_mix_uncoded<shallow_encoder, shallow_decoder>();
 }
 
 /// The recoding
 TEST(TestPerpetualCodes, test_recoders_api)
 {
     test_recoders<encoder, decoder>();
+    test_recoders<shallow_encoder, shallow_decoder>();
 }
 
 /// The recoding
 TEST(TestPerpetualCodes, test_recoding_relay)
 {
     test_recoding_relay<encoder, decoder>();
+    test_recoding_relay<shallow_encoder, shallow_decoder>();
 }
 
 /// Tests the basic API functionality this mean basic encoding and decoding
 TEST(TestPerpetualCodes, test_reuse_api)
 {
     test_reuse<encoder, decoder>();
+    test_reuse<shallow_encoder, shallow_decoder>();
 }
 
 /// Tests the basic API functionality this mean basic encoding and decoding
 TEST(TestPerpetualCodes, test_reuse_incomplete_api)
 {
     test_reuse_incomplete<encoder, decoder>();
+    test_reuse_incomplete<shallow_encoder, shallow_decoder>();
 }
