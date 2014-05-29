@@ -3,7 +3,6 @@
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
 
-
 /// @file test_rlnc_on_the_fly_codes.cpp Unit tests for the full
 ///       vector codes (i.e. Network Coding encoders and decoders).
 
@@ -14,9 +13,8 @@
 /// Checks that the encoders and decoders are in a clean state after using
 /// the initialize function.
 template<class Encoder, class Decoder>
-inline void test_initialize(uint32_t symbols, uint32_t symbol_size)
+inline void run_test_initialize(uint32_t symbols, uint32_t symbol_size)
 {
-
     // Common setting
     typename Encoder::factory encoder_factory(symbols, symbol_size);
     auto encoder = encoder_factory.build();
@@ -24,8 +22,7 @@ inline void test_initialize(uint32_t symbols, uint32_t symbol_size)
     typename Decoder::factory decoder_factory(symbols, symbol_size);
     auto decoder = decoder_factory.build();
 
-
-    for(uint32_t i = 0; i < 3; ++i)
+    for (uint32_t i = 0; i < 3; ++i)
     {
         encoder->initialize(encoder_factory);
         decoder->initialize(decoder_factory);
@@ -37,14 +34,24 @@ inline void test_initialize(uint32_t symbols, uint32_t symbol_size)
         uint32_t block_size = rand_nonzero(encoder->block_size());
 
         std::vector<uint8_t> data_in = random_vector(block_size);
+        std::vector<uint8_t> data_out(decoder->block_size(), '\0');
 
         encoder->set_symbols(sak::storage(data_in));
 
-        // Set the encoder non-systematic
-        if(kodo::has_systematic_encoder<Encoder>::value)
-            kodo::set_systematic_off(encoder);
+        // If the decoder uses shallow storage we have to initialize
+        // it's decoding buffers
+        if (kodo::has_shallow_symbol_storage<Decoder>::value)
+        {
+            decoder->set_symbols(sak::storage(data_out));
+        }
 
-        while( !decoder->is_complete() )
+        // Set the encoder non-systematic
+        if (kodo::has_systematic_encoder<Encoder>::value)
+        {
+            kodo::set_systematic_off(encoder);
+        }
+
+        while (!decoder->is_complete())
         {
             uint32_t payload_used = encoder->encode( &payload[0] );
             EXPECT_TRUE(payload_used <= encoder->payload_size());
@@ -52,45 +59,69 @@ inline void test_initialize(uint32_t symbols, uint32_t symbol_size)
             decoder->decode( &payload[0] );
         }
 
-        std::vector<uint8_t> data_out(block_size, '\0');
-        decoder->copy_symbols(sak::storage(data_out));
+        // If the decoder uses deep storage we need to copy out the
+        // decoded data
+        if (kodo::has_deep_symbol_storage<Decoder>::value)
+        {
+            decoder->copy_symbols(sak::storage(data_out));
+        }
 
-        bool data_equal = sak::equal(sak::storage(data_out),
-                                     sak::storage(data_in));
+        // Adjust the size of data_out since it may be larger than
+        // data_in std::vector::resize should be fine, since it just
+        // drops the excess bytes at the end.
+        EXPECT_TRUE(data_in.size() <= data_out.size());
+        data_out.resize(data_in.size());
 
-        ASSERT_TRUE(data_equal);
-
+        EXPECT_TRUE(data_out == data_in);
     }
 
 }
-
-
 
 template
 <
     template <class> class Encoder,
     template <class> class Decoder
->
+    >
 inline void test_initialize(uint32_t symbols, uint32_t symbol_size)
 {
+    SCOPED_TRACE(testing::Message() << "symbols = " << symbols);
+    SCOPED_TRACE(testing::Message() << "symbols_size = " << symbol_size);
 
-    test_initialize
-        <
+    {
+        SCOPED_TRACE(testing::Message() << "field = binary");
+        run_test_initialize
+            <
             Encoder<fifi::binary>,
             Decoder<fifi::binary>
             >(symbols, symbol_size);
+    }
 
-    test_initialize
-        <
+    {
+        SCOPED_TRACE(testing::Message() << "field = binary4");
+        run_test_initialize
+            <
+            Encoder<fifi::binary4>,
+            Decoder<fifi::binary4>
+            >(symbols, symbol_size);
+    }
+
+    {
+        SCOPED_TRACE(testing::Message() << "field = binary8");
+        run_test_initialize
+            <
             Encoder<fifi::binary8>,
             Decoder<fifi::binary8>
             >(symbols, symbol_size);
+    }
 
-    test_initialize
-        <
+    {
+        SCOPED_TRACE(testing::Message() << "field = binary16");
+        run_test_initialize
+            <
             Encoder<fifi::binary16>,
             Decoder<fifi::binary16>
             >(symbols, symbol_size);
+    }
 }
 
 template
@@ -108,6 +139,3 @@ inline void test_initialize()
 
     test_initialize<Encoder, Decoder>(symbols, symbol_size);
 }
-
-
-

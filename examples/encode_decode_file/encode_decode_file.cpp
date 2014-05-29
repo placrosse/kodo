@@ -5,7 +5,7 @@
 
 #include <kodo/file_encoder.hpp>
 #include <kodo/object_decoder.hpp>
-#include <kodo/rlnc/full_vector_codes.hpp>
+#include <kodo/rlnc/full_rlnc_codes.hpp>
 #include <kodo/set_systematic_off.hpp>
 
 /// @example encode_decode_file.cpp
@@ -127,4 +127,3 @@ int main()
                   << "please file a bug report :)" << std::endl;
     }
 }
-

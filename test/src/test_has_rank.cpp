@@ -11,7 +11,7 @@
 #include <gtest/gtest.h>
 
 #include <kodo/has_rank.hpp>
-#include <kodo/rlnc/full_vector_codes.hpp>
+#include <kodo/rlnc/full_rlnc_codes.hpp>
 
 namespace kodo
 {
@@ -46,6 +46,3 @@ TEST(TestHasRank, detect)
     typedef kodo::full_rlnc_encoder<fifi::binary8> encoder_type;
     EXPECT_TRUE(kodo::has_rank<encoder_type>::value);
 }
-
-
-

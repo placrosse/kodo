@@ -3,12 +3,12 @@
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
 
-/// @file test_cached_symbol_decoder.cpp Unit tests for the
-///       cached_symbol_decoder layer
+/// @file test_cache_decode_symbol.cpp Unit tests for the
+///       cache_decode_symbol layer
 
 #include "kodo_unit_test/basic_api_test_helper.hpp"
 
-#include <kodo/cached_symbol_decoder.hpp>
+#include <kodo/cache_decode_symbol.hpp>
 #include <kodo/empty_decoder.hpp>
 #include <kodo/storage_block_info.hpp>
 #include <kodo/finite_field_info.hpp>
@@ -23,16 +23,16 @@ namespace kodo
     namespace
     {
 
-        /// Test stack for the cached_symbol_decoder
+        /// Test stack for the cache_decode_symbol
         template<class Field>
-        class cached_symbol_decoder_stack :
-            public cached_symbol_decoder<
+        class cache_decode_symbol_stack :
+            public cache_decode_symbol<
                    empty_decoder<
                    coefficient_info<
                    storage_block_info<
                    finite_field_info<Field,
                    final_coder_factory<
-                   cached_symbol_decoder_stack<Field>
+                   cache_decode_symbol_stack<Field>
                        > > > > > >
         { };
 
@@ -40,7 +40,7 @@ namespace kodo
 }
 
 template<class Stack>
-void test_cached_symbol_decoder(uint32_t symbols, uint32_t symbol_size)
+void test_cache_decode_symbol(uint32_t symbols, uint32_t symbol_size)
 {
     typename Stack::factory factory(symbols, symbol_size);
     auto stack = factory.build();
@@ -90,29 +90,28 @@ void test_cached_symbol_decoder(uint32_t symbols, uint32_t symbol_size)
 }
 
 /// Run the tests typical coefficients stack
-TEST(TestCachedSymbolDecoder, test_cached_symbol_decoder)
+TEST(TestCachedSymbolDecoder, test_cache_decode_symbol)
 {
 
     uint32_t symbols = rand_symbols();
     uint32_t symbol_size = rand_symbol_size();
 
     {
-        test_cached_symbol_decoder<
-            kodo::cached_symbol_decoder_stack<fifi::binary> >(
+        test_cache_decode_symbol<
+            kodo::cache_decode_symbol_stack<fifi::binary> >(
                 symbols, symbol_size);
     }
 
     {
-        test_cached_symbol_decoder<
-            kodo::cached_symbol_decoder_stack<fifi::binary8> >(
+        test_cache_decode_symbol<
+            kodo::cache_decode_symbol_stack<fifi::binary8> >(
                 symbols, symbol_size);
     }
 
     {
-        test_cached_symbol_decoder<
-            kodo::cached_symbol_decoder_stack<fifi::binary16> >(
+        test_cache_decode_symbol<
+            kodo::cache_decode_symbol_stack<fifi::binary16> >(
                 symbols, symbol_size);
     }
 
 }
-

@@ -8,7 +8,6 @@
 #include <cstdint>
 #include <type_traits>
 
-#include <fifi/arithmetics.hpp>
 #include <fifi/fifi_utils.hpp>
 
 namespace kodo
@@ -99,7 +98,6 @@ namespace kodo
                 std::max(the_factory.max_symbols(), data_symbol_length);
 
             assert(max_symbol_length > 0);
-            m_temp_symbol.resize(max_symbol_length, 0);
 
             m_field = the_factory.field();
         }
@@ -112,8 +110,10 @@ namespace kodo
             assert(symbol_dest != 0);
             assert(symbol_length > 0);
 
-            fifi::multiply_constant(*m_field, coefficient,
-                                    symbol_dest, symbol_length);
+            coefficient = fifi::pack_constant<field_type>(coefficient);
+
+            m_field->region_multiply_constant(symbol_dest, coefficient,
+                symbol_length);
         }
 
         /// @copydoc layer::multipy_add(value_type *, const value_type*,
@@ -127,9 +127,10 @@ namespace kodo
             assert(symbol_src != 0);
             assert(symbol_length > 0);
 
-            fifi::multiply_add(*m_field, coefficient, symbol_dest,
-                               symbol_src, &m_temp_symbol[0],
-                               symbol_length);
+            coefficient = fifi::pack_constant<field_type>(coefficient);
+
+            m_field->region_multiply_add(symbol_dest,
+                               symbol_src, coefficient, symbol_length);
         }
 
         /// @copydoc layer::add(value_type*, const value_type *, uint32_t)
@@ -141,7 +142,7 @@ namespace kodo
             assert(symbol_src  != 0);
             assert(symbol_length > 0);
 
-            fifi::add(*m_field, symbol_dest, symbol_src, symbol_length);
+            m_field->region_add(symbol_dest, symbol_src, symbol_length);
         }
 
         /// @copydoc layer::multiply_subtract(value_type*, const value_type*,
@@ -155,12 +156,12 @@ namespace kodo
             assert(symbol_dest != 0);
             assert(symbol_src  != 0);
             assert(symbol_length > 0);
-            assert(symbol_length <= m_temp_symbol.size());
             assert(symbol_dest != symbol_src);
 
-            fifi::multiply_subtract(
-                *m_field, coefficient, symbol_dest, symbol_src,
-                &m_temp_symbol[0], symbol_length);
+            coefficient = fifi::pack_constant<field_type>(coefficient);
+
+            m_field->region_multiply_subtract(symbol_dest,
+                symbol_src, coefficient, symbol_length);
         }
 
         /// @copydoc layer::subtract(value_type*,const value_type*, uint32_t)
@@ -172,7 +173,7 @@ namespace kodo
             assert(symbol_src  != 0);
             assert(symbol_length > 0);
 
-            fifi::subtract(*m_field, symbol_dest, symbol_src, symbol_length);
+            m_field->region_subtract(symbol_dest, symbol_src, symbol_length);
         }
 
         /// @copydoc layer::invert(value_type)
@@ -186,10 +187,6 @@ namespace kodo
 
         /// The selected field
         field_pointer m_field;
-
-        /// Temp. symbol used in various compound operations
-        std::vector<value_type> m_temp_symbol;
-
     };
 
 }

@@ -9,7 +9,8 @@
 #include <cstdint>
 
 #include <gtest/gtest.h>
-#include <fifi/field_types.hpp>
+#include <fifi/binary.hpp>
+#include <fifi/binary8.hpp>
 #include <kodo/coefficient_value_access.hpp>
 #include <kodo/storage_block_info.hpp>
 

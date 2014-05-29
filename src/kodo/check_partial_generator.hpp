@@ -6,6 +6,7 @@
 #pragma once
 
 #include <cstdint>
+#include <cassert>
 
 namespace kodo
 {
@@ -37,5 +38,3 @@ namespace kodo
     };
 
 }
-
-

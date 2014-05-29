@@ -35,7 +35,7 @@ namespace kodo
             }
         }
 
-        /// @return The index of the next symbol to be sent in a
+        /// @return The index of the next symbol to be sent systematically
         uint32_t next_systematic_symbol() const
         {
             if(single_symbol_available())
@@ -48,9 +48,9 @@ namespace kodo
                     bool is_remote_pivot =
                         SuperCoder::remote_is_symbol_pivot(i);
 
-                    bool is_pivot = SuperCoder::is_symbol_pivot(i);
+                    bool is_uncoded = SuperCoder::is_symbol_uncoded(i);
 
-                    if(!is_remote_pivot && is_pivot)
+                    if(!is_remote_pivot && is_uncoded)
                     {
                         next_symbol_found = true;
                         next_symbol = i;
@@ -78,7 +78,7 @@ namespace kodo
         /// However this is not sufficient if the decoder also
         /// receives packets from another source. This function
         /// therefore loops over all the local pivots and checks
-        /// whether it only has one pivot not seen by the deocder if
+        /// whether it only has one pivot not seen by the decoder if
         /// this is the case it returns that a single symbol is
         /// available.
         ///
@@ -91,9 +91,9 @@ namespace kodo
                 bool is_remote_pivot =
                     SuperCoder::remote_is_symbol_pivot(i);
 
-                bool is_pivot = SuperCoder::is_symbol_pivot(i);
+                bool is_uncoded = SuperCoder::is_symbol_uncoded(i);
 
-                if(!is_remote_pivot && is_pivot)
+                if(!is_remote_pivot && is_uncoded)
                 {
                     ++difference;
                 }
@@ -111,4 +111,3 @@ namespace kodo
     };
 
 }
-

@@ -5,6 +5,11 @@
 
 #pragma once
 
+#include <fifi/binary.hpp>
+#include <fifi/binary4.hpp>
+#include <fifi/binary8.hpp>
+#include <fifi/binary16.hpp>
+#include <fifi/prime2325.hpp>
 #include <fifi/is_prime2325.hpp>
 #include <fifi/prime2325_binary_search.hpp>
 #include <fifi/prime2325_apply_prefix.hpp>
@@ -19,22 +24,19 @@
 #include <kodo/read_feedback.hpp>
 #include <kodo/feedback_size.hpp>
 #include <kodo/set_systematic_off.hpp>
+#include <kodo/has_shallow_symbol_storage.hpp>
+#include <kodo/has_deep_symbol_storage.hpp>
 
-#include <kodo/has_debug_linear_block_decoder.hpp>
-#include <kodo/print_decoder_state.hpp>
-
-#include <kodo/has_print_cached_symbol_coefficients.hpp>
-#include <kodo/print_cached_symbol_coefficients.hpp>
 
 #include <kodo/has_rank.hpp>
 #include <kodo/rank.hpp>
+#include <kodo/proxy_args.hpp>
 
 /// Helper function which will invoke a number of checks on an encoder
 /// and decoder pair
 template<class Encoder, class Decoder>
-inline void test_basic_api(uint32_t symbols, uint32_t symbol_size)
+inline void run_test_basic_api(uint32_t symbols, uint32_t symbol_size)
 {
-
     // Common setting
     typename Encoder::factory encoder_factory(symbols, symbol_size);
     auto encoder = encoder_factory.build();
@@ -75,7 +77,7 @@ inline void test_basic_api(uint32_t symbols, uint32_t symbol_size)
 
     uint32_t feedback_size = 0;
 
-    if(kodo::has_write_feedback<Decoder>::value)
+    if (kodo::has_write_feedback<Decoder>::value)
     {
         EXPECT_EQ(kodo::feedback_size(encoder),
                   kodo::feedback_size(decoder));
@@ -91,7 +93,12 @@ inline void test_basic_api(uint32_t symbols, uint32_t symbol_size)
     std::vector<uint8_t> data_in = random_vector(encoder->block_size());
     std::vector<uint8_t> data_in_copy(data_in);
 
+    std::vector<uint8_t> data_out(decoder->block_size(), '\0');
+
     sak::mutable_storage storage_in = sak::storage(data_in);
+
+    // We take a copy of the data_in so that we can apply the prefix
+    // for prime2325 but still keep the unmodified input data
     sak::mutable_storage storage_in_copy = sak::storage(data_in_copy);
 
     EXPECT_TRUE(sak::equal(storage_in, storage_in_copy));
@@ -100,12 +107,13 @@ inline void test_basic_api(uint32_t symbols, uint32_t symbol_size)
     // this less intrusive
     uint32_t prefix = 0;
 
-    if(fifi::is_prime2325<typename Encoder::field_type>::value)
+    if (fifi::is_prime2325<typename Encoder::field_type>::value)
     {
         // This field only works for multiple of uint32_t
         assert((encoder->block_size() % 4) == 0);
 
-        uint32_t block_length = encoder->block_size() / 4;
+        uint32_t block_length =
+            fifi::size_to_length<fifi::prime2325>(encoder->block_size());
 
         fifi::prime2325_binary_search search(block_length);
         prefix = search.find_prefix(storage_in_copy);
@@ -117,52 +125,48 @@ inline void test_basic_api(uint32_t symbols, uint32_t symbol_size)
     encoder->set_symbols(storage_in_copy);
 
     // Set the encoder non-systematic
-   if(kodo::has_systematic_encoder<Encoder>::value)
-       kodo::set_systematic_off(encoder);
-
-    while( !decoder->is_complete() )
+    if (kodo::has_systematic_encoder<Encoder>::value)
     {
-        uint32_t payload_used = encoder->encode( &payload[0] );
+        kodo::set_systematic_off(encoder);
+    }
+
+    // If the decoder is shallow we need to specify the buffer will be decoded
+    if (kodo::has_shallow_symbol_storage<Decoder>::value)
+    {
+        decoder->set_symbols(sak::storage(data_out));
+    }
+
+    while (!decoder->is_complete())
+    {
+        uint32_t payload_used = encoder->encode(payload.data());
         EXPECT_TRUE(payload_used <= encoder->payload_size());
 
-        decoder->decode( &payload[0] );
+        decoder->decode(payload.data());
 
-        if(kodo::has_write_feedback<Decoder>::value)
+        if (kodo::has_write_feedback<Decoder>::value)
         {
-            uint32_t written = kodo::write_feedback(decoder, &feedback[0]);
+            uint32_t written = kodo::write_feedback(decoder, feedback.data());
             EXPECT_TRUE(written > 0);
 
             // Pass to the encoder
-            kodo::read_feedback(encoder, &feedback[0]);
+            kodo::read_feedback(encoder, feedback.data());
         }
-
-        // if(kodo::has_print_cached_symbol_coefficients<Decoder>::value)
-        // {
-        //     kodo::print_cached_symbol_coefficients(decoder, std::cout);
-        //     std::cout << std::endl;
-        // }
-
-        // if(kodo::has_debug_linear_block_decoder<Decoder>::value)
-        // {
-        //     kodo::print_decoder_state(decoder, std::cout);
-        //     std::cout << std::endl;
-        // }
-
 
     }
 
-    std::vector<uint8_t> data_out(decoder->block_size(), '\0');
-    decoder->copy_symbols(sak::storage(data_out));
+    // If the decoder uses deep storage we need to copy out the decoded data
+    if (kodo::has_deep_symbol_storage<Decoder>::value)
+    {
+        decoder->copy_symbols(sak::storage(data_out));
+    }
 
-    if(fifi::is_prime2325<typename Encoder::field_type>::value)
+    if (fifi::is_prime2325<typename Encoder::field_type>::value)
     {
         // Now we have to apply the negated prefix to the decoded data
         fifi::apply_prefix(sak::storage(data_out), ~prefix);
     }
 
-    EXPECT_TRUE(std::equal(data_out.begin(),
-                           data_out.end(),
-                           data_in.begin()));
+    EXPECT_TRUE(data_out == data_in);
 }
 
 /// Helper function that invokes the test_basic_api using a number of
@@ -174,29 +178,53 @@ template
 >
 inline void test_basic_api(uint32_t symbols, uint32_t symbol_size)
 {
-    test_basic_api
-        <
-            Encoder<fifi::binary>,
-            Decoder<fifi::binary>
-        >(symbols, symbol_size);
+    SCOPED_TRACE(testing::Message() << "symbols = " << symbols);
+    SCOPED_TRACE(testing::Message() << "symbol_size = " << symbols);
 
-    test_basic_api
-        <
-            Encoder<fifi::binary8>,
-            Decoder<fifi::binary8>
-        >(symbols, symbol_size);
+    {
+        SCOPED_TRACE(testing::Message() << "field = binary");
+        run_test_basic_api
+            <
+                Encoder<fifi::binary>,
+                Decoder<fifi::binary>
+            >(symbols, symbol_size);
+    }
 
-    test_basic_api
-        <
-            Encoder<fifi::binary16>,
-            Decoder<fifi::binary16>
-        >(symbols, symbol_size);
+    {
+        SCOPED_TRACE(testing::Message() << "field = binary4");
+        run_test_basic_api
+            <
+                Encoder<fifi::binary4>,
+                Decoder<fifi::binary4>
+            >(symbols, symbol_size);
+    }
 
-    test_basic_api
-        <
-            Encoder<fifi::prime2325>,
-            Decoder<fifi::prime2325>
-        >(symbols, symbol_size);
+    {
+        SCOPED_TRACE(testing::Message() << "field = binary8");
+        run_test_basic_api
+            <
+                Encoder<fifi::binary8>,
+                Decoder<fifi::binary8>
+            >(symbols, symbol_size);
+    }
+
+    {
+        SCOPED_TRACE(testing::Message() << "field = binary16");
+        run_test_basic_api
+            <
+                Encoder<fifi::binary16>,
+                Decoder<fifi::binary16>
+            >(symbols, symbol_size);
+    }
+
+    {
+        SCOPED_TRACE(testing::Message() << "field = prime2325");
+        run_test_basic_api
+            <
+                Encoder<fifi::prime2325>,
+                Decoder<fifi::prime2325>
+            >(symbols, symbol_size);
+    }
 }
 
 /// Helper function that invokes the test_basic_api functions using a
@@ -217,4 +245,3 @@ inline void test_basic_api()
 
     test_basic_api<Encoder, Decoder>(symbols, symbol_size);
 }
-

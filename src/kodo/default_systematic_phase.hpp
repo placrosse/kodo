@@ -10,7 +10,16 @@
 namespace kodo
 {
 
-    /// @todo brief Allows the user to turn on off the systematic phase
+    /// @ingroup codec_header_layers
+    ///
+    /// @brief Allows the user to turn on/off the systematic phase
+    ///
+    /// This layer is used when implementing encoders that support
+    /// systematic operations. The systematic encoder will produce
+    /// systematic packets only when in the "systematic phase" this
+    /// layer makes it possible to enable or disable the systematic
+    /// phase. By setting the template argument SystematicOn on can
+    /// control what should be the default.
     template<bool SystematicOn, class SuperCoder>
     class default_systematic_phase : public SuperCoder
     {

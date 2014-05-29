@@ -98,7 +98,7 @@ TEST(TestSymbolDecodingStatusCounter, api)
 
     EXPECT_EQ(stack.symbols_missing(), stack.symbols());
     EXPECT_EQ(stack.symbols_seen(), 0U);
-    EXPECT_EQ(stack.symbols_decoded(), 0U);
+    EXPECT_EQ(stack.symbols_uncoded(), 0U);
 
     uint32_t symbol = 1;
 
@@ -106,17 +106,17 @@ TEST(TestSymbolDecodingStatusCounter, api)
 
     EXPECT_EQ(stack.symbols_missing(), stack.symbols() - 1);
     EXPECT_EQ(stack.symbols_seen(), 1U);
-    EXPECT_EQ(stack.symbols_decoded(), 0U);
+    EXPECT_EQ(stack.symbols_uncoded(), 0U);
 
-    stack.set_symbol_decoded(symbol);
+    stack.set_symbol_uncoded(symbol);
     EXPECT_EQ(stack.symbols_missing(), stack.symbols() - 1);
     EXPECT_EQ(stack.symbols_seen(), 0U);
-    EXPECT_EQ(stack.symbols_decoded(), 1U);
+    EXPECT_EQ(stack.symbols_uncoded(), 1U);
 
     stack.set_symbol_missing(symbol);
     EXPECT_EQ(stack.symbols_missing(), stack.symbols());
     EXPECT_EQ(stack.symbols_seen(), 0U);
-    EXPECT_EQ(stack.symbols_decoded(), 0U);
+    EXPECT_EQ(stack.symbols_uncoded(), 0U);
 
     // Go through the different transitions possible
     symbol = 9;
@@ -125,55 +125,55 @@ TEST(TestSymbolDecodingStatusCounter, api)
     stack.set_symbol_missing(symbol);
     EXPECT_EQ(stack.symbols_missing(), stack.symbols());
     EXPECT_EQ(stack.symbols_seen(), 0U);
-    EXPECT_EQ(stack.symbols_decoded(), 0U);
+    EXPECT_EQ(stack.symbols_uncoded(), 0U);
 
     // Missing -> Seen
     stack.set_symbol_seen(symbol);
     EXPECT_EQ(stack.symbols_missing(), stack.symbols() - 1);
     EXPECT_EQ(stack.symbols_seen(), 1U);
-    EXPECT_EQ(stack.symbols_decoded(), 0U);
+    EXPECT_EQ(stack.symbols_uncoded(), 0U);
 
     // Seen -> Seen
     stack.set_symbol_seen(symbol);
     EXPECT_EQ(stack.symbols_missing(), stack.symbols() - 1);
     EXPECT_EQ(stack.symbols_seen(), 1U);
-    EXPECT_EQ(stack.symbols_decoded(), 0U);
+    EXPECT_EQ(stack.symbols_uncoded(), 0U);
 
     // Seen -> Decoded
-    stack.set_symbol_decoded(symbol);
+    stack.set_symbol_uncoded(symbol);
     EXPECT_EQ(stack.symbols_missing(), stack.symbols() - 1);
     EXPECT_EQ(stack.symbols_seen(), 0U);
-    EXPECT_EQ(stack.symbols_decoded(), 1U);
+    EXPECT_EQ(stack.symbols_uncoded(), 1U);
 
     // Decoded -> Decoded
-    stack.set_symbol_decoded(symbol);
+    stack.set_symbol_uncoded(symbol);
     EXPECT_EQ(stack.symbols_missing(), stack.symbols() - 1);
     EXPECT_EQ(stack.symbols_seen(), 0U);
-    EXPECT_EQ(stack.symbols_decoded(), 1U);
+    EXPECT_EQ(stack.symbols_uncoded(), 1U);
 
     // Decoded -> Seen
     stack.set_symbol_seen(symbol);
     EXPECT_EQ(stack.symbols_missing(), stack.symbols() - 1);
     EXPECT_EQ(stack.symbols_seen(), 1U);
-    EXPECT_EQ(stack.symbols_decoded(), 0U);
+    EXPECT_EQ(stack.symbols_uncoded(), 0U);
 
     // Seen -> Missing
     stack.set_symbol_missing(symbol);
     EXPECT_EQ(stack.symbols_missing(), stack.symbols());
     EXPECT_EQ(stack.symbols_seen(), 0U);
-    EXPECT_EQ(stack.symbols_decoded(), 0U);
+    EXPECT_EQ(stack.symbols_uncoded(), 0U);
 
     // Missing -> Decoded
-    stack.set_symbol_decoded(symbol);
+    stack.set_symbol_uncoded(symbol);
     EXPECT_EQ(stack.symbols_missing(), stack.symbols() - 1);
     EXPECT_EQ(stack.symbols_seen(), 0U);
-    EXPECT_EQ(stack.symbols_decoded(), 1U);
+    EXPECT_EQ(stack.symbols_uncoded(), 1U);
 
     // Decoded -> Missing
     stack.set_symbol_missing(symbol);
     EXPECT_EQ(stack.symbols_missing(), stack.symbols());
     EXPECT_EQ(stack.symbols_seen(), 0U);
-    EXPECT_EQ(stack.symbols_decoded(), 0U);
+    EXPECT_EQ(stack.symbols_uncoded(), 0U);
 
 }
 

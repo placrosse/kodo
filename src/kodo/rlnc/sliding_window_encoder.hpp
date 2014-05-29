@@ -7,7 +7,7 @@
 
 #include <cstdint>
 
-#include "full_vector_codes.hpp"
+#include "full_rlnc_codes.hpp"
 #include "sliding_window_generator.hpp"
 #include "sliding_window_systematic_encoder.hpp"
 
@@ -26,8 +26,8 @@
 
 namespace kodo
 {
-
     /// @ingroup fec_stacks
+    ///
     /// @brief Implementation of a complete RLNC sliding window encoder
     ///
     /// This configuration extends the on_the_fly_encoder with the
@@ -37,46 +37,39 @@ namespace kodo
     /// this feature there is an example in the
     /// kodo/examples/sliding_window which demonstrates the use fo the
     /// feedback API.
-    template<class Field>
-    class sliding_window_encoder :
-        public // Feedback API
-               feedback_pivot_status_reader<
-               final_feedback_reader<
-               // Payload Codec API
-               payload_rank_encoder<
-               payload_encoder<
-               // Codec Header API
-               sliding_window_systematic_encoder<
-               symbol_id_encoder<
-               // Symbol ID API
-               plain_symbol_id_writer<
-               // Coefficient Generator API
-               sliding_window_generator<
-               // Encoder API
-               encode_symbol_tracker<
-               zero_symbol_encoder<
-               linear_block_encoder<
-               storage_aware_encoder<
-               pivot_status_reader<
-               rank_info<
-               // Coefficient Storage API
-               coefficient_value_access<
-               coefficient_info<
-               // Symbol Storage API
-               deep_symbol_storage<
-               storage_bytes_used<
-               storage_block_info<
-               // Finite Field API
-               finite_field_math<typename fifi::default_field<Field>::type,
-               finite_field_info<Field,
-               // Factory API
-               final_coder_factory_pool<
-               // Final type
-               sliding_window_encoder<Field>
-                   > > > > > > > > > > > > > > > > > > > > > >
+    template<class Field, class TraceTag = kodo::disable_trace>
+    class sliding_window_encoder : public
+        // Feedback API
+        feedback_pivot_status_reader<
+        final_feedback_reader<
+        // Payload Codec API
+        payload_rank_encoder<
+        payload_encoder<
+        // Codec Header API
+        sliding_window_systematic_encoder<
+        symbol_id_encoder<
+        // Symbol ID API
+        plain_symbol_id_writer<
+        // Coefficient Generator API
+        sliding_window_generator<
+        // Encoder API
+        encode_symbol_tracker<
+        zero_symbol_encoder<
+        linear_block_encoder<
+        storage_aware_encoder<
+        pivot_status_reader<
+        rank_info<
+        // Coefficient Storage API
+        coefficient_value_access<
+        coefficient_info<
+        // Symbol Storage API
+        deep_storage_layers<TraceTag,
+        // Finite Field API
+        finite_field_layers<Field,
+        // Factory API
+        final_coder_factory_pool<
+        // Final type
+        sliding_window_encoder<Field, TraceTag>
+        > > > > > > > > > > > > > > > > > > >
     { };
-
 }
-
-
-

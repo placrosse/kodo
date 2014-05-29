@@ -13,6 +13,7 @@ namespace kodo
 {
 
     /// @ingroup coefficient_storage_layers
+    ///
     /// @brief Provides storage and access to the coding coefficients
     ///        used during encoding and decoding.
     template<class SuperCoder>

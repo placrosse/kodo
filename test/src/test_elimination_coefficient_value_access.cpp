@@ -6,7 +6,6 @@
 #include <cstdint>
 
 #include <gtest/gtest.h>
-#include <fifi/field_types.hpp>
 #include <kodo/elimination_coefficient_value_access.hpp>
 #include <kodo/elimination_coefficient_offset.hpp>
 #include <kodo/storage_block_info.hpp>

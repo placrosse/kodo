@@ -3,7 +3,7 @@
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
 
-#include <kodo/rlnc/full_vector_codes.hpp>
+#include <kodo/rlnc/full_rlnc_codes.hpp>
 #include <kodo/set_systematic_on.hpp>
 #include <kodo/set_systematic_off.hpp>
 #include <kodo/is_systematic_on.hpp>
@@ -94,7 +94,7 @@ int main()
         // to the original source symbols and are therefore marked as
         // decoded
         std::cout << "Symbols decoded "
-                  << decoder->symbols_decoded() << std::endl;
+                  << decoder->symbols_uncoded() << std::endl;
     }
 
     // The decoder is complete, now copy the symbols from the decoder
@@ -112,4 +112,3 @@ int main()
                   << "please file a bug report :)" << std::endl;
     }
 }
-

@@ -49,11 +49,11 @@ namespace kodo
             m_pivot_status.set(index);
         }
 
-        /// @copydoc layer::set_symbol_decoded(uint32_t)
-        void set_symbol_decoded(uint32_t index)
+        /// @copydoc layer::set_symbol_uncoded(uint32_t)
+        void set_symbol_uncoded(uint32_t index)
         {
             assert(index < m_pivot_status.size());
-            Super::set_symbol_decoded(index);
+            Super::set_symbol_uncoded(index);
             m_pivot_status.set(index);
         }
 

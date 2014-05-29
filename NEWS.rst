@@ -6,6 +6,27 @@ detailed list of every change, see the Git log.
 
 Latest
 ------
+* Minor: Update to waf 1.8.0-pre1
+* Minor: Made python files comply with pep8
+* Major: Removed unused file ``test/src/kodo_unit_test/test_reuse.hpp``.
+
+17.0.0
+------
+* Major: Added tracing functionality to most of the coding
+  stacks. Enabling or disabling support for tracing is done via a
+  compile time constant. When tracing is enabled it is possible to get
+  human readable information about the encoding and decoding progress
+  at run time. This replaces the debug layers functionality. An
+  example can be found in the use_trace_layers example.
+* Bug: Fixed bug in the proxy_remote_rank layer. The state was
+  incorrectly updated causing the remote rank to be erroneous. This
+  bug was reported by Jonas Hansen <jonas@hrjonashansen.dk>
+* Major: Updated terminology in the proxy_layer and proxy_stack layers
+  to more consistently use the terms main- and proxy-stack.
+* Major: Started to use C++11 features only available in: gcc/g++-4.7
+  and later and Microsoft Visual Studio 2013.
+* Major: Update to Fifi version 11, which brings in hardware
+  accelerated finite field computations (based on SIMD instructions).
 * Minor: Added sliding window encoder and decoder. These codes extend
   the functionality of the on the fly codes which allow encoding
   before all symbols are available, by supporting feedback between the
@@ -204,9 +225,9 @@ Latest
 
 9.0.1
 -----
-* Bug: Fix behavior or deep_symbol_storage::set_symbols() to set all
+* Bug: Fix behavior of deep_symbol_storage::set_symbols() to set all
   symbols.
-* Bug: When reusing decoders contaning the linear_block_decoder layer
+* Bug: When reusing decoders containing the linear_block_decoder layer
   systematic symbols where not correctly initialized. A fix was added
   to the linear_block_decoder and the unit test test_reuse_incomplete
   now checks for this issue.

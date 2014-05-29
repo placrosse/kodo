@@ -51,7 +51,7 @@ namespace kodo
 
             for(uint32_t i = 0; i < m_pivot.size(); ++i)
             {
-                m_pivot[i] = rand() % 2;
+                m_pivot[i] = (rand() % 2) != 0;
                 if(m_pivot[i])
                     ++m_pivots;
             }
@@ -234,4 +234,3 @@ private:
     factory_type m_factory;
 
 };
-

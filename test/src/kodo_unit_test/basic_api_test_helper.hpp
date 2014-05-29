@@ -6,12 +6,10 @@
 #pragma once
 
 #include <gtest/gtest.h>
-
-#include <fifi/is_prime2325.hpp>
-#include <fifi/prime2325_binary_search.hpp>
-#include <fifi/prime2325_apply_prefix.hpp>
-
-#include <kodo/default_on_systematic_encoder.hpp>
+#include <random>
+#include <fifi/binary.hpp>
+#include <fifi/binary8.hpp>
+#include <fifi/binary16.hpp>
 
 /// @param max_value The maximum value to return
 /// @return a random number between 1 and max_value
@@ -39,13 +37,15 @@ inline uint32_t rand_symbols(uint32_t max_symbols = 256)
 /// @return a random symbol size up to max_symbol_size to use in the tests
 inline uint32_t rand_symbol_size(uint32_t max_symbol_size = 1000)
 {
-    assert(max_symbol_size >= 4);
+    /// @todo make the granularity based on the fifi stack.
+    uint32_t granularity = 16;
+    assert(max_symbol_size >= granularity);
 
-    uint32_t elements = max_symbol_size / 4;
+    uint32_t elements = max_symbol_size / granularity;
 
-    uint32_t symbol_size = ((rand() % elements) + 1) * 4;
+    uint32_t symbol_size = ((rand() % elements) + 1) * granularity;
     assert(symbol_size > 0);
-    assert((symbol_size % 4) == 0);
+    assert((symbol_size % granularity) == 0);
 
     return symbol_size;
 }

@@ -15,9 +15,9 @@
 #include <gauge/python_printer.hpp>
 
 #include <kodo/has_deep_symbol_storage.hpp>
-#include <kodo/rlnc/full_vector_codes.hpp>
-#include <kodo/rlnc/seed_codes.hpp>
-#include <kodo/rs/reed_solomon_codes.hpp>
+#include <kodo/rlnc/full_rlnc_codes.hpp>
+#include <kodo/rlnc/seed_rlnc_codes.hpp>
+#include <kodo/reed_solomon/reed_solomon_codes.hpp>
 #include <kodo/set_systematic_on.hpp>
 #include <kodo/set_systematic_off.hpp>
 #include <tables/table.hpp>
@@ -42,7 +42,7 @@ public:
     decoding_probability_benchmark()
     {
         // Seed the random generator controlling the erasures
-        m_random_generator.seed((uint64_t)time(0));
+        m_random_generator.seed((uint32_t)time(0));
     }
 
     void start()
@@ -517,4 +517,3 @@ int main(int argc, const char* argv[])
 
     return 0;
 }
-

@@ -7,6 +7,7 @@
 
 #include <kodo/rlnc/sliding_window_encoder.hpp>
 #include <kodo/rlnc/sliding_window_decoder.hpp>
+#include <kodo/trace.hpp>
 
 /// @example sliding_window.cpp
 ///
@@ -19,9 +20,11 @@
 
 int main()
 {
+    srand((uint32_t)time(0));
+
     // Set the number of symbols (i.e. the generation size in RLNC
     // terminology) and the size of a symbol in bytes
-    uint32_t symbols = 42;
+    uint32_t symbols = 16;
     uint32_t symbol_size = 160;
 
     // Typdefs for the encoder/decoder type we wish to use
@@ -58,37 +61,64 @@ int main()
     auto symbol_storage =
         sak::split_storage(sak::storage(data_in), symbol_size);
 
-    while( !decoder->is_complete() )
+    while ( !decoder->is_complete() )
     {
-        // Encode a packet into the payload buffer
-        encoder->encode( &payload[0] );
 
-        // Send the data to the decoders, here we just for fun
-        // simulate that we are loosing 50% of the packets
-        if(rand() % 2)
-           continue;
-
-        // Packet got through - pass that packet to the decoder
-        decoder->decode( &payload[0] );
+        if (kodo::has_trace<rlnc_decoder>::value)
+        {
+            kodo::trace(decoder, std::cout);
+        }
 
         // Randomly choose to insert a symbol
-        if((rand() % 2) && (encoder->rank() < symbols))
+        if ((rand() % 2) && (encoder->rank() < symbols))
         {
             // For an encoder the rank specifies the number of symbols
             // it has available for encoding
             uint32_t rank = encoder->rank();
 
             encoder->set_symbol(rank, symbol_storage[rank]);
+
+            std::cout << "Symbol " << rank << " added to the encoder"
+                      << std::endl;
         }
 
+        // Encode a packet into the payload buffer
+        encoder->encode(payload.data());
+
+        std::cout << "Packet encoded" << std::endl;
+
+        // Send the data to the decoders, here we just for fun
+        // simulate that we are loosing 50% of the packets
+        if (rand() % 2)
+        {
+            std::cout << "Packet dropped on channel" << std::endl;
+            continue;
+        }
+
+        std::cout << "Decoder received packet" << std::endl;
+
+        // Packet got through - pass that packet to the decoder
+        decoder->decode(payload.data());
+
+        std::cout << "Encoder rank = " << encoder->rank() << std::endl;
+        std::cout << "Decoder rank = " << decoder->rank() << std::endl;
+        std::cout << "Decoder uncoded = " << decoder->symbols_uncoded()
+                  << std::endl;
+        std::cout << "Decoder seen = " << decoder->symbols_seen() << std::endl;
+
         // Transmit the feedback
-        decoder->write_feedback(&feedback[0]);
+        decoder->write_feedback(feedback.data());
 
         // Simulate loss of feedback
-        if(rand() % 2)
+        if (rand() % 2)
+        {
+            std::cout << "Lost feedback from decoder" << std::endl;
             continue;
+        }
 
-        encoder->read_feedback(&feedback[0]);
+        std::cout << "Received feedback from decoder" << std::endl;
+
+        encoder->read_feedback(feedback.data());
     }
 
     // The decoder is complete, now copy the symbols from the decoder
@@ -96,7 +126,7 @@ int main()
     decoder->copy_symbols(sak::storage(data_out));
 
     // Check we properly decoded the data
-    if (std::equal(data_out.begin(), data_out.end(), data_in.begin()))
+    if (data_out == data_in)
     {
         std::cout << "Data decoded correctly" << std::endl;
     }
@@ -107,4 +137,3 @@ int main()
     }
 
 }
-

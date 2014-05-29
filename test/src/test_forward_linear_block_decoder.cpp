@@ -10,9 +10,9 @@
 #include <gtest/gtest.h>
 
 #include <kodo/forward_linear_block_decoder.hpp>
-#include <kodo/rlnc/full_vector_codes.hpp>
+#include <kodo/rlnc/full_rlnc_codes.hpp>
 
-#include <kodo/debug_linear_block_decoder.hpp>
+#include <kodo/trace_linear_block_decoder.hpp>
 
 #include "kodo_unit_test/basic_api_test_helper.hpp"
 
@@ -31,7 +31,7 @@ namespace kodo
                      // Codec Header API
                      // Symbol ID API
                      // Decoder API
-                     debug_linear_block_decoder<
+                     trace_linear_block_decoder<enable_trace,
                      forward_linear_block_decoder<
                      symbol_decoding_status_counter<
                      symbol_decoding_status_tracker<
@@ -59,7 +59,7 @@ namespace kodo
                      // Codec Header API
                      // Symbol ID API
                      // Decoder API
-                     debug_linear_block_decoder<
+                     trace_linear_block_decoder<enable_trace,
                      linear_block_decoder_delayed<
                      forward_linear_block_decoder<
                      symbol_decoding_status_counter<
@@ -147,7 +147,7 @@ void test_forward_stack()
 
     EXPECT_TRUE(d->is_symbol_seen(0));
     EXPECT_TRUE(d->is_symbol_seen(1));
-    EXPECT_TRUE(d->is_symbol_decoded(2));
+    EXPECT_TRUE(d->is_symbol_uncoded(2));
 
     EXPECT_FALSE(d->is_complete());
 
@@ -169,7 +169,7 @@ void test_forward_stack()
 
     EXPECT_TRUE(d->is_symbol_seen(0));
     EXPECT_TRUE(d->is_symbol_seen(1));
-    EXPECT_TRUE(d->is_symbol_decoded(2));
+    EXPECT_TRUE(d->is_symbol_uncoded(2));
     EXPECT_TRUE(d->is_symbol_seen(4));
 
     EXPECT_FALSE(d->is_complete());
@@ -193,7 +193,7 @@ void test_forward_stack()
 
     EXPECT_TRUE(d->is_symbol_seen(0));
     EXPECT_TRUE(d->is_symbol_seen(1));
-    EXPECT_TRUE(d->is_symbol_decoded(2));
+    EXPECT_TRUE(d->is_symbol_uncoded(2));
     EXPECT_TRUE(d->is_symbol_seen(4));
 
     EXPECT_FALSE(d->is_complete());
@@ -216,11 +216,11 @@ void test_forward_stack()
     EXPECT_TRUE(d->is_symbol_pivot(3));
     EXPECT_TRUE(d->is_symbol_pivot(4));
 
-    EXPECT_TRUE(d->is_symbol_decoded(0));
-    EXPECT_TRUE(d->is_symbol_decoded(1));
-    EXPECT_TRUE(d->is_symbol_decoded(2));
-    EXPECT_TRUE(d->is_symbol_decoded(3));
-    EXPECT_TRUE(d->is_symbol_decoded(4));
+    EXPECT_TRUE(d->is_symbol_uncoded(0));
+    EXPECT_TRUE(d->is_symbol_uncoded(1));
+    EXPECT_TRUE(d->is_symbol_uncoded(2));
+    EXPECT_TRUE(d->is_symbol_uncoded(3));
+    EXPECT_TRUE(d->is_symbol_uncoded(4));
 
     EXPECT_TRUE(d->is_complete());
 
@@ -236,6 +236,3 @@ TEST(TestForwardLinearBlockDecoder, test_decoder_delayed)
 {
     test_forward_stack<kodo::test_forward_delayed_stack>();
 }
-
-
-

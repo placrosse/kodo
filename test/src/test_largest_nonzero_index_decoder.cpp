@@ -12,9 +12,9 @@
 #include <kodo/largest_nonzero_index_decoder.hpp>
 #include <kodo/empty_decoder.hpp>
 #include <kodo/rank_info.hpp>
-#include <kodo/rlnc/full_vector_codes.hpp>
+#include <kodo/rlnc/full_rlnc_codes.hpp>
 
-#include <kodo/debug_linear_block_decoder.hpp>
+#include <kodo/trace_linear_block_decoder.hpp>
 
 #include "kodo_unit_test/basic_api_test_helper.hpp"
 
@@ -143,6 +143,3 @@ TEST(TestLargestNonzeroIndexDecoder, test_index)
     EXPECT_EQ(d->largest_nonzero_index(), 4U);
 
 }
-
-
-

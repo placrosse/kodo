@@ -311,6 +311,15 @@
 ///        various functions.
 
 //------------------------------------------------------------------
+// UTILITY
+//------------------------------------------------------------------
+
+/// @defgroup utility General utility functionality
+///
+/// @brief Utilitiy or helper classes that implement some reusable and
+///        generic functionality.
+
+//------------------------------------------------------------------
 // FEEDBACK
 //------------------------------------------------------------------
 
@@ -352,4 +361,20 @@
 /// @ingroup state
 /// @brief Implementations of the state API.
 
+//------------------------------------------------------------------
+// TRACE
+//------------------------------------------------------------------
 
+/// @defgroup trace Trace
+/// @ingroup api_layer
+///
+/// @brief The trace API functions are functions that provide a way to
+///        trace codec stacks.
+
+/// @defgroup trace_api API
+/// @ingroup trace
+/// @brief The API used by the trace layers
+
+/// @defgroup trace_layers Layers
+/// @ingroup trace
+/// @brief Implementations of the trace API.

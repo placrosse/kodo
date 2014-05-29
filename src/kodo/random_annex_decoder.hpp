@@ -3,15 +3,13 @@
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
 
-#ifndef KODO_RANDOM_ANNEX_DECODER_HPP
-#define KODO_RANDOM_ANNEX_DECODER_HPP
+#pragma once
 
 #include <cstdint>
+#include <functional>
 
 #include <boost/make_shared.hpp>
 #include <boost/noncopyable.hpp>
-#include <boost/function.hpp>
-#include <boost/bind.hpp>
 
 #include <sak/storage.hpp>
 
@@ -48,7 +46,7 @@ namespace kodo
         typedef typename std::set<annex_info>::iterator annex_iterator;
 
         /// The callback function to invoke when a decoder completes
-        typedef boost::function<void ()> is_complete_handler;
+        typedef std::function<void ()> is_complete_handler;
 
     public:
 
@@ -241,8 +239,12 @@ namespace kodo
                 // Now we use the reverse annex info to further pass
                 // symbols to decoders with our decoded block in
                 // their annex
-                uint32_t reverse_annex_size =
+                auto reverse_annex_size =
                     m_reverse_annex[from_decoder].size();
+
+                // Check that we do not overflow our loop variable
+                assert(reverse_annex_size <=
+                       std::numeric_limits<uint32_t>::max());
 
                 for(uint32_t to_decoder = 0;
                     to_decoder < reverse_annex_size; ++to_decoder)
@@ -305,8 +307,8 @@ namespace kodo
                     decoder->set_bytes_used(bytes_used);
 
                     is_complete_handler handler =
-                        boost::bind(&random_annex_decoder::decoder_complete,
-                                    this, i);
+                        std::bind(&random_annex_decoder::decoder_complete,
+                                  this, i);
 
                     wrap_coder wrap(decoder, handler);
 
@@ -337,6 +339,3 @@ namespace kodo
     };
 
 }
-
-#endif
-

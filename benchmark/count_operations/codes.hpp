@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include <kodo/rlnc/full_vector_codes.hpp>
+#include <kodo/rlnc/full_rlnc_codes.hpp>
 #include <kodo/linear_block_decoder_delayed.hpp>
 #include <kodo/partial_shallow_symbol_storage.hpp>
 #include <kodo/finite_field_counter.hpp>
@@ -114,4 +114,3 @@ namespace kodo
     { };
 
 }
-

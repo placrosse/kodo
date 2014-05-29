@@ -13,15 +13,16 @@
 #include <gauge/csv_printer.hpp>
 #include <gauge/json_printer.hpp>
 
-#include <kodo/rlnc/full_vector_codes.hpp>
-#include <kodo/rlnc/seed_codes.hpp>
-#include <kodo/rs/reed_solomon_codes.hpp>
+#include <kodo/has_systematic_encoder.hpp>
 #include <kodo/perpetual/perpetual_codes.hpp>
 #include <kodo/set_systematic_off.hpp>
+#include <kodo/rlnc/full_rlnc_codes.hpp>
+
+#include <fifi/is_prime2325.hpp>
+#include <fifi/prime2325_binary_search.hpp>
+#include <fifi/prime2325_apply_prefix.hpp>
 
 #include <tables/table.hpp>
-
-#include "codes.hpp"
 
 /// A test block represents an encoder and decoder pair
 template<class Encoder, class Decoder>
@@ -36,7 +37,7 @@ struct throughput_benchmark : public gauge::time_benchmark
 
     void init()
     {
-        m_factor = 2;
+        m_factor = 1;
         gauge::time_benchmark::init();
     }
 
@@ -64,11 +65,11 @@ struct throughput_benchmark : public gauge::time_benchmark
         // The number of bytes {en|de}coded
         uint64_t total_bytes = 0;
 
-        if(type == "decoder")
+        if (type == "decoder")
         {
             total_bytes = m_decoded_symbols * symbol_size;
         }
-        else if(type == "encoder")
+        else if (type == "encoder")
         {
             total_bytes = m_encoded_symbols * symbol_size;
         }
@@ -86,7 +87,7 @@ struct throughput_benchmark : public gauge::time_benchmark
 
     void store_run(tables::table& results)
     {
-        if(!results.has_column("throughput"))
+        if (!results.has_column("throughput"))
             results.add_column("throughput");
 
         results.set_value("throughput", measurement());
@@ -98,18 +99,21 @@ struct throughput_benchmark : public gauge::time_benchmark
 
         std::string type = cs.get_value<std::string>("type");
 
-        if(type == "decoder")
+        if (type == "decoder")
         {
             // If we are benchmarking a decoder we only accept
             // the measurement if the decoding was successful
-            if(!m_decoder->is_complete())
+            if (!m_decoder->is_complete())
             {
                 // We did not generate enough payloads to decode successfully,
                 // so we will generate more payloads for next run
-                m_factor++;
+                ++m_factor;
 
                 return false;
             }
+
+            // At this point, the output data should be equal to the input data
+            assert(m_data_out == m_data_in);
         }
 
         return gauge::time_benchmark::accept_measurement();
@@ -130,11 +134,11 @@ struct throughput_benchmark : public gauge::time_benchmark
         assert(symbol_size.size() > 0);
         assert(types.size() > 0);
 
-        for(uint32_t i = 0; i < symbols.size(); ++i)
+        for (uint32_t i = 0; i < symbols.size(); ++i)
         {
-            for(uint32_t j = 0; j < symbol_size.size(); ++j)
+            for (uint32_t j = 0; j < symbol_size.size(); ++j)
             {
-                for(uint32_t u = 0; u < types.size(); ++u)
+                for (uint32_t u = 0; u < types.size(); ++u)
                 {
                     gauge::config_set cs;
                     cs.set_value<uint32_t>("symbols", symbols[i]);
@@ -154,6 +158,7 @@ struct throughput_benchmark : public gauge::time_benchmark
         uint32_t symbols = cs.get_value<uint32_t>("symbols");
         uint32_t symbol_size = cs.get_value<uint32_t>("symbol_size");
 
+        /// @todo Research the cause of this
         // Make the factories fit perfectly otherwise there seems to
         // be problems with memory access i.e. when using a factory
         // with max symbols 1024 with a symbols 16
@@ -172,64 +177,115 @@ struct throughput_benchmark : public gauge::time_benchmark
         m_encoder = m_encoder_factory->build();
         m_decoder = m_decoder_factory->build();
 
-        // Prepare the data to be encoded
-        m_encoded_data.resize(m_encoder->block_size());
+        // Prepare the data buffers
+        m_data_in.resize(m_encoder->block_size());
+        m_data_out.resize(m_encoder->block_size());
 
-        for(uint8_t &e : m_encoded_data)
-        {
-            e = rand() % 256;
-        }
+        std::generate_n(m_data_in.begin(), m_data_in.size(), rand);
 
-        m_encoder->set_symbols(sak::storage(m_encoded_data));
+        m_encoder->set_symbols(sak::storage(m_data_in));
+
+        // This step is not needed for deep storage decoders, but also
+        // does not hurt :) For shallow decoders it will provide the
+        // memory that we will decode into, whereas a deep storage
+        // decoder already has its own memory (in this case the deep
+        // storage decoder will just gets its internal memory
+        // initialized by m_data_out)
+        m_decoder->set_symbols(sak::storage(m_data_out));
+
+        // Create the payload buffer
+        m_temp_payload.resize(m_decoder->payload_size());
 
         // Prepare storage to the encoded payloads
         uint32_t payload_count = symbols * m_factor;
+        assert(payload_count > 0);
 
         m_payloads.resize(payload_count);
-        for(uint32_t i = 0; i < payload_count; ++i)
+        for (auto& payload : m_payloads)
         {
-            m_payloads[i].resize( m_encoder->payload_size() );
+            payload.resize(m_encoder->payload_size());
         }
-
-        m_temp_payload.resize( m_encoder->payload_size() );
     }
 
     void encode_payloads()
     {
-        m_encoder->set_symbols(sak::storage(m_encoded_data));
+        // If we are working in the prime2325 finite field we have to
+        // "map" the data first. This cost is included in the encoder
+        // throughput (we do it with the clock running), just as it
+        // would be in a real application.
+        if (fifi::is_prime2325<typename Encoder::field_type>::value)
+        {
+            uint32_t block_length =
+                fifi::size_to_length<fifi::prime2325>(m_encoder->block_size());
+
+            fifi::prime2325_binary_search search(block_length);
+            m_prefix = search.find_prefix(sak::storage(m_data_in));
+
+            // Apply the negated prefix
+            fifi::apply_prefix(sak::storage(m_data_in), ~m_prefix);
+        }
+
+        m_encoder->set_symbols(sak::storage(m_data_in));
 
         // We switch any systematic operations off so we code
         // symbols from the beginning
-        if(kodo::has_systematic_encoder<Encoder>::value)
+        if (kodo::has_systematic_encoder<Encoder>::value)
             kodo::set_systematic_off(m_encoder);
 
-        uint32_t payload_count = m_payloads.size();
-
-        for(uint32_t i = 0; i < payload_count; ++i)
+        for (auto& payload : m_payloads)
         {
-            std::vector<uint8_t> &payload = m_payloads[i];
-            m_encoder->encode(&payload[0]);
-
+            m_encoder->encode(payload.data());
             ++m_encoded_symbols;
+        }
+
+        /// @todo Revert to the original input data by re-applying the
+        /// prefix to the input data. This is needed since the
+        /// benchmark loops and re-encodes the same data. If we did
+        /// not re-apply the prefix the input data would be corrupted
+        /// in the second iteration, causing decoding to produce
+        /// incorrect output data. In a real-world application this
+        /// would typically not be needed. For this reason the
+        /// prime2325 results encoding results will show a lower
+        /// throughput than what we can expect to see in an actual
+        /// application. Currently we don't have a good solution for
+        /// this. Possible solutions would be to copy the input data,
+        /// however in that way we will also see a performance hit.
+        if (fifi::is_prime2325<typename Encoder::field_type>::value)
+        {
+            // Apply the negated prefix
+            fifi::apply_prefix(sak::storage(m_data_in), ~m_prefix);
         }
     }
 
     void decode_payloads()
     {
-        uint32_t payload_count = m_payloads.size();
-
-        for(uint32_t i = 0; i < payload_count; ++i)
+        for (const auto& payload : m_payloads)
         {
-            std::copy(m_payloads[i].begin(),
-                      m_payloads[i].end(),
-                      m_temp_payload.begin());
 
-            m_decoder->decode(&m_temp_payload[0]);
+            /// @todo This copy would typically not be performed by an
+            /// actual application, however since the benchmark
+            /// performs several iterations decoding the same data we
+            /// have to copy the input data to avoid corrupting
+            /// it. The decoder works on data "in-place" therefore we
+            /// would corrupt the payloads if we did not copy them.
+            ///
+            /// Changing this would most likely improve the throughput
+            /// of the decoders. We are open to suggestions :)
+            std::copy_n(payload.data(), payload.size(), m_temp_payload.data());
+
+            m_decoder->decode(m_temp_payload.data());
 
             ++m_decoded_symbols;
 
-            if(m_decoder->is_complete())
+            if (m_decoder->is_complete())
             {
+                if(fifi::is_prime2325<typename Decoder::field_type>::value)
+                {
+                    // Now we have to apply the negated prefix to the
+                    // decoded data
+                    fifi::apply_prefix(sak::storage(m_data_out), ~m_prefix);
+                }
+
                 return;
             }
         }
@@ -247,12 +303,14 @@ struct throughput_benchmark : public gauge::time_benchmark
         m_encoder_factory->set_symbol_size(symbol_size);
 
         // The clock is running
-        RUN{
+        RUN
+        {
             // We have to make sure the encoder is in a "clean" state
             m_encoder->initialize(*m_encoder_factory);
 
             encode_payloads();
         }
+
     }
 
     /// Run the decoder
@@ -269,17 +327,22 @@ struct throughput_benchmark : public gauge::time_benchmark
         m_decoder_factory->set_symbols(symbols);
         m_decoder_factory->set_symbol_size(symbol_size);
 
+        // Zero the data buffer for the decoder
+        std::fill_n(m_data_out.begin(), m_data_out.size(), 0);
+
         // The clock is running
-        RUN{
+        RUN
+        {
             // We have to make sure the decoder is in a "clean" state
             // i.e. no symbols already decoded.
             m_decoder->initialize(*m_decoder_factory);
+
+            m_decoder->set_symbols(sak::storage(m_data_out));
 
             // Decode the payloads
             decode_payloads();
         }
     }
-
 
     void run_benchmark()
     {
@@ -287,11 +350,11 @@ struct throughput_benchmark : public gauge::time_benchmark
 
         std::string type = cs.get_value<std::string>("type");
 
-        if(type == "encoder")
+        if (type == "encoder")
         {
             run_encode();
         }
-        else if(type == "decoder")
+        else if (type == "decoder")
         {
             run_decode();
         }
@@ -299,7 +362,6 @@ struct throughput_benchmark : public gauge::time_benchmark
         {
             assert(0);
         }
-
     }
 
 protected:
@@ -313,20 +375,27 @@ protected:
     /// The encoder to use
     encoder_ptr m_encoder;
 
-    /// The number of symbols encoded
+    /// The number of encoded symbols
     uint32_t m_encoded_symbols;
 
-    /// The encoder to use
+    /// The decoder to use
     decoder_ptr m_decoder;
 
-    /// The number of symbols decoded
+    /// The number of decoded symbols
     uint32_t m_decoded_symbols;
 
-    /// The data encoded
-    std::vector<uint8_t> m_encoded_data;
+    /// The input data
+    std::vector<uint8_t> m_data_in;
 
-    /// Temporary payload to not destroy the already encoded payloads
-    /// when decoding
+    /// The output data
+    std::vector<uint8_t> m_data_out;
+
+    /// Buffer storing the encoded payloads before adding them to the
+    /// decoder. This is necessary since the decoder will "work on"
+    /// the encoded payloads directly. Therefore if we want to be able
+    /// to run multiple iterations with the same encoded paylaods we
+    /// have to copy them before injecting them into the decoder. This
+    /// of course has a negative impact on the decoding throughput.
     std::vector<uint8_t> m_temp_payload;
 
     /// Storage for encoded symbols
@@ -335,6 +404,8 @@ protected:
     /// Multiplication factor for payload_count
     uint32_t m_factor;
 
+    /// Prefix used when testing with the prime2325 finite field
+    uint32_t m_prefix;
 };
 
 
@@ -366,13 +437,13 @@ public:
         assert(types.size() > 0);
         assert(density.size() > 0);
 
-        for(const auto& s : symbols)
+        for (const auto& s : symbols)
         {
-            for(const auto& p : symbol_size)
+            for (const auto& p : symbol_size)
             {
-                for(const auto& t : types)
+                for (const auto& t : types)
                 {
-                    for(const auto& d: density)
+                    for (const auto& d: density)
                     {
                         gauge::config_set cs;
                         cs.set_value<uint32_t>("symbols", s);
@@ -397,7 +468,6 @@ public:
         double symbols = cs.get_value<double>("density");
         m_encoder->set_density(symbols);
     }
-
 };
 
 
@@ -469,12 +539,12 @@ BENCHMARK_OPTION(sparse_density_options)
 }
 
 //------------------------------------------------------------------
-// FullRLNC
+// Shallow FullRLNC
 //------------------------------------------------------------------
 
 typedef throughput_benchmark<
-    kodo::full_rlnc_encoder<fifi::binary>,
-    kodo::full_rlnc_decoder<fifi::binary> > setup_rlnc_throughput;
+    kodo::shallow_full_rlnc_encoder<fifi::binary>,
+    kodo::shallow_full_rlnc_decoder<fifi::binary> > setup_rlnc_throughput;
 
 BENCHMARK_F(setup_rlnc_throughput, FullRLNC, Binary, 5)
 {
@@ -482,8 +552,8 @@ BENCHMARK_F(setup_rlnc_throughput, FullRLNC, Binary, 5)
 }
 
 typedef throughput_benchmark<
-    kodo::full_rlnc_encoder<fifi::binary8>,
-    kodo::full_rlnc_decoder<fifi::binary8> > setup_rlnc_throughput8;
+    kodo::shallow_full_rlnc_encoder<fifi::binary8>,
+    kodo::shallow_full_rlnc_decoder<fifi::binary8> > setup_rlnc_throughput8;
 
 BENCHMARK_F(setup_rlnc_throughput8, FullRLNC, Binary8, 5)
 {
@@ -491,8 +561,8 @@ BENCHMARK_F(setup_rlnc_throughput8, FullRLNC, Binary8, 5)
 }
 
 typedef throughput_benchmark<
-    kodo::full_rlnc_encoder<fifi::binary16>,
-    kodo::full_rlnc_decoder<fifi::binary16> > setup_rlnc_throughput16;
+    kodo::shallow_full_rlnc_encoder<fifi::binary16>,
+    kodo::shallow_full_rlnc_decoder<fifi::binary16> > setup_rlnc_throughput16;
 
 BENCHMARK_F(setup_rlnc_throughput16, FullRLNC, Binary16, 5)
 {
@@ -500,8 +570,8 @@ BENCHMARK_F(setup_rlnc_throughput16, FullRLNC, Binary16, 5)
 }
 
 typedef throughput_benchmark<
-    kodo::full_rlnc_encoder<fifi::prime2325>,
-    kodo::full_rlnc_decoder<fifi::prime2325> > setup_rlnc_throughput2325;
+    kodo::shallow_full_rlnc_encoder<fifi::prime2325>,
+    kodo::shallow_full_rlnc_decoder<fifi::prime2325> > setup_rlnc_throughput2325;
 
 BENCHMARK_F(setup_rlnc_throughput2325, FullRLNC, Prime2325, 5)
 {
@@ -509,12 +579,12 @@ BENCHMARK_F(setup_rlnc_throughput2325, FullRLNC, Prime2325, 5)
 }
 
 //------------------------------------------------------------------
-// BackwardFullRLNC
+// Shallow BackwardFullRLNC
 //------------------------------------------------------------------
 
 typedef throughput_benchmark<
-    kodo::full_rlnc_encoder<fifi::binary>,
-    kodo::backward_full_rlnc_decoder<fifi::binary> >
+    kodo::shallow_full_rlnc_encoder<fifi::binary>,
+    kodo::shallow_backward_full_rlnc_decoder<fifi::binary> >
     setup_backward_rlnc_throughput;
 
 BENCHMARK_F(setup_backward_rlnc_throughput, BackwardFullRLNC, Binary, 5)
@@ -523,8 +593,8 @@ BENCHMARK_F(setup_backward_rlnc_throughput, BackwardFullRLNC, Binary, 5)
 }
 
 typedef throughput_benchmark<
-    kodo::full_rlnc_encoder<fifi::binary8>,
-    kodo::backward_full_rlnc_decoder<fifi::binary8> >
+    kodo::shallow_full_rlnc_encoder<fifi::binary8>,
+    kodo::shallow_backward_full_rlnc_decoder<fifi::binary8> >
     setup_backward_rlnc_throughput8;
 
 BENCHMARK_F(setup_backward_rlnc_throughput8, BackwardFullRLNC, Binary8, 5)
@@ -533,8 +603,8 @@ BENCHMARK_F(setup_backward_rlnc_throughput8, BackwardFullRLNC, Binary8, 5)
 }
 
 typedef throughput_benchmark<
-    kodo::full_rlnc_encoder<fifi::binary16>,
-    kodo::backward_full_rlnc_decoder<fifi::binary16> >
+    kodo::shallow_full_rlnc_encoder<fifi::binary16>,
+    kodo::shallow_backward_full_rlnc_decoder<fifi::binary16> >
     setup_backward_rlnc_throughput16;
 
 BENCHMARK_F(setup_backward_rlnc_throughput16, BackwardFullRLNC, Binary16, 5)
@@ -543,8 +613,8 @@ BENCHMARK_F(setup_backward_rlnc_throughput16, BackwardFullRLNC, Binary16, 5)
 }
 
 typedef throughput_benchmark<
-    kodo::full_rlnc_encoder<fifi::prime2325>,
-    kodo::backward_full_rlnc_decoder<fifi::prime2325> >
+    kodo::shallow_full_rlnc_encoder<fifi::prime2325>,
+    kodo::shallow_backward_full_rlnc_decoder<fifi::prime2325> >
     setup_backward_rlnc_throughput2325;
 
 BENCHMARK_F(setup_backward_rlnc_throughput2325, BackwardFullRLNC, Prime2325, 5)
@@ -552,14 +622,13 @@ BENCHMARK_F(setup_backward_rlnc_throughput2325, BackwardFullRLNC, Prime2325, 5)
     run_benchmark();
 }
 
-
 //------------------------------------------------------------------
-// FullDelayedRLNC
+// Shallow FullDelayedRLNC
 //------------------------------------------------------------------
 
 typedef throughput_benchmark<
-   kodo::full_rlnc_encoder<fifi::binary>,
-   kodo::full_delayed_rlnc_decoder<fifi::binary> >
+   kodo::shallow_full_rlnc_encoder<fifi::binary>,
+   kodo::shallow_delayed_full_rlnc_decoder<fifi::binary> >
    setup_delayed_rlnc_throughput;
 
 BENCHMARK_F(setup_delayed_rlnc_throughput, FullDelayedRLNC, Binary, 5)
@@ -568,8 +637,8 @@ BENCHMARK_F(setup_delayed_rlnc_throughput, FullDelayedRLNC, Binary, 5)
 }
 
 typedef throughput_benchmark<
-   kodo::full_rlnc_encoder<fifi::binary8>,
-   kodo::full_delayed_rlnc_decoder<fifi::binary8> >
+   kodo::shallow_full_rlnc_encoder<fifi::binary8>,
+   kodo::shallow_delayed_full_rlnc_decoder<fifi::binary8> >
    setup_delayed_rlnc_throughput8;
 
 BENCHMARK_F(setup_delayed_rlnc_throughput8, FullDelayedRLNC, Binary8, 5)
@@ -578,8 +647,8 @@ BENCHMARK_F(setup_delayed_rlnc_throughput8, FullDelayedRLNC, Binary8, 5)
 }
 
 typedef throughput_benchmark<
-   kodo::full_rlnc_encoder<fifi::binary16>,
-   kodo::full_delayed_rlnc_decoder<fifi::binary16> >
+   kodo::shallow_full_rlnc_encoder<fifi::binary16>,
+   kodo::shallow_delayed_full_rlnc_decoder<fifi::binary16> >
    setup_delayed_rlnc_throughput16;
 
 BENCHMARK_F(setup_delayed_rlnc_throughput16, FullDelayedRLNC, Binary16, 5)
@@ -588,8 +657,8 @@ BENCHMARK_F(setup_delayed_rlnc_throughput16, FullDelayedRLNC, Binary16, 5)
 }
 
 typedef throughput_benchmark<
-   kodo::full_rlnc_encoder<fifi::prime2325>,
-   kodo::full_delayed_rlnc_decoder<fifi::prime2325> >
+   kodo::shallow_full_rlnc_encoder<fifi::prime2325>,
+   kodo::shallow_delayed_full_rlnc_decoder<fifi::prime2325> >
    setup_delayed_rlnc_throughput2325;
 
 BENCHMARK_F(setup_delayed_rlnc_throughput2325, FullDelayedRLNC, Prime2325, 5)
@@ -597,11 +666,14 @@ BENCHMARK_F(setup_delayed_rlnc_throughput2325, FullDelayedRLNC, Prime2325, 5)
    run_benchmark();
 }
 
-/// Sparse
+//------------------------------------------------------------------
+// Shallow SparseFullRLNC
+//------------------------------------------------------------------
 
 typedef sparse_throughput_benchmark<
-    kodo::sparse_full_rlnc_encoder<fifi::binary>,
-    kodo::full_rlnc_decoder<fifi::binary> > setup_sparse_rlnc_throughput;
+    kodo::shallow_sparse_full_rlnc_encoder<fifi::binary>,
+    kodo::shallow_full_rlnc_decoder<fifi::binary>>
+    setup_sparse_rlnc_throughput;
 
 BENCHMARK_F(setup_sparse_rlnc_throughput, SparseFullRLNC, Binary, 5)
 {
@@ -609,8 +681,9 @@ BENCHMARK_F(setup_sparse_rlnc_throughput, SparseFullRLNC, Binary, 5)
 }
 
 typedef sparse_throughput_benchmark<
-    kodo::sparse_full_rlnc_encoder<fifi::binary8>,
-    kodo::full_rlnc_decoder<fifi::binary8> > setup_sparse_rlnc_throughput8;
+    kodo::shallow_sparse_full_rlnc_encoder<fifi::binary8>,
+    kodo::shallow_full_rlnc_decoder<fifi::binary8>>
+    setup_sparse_rlnc_throughput8;
 
 BENCHMARK_F(setup_sparse_rlnc_throughput8, SparseFullRLNC, Binary8, 5)
 {
@@ -618,8 +691,9 @@ BENCHMARK_F(setup_sparse_rlnc_throughput8, SparseFullRLNC, Binary8, 5)
 }
 
 typedef sparse_throughput_benchmark<
-    kodo::sparse_full_rlnc_encoder<fifi::binary16>,
-    kodo::full_rlnc_decoder<fifi::binary16> > setup_sparse_rlnc_throughput16;
+    kodo::shallow_sparse_full_rlnc_encoder<fifi::binary16>,
+    kodo::shallow_full_rlnc_decoder<fifi::binary16>>
+    setup_sparse_rlnc_throughput16;
 
 BENCHMARK_F(setup_sparse_rlnc_throughput16, SparseFullRLNC, Binary16, 5)
 {
@@ -669,7 +743,6 @@ BENCHMARK_F(setup_perpetual_throughput2325, Perpetual, Prime2325, 5)
 
 int main(int argc, const char* argv[])
 {
-
     srand(static_cast<uint32_t>(time(0)));
 
     gauge::runner::add_default_printers();
@@ -677,4 +750,3 @@ int main(int argc, const char* argv[])
 
     return 0;
 }
-

@@ -21,7 +21,7 @@ template
     class Encoder,
     class Decoder
 >
-inline void test_on_the_fly(uint32_t symbols, uint32_t symbol_size)
+inline void run_test_on_the_fly(uint32_t symbols, uint32_t symbol_size)
 {
 
     // Common setting
@@ -60,13 +60,13 @@ inline void test_on_the_fly(uint32_t symbols, uint32_t symbol_size)
         {
             // Check that we as many pivot elements as expected and that these
             // are decoded
-            uint32_t symbols_decoded = 0;
+            uint32_t symbols_uncoded = 0;
             for(uint32_t i = 0; i < decoder->symbols(); ++i)
             {
-                if(!decoder->is_symbol_decoded(i))
+                if(!decoder->is_symbol_uncoded(i))
                     continue;
 
-                ++symbols_decoded;
+                ++symbols_uncoded;
 
                 auto symbol_storage =
                     sak::storage(decoder->symbol(i), decoder->symbol_size());
@@ -74,7 +74,7 @@ inline void test_on_the_fly(uint32_t symbols, uint32_t symbol_size)
                 EXPECT_TRUE(sak::equal(symbol_storage, symbol_sequence[i]));
             }
 
-            EXPECT_EQ(symbols_decoded, decoder->symbols_decoded());
+            EXPECT_EQ(symbols_uncoded, decoder->symbols_uncoded());
         }
 
         if(((rand() % 2) == 0) && encoder->rank() < symbols)
@@ -101,17 +101,17 @@ template
 inline void test_on_the_fly(uint32_t symbols, uint32_t symbol_size)
 {
 
-    test_on_the_fly<
+    run_test_on_the_fly<
         Encoder<fifi::binary>,
         Decoder<fifi::binary> >(
         symbols, symbol_size);
 
-    test_on_the_fly<
+    run_test_on_the_fly<
         Encoder<fifi::binary8>,
         Decoder<fifi::binary8> >(
         symbols, symbol_size);
 
-    test_on_the_fly<
+    run_test_on_the_fly<
         Encoder<fifi::binary16>,
         Decoder<fifi::binary16> >(
         symbols, symbol_size);
@@ -140,7 +140,7 @@ inline void test_on_the_fly()
 /// This class tests on-the-fly adding symbols to the encoding while
 /// using the systematic feature of the encoder
 template<class Encoder, class Decoder>
-inline void test_on_the_fly_systematic(uint32_t symbols, uint32_t symbol_size)
+inline void run_test_on_the_fly_systematic(uint32_t symbols, uint32_t symbol_size)
 {
     // Common setting
     typename Encoder::factory encoder_factory(symbols, symbol_size);
@@ -193,13 +193,13 @@ inline void test_on_the_fly_systematic(uint32_t symbols, uint32_t symbol_size)
         {
             // Check that we as many pivot elements as expected and that these
             // are decoded
-            uint32_t symbols_decoded = 0;
+            uint32_t symbols_uncoded = 0;
             for(uint32_t i = 0; i < decoder->symbols(); ++i)
             {
-                if(!decoder->is_symbol_decoded(i))
+                if(!decoder->is_symbol_uncoded(i))
                     continue;
 
-                ++symbols_decoded;
+                ++symbols_uncoded;
 
                 auto symbol_storage =
                     sak::storage(decoder->symbol(i), decoder->symbol_size());
@@ -207,7 +207,7 @@ inline void test_on_the_fly_systematic(uint32_t symbols, uint32_t symbol_size)
                 EXPECT_TRUE(sak::equal(symbol_storage, symbol_sequence[i]));
             }
 
-            EXPECT_EQ(symbols_decoded, decoder->symbols_decoded());
+            EXPECT_EQ(symbols_uncoded, decoder->symbols_uncoded());
         }
 
 
@@ -237,19 +237,19 @@ template
 >
 inline void test_on_the_fly_systematic(uint32_t symbols, uint32_t symbol_size)
 {
-    test_on_the_fly_systematic
+    run_test_on_the_fly_systematic
         <
         Encoder<fifi::binary>,
         Decoder<fifi::binary>
         >(symbols, symbol_size);
 
-    test_on_the_fly_systematic
+    run_test_on_the_fly_systematic
         <
         Encoder<fifi::binary8>,
         Decoder<fifi::binary8>
         >(symbols, symbol_size);
 
-    test_on_the_fly_systematic
+    run_test_on_the_fly_systematic
         <
         Encoder<fifi::binary16>,
         Decoder<fifi::binary16>
@@ -275,7 +275,7 @@ inline void test_on_the_fly_systematic()
 /// This class tests on-the-fly adding symbols to the encoding while
 /// using the systematic feature of the encoder
 template<class Encoder, class Decoder>
-inline void test_on_the_fly_systematic_no_errors(uint32_t symbols,
+inline void run_test_on_the_fly_systematic_no_errors(uint32_t symbols,
                                                  uint32_t symbol_size)
 {
     // Common setting
@@ -312,13 +312,13 @@ inline void test_on_the_fly_systematic_no_errors(uint32_t symbols,
         {
             // Check that we as many pivot elements as expected and that these
             // are decoded
-            uint32_t symbols_decoded = 0;
+            uint32_t symbols_uncoded = 0;
             for(uint32_t i = 0; i < decoder->symbols(); ++i)
             {
-                if(!decoder->is_symbol_decoded(i))
+                if(!decoder->is_symbol_uncoded(i))
                     continue;
 
-                ++symbols_decoded;
+                ++symbols_uncoded;
 
                 auto symbol_storage =
                     sak::storage(decoder->symbol(i), decoder->symbol_size());
@@ -326,7 +326,7 @@ inline void test_on_the_fly_systematic_no_errors(uint32_t symbols,
                 EXPECT_TRUE(sak::equal(symbol_storage, symbol_sequence[i]));
             }
 
-            EXPECT_EQ(symbols_decoded, decoder->symbols_decoded());
+            EXPECT_EQ(symbols_uncoded, decoder->symbols_uncoded());
         }
 
 
@@ -357,19 +357,19 @@ template
 inline void test_on_the_fly_systematic_no_errors(uint32_t symbols,
                                                  uint32_t symbol_size)
 {
-    test_on_the_fly_systematic_no_errors
+    run_test_on_the_fly_systematic_no_errors
         <
         Encoder<fifi::binary>,
         Decoder<fifi::binary>
         >(symbols, symbol_size);
 
-    test_on_the_fly_systematic_no_errors
+    run_test_on_the_fly_systematic_no_errors
         <
         Encoder<fifi::binary8>,
         Decoder<fifi::binary8>
         >(symbols, symbol_size);
 
-    test_on_the_fly_systematic_no_errors
+    run_test_on_the_fly_systematic_no_errors
         <
         Encoder<fifi::binary16>,
         Decoder<fifi::binary16>
@@ -397,7 +397,7 @@ inline void test_on_the_fly_systematic_no_errors()
 /// This test checks that the systematic packets that are received are
 /// correctly reported as decoded
 template<class Encoder, class Decoder>
-inline void test_systematic_packets_decode()
+inline void run_test_systematic_packets_decode()
 {
     uint32_t symbols = 5;
     uint32_t symbol_size = 1400;
@@ -428,7 +428,7 @@ inline void test_systematic_packets_decode()
     decoder->decode( &payload[0] );
 
     EXPECT_TRUE(decoder->is_partial_complete());
-    EXPECT_TRUE(decoder->is_symbol_decoded(0));
+    EXPECT_TRUE(decoder->is_symbol_uncoded(0));
 
     encoder->encode( &payload[0] );
     // Simulate a packet loss
@@ -437,13 +437,13 @@ inline void test_systematic_packets_decode()
     decoder->decode( &payload[0] );
 
     EXPECT_TRUE(decoder->is_partial_complete());
-    EXPECT_TRUE(decoder->is_symbol_decoded(0));
-    EXPECT_TRUE(decoder->is_symbol_decoded(2));
+    EXPECT_TRUE(decoder->is_symbol_uncoded(0));
+    EXPECT_TRUE(decoder->is_symbol_uncoded(2));
 
     // We now have to loop since we are producing coded packets
     // and we might generate linear dependent packets
     uint32_t loop = 0;
-    while(decoder->symbols_decoded() != 3)
+    while(decoder->symbols_uncoded() != 3)
     {
         encoder->encode( &payload[0] );
         decoder->decode( &payload[0] );
@@ -453,9 +453,9 @@ inline void test_systematic_packets_decode()
     }
 
     EXPECT_TRUE(decoder->is_partial_complete());
-    EXPECT_TRUE(decoder->is_symbol_decoded(0));
-    EXPECT_TRUE(decoder->is_symbol_decoded(1));
-    EXPECT_TRUE(decoder->is_symbol_decoded(2));
+    EXPECT_TRUE(decoder->is_symbol_uncoded(0));
+    EXPECT_TRUE(decoder->is_symbol_uncoded(1));
+    EXPECT_TRUE(decoder->is_symbol_uncoded(2));
 
     encoder->set_symbol(3, symbol_sequence[3]);
 
@@ -463,7 +463,7 @@ inline void test_systematic_packets_decode()
     decoder->decode( &payload[0] );
 
     EXPECT_TRUE(decoder->is_partial_complete());
-    EXPECT_TRUE(decoder->is_symbol_decoded(3));
+    EXPECT_TRUE(decoder->is_symbol_uncoded(3));
 
     // Nothing should happen now since the encoder contains no
     // new symbols
@@ -482,7 +482,7 @@ inline void test_systematic_packets_decode()
     encoder->encode( &payload[0] );
     // Packet loss
 
-    while(decoder->symbols_decoded() != 5)
+    while(decoder->symbols_uncoded() != 5)
     {
         encoder->encode( &payload[0] );
         decoder->decode( &payload[0] );
@@ -501,14 +501,12 @@ template
 >
 inline void test_systematic_packets_decode()
 {
-    test_systematic_packets_decode<
+    run_test_systematic_packets_decode<
         Encoder<fifi::binary>, Decoder<fifi::binary> >();
 
-    test_systematic_packets_decode<
+    run_test_systematic_packets_decode<
         Encoder<fifi::binary8>, Decoder<fifi::binary8> >();
 
-    test_systematic_packets_decode<
+    run_test_systematic_packets_decode<
         Encoder<fifi::binary16>, Decoder<fifi::binary16> >();
 }
-
-

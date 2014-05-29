@@ -90,7 +90,11 @@ namespace kodo
         ///         this object
         uint32_t encoders() const
             {
-                return m_encoders.size();
+                auto size = m_encoders.size();
+
+                // Check that we do not overflow the return type
+                assert(size <= std::numeric_limits<uint32_t>::max());
+                return (uint32_t) size;
             }
 
         /// Builds a specific encoder
@@ -129,7 +133,7 @@ namespace kodo
                 auto symbol_sequence = sak::split_storage(
                     storage, encoder->symbol_size());
 
-                uint32_t sequence_size = symbol_sequence.size();
+                auto sequence_size = symbol_sequence.size();
                 for(uint32_t i = 0; i < sequence_size; ++i)
                 {
                     encoder->set_symbol(i, symbol_sequence[i]);

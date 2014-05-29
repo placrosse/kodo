@@ -14,7 +14,7 @@
 #include <kodo/default_on_systematic_encoder.hpp>
 #include <kodo/default_off_systematic_encoder.hpp>
 
-#include <kodo/rlnc/full_vector_codes.hpp>
+#include <kodo/rlnc/full_rlnc_codes.hpp>
 #include <kodo/rlnc/on_the_fly_codes.hpp>
 
 namespace kodo
@@ -105,6 +105,3 @@ TEST(TestHasSystematicEncoder, detect)
     EXPECT_TRUE(kodo::has_systematic_encoder<kodo::dummy_has_true>::value);
     EXPECT_TRUE(kodo::has_systematic_encoder<kodo::dummy_has_false>::value);
 }
-
-
-
