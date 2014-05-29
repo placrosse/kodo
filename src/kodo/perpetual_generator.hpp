@@ -148,7 +148,7 @@ namespace kodo
 
             uint32_t symbols = SuperCoder::symbols();
 
-            //draw a valid pivot
+            // Draw a valid pivot
             uint32_t pivot = m_pivot_distribution(m_random_generator);
             while (!SuperCoder::is_symbol_pivot(pivot))
                 pivot = m_pivot_distribution(m_random_generator);
@@ -158,6 +158,7 @@ namespace kodo
             boost::optional<uint32_t> back =
                 find_back(coefficients_index, (pivot + m_width) % symbols);
 
+            // The search must yield a valid back index
             assert(back != boost::none);
 
             uint32_t max_back = back.get();
@@ -165,7 +166,7 @@ namespace kodo
             value_type* c = reinterpret_cast<value_type*>(coefficients);
             fifi::set_value<field_type>(c, pivot, 1);
 
-            // check which of the w rows after the pivot can be used
+            // Check which of the w rows after the pivot can be used
             for (uint32_t i = 1 ; i <= m_width; ++i)
             {
                 uint32_t index = (pivot + i) % symbols;
@@ -197,7 +198,7 @@ namespace kodo
                 fifi::set_value<field_type>(c, index, coefficient);
             }
 
-            // check which of the (up to) w rows before the pivot can be used
+            // Check which of the (up to) w rows before the pivot can be used
             for (uint32_t i = 1 ; i <= m_width; ++i)
             {
                 uint32_t index = (pivot + symbols - i) % symbols;
@@ -214,7 +215,7 @@ namespace kodo
                 if (back == boost::none)
                     continue;
 
-                // none of the indices's before will fit width-in the width
+                // None of the indices before will fit in the width
                 if (calc_width(index, max_back) > m_width)
                     break;
 
@@ -242,6 +243,7 @@ namespace kodo
         void set_density(double density)
         {
             assert(density > 0);
+            assert(density <= 1);
             // If binary, the density should be below 1
             assert(!fifi::is_binary<field_type>::value || density < 1);
 
@@ -310,7 +312,7 @@ namespace kodo
 
             for (uint32_t i = 0; i < symbols; ++i)
             {
-                uint32_t index = (back - i) % symbols;
+                uint32_t index = (back + symbols - i) % symbols;
 
                 value_type coefficient =
                     SuperCoder::coefficient_value(coefficients, index);
@@ -321,7 +323,7 @@ namespace kodo
                 return boost::optional<uint32_t>(index);
             }
 
-            // for the zero vector there is no meaningful last element
+            // There is no meaningful last element for the zero vector
             return boost::none;
     }
 
