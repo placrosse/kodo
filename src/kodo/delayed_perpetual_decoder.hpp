@@ -94,16 +94,13 @@ namespace kodo
 
     protected:
 
-        /// the max width seen
-        uint32_t m_max_seen_width;
-
-        /// @return the highist width seen
+        /// @return the highest width seen
         uint32_t max_width() const
         {
             return m_max_seen_width;
         }
 
-        /// update the highest width seen
+        /// Update the highest width seen
         /// @param width an observed width
         void seen_width(uint32_t width)
         {
@@ -245,8 +242,8 @@ namespace kodo
             assert(vector_data != 0);
 
             // Look for a pivot
-            boost::optional<uint32_t> pivot_id
-                = forward_substitute_to_pivot(symbol_data, vector_data);
+            boost::optional<uint32_t> pivot_id =
+                forward_substitute_to_pivot(symbol_data, vector_data);
 
             if (pivot_id == boost::none)
                 return;
@@ -427,7 +424,7 @@ namespace kodo
             // Note: we need to use a signed when counting down to zero
             for (int32_t dest = symbols - 1; dest >= 0; --dest)
             {
-                if (SuperCoder::is_symbol_decoded(dest))
+                if (SuperCoder::is_symbol_uncoded(dest))
                     continue;
 
                 backward_substitute(dest);
@@ -487,5 +484,10 @@ namespace kodo
                 }
             }
         }
+
+    protected:
+
+        /// the max width seen
+        uint32_t m_max_seen_width;
     };
 }

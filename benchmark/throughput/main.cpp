@@ -14,9 +14,9 @@
 #include <gauge/json_printer.hpp>
 
 #include <kodo/has_systematic_encoder.hpp>
-#include <kodo/perpetual/perpetual_codes.hpp>
 #include <kodo/set_systematic_off.hpp>
 #include <kodo/rlnc/full_rlnc_codes.hpp>
+#include <kodo/rlnc/perpetual_codes.hpp>
 
 #include <fifi/is_prime2325.hpp>
 #include <fifi/prime2325_binary_search.hpp>
@@ -701,12 +701,13 @@ BENCHMARK_F(setup_sparse_rlnc_throughput16, SparseFullRLNC, Binary16, 5)
 }
 
 //------------------------------------------------------------------
-// Perpetual
+// Perpetual RLNC
 //------------------------------------------------------------------
 
 typedef throughput_benchmark<
     kodo::perpetual_encoder<fifi::binary>,
-    kodo::standard_perpetual_decoder<fifi::binary> > setup_perpetual_throughput;
+    kodo::perpetual_decoder<fifi::binary>>
+    setup_perpetual_throughput;
 
 BENCHMARK_F(setup_perpetual_throughput, Perpetual, Binary, 5)
 {
@@ -715,7 +716,8 @@ BENCHMARK_F(setup_perpetual_throughput, Perpetual, Binary, 5)
 
 typedef throughput_benchmark<
     kodo::perpetual_encoder<fifi::binary8>,
-    kodo::standard_perpetual_decoder<fifi::binary8> > setup_perpetual_throughput8;
+    kodo::perpetual_decoder<fifi::binary8>>
+    setup_perpetual_throughput8;
 
 BENCHMARK_F(setup_perpetual_throughput8, Perpetual, Binary8, 5)
 {
@@ -724,7 +726,8 @@ BENCHMARK_F(setup_perpetual_throughput8, Perpetual, Binary8, 5)
 
 typedef throughput_benchmark<
     kodo::perpetual_encoder<fifi::binary16>,
-    kodo::standard_perpetual_decoder<fifi::binary16> > setup_perpetual_throughput16;
+    kodo::perpetual_decoder<fifi::binary16>>
+    setup_perpetual_throughput16;
 
 BENCHMARK_F(setup_perpetual_throughput16, Perpetual, Binary16, 5)
 {
@@ -733,7 +736,8 @@ BENCHMARK_F(setup_perpetual_throughput16, Perpetual, Binary16, 5)
 
 typedef throughput_benchmark<
     kodo::perpetual_encoder<fifi::prime2325>,
-    kodo::standard_perpetual_decoder<fifi::prime2325> > setup_perpetual_throughput2325;
+    kodo::perpetual_decoder<fifi::prime2325>>
+    setup_perpetual_throughput2325;
 
 BENCHMARK_F(setup_perpetual_throughput2325, Perpetual, Prime2325, 5)
 {

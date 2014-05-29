@@ -8,9 +8,9 @@
 
 #include <fifi/is_binary.hpp>
 
-#include "kodo_unit_test/coefficient_generator_helper.hpp"
+#include <kodo/perpetual_generator.hpp>
 
-#include <kodo/perpetual/perpetual_generator.hpp>
+#include "kodo_unit_test/coefficient_generator_helper.hpp"
 
 namespace kodo
 {
