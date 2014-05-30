@@ -9,7 +9,7 @@
 
 #include <kodo/nested_catch_all.hpp>
 
-#include "stub.hpp"
+#include <stub/call.hpp>
 
 namespace
 {
@@ -448,7 +448,7 @@ namespace
 
 }
 
-    /// Run the tests typical coefficients stack
+/// Run the tests typical coefficients stack
 TEST(TestNestedCatchAll, api)
 {
     uint32_t max_symbols = 1U;
@@ -515,39 +515,39 @@ TEST(TestNestedCatchAll, api)
         // SYMBOL STORAGE API
         //------------------------------------------------------------------
 
-        auto compare_stoarge = [](std::tuple<sak::mutable_storage> a,
+        auto compare_storage = [](std::tuple<sak::mutable_storage> a,
                                   std::tuple<sak::mutable_storage> b)
+        {
+            auto aa = std::get<0>(a);
+            auto bb = std::get<0>(b);
+            if (aa.m_data != bb.m_data)
+                return false;
+            if (aa.m_size != bb.m_size)
+                return false;
+            return true;
+        };
+
+        auto check_copy_symbol = [](
+            std::tuple<uint32_t, sak::mutable_storage> a,
+            std::tuple<uint32_t, sak::mutable_storage> b)
+        {
+            if (std::get<0>(a) != std::get<0>(b))
             {
-                auto aa = std::get<0>(a);
-                auto bb = std::get<0>(b);
-                if(aa.m_data != bb.m_data)
-                    return false;
-                if(aa.m_size != bb.m_size)
-                    return false;
-                return true;
-            };
+                return false;
+            }
 
-        auto check_copy_symbol = [](std::tuple<uint32_t, sak::mutable_storage> a,
-                                    std::tuple<uint32_t, sak::mutable_storage> b)
-            {
-                if(std::get<0>(a) != std::get<0>(b))
-                {
-                    return false;
-                }
-
-                auto aa = std::get<1>(a);
-                auto bb = std::get<1>(b);
-                if(aa.m_data != bb.m_data)
-                    return false;
-                if(aa.m_size != bb.m_size)
-                    return false;
-                return true;
-            };
-
+            auto aa = std::get<1>(a);
+            auto bb = std::get<1>(b);
+            if (aa.m_data != bb.m_data)
+                return false;
+            if (aa.m_size != bb.m_size)
+                return false;
+            return true;
+        };
 
         stack.copy_symbols(sak::storage(data));
         EXPECT_TRUE(nested.m_copy_symbols.called_once_with(
-                        sak::storage(data), compare_stoarge));
+                        sak::storage(data), compare_storage));
 
         stack.copy_symbol(10U, sak::storage(data));
         EXPECT_TRUE(nested.m_copy_symbol.called_once_with(
@@ -665,11 +665,10 @@ TEST(TestNestedCatchAll, api)
 
     }
 
+    // @todo Clean up these lines if they are not needed
 
     // expected_factory_calls.m_max_symbols.add_call().set_return(r);
     // EXPECT_EQ(expected_factory_calls, );
-
-
 
 
     // call<uint32_t()> reference_call;
@@ -687,8 +686,4 @@ TEST(TestNestedCatchAll, api)
     // call_max_symbols.add_call().set_return(1U);
     // EXPECT_EQ(nested_factory.m_call_max_symbols, call_max_symbols);
     //
-
-
-
-
 }
