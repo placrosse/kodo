@@ -17,6 +17,8 @@
 #include <fifi/prime2325_binary_search.hpp>
 #include <fifi/prime2325_apply_prefix.hpp>
 
+#include <kodo/has_deep_symbol_storage.hpp>
+#include <kodo/has_shallow_symbol_storage.hpp>
 #include <kodo/has_systematic_encoder.hpp>
 #include <kodo/set_systematic_off.hpp>
 #include <kodo/rlnc/full_rlnc_codes.hpp>
@@ -44,7 +46,8 @@ struct throughput_benchmark : public gauge::time_benchmark
     void start()
     {
         m_encoded_symbols = 0;
-        m_decoded_symbols = 0;
+        m_recovered_symbols = 0;
+        m_processed_symbols = 0;
         gauge::time_benchmark::start();
     }
 
@@ -53,13 +56,14 @@ struct throughput_benchmark : public gauge::time_benchmark
         gauge::time_benchmark::stop();
     }
 
-    double measurement()
+    double measurement(bool goodput = false)
     {
         // Get the time spent per iteration
         double time = gauge::time_benchmark::measurement();
 
         gauge::config_set cs = get_current_configuration();
         std::string type = cs.get_value<std::string>("type");
+        uint32_t symbols = cs.get_value<uint32_t>("symbols");
         uint32_t symbol_size = cs.get_value<uint32_t>("symbol_size");
 
         // The number of bytes {en|de}coded
@@ -67,7 +71,10 @@ struct throughput_benchmark : public gauge::time_benchmark
 
         if (type == "decoder")
         {
-            total_bytes = m_decoded_symbols * symbol_size;
+            if (goodput)
+                total_bytes = m_recovered_symbols * symbol_size;
+            else
+                total_bytes = m_processed_symbols * symbol_size;
         }
         else if (type == "encoder")
         {
@@ -90,7 +97,11 @@ struct throughput_benchmark : public gauge::time_benchmark
         if (!results.has_column("throughput"))
             results.add_column("throughput");
 
-        results.set_value("throughput", measurement());
+        if (!results.has_column("goodput"))
+            results.add_column("goodput");
+
+        results.set_value("throughput", measurement(false));
+        results.set_value("goodput", measurement(true));
     }
 
     bool accept_measurement()
@@ -185,13 +196,12 @@ struct throughput_benchmark : public gauge::time_benchmark
 
         m_encoder->set_symbols(sak::storage(m_data_in));
 
-        // This step is not needed for deep storage decoders, but also
-        // does not hurt :) For shallow decoders it will provide the
-        // memory that we will decode into, whereas a deep storage
-        // decoder already has its own memory (in this case the deep
-        // storage decoder will just gets its internal memory
-        // initialized by m_data_out)
-        m_decoder->set_symbols(sak::storage(m_data_out));
+        // If the decoder uses shallow storage we have to initialize
+        // its decoding buffers
+        if (kodo::has_shallow_symbol_storage<Decoder>::value)
+        {
+            m_decoder->set_symbols(sak::storage(m_data_out));
+        }
 
         // Create the payload buffer
         m_temp_payload.resize(m_decoder->payload_size());
@@ -274,16 +284,27 @@ struct throughput_benchmark : public gauge::time_benchmark
 
             m_decoder->decode(m_temp_payload.data());
 
-            ++m_decoded_symbols;
+            ++m_processed_symbols;
 
             if (m_decoder->is_complete())
             {
+                // If the decoder uses deep storage, we have to copy
+                // its decoding buffers for verification.
+                // This would also be necessary in real applications, so it
+                // should be part of the timed benchmark.
+                if (kodo::has_deep_symbol_storage<Decoder>::value)
+                {
+                    m_decoder->copy_symbols(sak::storage(m_data_out));
+                }
+
                 if(fifi::is_prime2325<typename Decoder::field_type>::value)
                 {
                     // Now we have to apply the negated prefix to the
                     // decoded data
                     fifi::apply_prefix(sak::storage(m_data_out), ~m_prefix);
                 }
+
+                m_recovered_symbols += m_decoder->symbols();
 
                 return;
             }
@@ -309,7 +330,6 @@ struct throughput_benchmark : public gauge::time_benchmark
 
             encode_payloads();
         }
-
     }
 
     /// Run the decoder
@@ -336,7 +356,10 @@ struct throughput_benchmark : public gauge::time_benchmark
             // i.e. no symbols already decoded.
             m_decoder->initialize(*m_decoder_factory);
 
-            m_decoder->set_symbols(sak::storage(m_data_out));
+            if (kodo::has_shallow_symbol_storage<Decoder>::value)
+            {
+                m_decoder->set_symbols(sak::storage(m_data_out));
+            }
 
             // Decode the payloads
             decode_payloads();
@@ -380,8 +403,11 @@ protected:
     /// The decoder to use
     decoder_ptr m_decoder;
 
-    /// The number of decoded symbols
-    uint32_t m_decoded_symbols;
+    /// The number of symbols recovered by the decoder
+    uint32_t m_recovered_symbols;
+
+    /// The number of symbols processed by the decoder
+    uint32_t m_processed_symbols;
 
     /// The input data
     std::vector<uint8_t> m_data_in;
