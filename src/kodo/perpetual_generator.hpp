@@ -41,7 +41,7 @@ namespace kodo
         perpetual_generator() :
             m_symbol_distribution(field_type::min_value, field_type::max_value),
             m_pivot_distribution(),
-            m_density(0.1)
+            m_width_ratio(0.1)
         { }
 
         /// @copydoc layer::initialize(Factory&)
@@ -57,7 +57,7 @@ namespace kodo
                     0, SuperCoder::symbols() - 1);
 
             m_width =
-                std::max(1U, (uint32_t)(SuperCoder::symbols() * m_density));
+                std::max(1U, (uint32_t)(SuperCoder::symbols() * m_width_ratio));
             m_generated = 0;
 
             assert(m_width <= SuperCoder::symbols());
@@ -237,27 +237,25 @@ namespace kodo
             m_random_generator.seed(seed_value);
         }
 
-        /// Set the density that is used to calculate the number of
-        /// non-zero coefficients after the pivot
-        /// @param density coefficients density
-        void set_density(double density)
+        /// Set the ratio that is used to calculate the number of
+        /// non-zero coefficients after the pivot (i.e. the width)
+        /// @param ratio the width ratio
+        void set_width_ratio(double ratio)
         {
-            assert(density > 0);
-            assert(density <= 1);
-            // If binary, the density should be below 1
-            assert(!fifi::is_binary<field_type>::value || density < 1);
+            assert(ratio > 0);
+            assert(ratio < 1);
 
-            // Save the density and recalculate the width
-            m_density = density;
+            // Save the ratio and recalculate the width
+            m_width_ratio = ratio;
             m_width =
-                std::max(1U, (uint32_t)(SuperCoder::symbols() * m_density));
+                std::max(1U, (uint32_t)(SuperCoder::symbols() * m_width_ratio));
         }
 
-        /// Get the density of the coefficients generated
-        /// @return the density of the generator
-        double density() const
+        /// Get the ratio that is used to calculate the width
+        /// @return the width ratio of the generator
+        double width_ratio() const
         {
-            return m_density;
+            return m_width_ratio;
         }
 
         /// Get the width
@@ -340,8 +338,8 @@ namespace kodo
         /// The random generator
         boost::random::mt19937 m_random_generator;
 
-        /// The density that is used to calculate the width
-        double m_density;
+        /// The ratio that is used to calculate the width
+        double m_width_ratio;
 
         /// The number of non-zero values following the pivot
         uint32_t m_width;

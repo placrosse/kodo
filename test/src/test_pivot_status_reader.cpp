@@ -81,7 +81,6 @@ namespace kodo
 /// Run the tests typical coefficients stack
 TEST(TestPivotStatusReader, api)
 {
-
     kodo::dummy_stack stack;
     kodo::dummy_stack::factory factory(10, 100);
 
@@ -94,15 +93,15 @@ TEST(TestPivotStatusReader, api)
 
     EXPECT_EQ(stack.remote_rank(), 0U);
 
-    EXPECT_EQ(stack.remote_is_symbol_pivot(0), 0U);
-    EXPECT_EQ(stack.remote_is_symbol_pivot(1), 0U);
-    EXPECT_EQ(stack.remote_is_symbol_pivot(2), 0U);
-    EXPECT_EQ(stack.remote_is_symbol_pivot(3), 0U);
-    EXPECT_EQ(stack.remote_is_symbol_pivot(4), 0U);
-    EXPECT_EQ(stack.remote_is_symbol_pivot(5), 0U);
-    EXPECT_EQ(stack.remote_is_symbol_pivot(6), 0U);
-    EXPECT_EQ(stack.remote_is_symbol_pivot(7), 0U);
-    EXPECT_EQ(stack.remote_is_symbol_pivot(8), 0U);
+    EXPECT_EQ(stack.remote_is_symbol_pivot(0), false);
+    EXPECT_EQ(stack.remote_is_symbol_pivot(1), false);
+    EXPECT_EQ(stack.remote_is_symbol_pivot(2), false);
+    EXPECT_EQ(stack.remote_is_symbol_pivot(3), false);
+    EXPECT_EQ(stack.remote_is_symbol_pivot(4), false);
+    EXPECT_EQ(stack.remote_is_symbol_pivot(5), false);
+    EXPECT_EQ(stack.remote_is_symbol_pivot(6), false);
+    EXPECT_EQ(stack.remote_is_symbol_pivot(7), false);
+    EXPECT_EQ(stack.remote_is_symbol_pivot(8), false);
 
     std::vector<uint8_t> buffer(stack.pivot_status_size(), 0);
 
@@ -121,30 +120,27 @@ TEST(TestPivotStatusReader, api)
 
     EXPECT_EQ(stack.remote_rank(), 4U);
 
-    EXPECT_EQ(stack.remote_is_symbol_pivot(0), 0U);
-    EXPECT_EQ(stack.remote_is_symbol_pivot(1), 1U);
-    EXPECT_EQ(stack.remote_is_symbol_pivot(2), 0U);
-    EXPECT_EQ(stack.remote_is_symbol_pivot(3), 0U);
-    EXPECT_EQ(stack.remote_is_symbol_pivot(4), 0U);
-    EXPECT_EQ(stack.remote_is_symbol_pivot(5), 1U);
-    EXPECT_EQ(stack.remote_is_symbol_pivot(6), 0U);
-    EXPECT_EQ(stack.remote_is_symbol_pivot(7), 1U);
-    EXPECT_EQ(stack.remote_is_symbol_pivot(8), 1U);
+    EXPECT_EQ(stack.remote_is_symbol_pivot(0), false);
+    EXPECT_EQ(stack.remote_is_symbol_pivot(1), true);
+    EXPECT_EQ(stack.remote_is_symbol_pivot(2), false);
+    EXPECT_EQ(stack.remote_is_symbol_pivot(3), false);
+    EXPECT_EQ(stack.remote_is_symbol_pivot(4), false);
+    EXPECT_EQ(stack.remote_is_symbol_pivot(5), true);
+    EXPECT_EQ(stack.remote_is_symbol_pivot(6), false);
+    EXPECT_EQ(stack.remote_is_symbol_pivot(7), true);
+    EXPECT_EQ(stack.remote_is_symbol_pivot(8), true);
 
     stack.initialize(factory);
 
     EXPECT_EQ(stack.remote_rank(), 0U);
 
-    EXPECT_EQ(stack.remote_is_symbol_pivot(0), 0U);
-    EXPECT_EQ(stack.remote_is_symbol_pivot(1), 0U);
-    EXPECT_EQ(stack.remote_is_symbol_pivot(2), 0U);
-    EXPECT_EQ(stack.remote_is_symbol_pivot(3), 0U);
-    EXPECT_EQ(stack.remote_is_symbol_pivot(4), 0U);
-    EXPECT_EQ(stack.remote_is_symbol_pivot(5), 0U);
-    EXPECT_EQ(stack.remote_is_symbol_pivot(6), 0U);
-    EXPECT_EQ(stack.remote_is_symbol_pivot(7), 0U);
-    EXPECT_EQ(stack.remote_is_symbol_pivot(8), 0U);
-
+    EXPECT_EQ(stack.remote_is_symbol_pivot(0), false);
+    EXPECT_EQ(stack.remote_is_symbol_pivot(1), false);
+    EXPECT_EQ(stack.remote_is_symbol_pivot(2), false);
+    EXPECT_EQ(stack.remote_is_symbol_pivot(3), false);
+    EXPECT_EQ(stack.remote_is_symbol_pivot(4), false);
+    EXPECT_EQ(stack.remote_is_symbol_pivot(5), false);
+    EXPECT_EQ(stack.remote_is_symbol_pivot(6), false);
+    EXPECT_EQ(stack.remote_is_symbol_pivot(7), false);
+    EXPECT_EQ(stack.remote_is_symbol_pivot(8), false);
 }
-
-
