@@ -34,9 +34,9 @@ namespace
 
 TEST(TestFulcrum, inner)
 {
-    run_test_basic_api<
+    test_basic_api_param<
         encoder<fifi::binary8>,
-        inner_decoder<fifi::binary> >(10, 1000);
+        inner_decoder<fifi::binary> >();//10, 1000);
 
     run_test_reuse<
         encoder<fifi::binary8>,
@@ -65,6 +65,10 @@ TEST(TestFulcrum, outer)
     run_test_reuse_incomplete<
         encoder<fifi::binary8>,
         outer_decoder<fifi::binary8> >(10, 1000);
+
+    run_test_initialize<
+        encoder<fifi::binary8>,
+        outer_decoder<fifi::binary> >(10, 1000);
 }
 
 TEST(TestFulcrum, combined)
@@ -79,4 +83,8 @@ TEST(TestFulcrum, combined)
     run_test_reuse_incomplete<
         encoder<fifi::binary8>,
         combined_decoder<fifi::binary8> >(10, 1000);
+
+    run_test_initialize<
+        encoder<fifi::binary8>,
+        combined_decoder<fifi::binary> >(10, 1000);
 }

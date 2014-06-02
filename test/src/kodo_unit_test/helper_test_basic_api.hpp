@@ -37,6 +37,9 @@
 template<class Encoder, class Decoder>
 inline void run_test_basic_api(uint32_t symbols, uint32_t symbol_size)
 {
+    SCOPED_TRACE(testing::Message() << "symbols = " << symbols);
+    SCOPED_TRACE(testing::Message() << "symbol_size = " << symbols);
+
     // Common setting
     typename Encoder::factory encoder_factory(symbols, symbol_size);
     auto encoder = encoder_factory.build();
@@ -169,6 +172,25 @@ inline void run_test_basic_api(uint32_t symbols, uint32_t symbol_size)
     EXPECT_TRUE(data_out == data_in);
 }
 
+/// Helper function that invokes the test_basic_api functions using a
+/// set of symbols and symbol sizes
+template
+<
+    class Encoder,
+    class Decoder
+>
+inline void test_basic_api_param()
+{
+
+    run_test_basic_api<Encoder, Decoder>(32, 1600);
+    run_test_basic_api<Encoder, Decoder>(1, 1600);
+
+    uint32_t symbols = rand_symbols();
+    uint32_t symbol_size = rand_symbol_size();
+
+    run_test_basic_api<Encoder, Decoder>(symbols, symbol_size);
+}
+
 /// Helper function that invokes the test_basic_api using a number of
 /// different finite fields
 template
@@ -176,72 +198,50 @@ template
     template <class> class Encoder,
     template <class> class Decoder
 >
-inline void test_basic_api(uint32_t symbols, uint32_t symbol_size)
+inline void test_basic_api()
 {
-    SCOPED_TRACE(testing::Message() << "symbols = " << symbols);
-    SCOPED_TRACE(testing::Message() << "symbol_size = " << symbols);
-
     {
         SCOPED_TRACE(testing::Message() << "field = binary");
-        run_test_basic_api
+        test_basic_api_param
             <
                 Encoder<fifi::binary>,
                 Decoder<fifi::binary>
-            >(symbols, symbol_size);
+            >();
     }
 
     {
         SCOPED_TRACE(testing::Message() << "field = binary4");
-        run_test_basic_api
+        test_basic_api_param
             <
                 Encoder<fifi::binary4>,
                 Decoder<fifi::binary4>
-            >(symbols, symbol_size);
+            >();
     }
 
     {
         SCOPED_TRACE(testing::Message() << "field = binary8");
-        run_test_basic_api
+        test_basic_api_param
             <
                 Encoder<fifi::binary8>,
                 Decoder<fifi::binary8>
-            >(symbols, symbol_size);
+            >();
     }
 
     {
         SCOPED_TRACE(testing::Message() << "field = binary16");
-        run_test_basic_api
+        test_basic_api_param
             <
                 Encoder<fifi::binary16>,
                 Decoder<fifi::binary16>
-            >(symbols, symbol_size);
+            >();
     }
 
     {
         SCOPED_TRACE(testing::Message() << "field = prime2325");
-        run_test_basic_api
+        test_basic_api_param
             <
                 Encoder<fifi::prime2325>,
                 Decoder<fifi::prime2325>
-            >(symbols, symbol_size);
+            >();
     }
-}
-
-/// Helper function that invokes the test_basic_api functions using a
-/// set of symbols and symbol sizes
-template
-<
-    template <class> class Encoder,
-    template <class> class Decoder
->
-inline void test_basic_api()
-{
-
-    test_basic_api<Encoder, Decoder>(32, 1600);
-    test_basic_api<Encoder, Decoder>(1, 1600);
-
-    uint32_t symbols = rand_symbols();
-    uint32_t symbol_size = rand_symbol_size();
-
-    test_basic_api<Encoder, Decoder>(symbols, symbol_size);
 }
