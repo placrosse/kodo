@@ -148,20 +148,20 @@ namespace
 
                 s = sak::storage(coder->coefficient_vector_data(i), size);
 
-                EXPECT_TRUE(sak::equal(zero_storage, s));
+                EXPECT_TRUE(sak::is_equal(zero_storage, s));
 
                 s = sak::storage(
                     const_coder->coefficient_vector_data(i), size);
 
-                EXPECT_TRUE(sak::equal(zero_storage, s));
+                EXPECT_TRUE(sak::is_equal(zero_storage, s));
 
                 s = sak::storage(coder->coefficient_vector_values(i), size);
-                EXPECT_TRUE(sak::equal(zero_storage, s));
+                EXPECT_TRUE(sak::is_equal(zero_storage, s));
 
                 s = sak::storage(const_coder->coefficient_vector_values(i),
                                  size);
 
-                EXPECT_TRUE(sak::equal(zero_storage, s));
+                EXPECT_TRUE(sak::is_equal(zero_storage, s));
             }
 
             // Create some random coefficients, one for every symbol
@@ -185,20 +185,20 @@ namespace
                 sak::const_storage s2 = coefficient_storage[i];
 
                 s1 = sak::storage(coder->coefficient_vector_data(i), size);
-                EXPECT_TRUE(sak::equal(s1, s2));
+                EXPECT_TRUE(sak::is_equal(s1, s2));
 
                 s1 = sak::storage(const_coder->coefficient_vector_data(i),
                                   size);
 
-                EXPECT_TRUE(sak::equal(s1, s2));
+                EXPECT_TRUE(sak::is_equal(s1, s2));
 
                 s1 = sak::storage(coder->coefficient_vector_values(i), size);
-                EXPECT_TRUE(sak::equal(s1, s2));
+                EXPECT_TRUE(sak::is_equal(s1, s2));
 
                 s1 = sak::storage(const_coder->coefficient_vector_values(i),
                                   size);
 
-                EXPECT_TRUE(sak::equal(s1, s2));
+                EXPECT_TRUE(sak::is_equal(s1, s2));
             }
 
         }
@@ -228,4 +228,3 @@ TEST(TestSymbolStorage, test_coefficients_storage_stack)
         api_coefficients_storage>(symbols, symbol_size);
 
 }
-

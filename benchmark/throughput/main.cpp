@@ -63,7 +63,7 @@ struct throughput_benchmark : public gauge::time_benchmark
 
         gauge::config_set cs = get_current_configuration();
         std::string type = cs.get_value<std::string>("type");
-        uint32_t symbols = cs.get_value<uint32_t>("symbols");
+        //uint32_t symbols = cs.get_value<uint32_t>("symbols");
         uint32_t symbol_size = cs.get_value<uint32_t>("symbol_size");
 
         // The number of bytes {en|de}coded
@@ -335,6 +335,7 @@ struct throughput_benchmark : public gauge::time_benchmark
     /// Run the decoder
     void run_decode()
     {
+        // std::cout << "run_decode()" << std::endl;
         // Encode some data
         encode_payloads();
 
@@ -358,7 +359,9 @@ struct throughput_benchmark : public gauge::time_benchmark
 
             if (kodo::has_shallow_symbol_storage<Decoder>::value)
             {
+                // std::cout << "ok 1" << std::endl;
                 m_decoder->set_symbols(sak::storage(m_data_out));
+                // std::cout << "ok 2" << std::endl;
             }
 
             // Decode the payloads
@@ -513,6 +516,7 @@ public:
     using Super::m_encoder;
     using Super::m_decoder;
     using Super::m_data_in;
+    using Super::m_data_out;
     using Super::m_payloads;
     using Super::m_temp_payload;
     using Super::m_factor;
@@ -585,13 +589,21 @@ public:
 
         // Prepare the data to be encoded
         m_data_in.resize(m_encoder->block_size());
+        m_data_out.resize(m_encoder->block_size());
 
         for(uint8_t &e : m_data_in)
         {
             e = rand() % 256;
         }
 
-        m_encoder->set_symbols(sak::storage(m_data_in));
+        // m_encoder->set_symbols(sak::storage(m_data_in));
+
+        // // If the decoder uses shallow storage we have to initialize
+        // // its decoding buffers
+        // if (kodo::has_shallow_symbol_storage<Decoder>::value)
+        // {
+        //     m_decoder->set_symbols(sak::storage(m_data_out));
+        // }
 
         // Prepare storage to the encoded payloads
         uint32_t payload_count = symbols * m_factor;

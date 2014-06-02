@@ -6,6 +6,7 @@ detailed list of every change, see the Git log.
 
 Latest
 ------
+* Major: Updated to sak verion 11.x.y.
 * Minor: Update to waf 1.8.0-pre1
 * Minor: Made python files comply with pep8
 * Major: Removed unused file ``test/src/kodo_unit_test/test_reuse.hpp``.
