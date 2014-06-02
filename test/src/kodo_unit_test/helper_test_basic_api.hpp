@@ -5,6 +5,8 @@
 
 #pragma once
 
+#include <memory>
+
 #include <fifi/binary.hpp>
 #include <fifi/binary4.hpp>
 #include <fifi/binary8.hpp>
@@ -27,10 +29,40 @@
 #include <kodo/has_shallow_symbol_storage.hpp>
 #include <kodo/has_deep_symbol_storage.hpp>
 
-
 #include <kodo/has_rank.hpp>
 #include <kodo/rank.hpp>
 #include <kodo/proxy_args.hpp>
+
+template<class Encoder, class Decoder>
+class test_basic_api_t
+{
+public:
+
+    using encoder_factory_type = std::shared_ptr<typename Encoder::factory>;
+    using decoder_factory_type = std::shared_ptr<typename Decoder::factory>;
+
+    virtual void run()
+    {
+    }
+
+    virtual void setup()
+    {
+    }
+
+    virtual void setup_factories()
+    {
+
+    }
+
+    virtual void setup_coders()
+    {
+    }
+
+    encoder_factory_type m_encoder_factory;
+    decoder_factory_type m_decoder_factory;
+
+};
+
 
 /// Helper function which will invoke a number of checks on an encoder
 /// and decoder pair
