@@ -174,6 +174,24 @@ namespace
             return m_is_symbol_initialized(symbol_index);
         }
 
+        // Test stubs that "record" the function calls
+        stub::call<void (const sak::mutable_storage&)> m_copy_symbols;
+        stub::call<void (uint32_t,const sak::mutable_storage&)> m_copy_symbol;
+        stub::call<uint8_t* (uint32_t)> m_symbol;
+        stub::call<const uint8_t* (uint32_t)> m_symbol_const;
+        stub::call<value_type* (uint32_t)> m_symbol_value;
+        stub::call<const value_type* (uint32_t)> m_symbol_value_const;
+        stub::call<uint32_t ()> m_symbols;
+        stub::call<uint32_t ()> m_symbol_size;
+        stub::call<uint32_t ()> m_symbol_length;
+        stub::call<uint32_t ()> m_block_size;
+        stub::call<uint32_t ()> m_symbols_available;
+        stub::call<uint32_t ()> m_symbols_initialized;
+        stub::call<bool ()> m_is_symbols_available;
+        stub::call<bool ()> m_is_symbols_initialized;
+        stub::call<bool (uint32_t)> m_is_symbol_available;
+        stub::call<bool (uint32_t)> m_is_symbol_initialized;
+
         //------------------------------------------------------------------
         // COEFFICIENT STORAGE API
         //------------------------------------------------------------------
@@ -208,6 +226,29 @@ namespace
             return m_coefficient_vector_data_const(index);
         }
 
+        /// @todo When writing these functions I noticed that they are
+        ///       not very consistent with the symbol storage
+        ///       API. I.e. here we have coefficient_vector_values
+        ///       whereas for symbols we have symbol_value
+
+        stub::call<uint32_t ()>
+            m_coefficient_vector_size;
+
+        stub::call<uint32_t ()>
+            m_coefficient_vector_length;
+
+        stub::call<value_type* (uint32_t)>
+            m_coefficient_vector_values;
+
+        stub::call<const value_type* (uint32_t)>
+            m_coefficient_vector_values_const;
+
+        stub::call<uint8_t* (uint32_t)>
+            m_coefficient_vector_data;
+
+        stub::call<const uint8_t* (uint32_t)>
+            m_coefficient_vector_data_const;
+
         //------------------------------------------------------------------
         // FINITE FIELD API
         //------------------------------------------------------------------
@@ -230,14 +271,16 @@ namespace
             m_add(symbol_dest, symbol_src, symbol_length);
         }
 
-        void multiply_subtract(value_type* symbol_dest, const value_type* symbol_src,
+        void multiply_subtract(value_type* symbol_dest,
+                               const value_type* symbol_src,
                                value_type coefficient, uint32_t symbol_length)
         {
             m_multiply_subtract(symbol_dest, symbol_src,
                                  coefficient, symbol_length);
         }
 
-        void subtract(value_type* symbol_dest, const value_type* symbol_src,
+        void subtract(value_type* symbol_dest,
+                      const value_type* symbol_src,
                       uint32_t symbol_length)
         {
             m_subtract(symbol_dest, symbol_src, symbol_length);
@@ -247,6 +290,24 @@ namespace
         {
             return m_invert(value);
         }
+
+        stub::call<void (value_type*, value_type, uint32_t)>
+            m_multiply;
+
+        stub::call<void (value_type*, const value_type*, value_type, uint32_t)>
+            m_multiply_add;
+
+        stub::call<void (value_type*, const value_type*, uint32_t)>
+            m_add;
+
+        stub::call<void (value_type*, const value_type*, value_type, uint32_t)>
+            m_multiply_subtract;
+
+        stub::call<void (value_type*, const value_type*, uint32_t)>
+            m_subtract;
+
+        stub::call<value_type (value_type)>
+            m_invert;
 
         //------------------------------------------------------------------
         // CODEC API
@@ -287,6 +348,16 @@ namespace
             return m_is_symbol_pivot(index);
         }
 
+        stub::call<void (uint8_t*, uint8_t*)> m_encode_symbol;
+        stub::call<void (uint8_t*, uint32_t)> m_encode_symbol_index;
+        stub::call<void (uint8_t*, uint8_t*)> m_decode_symbol;
+        stub::call<void (uint8_t*, uint32_t)> m_decode_symbol_index;
+        stub::call<bool ()> m_is_complete;
+        stub::call<uint32_t ()> m_rank;
+
+        /// @todo The is_pivot should be move to the symbol storage API?
+        stub::call<bool (uint32_t)> m_is_symbol_pivot;
+
         //------------------------------------------------------------------
         // COEFFICIENT GENERATOR API
         //------------------------------------------------------------------
@@ -305,83 +376,6 @@ namespace
         {
             m_seed(seed_value);
         }
-
-        //------------------------------------------------------------------
-        // SYMBOL STORAGE API
-        //------------------------------------------------------------------
-
-        stub::call<void (const sak::mutable_storage&)> m_copy_symbols;
-        stub::call<void (uint32_t,const sak::mutable_storage&)> m_copy_symbol;
-        stub::call<uint8_t* (uint32_t)> m_symbol;
-        stub::call<const uint8_t* (uint32_t)> m_symbol_const;
-        stub::call<value_type* (uint32_t)> m_symbol_value;
-        stub::call<const value_type* (uint32_t)> m_symbol_value_const;
-        stub::call<uint32_t ()> m_symbols;
-        stub::call<uint32_t ()> m_symbol_size;
-        stub::call<uint32_t ()> m_symbol_length;
-        stub::call<uint32_t ()> m_block_size;
-        stub::call<uint32_t ()> m_symbols_available;
-        stub::call<uint32_t ()> m_symbols_initialized;
-        stub::call<bool ()> m_is_symbols_available;
-        stub::call<bool ()> m_is_symbols_initialized;
-        stub::call<bool (uint32_t)> m_is_symbol_available;
-        stub::call<bool (uint32_t)> m_is_symbol_initialized;
-
-        //------------------------------------------------------------------
-        // COEFFICIENT STORAGE API
-        //------------------------------------------------------------------
-
-        /// @todo When writing these functions I noticed that they are
-        ///       not very consistent with the symbol storage
-        ///       API. I.e. here we have coefficient_vector_values
-        ///       whereas for symbols we have symbol_value
-
-        stub::call<uint32_t ()> m_coefficient_vector_size;
-        stub::call<uint32_t ()> m_coefficient_vector_length;
-        stub::call<value_type* (uint32_t)> m_coefficient_vector_values;
-        stub::call<const value_type* (uint32_t)> m_coefficient_vector_values_const;
-        stub::call<uint8_t* (uint32_t)> m_coefficient_vector_data;
-        stub::call<const uint8_t* (uint32_t)> m_coefficient_vector_data_const;
-
-        //------------------------------------------------------------------
-        // FINITE FIELD API
-        //------------------------------------------------------------------
-
-        stub::call<void (value_type*, value_type, uint32_t)>
-            m_multiply;
-
-        stub::call<void (value_type*, const value_type*, value_type, uint32_t)>
-            m_multiply_add;
-
-        stub::call<void (value_type*, const value_type*, uint32_t)>
-            m_add;
-
-        stub::call<void (value_type*, const value_type*, value_type, uint32_t)>
-            m_multiply_subtract;
-
-        stub::call<void (value_type*, const value_type*, uint32_t)>
-            m_subtract;
-
-        stub::call<value_type (value_type)>
-            m_invert;
-
-        //------------------------------------------------------------------
-        // CODEC API
-        //------------------------------------------------------------------
-
-        stub::call<void (uint8_t*, uint8_t*)> m_encode_symbol;
-        stub::call<void (uint8_t*, uint32_t)> m_encode_symbol_index;
-        stub::call<void (uint8_t*, uint8_t*)> m_decode_symbol;
-        stub::call<void (uint8_t*, uint32_t)> m_decode_symbol_index;
-        stub::call<bool ()> m_is_complete;
-        stub::call<uint32_t ()> m_rank;
-
-        /// @todo The is_pivot should be move to the symbol storage API
-        stub::call<bool (uint32_t)> m_is_symbol_pivot;
-
-        //------------------------------------------------------------------
-        // COEFFICIENT GENERATOR API
-        //------------------------------------------------------------------
 
         stub::call<void (uint8_t*)> m_generate;
         stub::call<void (uint8_t*)> m_generate_partial;
@@ -515,16 +509,16 @@ TEST(TestNestedCatchAll, api)
         // SYMBOL STORAGE API
         //------------------------------------------------------------------
 
+        // There are two ways of comparing storage objects, is_equal
+        // (which is used by operator==()) or is_same. The difference
+        // is that is_equal checks whether the two storage objects
+        // "contain" the same data, whereas is_same checks whether the
+        // two storage objects point to the same chunck of memroy. The
+        // latter being the check we want to perform here.
         auto compare_storage = [](std::tuple<sak::mutable_storage> a,
                                   std::tuple<sak::mutable_storage> b)
         {
-            auto aa = std::get<0>(a);
-            auto bb = std::get<0>(b);
-            if (aa.m_data != bb.m_data)
-                return false;
-            if (aa.m_size != bb.m_size)
-                return false;
-            return true;
+            return sak::is_same(std::get<0>(a),std::get<0>(b));
         };
 
         auto check_copy_symbol = [](
@@ -535,14 +529,7 @@ TEST(TestNestedCatchAll, api)
             {
                 return false;
             }
-
-            auto aa = std::get<1>(a);
-            auto bb = std::get<1>(b);
-            if (aa.m_data != bb.m_data)
-                return false;
-            if (aa.m_size != bb.m_size)
-                return false;
-            return true;
+            return sak::is_same(std::get<1>(a),std::get<1>(b));
         };
 
         stack.copy_symbols(sak::storage(data));
@@ -635,55 +622,87 @@ TEST(TestNestedCatchAll, api)
 
         nested.m_coefficient_vector_values_const.set_return((value_type*)0xd);
         EXPECT_EQ(stack_const.coefficient_vector_values(4U), (value_type*)0xd);
-        EXPECT_TRUE(nested.m_coefficient_vector_values_const.called_once_with(4U));
+        EXPECT_TRUE(nested.m_coefficient_vector_values_const.called_once_with(
+                        4U));
 
         //------------------------------------------------------------------
         // FINITE FIELD API
         //------------------------------------------------------------------
 
         stack.multiply((value_type*)0xa, (value_type)1U, 3U);
-        EXPECT_TRUE(nested.m_multiply.called_once_with((value_type*)0xa, (value_type)1U, 3U));
 
-        stack.multiply_add((value_type*)0xa, (value_type*)0xb, (value_type)1U, 3U);
-        EXPECT_TRUE(nested.m_multiply_add.called_once_with((value_type*)0xa, (value_type*)0xb, (value_type)1U, 3U));
+        EXPECT_TRUE(nested.m_multiply.called_once_with(
+                        (value_type*)0xa, (value_type)1U, 3U));
+
+        stack.multiply_add((value_type*)0xa, (value_type*)0xb,
+                           (value_type)1U, 3U);
+
+        EXPECT_TRUE(nested.m_multiply_add.called_once_with(
+                        (value_type*)0xa, (value_type*)0xb,
+                        (value_type)1U, 3U));
 
         stack.add((value_type*)0xa, (value_type*)0xc, 3U);
-        EXPECT_TRUE(nested.m_add.called_once_with((value_type*)0xa, (value_type*)0xc, 3U));
 
-        stack.multiply_subtract((value_type*)0xa, (value_type*)0xb, (value_type)1U, 3U);
-        EXPECT_TRUE(nested.m_multiply_subtract.called_once_with((value_type*)0xa, (value_type*)0xb, (value_type)1U, 3U));
+        EXPECT_TRUE(nested.m_add.called_once_with(
+                        (value_type*)0xa, (value_type*)0xc, 3U));
+
+        stack.multiply_subtract((value_type*)0xa, (value_type*)0xb,
+                                (value_type)1U, 3U);
+
+        EXPECT_TRUE(nested.m_multiply_subtract.called_once_with(
+                        (value_type*)0xa, (value_type*)0xb,
+                        (value_type)1U, 3U));
 
         stack.subtract((value_type*)0xa, (value_type*)0xc, 3U);
-        EXPECT_TRUE(nested.m_subtract.called_once_with((value_type*)0xa, (value_type*)0xc, 3U));
+        EXPECT_TRUE(nested.m_subtract.called_once_with(
+                        (value_type*)0xa, (value_type*)0xc, 3U));
 
         //------------------------------------------------------------------
         // CODEC API
         //------------------------------------------------------------------
 
         stack.encode_symbol((uint8_t*)0xa, (uint8_t*)0xb);
-        EXPECT_TRUE(nested.m_encode_symbol.called_once_with((uint8_t*)0xa, (uint8_t*)0xb));
+        EXPECT_TRUE(nested.m_encode_symbol.called_once_with(
+                        (uint8_t*)0xa, (uint8_t*)0xb));
+
+        stack.encode_symbol((uint8_t*)0xa, 50);
+        EXPECT_TRUE(nested.m_encode_symbol_index.called_once_with(
+                        (uint8_t*)0xa, 50));
+
+        stack.decode_symbol((uint8_t*)0xc, (uint8_t*)0xd);
+        EXPECT_TRUE(nested.m_decode_symbol.called_once_with(
+                        (uint8_t*)0xc, (uint8_t*)0xd));
+
+        stack.decode_symbol((uint8_t*)0xa, 50);
+        EXPECT_TRUE(nested.m_decode_symbol_index.called_once_with(
+                        (uint8_t*)0xa, 50));
+
+        nested.m_is_complete.set_return(true);
+        EXPECT_TRUE(stack.is_complete());
+        EXPECT_TRUE(nested.m_is_complete.called_once_with());
+
+        nested.m_rank.set_return(42);
+        EXPECT_EQ(stack.rank(), 42);
+        EXPECT_TRUE(nested.m_rank.called_once_with());
+
+        nested.m_is_symbol_pivot.set_return({true,false});
+        EXPECT_TRUE(stack.is_symbol_pivot(15));
+        EXPECT_TRUE(nested.m_is_symbol_pivot.called_with(15));
+        EXPECT_FALSE(stack.is_symbol_pivot(12));
+        EXPECT_TRUE(nested.m_is_symbol_pivot.called_with(12));
+
+        //------------------------------------------------------------------
+        // COEFFICIENT GENERATOR API
+        //------------------------------------------------------------------
+
+        stack.generate((uint8_t*)0x3);
+        EXPECT_TRUE(nested.m_generate.called_once_with((uint8_t*)0x3));
+
+        stack.generate_partial((uint8_t*)0x4);
+        EXPECT_TRUE(nested.m_generate_partial.called_once_with((uint8_t*)0x4));
+
+        stack.seed(33);
+        EXPECT_TRUE(nested.m_seed.called_once_with(33));
 
     }
-
-    // @todo Clean up these lines if they are not needed
-
-    // expected_factory_calls.m_max_symbols.add_call().set_return(r);
-    // EXPECT_EQ(expected_factory_calls, );
-
-
-    // call<uint32_t()> reference_call;
-    // call<uint32_t()> expected_call;
-
-    // expected_call.add_call().set_return(1U);
-    // reference_call.set_return(
-
-    // expected_call.set_return(1U);
-
-    // EXPECT_EQ(factory.max_symbols(), 1U);
-    // }
-
-    // call<uint32_t()> call_max_symbols;
-    // call_max_symbols.add_call().set_return(1U);
-    // EXPECT_EQ(nested_factory.m_call_max_symbols, call_max_symbols);
-    //
 }
