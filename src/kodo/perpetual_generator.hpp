@@ -376,6 +376,13 @@ namespace kodo
         /// The random generator
         boost::random::mt19937 m_random_generator;
 
+        /// Indicates if pre-charging for pivot selection in the initial phase
+        bool m_pre_charging;
+
+        /// Indicates if pivot indices are selected in a pseudo-systematic
+        /// fashion in the second phase
+        bool m_pseudo_systematic;
+
         /// The ratio that is used to calculate the width
         double m_width_ratio;
 
@@ -384,12 +391,5 @@ namespace kodo
 
         /// Counter for number of generated coefficient vectors
         uint32_t m_generated;
-
-        /// Indicates if pre-charging for pivot selection in the initial phase
-        bool m_pre_charging;
-
-        /// Indicates if pivot indices are selected in a pseudo-systematic
-        /// fashion in the second phase
-        bool m_pseudo_systematic;
     };
 }
