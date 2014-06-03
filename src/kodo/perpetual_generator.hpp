@@ -41,6 +41,8 @@ namespace kodo
         perpetual_generator() :
             m_symbol_distribution(field_type::min_value, field_type::max_value),
             m_pivot_distribution(),
+            m_pre_charging(false),
+            m_pseudo_systematic(false),
             m_width_ratio(0.1)
         { }
 
@@ -72,12 +74,20 @@ namespace kodo
             std::fill_n(coefficients, SuperCoder::coefficient_vector_size(), 0);
 
             uint32_t pivot;
-            if (m_generated < m_width + 1)
+            if (m_pre_charging && m_generated < m_width + 1)
+            {
                 pivot = 0;
-            else if (m_generated < SuperCoder::symbols() + m_width)
+            }
+            else if (m_pseudo_systematic &&
+                     m_generated < SuperCoder::symbols() + m_width)
+            {
                 pivot = m_generated - m_width;
+            }
             else
+            {
+                // Random pivot selection is the default policy
                 pivot = m_pivot_distribution(m_random_generator);
+            }
 
             value_type* c = reinterpret_cast<value_type*>(coefficients);
             fifi::set_value<field_type>(c, pivot, 1);
@@ -259,10 +269,38 @@ namespace kodo
         }
 
         /// Get the width
-        /// @param return the width used by the generator
+        /// @return the width used by the generator
         uint32_t width() const
         {
             return m_width;
+        }
+
+        /// Set the pre-charging property of the generator
+        /// @param pre_charging the new setting for pre-charging
+        bool set_pre_charging(bool pre_charging)
+        {
+            m_pre_charging = pre_charging
+        }
+
+        /// Get the pre-charging property of the generator
+        /// @return the current setting for pre-charging
+        bool pre_charging() const
+        {
+            return m_pre_charging;
+        }
+
+        /// Set the pseudo-systematic property of the generator
+        /// @param pseudo_systematic the new setting for pseudo-systematic
+        bool set_pseudo_systematic(bool pseudo_systematic)
+        {
+            m_pseudo_systematic = pseudo_systematic
+        }
+
+        /// Get the pseudo-systematic property of the generator
+        /// @return the current setting for pseudo-systematic
+        bool pseudo_systematic() const
+        {
+            return m_pseudo_systematic;
         }
 
     protected:
@@ -344,7 +382,14 @@ namespace kodo
         /// The number of non-zero values following the pivot
         uint32_t m_width;
 
-        /// counter for number of generated coefficient vectors
+        /// Counter for number of generated coefficient vectors
         uint32_t m_generated;
+
+        /// Indicates if pre-charging for pivot selection in the initial phase
+        bool m_pre_charging;
+
+        /// Indicates if pivot indices are selected in a pseudo-systematic
+        /// fashion in the second phase
+        bool m_pseudo_systematic;
     };
 }
