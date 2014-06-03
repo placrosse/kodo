@@ -6,6 +6,7 @@
 #pragma once
 
 #include <cstdint>
+#include <algorithm>
 
 namespace kodo
 {
@@ -40,17 +41,18 @@ namespace kodo
             /// @copydoc layer::factory::max_payload_size() const
             uint32_t max_payload_size() const
             {
-                return SuperCoder::factory::nested().max_payload_size();
+                return std::max(
+                    SuperCoder::factory::nested().max_payload_size(),
+                    SuperCoder::max_payload_size());
             }
         };
 
         /// @copydoc layer::payload_size() const
         uint32_t payload_size() const
         {
-            /// @todo should be max between SuperCoder and nested
-            ///       same goes for the factory
             assert(SuperCoder::nested());
-            return SuperCoder::nested()->payload_size();
+            return std::max(SuperCoder::nested()->payload_size(),
+                            SuperCoder::payload_size());
         }
 
         /// @copydoc layer::decode(uint8_t*)
