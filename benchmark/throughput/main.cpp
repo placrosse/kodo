@@ -63,7 +63,6 @@ struct throughput_benchmark : public gauge::time_benchmark
 
         gauge::config_set cs = get_current_configuration();
         std::string type = cs.get_value<std::string>("type");
-        uint32_t symbols = cs.get_value<uint32_t>("symbols");
         uint32_t symbol_size = cs.get_value<uint32_t>("symbol_size");
 
         // The number of bytes {en|de}coded
