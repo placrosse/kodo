@@ -277,7 +277,7 @@ namespace kodo
 
         /// Set the pre-charging property of the generator
         /// @param pre_charging the new setting for pre-charging
-        bool set_pre_charging(bool pre_charging)
+        void set_pre_charging(bool pre_charging)
         {
             m_pre_charging = pre_charging;
         }
@@ -291,7 +291,7 @@ namespace kodo
 
         /// Set the pseudo-systematic property of the generator
         /// @param pseudo_systematic the new setting for pseudo-systematic
-        bool set_pseudo_systematic(bool pseudo_systematic)
+        void set_pseudo_systematic(bool pseudo_systematic)
         {
             m_pseudo_systematic = pseudo_systematic;
         }
