@@ -41,9 +41,10 @@ namespace kodo
             /// @copydoc layer::factory::max_payload_size() const
             uint32_t max_payload_size() const
             {
-                return std::max(
-                    SuperCoder::factory::nested().max_payload_size(),
-                    SuperCoder::factory::max_payload_size());
+	        return SuperCoder::factory::nested().max_payload_size();
+                // return std::max(
+                //     SuperCoder::factory::nested().max_payload_size(),
+                //     SuperCoder::factory::max_payload_size());
             }
         };
 
@@ -51,8 +52,9 @@ namespace kodo
         uint32_t payload_size() const
         {
             assert(SuperCoder::nested());
-            return std::max(SuperCoder::nested()->payload_size(),
-                            SuperCoder::payload_size());
+	    return SuperCoder::nested()->payload_size();
+            // return std::max(SuperCoder::nested()->payload_size(),
+            //                 SuperCoder::payload_size());
         }
 
         /// @copydoc layer::decode(uint8_t*)

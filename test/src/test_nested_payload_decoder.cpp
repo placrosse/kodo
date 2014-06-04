@@ -60,12 +60,7 @@ namespace kodo
                       m_max_symbol_size(max_symbol_size)
                 { }
 
-                uint32_t max_payload_size() const
-                {
-                    return m_max_payload_size;
-                }
-
-                nested_factory& nested() const
+                const nested_factory& nested() const
                 {
                     return m_nested;
                 }
@@ -73,34 +68,28 @@ namespace kodo
                 uint32_t m_max_symbols;
                 uint32_t m_max_symbol_size;
 
-                uint32_t m_max_payload_size;
-
                 nested_factory m_nested;
             };
 
         public:
 
-            uint32_t payload_size() const
-            {
-                return m_payload_size;
-            }
+	  const nested_stack* nested() const
+	  {
+	    return &m_nested;
+	  }
 
-            nested* nested
-            {
-                return 7;
-            }
+	  nested_stack m_nested;
         };
 
         // Helper stack
         class dummy_stack : public
-            nested_stack<helper_nested_stack,dummy_layer>
+            nested_payload_decoder<dummy_layer>
         { };
 
     }
 }
 
-
-TEST(TestNestedStack, api)
+TEST(TestNestedPayloadDecoder, api)
 {
     uint32_t symbols = 10;
     uint32_t symbol_size = 10;
@@ -108,13 +97,11 @@ TEST(TestNestedStack, api)
     kodo::dummy_stack::factory factory(symbols, symbol_size);
     EXPECT_EQ(factory.m_max_symbols, symbols);
     EXPECT_EQ(factory.m_max_symbol_size, symbol_size);
-    EXPECT_EQ(factory.nested().m_max_symbols, 5U);
-    EXPECT_EQ(factory.nested().m_max_symbol_size, 9U);
+
+    factory.m_nested.m_max_payload_size = 100;
+    EXPECT_EQ(factory.max_payload_size(), 100);
 
     kodo::dummy_stack stack;
-    stack.initialize(factory);
-
-    EXPECT_TRUE(stack.nested() != 0);
-    EXPECT_EQ(stack.nested()->m_symbols, 2U);
-    EXPECT_EQ(stack.nested()->m_symbol_size, 7U);
+    stack.m_nested.m_payload_size = 1000;
+    EXPECT_EQ(stack.payload_size(), 1000);
 }

@@ -7,7 +7,6 @@
 
 namespace kodo
 {
-
     /// @ingroup type_traits
     /// Type trait helper allows compile time detection of whether a
     /// codec contains a layer with the member function set_symbols()
@@ -38,7 +37,6 @@ namespace kodo
 
         static const bool value = std::is_same<decltype(test<T>(0)),yes>::value;
     };
-
 }
 
 
