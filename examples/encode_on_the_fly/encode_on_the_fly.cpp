@@ -3,8 +3,7 @@
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
 
-#include <kodo/rlnc/full_vector_codes.hpp>
-#include <kodo/storage_aware_generator.hpp>
+#include <kodo/rlnc/on_the_fly_codes.hpp>
 
 /// @example encode_on_the_fly.cpp
 ///
@@ -12,49 +11,6 @@
 /// allow you to encode from a block before all symbols have been
 /// specified. This can be useful in cases where the symbols that
 /// should be encoded are produced on-the-fly.
-
-namespace kodo
-{
-
-    /// Implementation of RLNC encoder using a storage aware generator
-    /// and storage aware encoder. The two layers needed are marked with
-    /// "New layer" in the stack below.
-    template<class Field>
-    class on_the_fly_encoder
-        : public // Payload Codec API
-                 payload_encoder<
-                 // Codec Header API
-                 systematic_encoder<
-                 symbol_id_encoder<
-                 // Symbol ID API
-                 plain_symbol_id_writer<
-                 // Coefficient Generator API
-                 storage_aware_generator<       // <--- New layer
-                 uniform_generator<
-                 // Codec API
-                 encode_symbol_tracker<
-                 zero_symbol_encoder<
-                 linear_block_encoder<
-                 storage_aware_encoder<         // <--- New layer
-                 // Coefficient Storage API
-                 coefficient_value_access<
-                 coefficient_info<
-                 // Symbol Storage API
-                 deep_symbol_storage<
-                 storage_bytes_used<
-                 storage_block_info<
-                 // Finite Field API
-                 finite_field_math<typename fifi::default_field<Field>::type,
-                 finite_field_info<Field,
-                 // Factory API
-                 final_coder_factory_pool<
-                 // Final type
-                 on_the_fly_encoder<Field>
-                     > > > > > > > > > > > > > > > > > >
-    { };
-}
-
-
 
 int main()
 {
@@ -65,7 +21,7 @@ int main()
 
     // Typdefs for the encoder/decoder type we wish to use
     typedef kodo::on_the_fly_encoder<fifi::binary8> rlnc_encoder;
-    typedef kodo::full_rlnc_decoder<fifi::binary8> rlnc_decoder;
+    typedef kodo::on_the_fly_decoder<fifi::binary8> rlnc_decoder;
 
     // In the following we will make an encoder/decoder factory.
     // The factories are used to build actual encoders/decoders

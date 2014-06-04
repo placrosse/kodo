@@ -8,114 +8,81 @@ http://www.steinwurf.com/licensing
 Plot the number of extra symbols needed to decode
 """
 
-import argparse
-import pandas as pd
-import scipy as sp
+import scipy
+from matplotlib import pyplot
 
 import sys
-sys.path.insert(0, "../")
-import processing_shared as ps
 
-from datetime import datetime, timedelta
-now = datetime.utcnow()
-today = now.date()
-today = datetime(today.year, today.month, today.day)
-yesterday = today - timedelta(1)
+import os
+sys.path.insert(0, os.path.join(
+    os.path.dirname(os.path.realpath(__file__)), ".."))
+
+import plot_helper
+
 
 def plot(args):
+    plotter = plot_helper.plotter(args)
 
-    if args.jsonfile:
-        PATH  = ("figures_local/")
-        df = pd.read_json(args.jsonfile)
-        df['buildername'] = "local"
-
-    else:
-        PATH  = ("figures_database_detailed/")
-        query = {
-        "branch" : "master",
-        "scheduler": "kodo-nightly-benchmark",
-        "utc_date" : {"$gte": yesterday, "$lt": today}
-        }
-
-        db = ps.connect_database()
-        mc = db.kodo_decoding_probability.find(query)
-        df = pd.DataFrame.from_records( list(mc) )
+    query = {
+        "branch": "master",
+        "scheduler": "kodo (nightly benchmark)",
+        "utc_date": {
+            "$gte": args.date - plot_helper.timedelta(1),
+            "$lt": args.date},
+    }
+    df = plotter.get_dataframe(query, "kodo_decoding_probability")
 
     # Calculate the expected number of extra pacekts depending on the rank
-    df['dependency'] = df['rank'].apply(sp.mean, axis=0)-1
+    df['dependency'] = df['rank'].apply(scipy.mean, axis=0) - 1
+    df['field'] = df['benchmark'].apply(plot_helper.get_field)
+    df['algorithm'] = df['testcase'].apply(plot_helper.get_algorithm)
 
     # Group by type of code; dense, sparse
-    sparse = df[df['testcase'] == "SparseFullRLNC"].groupby(by= ['buildername',
-        'symbol_size','symbols'])
-    dense = df[df['testcase'] != "SparseFullRLNC"].groupby(by= ['buildername',
-        'symbol_size','symbols'])
+    dense = df[df['testcase'].isin(plot_helper.codes['dense'])].groupby(
+        by=['slavename', 'symbol_size', 'symbols'])
+    sparse = df[df['testcase'].isin(plot_helper.codes['sparse'])].groupby(
+        by=['slavename', 'symbol_size', 'symbols'])
 
-    from matplotlib import pyplot as pl
-    from matplotlib.backends.backend_pdf import PdfPages as pp
-    pl.close('all')
+    def set_comparison_plot():
+        #pl.xlim(xmin = max(0, pl.xlim()[1] -16 ))
+        pyplot.xticks(
+            symbols - 2 ** scipy.arange(scipy.log2(symbols))[::-1],
+            2 ** scipy.arange(scipy.log2(symbols), dtype=int)[::-1])
+        pyplot.grid('on')
+        plotter.set_slave_info(slavename)
+        pyplot.xlabel("Rank Deficiency")
+        pyplot.ylabel("Extra Packets")
 
-    ps.mkdir_p(PATH + "sparse")
-    ps.mkdir_p(PATH + "dense")
-    pdf = pp(PATH + "all.pdf")
+    # Verbose plotting since due to no pandas support for plotting of vectors
+    for (slavename, symbol_size, symbols), group in sparse:
+        pyplot.figure()
+        for (deps, field, density) in zip(group['dependency'], group['field'],
+                                          group['density']):
+            pyplot.plot(
+                scipy.arange(symbols),
+                deps,
+                marker=plot_helper.get_marker(field),
+                label="({}, {})".format(field, str(density)))
 
-    for (buildername, symbol_size, symbols), group in sparse:
+        set_comparison_plot()
+        plotter.write("sparse", slavename)
 
-        #Verbose plotting since due to no pandas support for plotting of vectors
-        pl.figure()
-        ps.set_sparse_plot()
-        for (deps, field,density) in zip(group['dependency'],
-            group['benchmark'], group['density']):
-            pl.plot(sp.arange(symbols), deps, marker = ps.markers(field),
-                label = "(" + field +", " + str(density) + ")")
+    for (slavename, symbol_size, symbols), group in dense:
+        pyplot.figure()
+        for (deps, field, algorithm) in zip(
+                group['dependency'],
+                group['field'],
+                group['algorithm']):
+            pyplot.plot(
+                scipy.arange(symbols),
+                deps,
+                marker=plot_helper.get_marker(field),
+                label="({}, {})".format(field, algorithm))
+        set_comparison_plot()
+        plotter.write("dense", slavename)
 
-        pl.title(buildername, ha = "left", position = (.0,1.03),
-            fontsize = "medium")
-        ps.set_legend()
-        pl.xlabel("Rank Defeciency")
-        pl.ylabel("Extra Packets")
-        pl.xticks( symbols-2**sp.arange(sp.log2(symbols))[::-1] ,
-            2**sp.arange(sp.log2(symbols),dtype=int)[::-1])
-        pl.grid('on')
-        pl.savefig(PATH + "sparse/" + buildername + str(symbols) + "." + args.format)
-        pdf.savefig(transparent=True)
-
-    for (buildername, symbol_size, symbols), group in dense:
-
-        #Verbose plotting since due to no pandas support for plotting of vectors
-        pl.figure()
-        ps.set_dense_plot()
-        for (deps, field,testcase) in zip(group['dependency'],
-            group['benchmark'], group['testcase']):
-            pl.plot(sp.arange(symbols), deps, marker = ps.markers(field),
-                label = "(" + field +", " + testcase + ")")
-
-        pl.title(buildername, ha = "left", position = (.0,1.03),
-            fontsize = "medium")
-        ps.set_legend()
-        pl.xlabel("Rank Defeciency")
-        pl.ylabel("Extra Packets")
-        pl.xticks( symbols-2**sp.arange(sp.log2(symbols))[::-1],
-            2**sp.arange(sp.log2(symbols),dtype=int)[::-1])
-        pl.grid('on')
-        pl.savefig(PATH + "dense/" + buildername + str(symbols) + "." + args.format)
-        pdf.savefig(transparent=True)
-
-    pdf.close()
-
+    return df
 
 if __name__ == '__main__':
-
-    parser = argparse.ArgumentParser()
-
-    parser.add_argument(
-        '--json', dest='jsonfile', action='store',
-        help='the .json file written by gauge benchmark, if non provided plots \
-        from the database',
-        default="")
-    parser.add_argument(
-        '--output-format', dest='format', action='store', default='eps',
-        help='The format of the generated figures, e.g. eps, pdf')
-
-    args = parser.parse_args()
-
-    plot(args)
+    args = plot_helper.add_arguments(["json", "date", "output-format"])
+    df = plot(args)

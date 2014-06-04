@@ -15,23 +15,14 @@
 #include <gauge/python_printer.hpp>
 
 #include <kodo/has_deep_symbol_storage.hpp>
-#include <kodo/rlnc/full_vector_codes.hpp>
-#include <kodo/rlnc/seed_codes.hpp>
-#include <kodo/rs/reed_solomon_codes.hpp>
-
+#include <kodo/rlnc/full_rlnc_codes.hpp>
+#include <kodo/rlnc/seed_rlnc_codes.hpp>
+#include <kodo/reed_solomon/reed_solomon_codes.hpp>
+#include <kodo/set_systematic_on.hpp>
+#include <kodo/set_systematic_off.hpp>
 #include <tables/table.hpp>
 
 #include "codes.hpp"
-
-// Helper function to convert to string
-template<class T>
-inline std::string to_string(T t)
-{
-    std::stringstream ss;
-    ss << t;
-    return ss.str();
-}
-
 
 /// A test block represents an encoder and decoder pair
 template<class Encoder, class Decoder>
@@ -51,7 +42,7 @@ public:
     decoding_probability_benchmark()
     {
         // Seed the random generator controlling the erasures
-        m_random_generator.seed((uint64_t)time(0));
+        m_random_generator.seed((uint32_t)time(0));
     }
 
     void start()
@@ -146,7 +137,7 @@ public:
 
         // We switch any systematic operations off so we code
         // symbols from the beginning
-        if(kodo::is_systematic_encoder(m_encoder))
+        if(kodo::has_systematic_encoder<Encoder>::value)
         {
             if(systematic)
             {
@@ -186,7 +177,9 @@ public:
 
         std::vector<uint8_t> payload(m_encoder->payload_size());
 
-        m_encoder->seed((uint32_t)time(0));
+        // Ensure the encoding vectors generated are randomized between
+        // runs
+        m_encoder->seed(rand());
 
         // The clock is running
         RUN{
@@ -519,17 +512,8 @@ int main(int argc, const char* argv[])
 
     srand(static_cast<uint32_t>(time(0)));
 
-    gauge::runner::instance().printers().push_back(
-        std::make_shared<gauge::console_printer>());
-
-    gauge::runner::instance().printers().push_back(
-        std::make_shared<gauge::python_printer>());
-
-    gauge::runner::instance().printers().push_back(
-        std::make_shared<gauge::csv_printer>());
-
+    gauge::runner::add_default_printers();
     gauge::runner::run_benchmarks(argc, argv);
 
     return 0;
 }
-

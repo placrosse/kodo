@@ -37,7 +37,7 @@ namespace kodo
     /// on the incoming symbols.
     ///
     /// To figure out which symbols have been partially decoded the decoder's
-    /// layer::is_symbol_decoded(uint32_t) const function can be used.
+    /// layer::is_symbol_uncoded(uint32_t) const function can be used.
     template<class SuperCoder>
     class rank_symbol_decoding_status_updater : public SuperCoder
     {
@@ -66,22 +66,22 @@ namespace kodo
             SuperCoder::decode(payload);
 
             rank_type decoder_rank = SuperCoder::rank();
-            rank_type seen_encoder_rank = SuperCoder::seen_encoder_rank();
+            rank_type remote_rank = SuperCoder::remote_rank();
 
             // If the decoder and encoder rank matches we know that when
             // using Gaussian Elimination with backward substitution that
             // symbols stored must be fully decoded
-            if(decoder_rank == seen_encoder_rank)
+            if(decoder_rank == remote_rank)
             {
                 for(uint32_t i = 0; i < SuperCoder::symbols(); ++i)
                 {
                     if(SuperCoder::is_symbol_seen(i))
                     {
-                        SuperCoder::set_symbol_decoded(i);
+                        SuperCoder::set_symbol_uncoded(i);
                     }
                 }
 
-                assert(SuperCoder::rank() == SuperCoder::symbols_decoded());
+                assert(SuperCoder::rank() == SuperCoder::symbols_uncoded());
             }
         }
 

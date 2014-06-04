@@ -43,6 +43,12 @@ namespace kodo
                 {
                     return 0;
                 }
+
+                uint32_t max_rank_size() const
+                {
+                    return sizeof(rank_type);
+                }
+
             };
 
         public:
@@ -53,9 +59,9 @@ namespace kodo
                 return 0;
             }
 
-            rank_type seen_encoder_rank() const
+            rank_type remote_rank() const
             {
-                return m_seen_encoder_rank;
+                return m_remote_rank;
             }
 
             uint32_t payload_size() const
@@ -63,10 +69,15 @@ namespace kodo
                 return 0;
             }
 
+            uint32_t rank_size() const
+            {
+                return sizeof(rank_type);
+            }
+
         public:
 
             uint8_t* m_payload;
-            uint32_t m_seen_encoder_rank;
+            uint32_t m_remote_rank;
 
         };
 
@@ -90,41 +101,41 @@ TEST(TestPayloadRankRecoder, stack)
 
     std::vector<uint8_t> payload(stack.payload_size());
 
-    stack.m_seen_encoder_rank = 0U;
+    stack.m_remote_rank = 0U;
 
     uint32_t bytes_used = stack.encode(&payload[0]);
     EXPECT_EQ(bytes_used, sizeof(rank_type));
     EXPECT_EQ(stack.m_payload, &payload[4]);
 
     rank_type rank = sak::big_endian::get<rank_type>(&payload[0]);
-    EXPECT_EQ(rank, stack.m_seen_encoder_rank);
+    EXPECT_EQ(rank, stack.m_remote_rank);
 
-    stack.m_seen_encoder_rank = 4U;
-
-    bytes_used = stack.encode(&payload[0]);
-    EXPECT_EQ(bytes_used, sizeof(rank_type));
-    EXPECT_EQ(stack.m_payload, &payload[4]);
-
-    rank = sak::big_endian::get<rank_type>(&payload[0]);
-    EXPECT_EQ(rank, stack.m_seen_encoder_rank);
-
-    stack.m_seen_encoder_rank = 1U;
+    stack.m_remote_rank = 4U;
 
     bytes_used = stack.encode(&payload[0]);
     EXPECT_EQ(bytes_used, sizeof(rank_type));
     EXPECT_EQ(stack.m_payload, &payload[4]);
 
     rank = sak::big_endian::get<rank_type>(&payload[0]);
-    EXPECT_EQ(rank, stack.m_seen_encoder_rank);
+    EXPECT_EQ(rank, stack.m_remote_rank);
 
-    stack.m_seen_encoder_rank = 0U;
+    stack.m_remote_rank = 1U;
 
     bytes_used = stack.encode(&payload[0]);
     EXPECT_EQ(bytes_used, sizeof(rank_type));
     EXPECT_EQ(stack.m_payload, &payload[4]);
 
     rank = sak::big_endian::get<rank_type>(&payload[0]);
-    EXPECT_EQ(rank, stack.m_seen_encoder_rank);
+    EXPECT_EQ(rank, stack.m_remote_rank);
+
+    stack.m_remote_rank = 0U;
+
+    bytes_used = stack.encode(&payload[0]);
+    EXPECT_EQ(bytes_used, sizeof(rank_type));
+    EXPECT_EQ(stack.m_payload, &payload[4]);
+
+    rank = sak::big_endian::get<rank_type>(&payload[0]);
+    EXPECT_EQ(rank, stack.m_remote_rank);
 }
 
 

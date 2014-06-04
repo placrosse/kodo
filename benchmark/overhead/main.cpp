@@ -12,9 +12,9 @@
 #include <gauge/python_printer.hpp>
 #include <gauge/csv_printer.hpp>
 
-#include <kodo/rlnc/full_vector_codes.hpp>
-#include <kodo/rlnc/seed_codes.hpp>
-#include <kodo/rs/reed_solomon_codes.hpp>
+#include <kodo/rlnc/full_rlnc_codes.hpp>
+#include <kodo/rlnc/seed_rlnc_codes.hpp>
+#include <kodo/reed_solomon/reed_solomon_codes.hpp>
 #include <kodo/has_deep_symbol_storage.hpp>
 
 #include <tables/table.hpp>
@@ -215,7 +215,7 @@ BENCHMARK_OPTION(overhead_options)
         ("symbol_size", default_symbol_size, "Set the symbol size in bytes");
 
     options.add_options()
-        ("symbol erasure probability", default_erasure,
+        ("erasure", default_erasure,
          "Set the symbol erasure probability");
 
     gauge::runner::instance().register_options(options);
@@ -319,17 +319,8 @@ int main(int argc, const char* argv[])
 
     srand(static_cast<uint32_t>(time(0)));
 
-    gauge::runner::instance().printers().push_back(
-        std::make_shared<gauge::console_printer>());
-
-    gauge::runner::instance().printers().push_back(
-        std::make_shared<gauge::python_printer>());
-
-    gauge::runner::instance().printers().push_back(
-        std::make_shared<gauge::csv_printer>());
-
+    gauge::runner::add_default_printers();
     gauge::runner::run_benchmarks(argc, argv);
 
     return 0;
 }
-

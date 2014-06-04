@@ -12,7 +12,7 @@
 
 #include <kodo/operations_counter.hpp>
 
-#include "operations_counter_helper.hpp"
+#include "kodo_unit_test/operations_counter_helper.hpp"
 
 
 /// Run the tests typical coefficients stack
@@ -45,6 +45,7 @@ TEST(TestOperationsCounter, test_operations_counter)
     }
 
 }
+
 
 
 

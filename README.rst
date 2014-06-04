@@ -1,12 +1,11 @@
 License
 -------
 
-To obtain a valid Kodo license **you must fil out the license request** form_.
+To obtain a valid Kodo license **you must fill out the license request** form_.
 
 Kodo is available under a research and educational friendly licensee, see the details in the LICENSE.rst file.
 
 .. _form: http://steinwurf.com/license/
-
 
 Introduction
 ------------
@@ -26,5 +25,5 @@ To get started see the manual here:
 http://readthedocs.org/docs/kodo/en/latest/
 
 The API documentation (doxygen) is available here:
-http://176.28.49.184:12344/doxygen/kodo/
+http://buildbot.steinwurf.com/doxygen/kodo/
 

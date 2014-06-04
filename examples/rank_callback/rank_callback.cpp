@@ -15,7 +15,7 @@
 
 #include <functional>
 
-#include <kodo/rlnc/full_vector_codes.hpp>
+#include <kodo/rlnc/full_rlnc_codes.hpp>
 #include <kodo/rank_callback_decoder.hpp>
 
 namespace kodo

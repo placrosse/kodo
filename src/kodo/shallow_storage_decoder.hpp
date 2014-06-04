@@ -7,9 +7,6 @@
 
 #include <cstdint>
 
-#include <boost/function.hpp>
-#include <boost/bind.hpp>
-
 #include <sak/storage.hpp>
 
 #include "object_decoder.hpp"
@@ -127,4 +124,3 @@ namespace kodo
     };
 
 }
-

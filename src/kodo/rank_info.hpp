@@ -29,6 +29,25 @@ namespace kodo
 
     public:
 
+        class factory : public SuperCoder::factory
+        {
+        public:
+
+            /// @copydoc layer::factory::factory(uint32_t,uint32_t)
+            factory(uint32_t max_symbols, uint32_t max_symbol_size)
+                : SuperCoder::factory(max_symbols, max_symbol_size)
+            { }
+
+            /// @return the maximum size needed to store the rank information
+            uint32_t max_rank_size() const
+            {
+                return sizeof(rank_type);
+            }
+
+        };
+
+    public:
+
         /// @copydoc layer::construct(Factory&)
         template<class Factory>
         void construct(Factory& the_factory)
@@ -37,6 +56,12 @@ namespace kodo
 
             assert(std::numeric_limits<rank_type>::max() >=
                    the_factory.max_symbols());
+        }
+
+        /// @return the size of the rank information
+        uint32_t rank_size() const
+        {
+            return sizeof(rank_type);
         }
 
     };

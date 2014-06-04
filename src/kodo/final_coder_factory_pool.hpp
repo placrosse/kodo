@@ -6,6 +6,7 @@
 #pragma once
 
 #include <cstdint>
+#include <functional>
 
 #include <boost/shared_ptr.hpp>
 #include <boost/make_shared.hpp>
@@ -38,7 +39,7 @@ namespace kodo
 
             /// @copydoc layer::factory::factory(uint32_t,uint32_t)
             factory(uint32_t max_symbols, uint32_t max_symbol_size) :
-                m_pool(boost::bind(&factory::make_coder, this))
+                m_pool(std::bind(&factory::make_coder, this))
             {
                 (void) max_symbols;
                 (void) max_symbol_size;
@@ -141,5 +142,3 @@ namespace kodo
 
     };
 }
-
-

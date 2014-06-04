@@ -3,12 +3,13 @@
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
 
-#ifndef KODO_SEED_SYMBOL_ID_HPP
-#define KODO_SEED_SYMBOL_ID_HPP
+#pragma once
 
 #include <cstdint>
 
 #include <fifi/fifi_utils.hpp>
+
+#include "aligned_coefficients_buffer.hpp"
 
 namespace kodo
 {
@@ -63,6 +64,3 @@ namespace kodo
     };
 
 }
-
-#endif
-

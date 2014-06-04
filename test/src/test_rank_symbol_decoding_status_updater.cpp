@@ -51,9 +51,9 @@ namespace kodo
                 return m_rank;
             }
 
-            uint32_t seen_encoder_rank() const
+            uint32_t remote_rank() const
             {
-                return m_seen_encoder_rank;
+                return m_remote_rank;
             }
 
             uint32_t symbols() const
@@ -63,7 +63,7 @@ namespace kodo
 
             uint8_t* m_payload;
             uint32_t m_rank;
-            uint32_t m_seen_encoder_rank;
+            uint32_t m_remote_rank;
             uint32_t m_symbols;
         };
 
@@ -109,7 +109,7 @@ TEST(TestRankSymbolDecodingStatusUpdator, api)
 
     kodo::dummy_stack stack;
     stack.m_rank = 0;
-    stack.m_seen_encoder_rank = 0;
+    stack.m_remote_rank = 0;
 
     std::vector<uint8_t> payload(10);
 
@@ -118,80 +118,80 @@ TEST(TestRankSymbolDecodingStatusUpdator, api)
     EXPECT_EQ(stack.symbols(), factory.symbols());
 
     for(uint32_t i = 0; i < stack.symbols(); ++i)
-        EXPECT_FALSE(stack.is_symbol_decoded(i));
+        EXPECT_FALSE(stack.is_symbol_uncoded(i));
 
     stack.m_rank = 1;
-    stack.m_seen_encoder_rank = 2;
+    stack.m_remote_rank = 2;
 
     stack.set_symbol_seen(1);
 
     stack.decode(&payload[0]);
 
     for(uint32_t i = 0; i < stack.symbols(); ++i)
-        EXPECT_FALSE(stack.is_symbol_decoded(i));
+        EXPECT_FALSE(stack.is_symbol_uncoded(i));
 
     stack.m_rank = 2;
-    stack.m_seen_encoder_rank = 2;
+    stack.m_remote_rank = 2;
 
     stack.set_symbol_seen(0);
 
     stack.decode(&payload[0]);
 
-    EXPECT_TRUE(stack.is_symbol_decoded(0));
-    EXPECT_TRUE(stack.is_symbol_decoded(1));
-    EXPECT_FALSE(stack.is_symbol_decoded(2));
-    EXPECT_FALSE(stack.is_symbol_decoded(3));
-    EXPECT_FALSE(stack.is_symbol_decoded(4));
+    EXPECT_TRUE(stack.is_symbol_uncoded(0));
+    EXPECT_TRUE(stack.is_symbol_uncoded(1));
+    EXPECT_FALSE(stack.is_symbol_uncoded(2));
+    EXPECT_FALSE(stack.is_symbol_uncoded(3));
+    EXPECT_FALSE(stack.is_symbol_uncoded(4));
 
     stack.m_rank = 3;
-    stack.m_seen_encoder_rank = 3;
+    stack.m_remote_rank = 3;
 
     stack.set_symbol_seen(4);
 
     stack.decode(&payload[0]);
 
-    EXPECT_TRUE(stack.is_symbol_decoded(0));
-    EXPECT_TRUE(stack.is_symbol_decoded(1));
-    EXPECT_FALSE(stack.is_symbol_decoded(2));
-    EXPECT_FALSE(stack.is_symbol_decoded(3));
-    EXPECT_TRUE(stack.is_symbol_decoded(4));
+    EXPECT_TRUE(stack.is_symbol_uncoded(0));
+    EXPECT_TRUE(stack.is_symbol_uncoded(1));
+    EXPECT_FALSE(stack.is_symbol_uncoded(2));
+    EXPECT_FALSE(stack.is_symbol_uncoded(3));
+    EXPECT_TRUE(stack.is_symbol_uncoded(4));
 
     stack.m_rank = 3;
-    stack.m_seen_encoder_rank = 5;
+    stack.m_remote_rank = 5;
 
     stack.decode(&payload[0]);
 
-    EXPECT_TRUE(stack.is_symbol_decoded(0));
-    EXPECT_TRUE(stack.is_symbol_decoded(1));
-    EXPECT_FALSE(stack.is_symbol_decoded(2));
-    EXPECT_FALSE(stack.is_symbol_decoded(3));
-    EXPECT_TRUE(stack.is_symbol_decoded(4));
+    EXPECT_TRUE(stack.is_symbol_uncoded(0));
+    EXPECT_TRUE(stack.is_symbol_uncoded(1));
+    EXPECT_FALSE(stack.is_symbol_uncoded(2));
+    EXPECT_FALSE(stack.is_symbol_uncoded(3));
+    EXPECT_TRUE(stack.is_symbol_uncoded(4));
 
     stack.m_rank = 4;
-    stack.m_seen_encoder_rank = 5;
+    stack.m_remote_rank = 5;
 
     stack.set_symbol_seen(2);
 
     stack.decode(&payload[0]);
 
-    EXPECT_TRUE(stack.is_symbol_decoded(0));
-    EXPECT_TRUE(stack.is_symbol_decoded(1));
-    EXPECT_FALSE(stack.is_symbol_decoded(2));
-    EXPECT_FALSE(stack.is_symbol_decoded(3));
-    EXPECT_TRUE(stack.is_symbol_decoded(4));
+    EXPECT_TRUE(stack.is_symbol_uncoded(0));
+    EXPECT_TRUE(stack.is_symbol_uncoded(1));
+    EXPECT_FALSE(stack.is_symbol_uncoded(2));
+    EXPECT_FALSE(stack.is_symbol_uncoded(3));
+    EXPECT_TRUE(stack.is_symbol_uncoded(4));
 
     stack.m_rank = 5;
-    stack.m_seen_encoder_rank = 5;
+    stack.m_remote_rank = 5;
 
     stack.set_symbol_seen(3);
 
     stack.decode(&payload[0]);
 
-    EXPECT_TRUE(stack.is_symbol_decoded(0));
-    EXPECT_TRUE(stack.is_symbol_decoded(1));
-    EXPECT_TRUE(stack.is_symbol_decoded(2));
-    EXPECT_TRUE(stack.is_symbol_decoded(3));
-    EXPECT_TRUE(stack.is_symbol_decoded(4));
+    EXPECT_TRUE(stack.is_symbol_uncoded(0));
+    EXPECT_TRUE(stack.is_symbol_uncoded(1));
+    EXPECT_TRUE(stack.is_symbol_uncoded(2));
+    EXPECT_TRUE(stack.is_symbol_uncoded(3));
+    EXPECT_TRUE(stack.is_symbol_uncoded(4));
 
 }
 

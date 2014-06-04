@@ -19,8 +19,10 @@
 #include <kodo/has_shallow_symbol_storage.hpp>
 #include <kodo/has_deep_symbol_storage.hpp>
 #include <kodo/fake_symbol_storage.hpp>
+#include <kodo/mutable_shallow_symbol_storage.hpp>
+#include <kodo/const_shallow_symbol_storage.hpp>
 
-#include "basic_api_test_helper.hpp"
+#include "kodo_unit_test/basic_api_test_helper.hpp"
 
 /// Defines a number test stacks which contains the layers we wish to
 /// test.
@@ -1868,6 +1870,3 @@ TEST(TestSymbolStorage, test_has_deep_symbol_storage)
 
     EXPECT_FALSE(kodo::has_deep_symbol_storage<fifi::binary8>::value);
 }
-
-
-

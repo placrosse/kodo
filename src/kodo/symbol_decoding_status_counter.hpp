@@ -30,7 +30,7 @@ namespace kodo
         symbol_decoding_status_counter()
             : m_symbols_missing(0),
               m_symbols_seen(0),
-              m_symbols_decoded(0)
+              m_symbols_uncoded(0)
         { }
 
         /// @copydoc layer::initialize(Factory&)
@@ -41,7 +41,7 @@ namespace kodo
 
             m_symbols_missing = the_factory.symbols();
             m_symbols_seen = 0;
-            m_symbols_decoded = 0;
+            m_symbols_uncoded = 0;
         }
 
         /// @copydoc layer::set_symbol_missing(uint32_t)
@@ -58,14 +58,14 @@ namespace kodo
 
                 --m_symbols_seen;
             }
-            else if(SuperCoder::is_symbol_decoded(index))
+            else if(SuperCoder::is_symbol_uncoded(index))
             {
                 ++m_symbols_missing;
 
                 assert(m_symbols_missing <= SuperCoder::symbols());
-                assert(m_symbols_decoded > 0);
+                assert(m_symbols_uncoded > 0);
 
-                --m_symbols_decoded;
+                --m_symbols_uncoded;
             }
 
             SuperCoder::set_symbol_missing(index);
@@ -85,44 +85,44 @@ namespace kodo
 
                 --m_symbols_missing;
             }
-            else if(SuperCoder::is_symbol_decoded(index))
+            else if(SuperCoder::is_symbol_uncoded(index))
             {
                 ++m_symbols_seen;
 
                 assert(m_symbols_seen <= SuperCoder::symbols());
-                assert(m_symbols_decoded > 0);
+                assert(m_symbols_uncoded > 0);
 
-                --m_symbols_decoded;
+                --m_symbols_uncoded;
             }
 
             SuperCoder::set_symbol_seen(index);
         }
 
-        /// @copydoc layer::set_symbol_decoded(uint32_t)
-        void set_symbol_decoded(uint32_t index)
+        /// @copydoc layer::set_symbol_uncoded(uint32_t)
+        void set_symbol_uncoded(uint32_t index)
         {
             assert(index < SuperCoder::symbols());
 
             if(SuperCoder::is_symbol_missing(index))
             {
-                ++m_symbols_decoded;
+                ++m_symbols_uncoded;
 
-                assert(m_symbols_decoded <= SuperCoder::symbols());
+                assert(m_symbols_uncoded <= SuperCoder::symbols());
                 assert(m_symbols_missing > 0);
 
                 --m_symbols_missing;
             }
             else if(SuperCoder::is_symbol_seen(index))
             {
-                ++m_symbols_decoded;
+                ++m_symbols_uncoded;
 
-                assert(m_symbols_decoded <= SuperCoder::symbols());
+                assert(m_symbols_uncoded <= SuperCoder::symbols());
                 assert(m_symbols_seen > 0);
 
                 --m_symbols_seen;
             }
 
-            SuperCoder::set_symbol_decoded(index);
+            SuperCoder::set_symbol_uncoded(index);
         }
 
         /// @copydoc layer::symbols_missing() const
@@ -137,10 +137,10 @@ namespace kodo
             return m_symbols_seen;
         }
 
-        /// @copydoc layer::symbols_decoded() const
-        uint32_t symbols_decoded() const
+        /// @copydoc layer::symbols_uncoded() const
+        uint32_t symbols_uncoded() const
         {
-            return m_symbols_decoded;
+            return m_symbols_uncoded;
         }
 
     public:
@@ -154,7 +154,7 @@ namespace kodo
         uint32_t m_symbols_seen;
 
         /// Counter for symbols which have been fully decoded.
-        uint32_t m_symbols_decoded;
+        uint32_t m_symbols_uncoded;
 
     };
 

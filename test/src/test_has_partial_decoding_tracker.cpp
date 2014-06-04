@@ -11,7 +11,7 @@
 #include <gtest/gtest.h>
 
 #include <kodo/has_partial_decoding_tracker.hpp>
-#include <kodo/rlnc/full_vector_codes.hpp>
+#include <kodo/rlnc/full_rlnc_codes.hpp>
 #include <kodo/rlnc/on_the_fly_codes.hpp>
 
 TEST(TestHasPartialDecodingTracker, detect)
@@ -41,6 +41,3 @@ TEST(TestHasPartialDecodingTracker, detect)
                      kodo::on_the_fly_decoder<fifi::binary8> >::value);
 
 }
-
-
-

@@ -10,11 +10,11 @@
 #include <gtest/gtest.h>
 
 #include <kodo/backward_linear_block_decoder.hpp>
-#include <kodo/rlnc/full_vector_codes.hpp>
+#include <kodo/rlnc/full_rlnc_codes.hpp>
 
-#include <kodo/debug_linear_block_decoder.hpp>
+#include <kodo/trace_linear_block_decoder.hpp>
 
-#include "basic_api_test_helper.hpp"
+#include "kodo_unit_test/basic_api_test_helper.hpp"
 
 namespace kodo
 {
@@ -31,7 +31,7 @@ namespace kodo
                      // Codec Header API
                      // Symbol ID API
                      // Decoder API
-                     debug_linear_block_decoder<
+                     trace_linear_block_decoder<enable_trace,
                      backward_linear_block_decoder<
                      symbol_decoding_status_counter<
                      symbol_decoding_status_tracker<
@@ -59,7 +59,7 @@ namespace kodo
                      // Codec Header API
                      // Symbol ID API
                      // Codec API
-                     debug_linear_block_decoder<
+                     trace_linear_block_decoder<enable_trace,
                      linear_block_decoder_delayed<
                      backward_linear_block_decoder<
                      symbol_decoding_status_counter<
@@ -252,6 +252,3 @@ TEST(TestBackwardLinearBlockDecoder, test_decoder_delayed)
 {
     test_backward_stack<kodo::test_backward_delayed_stack>();
 }
-
-
-

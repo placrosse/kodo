@@ -22,11 +22,11 @@
 #include <kodo/encode_symbol_tracker.hpp>
 #include <kodo/finite_field_math.hpp>
 #include <kodo/finite_field_info.hpp>
-#include <kodo/rs/reed_solomon_symbol_id_writer.hpp>
-#include <kodo/rs/reed_solomon_symbol_id_reader.hpp>
-#include <kodo/rs/vandermonde_matrix.hpp>
+#include <kodo/reed_solomon/reed_solomon_symbol_id_writer.hpp>
+#include <kodo/reed_solomon/reed_solomon_symbol_id_reader.hpp>
+#include <kodo/reed_solomon/vandermonde_matrix.hpp>
 
-#include "basic_api_test_helper.hpp"
+#include "kodo_unit_test/basic_api_test_helper.hpp"
 
 /// Here we define the stacks which should be tested.
 namespace kodo
@@ -38,17 +38,28 @@ namespace kodo
     namespace
     {
 
+        template<class SuperCoder>
+        struct dummy_layer : public SuperCoder
+        {
+            uint32_t rank() const
+            {
+                return SuperCoder::symbols();
+            }
+        };
+
+
         template<class Field>
         class plain_uniform_stack
             : public plain_symbol_id_reader<
                      plain_symbol_id_writer<
                      uniform_generator<
                      coefficient_info<
+                     dummy_layer<
                      storage_block_info<
                      finite_field_info<Field,
                      final_coder_factory<
                      plain_uniform_stack<Field>
-                         > > > > > > >
+                         > > > > > > > >
         { };
 
         template<class Field>
@@ -57,13 +68,14 @@ namespace kodo
                      reed_solomon_symbol_id_writer<
                      vandermonde_matrix<
                      coefficient_info<
+                     dummy_layer<
                      storage_block_info<
                      encode_symbol_tracker<
                      finite_field_math<typename fifi::default_field<Field>::type,
                      finite_field_info<Field,
                      final_coder_factory<
                      rs_vandermond_nonsystematic_stack<Field>
-                         > > > > > > > > >
+                         > > > > > > > > > >
         { };
     }
 }
@@ -180,4 +192,3 @@ TEST(TestSymbolId, test_rs_stack)
     test.run();
 
 }
-

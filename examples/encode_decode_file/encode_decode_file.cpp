@@ -5,7 +5,8 @@
 
 #include <kodo/file_encoder.hpp>
 #include <kodo/object_decoder.hpp>
-#include <kodo/rlnc/full_vector_codes.hpp>
+#include <kodo/rlnc/full_rlnc_codes.hpp>
+#include <kodo/set_systematic_off.hpp>
 
 /// @example encode_decode_file.cpp
 ///
@@ -88,7 +89,7 @@ int main()
         auto decoder = object_decoder.build(i);
 
         // Set the encoder non-systematic
-        if(kodo::is_systematic_encoder(encoder))
+        if(kodo::has_systematic_encoder<encoder_t>::value)
             kodo::set_systematic_off(encoder);
 
         std::vector<uint8_t> payload(encoder->payload_size());
@@ -126,4 +127,3 @@ int main()
                   << "please file a bug report :)" << std::endl;
     }
 }
-
