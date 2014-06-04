@@ -43,7 +43,7 @@ namespace kodo
             {
                 return std::max(
                     SuperCoder::factory::nested().max_payload_size(),
-                    SuperCoder::max_payload_size());
+                    SuperCoder::factory::max_payload_size());
             }
         };
 
@@ -56,7 +56,7 @@ namespace kodo
         }
 
         /// @copydoc layer::decode(uint8_t*)
-        void decode(uint8_t *payload)
+        void decode(uint8_t* payload)
         {
             assert(payload);
             assert(SuperCoder::nested());
