@@ -3,8 +3,9 @@
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
 
-#include <kodo/rlnc/full_vector_codes.hpp>
-#include <kodo/rlnc/seed_codes.hpp>
+#include <kodo/rlnc/full_rlnc_codes.hpp>
+#include <kodo/is_systematic_on.hpp>
+#include <kodo/set_systematic_off.hpp>
 
 namespace kodo
 {
@@ -55,7 +56,7 @@ namespace kodo
                encoded_count<
                payload_encoder<
                // Codec Header API
-               systematic_encoder<
+               default_on_systematic_encoder<
                symbol_id_encoder<
                // Symbol ID API
                plain_symbol_id_writer<
@@ -117,7 +118,7 @@ int main()
 
     // We switch any systematic operations off so we code
     // symbols from the beginning
-    if(kodo::is_systematic_encoder(encoder))
+    if(kodo::is_systematic_on(encoder))
         kodo::set_systematic_off(encoder);
 
     while( !decoder2->is_complete() )

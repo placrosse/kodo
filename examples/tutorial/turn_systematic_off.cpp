@@ -3,7 +3,9 @@
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
 
-#include <kodo/rlnc/full_vector_codes.hpp>
+#include <kodo/rlnc/full_rlnc_codes.hpp>
+#include <kodo/is_systematic_on.hpp>
+#include <kodo/set_systematic_off.hpp>
 
 int main()
 {
@@ -39,7 +41,7 @@ int main()
 
     // We switch any systematic operations off so we code
     // symbols from the beginning
-    if(kodo::is_systematic_encoder(encoder))
+    if(kodo::is_systematic_on(encoder))
         kodo::set_systematic_off(encoder);
 
     while( !decoder->is_complete() )
