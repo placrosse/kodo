@@ -6,7 +6,8 @@
 #pragma once
 
 #include <cstdint>
-#include <algorithm>
+
+#include "nested_payload_size.hpp"
 
 namespace kodo
 {
@@ -23,39 +24,9 @@ namespace kodo
     /// On common use-case for this type of layer are situations where a
     /// nested stack should e.g. "preprocess" the incoming symbols.
     template<class SuperCoder>
-    class nested_payload_decoder : public SuperCoder
+    class nested_payload_decoder : public nested_payload_size<SuperCoder>
     {
     public:
-
-        /// @ingroup factory_layers
-        /// The factory layer associated with this coder.
-        class factory : public SuperCoder::factory
-        {
-        public:
-
-            /// @copydoc layer::factory::factory(uint32_t,uint32_t)
-            factory(uint32_t max_symbols, uint32_t max_symbol_size) :
-                SuperCoder::factory(max_symbols, max_symbol_size)
-            { }
-
-            /// @copydoc layer::factory::max_payload_size() const
-            uint32_t max_payload_size() const
-            {
-	        return SuperCoder::factory::nested().max_payload_size();
-                // return std::max(
-                //     SuperCoder::factory::nested().max_payload_size(),
-                //     SuperCoder::factory::max_payload_size());
-            }
-        };
-
-        /// @copydoc layer::payload_size() const
-        uint32_t payload_size() const
-        {
-            assert(SuperCoder::nested());
-	    return SuperCoder::nested()->payload_size();
-            // return std::max(SuperCoder::nested()->payload_size(),
-            //                 SuperCoder::payload_size());
-        }
 
         /// @copydoc layer::decode(uint8_t*)
         void decode(uint8_t* payload)
