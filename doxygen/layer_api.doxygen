@@ -36,7 +36,7 @@ public:
 
         /// @ingroup factory_api
         /// @brief Factory constructor
-        /// @param max_symbols the maximum symbols coder can expect
+        /// @param max_symbols the maximum symbols coders can expect
         /// @param max_symbol_size the maximum size of a symbol in bytes
         factory(uint32_t max_symbols, uint32_t max_symbol_size);
 
