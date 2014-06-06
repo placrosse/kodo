@@ -118,13 +118,11 @@ public:
         /// @return the maximum required feedback buffer size in bytes
         uint32_t max_feedback_size() const;
 
-        /// @todo Improve docs
         /// @ingroup factory_api
         /// Sets the number of symbols
         /// @param symbols the number of symbols
         void set_symbols(uint32_t symbols);
 
-        /// @todo Improve docs
         /// @ingroup factory_api
         /// Sets the symbol size
         /// @param symbol_size the symbol size
@@ -319,13 +317,11 @@ public:
     /// @return true if the decoding is complete
     bool is_complete() const;
 
-    /// @todo Improve docs
     /// @ingroup decoder_api
     /// Returns the number of uncoded symbols
     /// @return the number of symbols which have been uncoded
     uint32_t symbols_uncoded() const;
 
-    /// @todo Improve docs
     /// @ingroup decoder_api
     /// Returns whether the symbol is uncoded or not
     /// @param index  Index of the symbol to check.
