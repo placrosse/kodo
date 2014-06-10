@@ -5,6 +5,9 @@
 
 #pragma once
 
+#include "set_systematic_on.hpp"
+#include "set_systematic_off.hpp"
+
 namespace kodo
 {
     /// @ingroup codec_header_layers
@@ -19,25 +22,27 @@ namespace kodo
         /// Set the encoder in systematic mode
         void set_systematic_on()
         {
-            auto& nested = SuperCoder::nested();
+            auto&& nested = SuperCoder::nested();
             assert(nested);
             nested->set_systematic_on();
 
+            if (has_set_systematic_on<SuperCoder>::value)
+            {
+                kodo::set_systematic_on<SuperCoder>(*this);
+            }
         }
 
         /// Turns off systematic mode
         void set_systematic_off()
         {
-            auto& nested = SuperCoder::nested();
+            auto&& nested = SuperCoder::nested();
             assert(nested);
             nested->set_systematic_off();
 
-            /// @todo consider also calling
-            ///       Super::set_systeamtic_off() potentially using a
-            ///       type trait to only do it if the lower layers
-            ///       also have a set_systematic_off .. the same
-            ///       counts for set_systematic_on
+            if (has_set_systematic_off<SuperCoder>::value)
+            {
+                kodo::set_systematic_off<SuperCoder>(*this);
+            }
         }
-
     };
 }

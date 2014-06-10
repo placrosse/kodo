@@ -12,7 +12,6 @@
 
 namespace kodo
 {
-
     /// @ingroup generic_api
     /// @copydoc set_systematic_off(const T&)
     template<bool what, class T>
@@ -54,8 +53,4 @@ namespace kodo
     {
         set_systematic_off(*t);
     }
-
-
 }
-
-

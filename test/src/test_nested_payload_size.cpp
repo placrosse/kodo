@@ -7,7 +7,7 @@
 
 #include <stub/call.hpp>
 
-#include <kodo/nested_payload_encoder.hpp>
+#include <kodo/nested_payload_size.hpp>
 #include "kodo_unit_test/helper_test_nested_stack.hpp"
 
 namespace kodo
@@ -38,13 +38,7 @@ namespace kodo
                 return m_payload_size();
             }
 
-            uint32_t encode(uint8_t* payload)
-            {
-                return m_encode(payload);
-            }
-
             stub::call<uint32_t ()> m_payload_size;
-            stub::call<uint32_t (uint8_t*)> m_encode;
         };
 
         // The layer providing the API required by the
@@ -90,13 +84,13 @@ namespace kodo
 
         // Helper stack
         class dummy_stack : public
-            nested_payload_encoder<dummy_layer>
+            nested_payload_size<dummy_layer>
         { };
 
     }
 }
 
-TEST(TestNestedPayloadEncoder, api)
+TEST(TestNestedPayloadSize, api)
 {
     uint32_t symbols = 10;
     uint32_t symbol_size = 10;
@@ -111,8 +105,4 @@ TEST(TestNestedPayloadEncoder, api)
     kodo::dummy_stack stack;
     stack.m_nested.m_payload_size.set_return(1000);
     EXPECT_EQ(stack.payload_size(), 1000);
-
-    stack.m_nested.m_encode.set_return(42);
-    EXPECT_EQ(stack.encode((uint8_t*)0xcc), 42);
-    EXPECT_TRUE(stack.m_nested.m_encode.called_once_with((uint8_t*)0xcc));
 }

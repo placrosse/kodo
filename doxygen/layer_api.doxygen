@@ -13,7 +13,7 @@ public:
     /// @typedef value_type
     /// The value type storing the field elements used for the
     /// specified field. E.g. the binary extension field 2^8 uses
-nn    /// uint8_t as the value_type.
+    /// uint8_t as the value_type.
     typedef field::value_type value_type;
 
     /// @typedef seed_type
