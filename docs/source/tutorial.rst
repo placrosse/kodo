@@ -22,9 +22,7 @@ header .
 
 .. literalinclude:: ../../examples/tutorial/basic.cpp
     :language: c++
-    :start-after: #include
-    :end-before: #include
-    :linenos:
+    :lines: 6
 
 Adding code samples
 -------------------
