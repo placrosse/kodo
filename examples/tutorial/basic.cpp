@@ -3,14 +3,20 @@
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
 
+//! [0]
 #include <kodo/rlnc/full_rlnc_codes.hpp>
+//! [0]
 
 int main()
 {
+    //! [1]
+
     // Set the number of symbols (i.e. the generation size in RLNC
     // terminology) and the size of a symbol in bytes
     uint32_t max_symbols = 16;
     uint32_t max_symbol_size = 1400;
+
+    //! [1]
 
     typedef kodo::full_rlnc_encoder<fifi::binary8> rlnc_encoder;
     typedef kodo::full_rlnc_decoder<fifi::binary8> rlnc_decoder;
