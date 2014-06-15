@@ -43,6 +43,28 @@ parameters are the number of ´´symbols´´ and the ´´symbol_size´´.
     :end-before: //! [3]
     :linenos:
 
+In general if we want to encode a block of data, we split this block
+into some number of symbols of a specific size. If you multiply the
+number of symbols with the symbol size you get the total amount of
+data in bytes that will be either encoded or decoded.
+
+.. note:: Sizes in Kodo are always measured in bytes. So if you see a
+          variable of function name that includes the word size bytes
+          is the unit used.
+
+Let us briefly outline the impact of changing the number of symbols
+and the symbol size.
+
+symbols
+.......
+* Increasing the number of symbols also increases the computational
+  complexity and can therefore result in slow encoding/decoding.
+* Increasing
+
+
+Especially the number of symbols is an important parameter.
+
+
 
  *
  * Rate-less (this means that we can in principle generate an infinite amount of redundancy
