@@ -30,9 +30,9 @@ namespace kodo
 
         public:
 
-            struct factory
+            struct factory_base
             {
-                factory(uint32_t max_symbols, uint32_t max_symbol_size)
+                factory_base(uint32_t max_symbols, uint32_t max_symbol_size)
                 {
                     (void) max_symbols;
                     (void) max_symbol_size;

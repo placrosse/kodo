@@ -24,12 +24,12 @@ namespace kodo
         struct dummy_layer
         {
 
-            class factory
+            class factory_base
             {
             public:
 
-                /// @copydoc layer::factory::factory(uint32_t,uint32_t)
-                factory(uint32_t max_symbols, uint32_t max_symbol_size)
+                /// @copydoc layer::factory_base::factory_base(uint32_t,uint32_t)
+                factory_base(uint32_t max_symbols, uint32_t max_symbol_size)
                 {
                     (void) max_symbols;
                     (void) max_symbol_size;
@@ -61,6 +61,3 @@ TEST(TestFinalFeedbackWriter, api)
     EXPECT_EQ(stack.write_feedback(&ptr), 0U);
 
 }
-
-
-

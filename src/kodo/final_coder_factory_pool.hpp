@@ -13,9 +13,10 @@
 
 #include <sak/resource_pool.hpp>
 
+#include "pool_factory.hpp"
+
 namespace kodo
 {
-
     /// @ingroup factory_layers
     /// Terminates the layered coder and contains the coder final
     /// factory. The pool factory uses a memory pool to recycle
@@ -30,7 +31,7 @@ namespace kodo
 
         /// @ingroup factory_layers
         /// The final factory
-        class factory
+        class factory_base
         {
         public:
 
@@ -38,7 +39,7 @@ namespace kodo
             typedef typename FinalType::factory factory_type;
 
             /// @copydoc layer::factory::factory(uint32_t,uint32_t)
-            factory(uint32_t max_symbols, uint32_t max_symbol_size) :
+            factory_base(uint32_t max_symbols, uint32_t max_symbol_size) :
                 m_pool(std::bind(&factory::make_coder, this))
             {
                 (void) max_symbols;

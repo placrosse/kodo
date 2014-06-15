@@ -23,10 +23,10 @@ namespace kodo
         {
         public:
 
-            class factory
+            class factory_base
             {
             public:
-                factory(uint32_t max_symbols, uint32_t max_symbol_size)
+                factory_base(uint32_t max_symbols, uint32_t max_symbol_size)
                     : m_symbols(0),
                       m_max_symbols(max_symbols),
                       m_max_symbol_size(max_symbol_size)
@@ -95,5 +95,3 @@ TEST(TestEliminationCoefficientOffset, api)
     EXPECT_EQ(factory.elimination_offset(), 0U);
     EXPECT_EQ(stack.elimination_offset(), 0U);
 }
-
-

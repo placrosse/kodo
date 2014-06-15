@@ -39,29 +39,29 @@ namespace kodo
 
     public:
 
-        /// The factory layer associated with this coder. Maintains
+        /// The factory_base layer associated with this coder. Maintains
         /// the block generator needed for the encoding vectors.
-        class factory : public SuperCoder::factory
+        class factory_base : public SuperCoder::factory_base
         {
         public:
 
-            /// @copydoc layer::factory::factory(uint32_t,uint32_t)
-            factory(uint32_t max_symbols, uint32_t max_symbol_size)
-                : SuperCoder::factory(max_symbols, max_symbol_size)
+            /// @copydoc layer::factory_base::factory_base(uint32_t,uint32_t)
+            factory_base(uint32_t max_symbols, uint32_t max_symbol_size)
+                : SuperCoder::factory_base(max_symbols, max_symbol_size)
             { }
 
 
-            /// @copydoc layer::factory::build()
+            /// @copydoc layer::factory_base::build()
             pointer build()
             {
-                pointer coder = SuperCoder::factory::build();
+                pointer coder = SuperCoder::factory_base::build();
 
-                uint32_t symbols = SuperCoder::factory::symbols();
+                uint32_t symbols = SuperCoder::factory_base::symbols();
 
                 if(m_cache.find(symbols) == m_cache.end())
                 {
                     m_cache[symbols] =
-                        SuperCoder::factory::construct_matrix(symbols);
+                        SuperCoder::factory_base::construct_matrix(symbols);
                 }
 
                 this_pointer this_coder = coder;
@@ -105,5 +105,3 @@ namespace kodo
     };
 
 }
-
-

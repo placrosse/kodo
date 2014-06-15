@@ -26,10 +26,10 @@ namespace kodo
         {
             typedef uint32_t rank_type;
 
-            struct factory
+            struct factory_base
             {
-                /// @copydoc layer::factory::factory(uint32_t,uint32_t)
-                factory(uint32_t max_symbols, uint32_t max_symbol_size)
+                /// @copydoc layer::factory_base::factory_base(uint32_t,uint32_t)
+                factory_base(uint32_t max_symbols, uint32_t max_symbol_size)
                     : m_max_payload_size(0)
                 {
                     (void) max_symbols;
@@ -150,5 +150,3 @@ TEST(TestPayloadRankDecoder, test_payload_rank_decoder)
     EXPECT_EQ(stack.remote_rank(), 0U);
 
 }
-
-

@@ -84,16 +84,16 @@ namespace kodo
 
     public:
 
-        /// @ingroup factory_layers
+        /// @ingroup factory_base_layers
         ///
-        /// The factory layer associated with this coder.
-        class factory : public SuperCoder::factory
+        /// The factory_base layer associated with this coder.
+        class factory_base : public SuperCoder::factory_base
         {
         public:
 
-            /// @copydoc layer::factory::factory(uint32_t, uint32_t)
-            factory(uint32_t max_symbols, uint32_t max_symbol_size)
-                : SuperCoder::factory(max_symbols, max_symbol_size),
+            /// @copydoc layer::factory_base::factory_base(uint32_t, uint32_t)
+            factory_base(uint32_t max_symbols, uint32_t max_symbol_size)
+                : SuperCoder::factory_base(max_symbols, max_symbol_size),
                   m_cache(max_symbols, max_symbol_size)
             { }
 

@@ -33,7 +33,7 @@ namespace kodo
             {
             public:
 
-                factory(uint32_t max_symbols, uint32_t max_symbol_size)
+                factory_base(uint32_t max_symbols, uint32_t max_symbol_size)
                 {
                     (void) max_symbols;
                     (void) max_symbol_size;
@@ -137,5 +137,3 @@ TEST(TestPayloadRankRecoder, stack)
     rank = sak::big_endian::get<rank_type>(&payload[0]);
     EXPECT_EQ(rank, stack.m_remote_rank);
 }
-
-

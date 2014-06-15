@@ -41,7 +41,7 @@ namespace kodo
         public:
 
             /// Dummy factory
-            struct factory
+            struct factory_base
             {};
 
         public:
@@ -190,6 +190,3 @@ TEST(TestFiniteFieldCounter, invoke_counters)
 
     test_values(counter, 0U);
 }
-
-
-

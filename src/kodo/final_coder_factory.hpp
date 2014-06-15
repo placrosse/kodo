@@ -28,17 +28,17 @@ namespace kodo
 
         /// @ingroup factory_layers
         /// The final factory
-        class factory
+        class factory_base
         {
         public:
 
-            /// The factory type
-            typedef typename FinalType::factory factory_type;
+            /// The factory_base type
+            typedef typename FinalType::factory_base factory_type;
 
         public:
 
-            /// @copydoc layer::factory::factory(uint32_t,uint32_t)
-            factory(uint32_t max_symbols, uint32_t max_symbol_size)
+            /// @copydoc layer::factory_base::factory_base(uint32_t,uint32_t)
+            factory_base(uint32_t max_symbols, uint32_t max_symbol_size)
             {
                 (void) max_symbols;
                 (void) max_symbol_size;
@@ -61,10 +61,10 @@ namespace kodo
         private: // Make non-copyable
 
             /// Copy constructor
-            factory(const factory&);
+            factory_base(const factory_base&);
 
             /// Copy assignment
-            const factory& operator=(const factory&);
+            const factory_base& operator=(const factory_base&);
 
         };
 
@@ -106,5 +106,3 @@ namespace kodo
             const final_coder_factory&);
     };
 }
-
-

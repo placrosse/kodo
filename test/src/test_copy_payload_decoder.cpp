@@ -84,16 +84,16 @@ namespace kodo
         {
         public:
 
-            struct factory
+            struct factory_base
             {
 
-                /// @copydoc layer::factory::symbol_size() const;
+                /// @copydoc layer::factory_base::symbol_size() const;
                 uint32_t symbol_size() const
                 {
                     return m_symbol_size;
                 }
 
-                /// @copydoc layer::factory::set_symbol_size(uint32_t)
+                /// @copydoc layer::factory_base::set_symbol_size(uint32_t)
                 void set_symbol_size(uint32_t symbol_size)
                 {
                     m_symbol_size = symbol_size;

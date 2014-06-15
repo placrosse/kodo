@@ -13,6 +13,8 @@
 #include <fifi/binary8.hpp>
 #include <kodo/coefficient_info.hpp>
 #include <kodo/storage_block_info.hpp>
+#include <kodo/pool_factory.hpp>
+
 namespace kodo
 {
 
@@ -32,11 +34,11 @@ namespace kodo
 
         public:
 
-            class factory
+            class factory_base
             {
             public:
 
-                factory(uint32_t max_symbols, uint32_t max_symbol_size)
+                factory_base(uint32_t max_symbols, uint32_t max_symbol_size)
                 {
                     (void)max_symbols;
                     (void)max_symbol_size;
@@ -64,7 +66,9 @@ namespace kodo
                    storage_block_info<
                    dummy_layer<
                    FieldType > > >
-        { };
+        {
+            using factory = kodo::pool_factory<test_coefficient_info>;
+        };
     }
 
 }
@@ -74,7 +78,7 @@ TEST(TestCoefficientInfo, api)
     uint32_t symbols = 16;
     uint32_t symbols_size = 16;
     {
-        typedef kodo::test_coefficient_info<fifi::binary> stack;
+        using stack = kodo::test_coefficient_info<fifi::binary>;
 
         stack::factory f(symbols, symbols_size);
 

@@ -51,13 +51,13 @@ namespace kodo
     public:
 
         /// The factory used by the storage_decoder
-        class factory : public DecoderType::factory
+        class factory_base : public DecoderType::factory_base
         {
         public:
 
             /// @copydoc layer::factory::factory(uint32_t,utin32_t)
-            factory(uint32_t max_symbols, uint32_t max_symbol_size) :
-                DecoderType::factory(max_symbols, max_symbol_size)
+            factory_base(uint32_t max_symbols, uint32_t max_symbol_size) :
+                DecoderType::factory_base(max_symbols, max_symbol_size)
             { }
 
             /// @param object_size The total size of the object to be
@@ -70,8 +70,8 @@ namespace kodo
             ///         decoders with the memory needed.
             uint32_t total_block_size(uint32_t object_size) const
             {
-                partitioning p(DecoderType::factory::max_symbols(),
-                               DecoderType::factory::max_symbol_size(),
+                partitioning p(DecoderType::factory_base::max_symbols(),
+                               DecoderType::factory_base::max_symbol_size(),
                                object_size);
 
                 return p.total_block_size();

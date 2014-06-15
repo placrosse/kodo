@@ -58,20 +58,20 @@ namespace kodo
 
     public:
 
-        /// @ingroup factory_layers
+        /// @ingroup factory_base_layers
         ///
-        /// Forwarding factory for the parallel proxy stack
-        class factory
+        /// Forwarding factory_base for the parallel proxy stack
+        class factory_base
         {
         public:
 
-            /// The factory type
-            typedef typename FinalType::factory factory_type;
+            /// The factory_base type
+            typedef typename FinalType::factory_base factory_type;
 
         public:
 
-            /// @copydoc layer::factory::factory(uint32_t,uint32_t)
-            factory(uint32_t max_symbols, uint32_t max_symbol_size)
+            /// @copydoc layer::factory_base::factory_base(uint32_t,uint32_t)
+            factory_base(uint32_t max_symbols, uint32_t max_symbol_size)
                 : m_main_factory(0),
                   m_main_stack(0)
             {
@@ -556,5 +556,3 @@ namespace kodo
     };
 
 }
-
-

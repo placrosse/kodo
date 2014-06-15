@@ -27,11 +27,11 @@ namespace kodo
 
             typedef std::shared_ptr<helper_nested_stack> pointer;
 
-            class factory
+            class factory_base
             {
             public:
 
-                factory(uint32_t max_symbols, uint32_t max_symbol_size)
+                factory_base(uint32_t max_symbols, uint32_t max_symbol_size)
                     : m_max_symbols(max_symbols),
                       m_max_symbol_size(max_symbol_size),
                       m_symbols(0),
@@ -81,11 +81,11 @@ namespace kodo
         {
         public:
 
-            class factory
+            class factory_base
             {
             public:
 
-                factory(uint32_t max_symbols, uint32_t max_symbol_size)
+                factory_base(uint32_t max_symbols, uint32_t max_symbol_size)
                     : m_max_symbols(max_symbols),
                       m_max_symbol_size(max_symbol_size),
                       m_symbols(max_symbols),
@@ -156,4 +156,3 @@ namespace kodo
     }
 
 }
-
