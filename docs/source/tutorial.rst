@@ -3,8 +3,28 @@
 Tutorial
 ========
 
-Include tutorial here...
+In this tutorial we will demonstrate different features of Kodo and
+see how it can be used to encode and decode data.
 
+A minimal example
+-----------------
+
+The following code shows a complete and working encoding/decoding
+example.
+
+.. literalinclude:: ../../examples/tutorial/basic.cpp
+    :language: c++
+    :linenos:
+
+In this example we have chosen to use a particular version of a Random
+Linear Network Code (RLNC) which we call full RLNC located in the
+header .
+
+.. literalinclude:: ../../examples/tutorial/basic.cpp
+    :language: c++
+    :start-after: #include
+    :end-before: #include
+    :linenos:
 
 Adding code samples
 -------------------
