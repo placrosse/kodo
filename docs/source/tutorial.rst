@@ -24,7 +24,7 @@ example we have chosen to use a particular version of a RLNC code
 .. literalinclude:: ../../examples/tutorial/basic.cpp
     :language: c++
     :start-after: //! [0]
-    :end-before: //! [0]
+    :end-before: //! [1]
     :linenos:
 
 The full RLNC code is one of the most common RLNC variants, and
@@ -37,6 +37,11 @@ In the following we will go through three of the the key-parameters to
 choose when configuring an erasure correcting code. The first two
 parameters are the number of ´´symbols´´ and the ´´symbol_size´´.
 
+.. literalinclude:: ../../examples/tutorial/basic.cpp
+    :language: c++
+    :start-after: //! [2]
+    :end-before: //! [3]
+    :linenos:
 
 
  *
