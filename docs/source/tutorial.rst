@@ -18,11 +18,17 @@ example.
 
 In this example we have chosen to use a particular version of a Random
 Linear Network Code (RLNC) which we call full RLNC located in the
-header .
+header:
 
 .. literalinclude:: ../../examples/tutorial/basic.cpp
     :language: c++
-    :lines: 6
+    :start-after: //! [0]
+    :end-before: //! [0]
+    :linenos:
+
+The full RLNC codec is a standard RLNC code where the encoding vector
+i.e. the coefficients used for the encoding is included in each
+packet.
 
 Adding code samples
 -------------------
