@@ -138,7 +138,44 @@ will then return one of the reused encoders/decoders. This type of
 memory use increases performance and reduces the pressure on the
 memory allocation system by performing less allocations.
 
+We are now ready to encode and decode some data, but first we need to
+define two buffers.
 
+.. literalinclude:: ../../examples/tutorial/basic.cpp
+    :language: c++
+    :start-after: //! [6]
+    :end-before: //! [7]
+    :linenos:
+
+
+The first buffer we will create is the ``payload`` buffer. Once we
+start coding this buffer will contain an single encoded symbol which
+we can pass to the decoder. Besides the encoded symbol data the
+payload buffer will also contain some internal meta-data describing
+how the symbol was encoded. The format and size of this data depends
+on the chosen erasure correcting code. But, fortunately we don't have
+to worry about that, as long as we provide a buffer large enough. The
+needed size of the buffer is returned by the
+``payload_size`` call.
+
+The second buffer contains the data we wish to encode. As mentioned
+earlier the size of this buffer is the number of symbols multiplied by
+the symbol size. For convenience we can call the ``block_size``
+function to get this value. In this case we are not encoding real data
+so we just fill the ``block_in`` buffer with some randomly generate data.
+
+Once the buffers have been created we can call the ``set_symbols``
+function on the encoder to specify which buffer it should encode.
+
+.. literalinclude:: ../../examples/tutorial/basic.cpp
+    :language: c++
+    :start-after: //! [10]
+    :end-before: //! [12]
+    :linenos:
+
+for the encoder to  the
+The encodeThis buffer will contain single encoded symbol now have an
+encoder and a decoder ready to
 
 
 .. source: http://sphinx-doc.org/markup/code.html#includes

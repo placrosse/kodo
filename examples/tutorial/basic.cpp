@@ -31,16 +31,20 @@ int main()
     auto decoder = decoder_factory.build();
     //! [7]
 
+    //! [8]
     std::vector<uint8_t> payload(encoder->payload_size());
     std::vector<uint8_t> block_in(encoder->block_size());
 
     // Just for fun - fill the data with random data
     for(auto &e: block_in)
         e = rand() % 256;
+    //! [9]
 
+    //! [10]
     // Assign the data buffer to the encoder so that we may start
     // to produce encoded symbols from it
     encoder->set_symbols(sak::storage(block_in));
+    //! [11]
 
     uint32_t encoded_count = 0;
 
