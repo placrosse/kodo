@@ -35,7 +35,7 @@ encode and decode some data.
 
 In the following we will go through three of the the key-parameters to
 choose when configuring an erasure correcting code. The first two
-parameters are the number of ´´symbols´´ and the ´´symbol_size´´.
+parameters are the number of ``symbols`` and the ``symbol_size``.
 
 .. literalinclude:: ../../examples/tutorial/basic.cpp
     :language: c++
@@ -107,8 +107,38 @@ for both the encoder and decoder.
 As shown above this is done by passing a type defining the finite
 field as the first argument to the chosen encoder and decoder. Since
 fast finite field computations are not only useful in erasure
-correcting codes this part of the functionlity has be split into a
-second library called Fifi. The Fifi library defines a number of
-different finite fields such as binary, binary4, binary8 and binary16.
+correcting codes this part of the functionality has be split into a
+second library called Fifi (www.github.com/steinwurf/fifi). The Fifi
+library defines a number of different finite fields such as
+``binary``, ``binary4``, ``binary8`` and ``binary16``. To switch
+between the different field you can simple replace the
+``fifi::binary8`` string with one of the other field types
+e.g. ``fifi::binary``.
+
+Once the key parameters have been selected we are ready to create an
+encoder and decoder to perform the actual coding.
+
+.. literalinclude:: ../../examples/tutorial/basic.cpp
+    :language: c++
+    :start-after: //! [6]
+    :end-before: //! [7]
+    :linenos:
+
+The encoder and decoder types define a nested type called the
+``factory``. Using the factory we can configure and build encoders and
+decoders. We instantiate the factory using chosen number of symbols
+and symbol size. Invoking the ``build()`` function will return a
+smart-pointer to a new encoder or decoder. In C++ a smart-pointer is
+one which behaves just like a normal pointer to an object but which
+will delete the object when there are no more references to
+it. Typically the factory type used is a *pooled* factory which means
+that when an encoder or decoder is about to be delete instead they
+will be returned to a memory pool for reuse. The next call to build
+will then return one of the reused encoders/decoders. This type of
+memory use increases performance and reduces the pressure on the
+memory allocation system by performing less allocations.
+
+
+
 
 .. source: http://sphinx-doc.org/markup/code.html#includes

@@ -21,6 +21,7 @@ int main()
     typedef kodo::full_rlnc_decoder<fifi::binary8> rlnc_decoder;
     //! [5]
 
+    //! [6]
     // In the following we will make an encoder/decoder factory.
     // The factories are used to build actual encoders/decoders
     rlnc_encoder::factory encoder_factory(max_symbols, max_symbol_size);
@@ -28,6 +29,7 @@ int main()
 
     rlnc_decoder::factory decoder_factory(max_symbols, max_symbol_size);
     auto decoder = decoder_factory.build();
+    //! [7]
 
     std::vector<uint8_t> payload(encoder->payload_size());
     std::vector<uint8_t> block_in(encoder->block_size());
