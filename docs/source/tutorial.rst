@@ -52,47 +52,63 @@ data in bytes that will be either encoded or decoded.
           variable of function name that includes the word size bytes
           is the unit used.
 
+.. note:: In network applications a single symbol typically
+          corresponds to a single packet (for example an UDP
+          datagram).
+
 Let us briefly outline the impact of changing the number of symbols
 and the symbol size.
 
 symbols
 .......
-* Increasing the number of symbols also increases the computational
-  complexity and can therefore result in slow encoding/decoding.
-* Increasing
+* Increasing the number of symbols will also increases the
+  computational complexity and can therefore result in slower
+  encoding/decoding.
+* For some variants of RLNC increasing the number of symbols also
+  increases the per-packet overhead (due to added coding
+  coefficients).
+* Increasing the number of symbols may result in a larger per-symbol
+  decoding delay. The reason for this is that when we increase the
+  number of symbols that are encoded the decoder has to received more
+  symbols before decoding.
 
+symbol size
+...........
+* The choice of symbol size typically depends on the application. For
+  network applications we may choose the symbol size according to the
+  network MTU (Maximum Transfer Unit) so that datagrams do not get
+  fragmented as they traverse the network. In those cases symbols
+  sizes are typically around 1300-1400 bytes. On the other hand for
+  storage applications the symbol size is typically much larger
+  e.g. in the order of several megabytes.
 
-Especially the number of symbols is an important parameter.
+The third key parameter is the finite field, or more specifically the
+field size used. The core mathematics used in most erasure correcting
+codes are based on finite fields. This parameter also introduces a set of
+trade-offs.
 
+Field size
+..........
+* Increasing the field size will also increase the probability of
+  successful decoding.
+* On the other hand increasing field size typically also leads to
+  higher computational complexity which results in slower
+  applications.
 
-
- *
- * Rate-less (this means that we can in principle generate an infinite amount of redundancy
- * Supports recoding
-
-We will discuss its properties more in the
-following.
-
-
-is the canonical RLNC code. It    is a standard RLNC code where the encoding vector
-i.e. the coding coefficients used for the encoding is included in each
-packet. Most erasure correcting codes all
-
-Adding code samples
--------------------
-
-This is an example of an included code sample.
+In the given example the following two lines selects the field size
+for both the encoder and decoder.
 
 .. literalinclude:: ../../examples/tutorial/basic.cpp
     :language: c++
-    :start-after: main()
-    :end-before: return 0;
-    :emphasize-lines: 12,15-18
+    :start-after: //! [4]
+    :end-before: //! [5]
     :linenos:
 
-We should consider only using start-after and end-before as this would allow the
-documentation to change with the code.
-By using linenos and emphasize-lines we can possibly introduces bugs in the
-docs as they are line dependent.
+As shown above this is done by passing a type defining the finite
+field as the first argument to the chosen encoder and decoder. Since
+fast finite field computations are not only useful in erasure
+correcting codes this part of the functionlity has be split into a
+second library called Fifi. The Fifi library defines a number of
+different finite fields such as binary, binary4, binary8 and binary16.
 
 .. source: http://sphinx-doc.org/markup/code.html#includes

@@ -16,8 +16,10 @@ int main()
     uint32_t max_symbol_size = 1400;
     //! [3]
 
+    //! [4]
     typedef kodo::full_rlnc_encoder<fifi::binary8> rlnc_encoder;
     typedef kodo::full_rlnc_decoder<fifi::binary8> rlnc_decoder;
+    //! [5]
 
     // In the following we will make an encoder/decoder factory.
     // The factories are used to build actual encoders/decoders
