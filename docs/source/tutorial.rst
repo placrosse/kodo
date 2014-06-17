@@ -9,16 +9,20 @@ see how it can be used to encode and decode data.
 A minimal example
 -----------------
 
-The following code shows a complete and working encoding/decoding
-example:
+In the following we will walk through the process of creating an
+encoder and decoder for a single buffer of data. We will start from an
+empty file and slowly expand it. Once we have a working example we
+will modify it in a number of steps to show different properties and
+features of the erasure correcting codes and the library.
 
-.. literalinclude:: ../../examples/tutorial/basic.cpp
+Our starting point will be the following:
+
+.. literalinclude:: ../../examples/tutorial/empty.cpp
     :language: c++
     :linenos:
 
-Kodo implements a number of different erasure correcting codes and in
-particular a number of different variants of different codes. In this
-example we have chosen to use a particular version of a RLNC code
+Kodo implements a number of different erasure correcting codes. In
+this example we have chosen to use a particular version of a RLNC code
 (Random Linear Network Code) located in the following header file:
 
 .. literalinclude:: ../../examples/tutorial/basic.cpp
@@ -34,8 +38,8 @@ will just use it as a standard erasure correcting code, namely to
 encode and decode some data.
 
 In the following we will go through three of the the key-parameters to
-choose when configuring an erasure correcting code. The first two
-parameters are the number of ``symbols`` and the ``symbol_size``.
+choose when configuring an erasure correcting code. The first two we
+will define are the number of ``symbols`` and the ``symbol_size``.
 
 .. literalinclude:: ../../examples/tutorial/basic.cpp
     :language: c++
