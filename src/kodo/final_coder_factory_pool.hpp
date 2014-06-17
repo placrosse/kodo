@@ -40,7 +40,7 @@ namespace kodo
 
             /// @copydoc layer::factory::factory(uint32_t,uint32_t)
             factory_base(uint32_t max_symbols, uint32_t max_symbol_size) :
-                m_pool(std::bind(&factory::make_coder, this))
+                m_pool(std::bind(&factory_base::make_coder, this))
             {
                 (void) max_symbols;
                 (void) max_symbol_size;
@@ -74,10 +74,10 @@ namespace kodo
         private: // Make non-copyable
 
             /// Copy constructor
-            factory(const factory&);
+            factory_base(const factory_base&);
 
             /// Copy assignment
-            const factory& operator=(const factory&);
+            const factory_base& operator=(const factory_base&);
 
         private:
 
@@ -86,7 +86,7 @@ namespace kodo
             /// @param max_symbols The maximum symbols that are supported
             /// @param max_symbol_size The maximum size of a symbol in
             ///        bytes
-            static pointer make_coder(factory *f_ptr)
+            static pointer make_coder(factory_base *f_ptr)
             {
                 factory_type *this_factory =
                     static_cast<factory_type*>(f_ptr);

@@ -37,28 +37,36 @@ namespace kodo
 
         // Coefficient Storage
         template<class Field>
-        class coefficient_storage_stack
-            : public coefficient_storage<
-                     coefficient_info<
-                     storage_block_info<
-                     finite_field_info<Field,
-                     final_coder_factory<
-                     coefficient_storage_stack<Field>
-                         > > > > >
-        { };
+        class coefficient_storage_stack : public
+            coefficient_storage<
+            coefficient_info<
+            storage_block_info<
+            finite_field_info<Field,
+            final_coder_factory<
+            coefficient_storage_stack<Field>
+            > > > > >
+        {
+        public:
+            /// @todo using different factory, on the other hand it
+            /// seems excessive to have two stacks here after the
+            /// factory split.
+            using factory = pool_factory<coefficient_storage_stack>;
+        };
 
         // Coefficient Storage
         template<class Field>
-        class coefficient_storage_stack_pool
-
-            : public coefficient_storage<
-                     coefficient_info<
-                     storage_block_info<
-                     finite_field_info<Field,
-                     final_coder_factory<
-                     coefficient_storage_stack_pool<Field>
-                         > > > > >
-        { };
+        class coefficient_storage_stack_pool : public
+            coefficient_storage<
+            coefficient_info<
+            storage_block_info<
+            finite_field_info<Field,
+            final_coder_factory<
+            coefficient_storage_stack_pool<Field>
+            > > > > >
+        {
+        public:
+            using factory = pool_factory<coefficient_storage_stack_pool>;
+        };
     }
 }
 
@@ -228,4 +236,3 @@ TEST(TestSymbolStorage, test_coefficients_storage_stack)
         api_coefficients_storage>(symbols, symbol_size);
 
 }
-

@@ -10,6 +10,8 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/make_shared.hpp>
 
+#include "pool_factory.hpp"
+
 namespace kodo
 {
 

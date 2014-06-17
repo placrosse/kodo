@@ -20,7 +20,7 @@ namespace kodo
     /// factory. The pool factory uses a memory pool to recycle
     /// encoders/decoders, and thereby minimize memory consumption.
     template<class Codec>
-    class pool_factory : public Codec::factory
+    class pool_factory : public Codec::factory_base
     {
     public:
 

@@ -67,6 +67,7 @@ namespace kodo
                    dummy_layer<
                    FieldType > > >
         {
+        public:
             using factory = kodo::pool_factory<test_coefficient_info>;
         };
     }
