@@ -11,6 +11,7 @@
 #include <fifi/fifi_utils.hpp>
 
 #include <kodo/pivot_status_reader.hpp>
+#include <kodo/basic_factory.hpp>
 
 namespace kodo
 {
@@ -74,7 +75,10 @@ namespace kodo
         class dummy_stack
             : public pivot_status_reader<
                      dummy_layer>
-          { };
+        {
+        public:
+            using factory = basic_factory<dummy_stack>;
+        };
     }
 }
 

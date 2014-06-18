@@ -71,5 +71,8 @@ namespace kodo
         // Final type
         sliding_window_encoder<Field, TraceTag>
         > > > > > > > > > > > > > > > > > > >
-    { };
+    {
+    public:
+        using factory = pool_factory<sliding_window_encoder>;
+    };
 }

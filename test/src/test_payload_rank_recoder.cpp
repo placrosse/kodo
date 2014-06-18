@@ -10,6 +10,7 @@
 #include <gtest/gtest.h>
 
 #include <kodo/payload_rank_recoder.hpp>
+#include <kodo/basic_factory.hpp>
 
 namespace kodo
 {
@@ -29,7 +30,7 @@ namespace kodo
         public:
 
             // The dummy factory object
-            class factory
+            class factory_base
             {
             public:
 
@@ -82,7 +83,10 @@ namespace kodo
         };
 
         class test_stack : public payload_rank_recoder<dummy_layer>
-        { };
+        {
+        public:
+            using factory = basic_factory<test_stack>;
+        };
     }
 }
 

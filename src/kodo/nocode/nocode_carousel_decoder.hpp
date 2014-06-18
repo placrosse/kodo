@@ -42,5 +42,8 @@ namespace kodo
         // Final type
         nocode_carousel_decoder<TraceTag>
         > > > > > >
-    { };
+    {
+    public:
+        using factory = pool_factory<nocode_carousel_decoder>;
+    };
 }

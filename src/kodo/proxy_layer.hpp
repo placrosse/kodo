@@ -14,7 +14,6 @@
 
 namespace kodo
 {
-
     /// @brief Special layer used to create parallel stacks with
     ///       some shared layers.
     ///
@@ -54,7 +53,7 @@ namespace kodo
         typedef MainStack main_stack_type;
 
         /// The type of the main stack
-        typedef typename main_stack_type::factory main_factory_type;
+        typedef typename main_stack_type::factory_base main_factory_type;
 
     public:
 
@@ -215,7 +214,7 @@ namespace kodo
         private:
 
             /// Pointer to the main stack's factory
-            typename main_stack_type::factory* m_main_factory;
+            main_factory_type* m_main_factory;
 
             /// Pointer to the main stack used during building a stack
             main_stack_type* m_main_stack;

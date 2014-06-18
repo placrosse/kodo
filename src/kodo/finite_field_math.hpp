@@ -49,7 +49,7 @@ namespace kodo
         /// @ingroup factory_layers
         /// The factory layer associated with this coder. We create
         /// an instance of the used field and share this with all coders
-        class factory : public SuperCoder::factory_base
+        class factory_base : public SuperCoder::factory_base
         {
         public:
 

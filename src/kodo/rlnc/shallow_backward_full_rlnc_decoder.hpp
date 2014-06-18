@@ -58,5 +58,8 @@ namespace kodo
         // Final type
         shallow_backward_full_rlnc_decoder<Field, TraceTag>
         > > > > > > > > > > > > > >
-    { };
+    {
+    public:
+        using factory = pool_factory<shallow_backward_full_rlnc_decoder>;
+    };
 }

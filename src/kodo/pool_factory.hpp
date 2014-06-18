@@ -1,4 +1,4 @@
-// Copyright Steinwurf ApS 2011-2012.
+// Copyright Steinwurf ApS 2011-2014.
 // Distributed under the "STEINWURF RESEARCH LICENSE 1.0".
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
@@ -16,6 +16,7 @@
 namespace kodo
 {
     /// @ingroup factory_layers
+    ///
     /// Terminates the layered coder and contains the coder final
     /// factory. The pool factory uses a memory pool to recycle
     /// encoders/decoders, and thereby minimize memory consumption.
@@ -55,6 +56,12 @@ namespace kodo
         {
             return m_pool;
         }
+
+    public:
+
+        /// @todo docs
+        template<class U>
+        using other = pool_factory<U>;
 
     private: // Make non-copyable
 

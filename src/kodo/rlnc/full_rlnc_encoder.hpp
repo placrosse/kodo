@@ -64,5 +64,8 @@ namespace kodo
         // Final type
         full_rlnc_encoder<Field, TraceTag>
         > > > > > > > > > > > > > >
-    { };
+    {
+    public:
+        using factory = pool_factory<full_rlnc_encoder>;
+    };
 }

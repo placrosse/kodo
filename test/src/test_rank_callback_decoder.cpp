@@ -32,7 +32,7 @@
 #include <kodo/coefficient_value_access.hpp>
 #include <kodo/symbol_decoding_status_tracker.hpp>
 #include <kodo/symbol_decoding_status_counter.hpp>
-
+#include <kodo/basic_factory.hpp>
 
 /// Here we define the stacks which should be tested.
 namespace kodo
@@ -47,29 +47,32 @@ namespace kodo
          // Test layer against real api to ensure that we get an error if the
          // layer doesn't complies with the api.
          template<class Field>
-         class rank_callback_decoder_stack
-             : public // Codec API
-                      rank_callback_decoder<
-                      forward_linear_block_decoder<
-                      symbol_decoding_status_counter<
-                      symbol_decoding_status_tracker<
-                      // Coefficient Storage API
-                      coefficient_value_access<
-                      coefficient_storage<
-                      coefficient_info<
-                      // Storage api
-                      deep_symbol_storage<
-                      storage_bytes_used<
-                      storage_block_info<
-                      // Finite Field Math API
-                      finite_field_math<typename fifi::default_field<Field>::type,
-                      finite_field_info<Field,
-                      // Factory API
-                      final_coder_factory_pool<
-                      // Final type
-                      rank_callback_decoder_stack<Field>
-                          > > > > > > > > > > > > >
-         { };
+         class rank_callback_decoder_stack : public
+            // Codec API
+            rank_callback_decoder<
+            forward_linear_block_decoder<
+            symbol_decoding_status_counter<
+            symbol_decoding_status_tracker<
+            // Coefficient Storage API
+            coefficient_value_access<
+            coefficient_storage<
+            coefficient_info<
+            // Storage api
+            deep_symbol_storage<
+            storage_bytes_used<
+            storage_block_info<
+            // Finite Field Math API
+            finite_field_math<typename fifi::default_field<Field>::type,
+            finite_field_info<Field,
+            // Factory API
+            final_coder_factory_pool<
+            // Final type
+            rank_callback_decoder_stack<Field>
+            > > > > > > > > > > > > >
+         {
+         public:
+             using factory = basic_factory<rank_callback_decoder_stack>;
+         };
 
         // A dummi api to replace the real stack
         class dummy_codec_api
@@ -131,14 +134,19 @@ namespace kodo
         };
 
         // Test functionality of the individual layer
-        typedef rank_callback_decoder<dummy_codec_api> rank_coder;
+        class rank_coder : public rank_callback_decoder<dummy_codec_api>
+        {
+        public:
+            using factory = basic_factory<rank_coder>;
+        };
 
     }
 
 }
 
 // callback handler
-void rank_changed_event(kodo::rank_coder& coder, uint32_t& callback_count, uint32_t rank)
+void rank_changed_event(kodo::rank_coder& coder, uint32_t& callback_count,
+                        uint32_t rank)
 {
     ++callback_count;
     EXPECT_EQ(coder.rank(), rank);

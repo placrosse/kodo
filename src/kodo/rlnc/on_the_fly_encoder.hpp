@@ -69,5 +69,8 @@ namespace kodo
         // Final type
         on_the_fly_encoder<Field, TraceTag>
         > > > > > > > > > > > > > > > >
-    { };
+    {
+    public:
+        using factory = pool_factory<on_the_fly_encoder>;
+    };
 }

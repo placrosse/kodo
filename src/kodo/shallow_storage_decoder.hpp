@@ -12,9 +12,52 @@
 #include "object_decoder.hpp"
 #include "rfc5052_partitioning_scheme.hpp"
 #include "has_shallow_symbol_storage.hpp"
+#include "rebind_factory.hpp"
 
 namespace kodo
 {
+
+    /// @todo think of a nicer way to do this :)
+    namespace detail
+    {
+        template<class DecoderType, class BlockPartitioning>
+        class wrap : public DecoderType
+        {
+        public:
+
+            /// The factory used by the storage_decoder
+            class factory_base : public DecoderType::factory_base
+            {
+            public:
+
+                /// @copydoc layer::factory::factory(uint32_t,utin32_t)
+                factory_base(uint32_t max_symbols, uint32_t max_symbol_size) :
+                    DecoderType::factory_base(max_symbols, max_symbol_size)
+                { }
+
+                /// @param object_size The total size of the object to be
+                ///        decoded.
+                /// @return The number of storage bytes needed to decode a
+                ///         object of object_size bytes. A decoder requires
+                ///         symbols*symbols_size bytes, however if a object
+                ///         does not fully cover all decoders we may require
+                ///         additional memory to be able to provide all
+                ///         decoders with the memory needed.
+                uint32_t total_block_size(uint32_t object_size) const
+                {
+                    BlockPartitioning p(
+                        DecoderType::factory_base::max_symbols(),
+                        DecoderType::factory_base::max_symbol_size(),
+                        object_size);
+
+                    return p.total_block_size();
+                }
+            };
+
+            using factory = rebind_factory<DecoderType, wrap>;
+
+        };
+    }
 
     /// @brief A storage decoder creates a number of decoders decoding
     ///        into a sak::mutable_storage object
@@ -24,7 +67,8 @@ namespace kodo
         class BlockPartitioning = rfc5052_partitioning_scheme
     >
     class shallow_storage_decoder :
-        public object_decoder<DecoderType, BlockPartitioning>
+        public object_decoder<detail::wrap<DecoderType, BlockPartitioning>,
+                              BlockPartitioning>
     {
     public:
 
@@ -40,7 +84,8 @@ namespace kodo
             "shallow storage");
 
         /// The base class
-        typedef object_decoder<DecoderType, partitioning> base_decoder;
+        typedef object_decoder<detail::wrap<DecoderType, BlockPartitioning>,
+                              BlockPartitioning> base_decoder;
 
         /// The pointer to the decoder
         typedef typename base_decoder::pointer pointer;
@@ -48,35 +93,10 @@ namespace kodo
         /// Access the partitioning scheme
         using base_decoder::m_partitioning;
 
-    public:
+        /// @todo
+        using factory = typename base_decoder::factory;
 
-        /// The factory used by the storage_decoder
-        class factory_base : public DecoderType::factory_base
-        {
-        public:
 
-            /// @copydoc layer::factory::factory(uint32_t,utin32_t)
-            factory_base(uint32_t max_symbols, uint32_t max_symbol_size) :
-                DecoderType::factory_base(max_symbols, max_symbol_size)
-            { }
-
-            /// @param object_size The total size of the object to be
-            ///        decoded.
-            /// @return The number of storage bytes needed to decode a
-            ///         object of object_size bytes. A decoder requires
-            ///         symbols*symbols_size bytes, however if a object
-            ///         does not fully cover all decoders we may require
-            ///         additional memory to be able to provide all
-            ///         decoders with the memory needed.
-            uint32_t total_block_size(uint32_t object_size) const
-            {
-                partitioning p(DecoderType::factory_base::max_symbols(),
-                               DecoderType::factory_base::max_symbol_size(),
-                               object_size);
-
-                return p.total_block_size();
-            }
-        };
 
     public:
 

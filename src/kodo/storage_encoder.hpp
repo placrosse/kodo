@@ -33,7 +33,7 @@ namespace kodo
     public:
 
         /// The factory type
-        typedef typename EncoderType::factory_base factory;
+        typedef typename EncoderType::factory factory;
 
     public:
 

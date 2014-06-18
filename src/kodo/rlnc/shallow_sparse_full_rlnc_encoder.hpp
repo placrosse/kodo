@@ -50,5 +50,8 @@ namespace kodo
         // Final type
         shallow_sparse_full_rlnc_encoder<Field, TraceTag>
         > > > > > > > > > > > > > >
-    { };
+    {
+    public:
+        using factory = pool_factory<shallow_sparse_full_rlnc_encoder>;
+    };
 }

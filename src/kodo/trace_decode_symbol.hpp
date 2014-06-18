@@ -25,6 +25,7 @@
 #include "enable_trace.hpp"
 #include "hexdump.hpp"
 #include "coefficient_value_access.hpp"
+#include "basic_factory.hpp"
 
 namespace kodo
 {
@@ -80,7 +81,10 @@ namespace kodo
             storage_block_info<
             finite_field_info<field_type,
             final_coder_factory<cache> > > > > >
-        { };
+        {
+        public:
+            using factory = basic_factory<cache>;
+        };
 
     public:
 

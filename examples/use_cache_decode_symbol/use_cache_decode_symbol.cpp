@@ -5,6 +5,7 @@
 
 #include <kodo/rlnc/full_rlnc_codes.hpp>
 #include <kodo/cache_decode_symbol.hpp>
+#include <kodo/basic_factory.hpp>
 
 namespace kodo
 {
@@ -45,7 +46,10 @@ namespace kodo
                  // Final type
                  symbol_info_decoder<Field>
                      > > > > > > > > > >
-    { };
+    {
+    public:
+        using factory = basic_factory<symbol_info_decoder>;
+    };
 
 }
 

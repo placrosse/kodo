@@ -11,6 +11,8 @@
 namespace kodo
 {
 
+    /// @todo clean up this class an it's corresponding unit-test
+
     /// @ingroup payload_codec_layers
     ///
     /// @brief Make decoder work on a copy of the payload
@@ -55,5 +57,3 @@ namespace kodo
 
     };
 }
-
-

@@ -56,6 +56,8 @@ TEST(TestFeedbackSize, invoke)
     }
 
     {
+        /// @todo re-enable this
+
         // Check that the code compiles with a normal stack
         // typedef kodo::full_rlnc_encoder<fifi::binary8> encoder_type;
 

@@ -57,8 +57,6 @@ namespace kodo
         > > > > > > > > > > >
     {
     public:
-
-        using factory_ = pool_factory<full_rlnc_decoder<Field, TraceTag>>;
-
+        using factory = pool_factory<full_rlnc_decoder>;
     };
 }

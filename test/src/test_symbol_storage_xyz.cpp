@@ -21,6 +21,7 @@
 #include <kodo/fake_symbol_storage.hpp>
 #include <kodo/mutable_shallow_symbol_storage.hpp>
 #include <kodo/const_shallow_symbol_storage.hpp>
+#include <kodo/basic_factory.hpp>
 
 #include "kodo_unit_test/basic_api_test_helper.hpp"
 
@@ -41,95 +42,119 @@ namespace kodo
 
         // Deep Symbol Storage
         template<class Field>
-        class deep_storage_stack
-            : public deep_symbol_storage<
+        class deep_storage_stack : public
+            deep_symbol_storage<
             storage_bytes_used<
-                storage_block_info<
-                    finite_field_info<Field,
-                        final_coder_factory<
-                            deep_storage_stack<Field>
-                            > > > > >
-        {};
+            storage_block_info<
+            finite_field_info<Field,
+            final_coder_factory<
+            deep_storage_stack<Field>
+            > > > > >
+        {
+        public:
+            using factory = basic_factory<deep_storage_stack>;
+        };
 
         template<class Field>
-        class deep_storage_stack_pool
-            : public deep_symbol_storage<
+        class deep_storage_stack_pool : public
+            deep_symbol_storage<
             storage_bytes_used<
-                storage_block_info<
-                    finite_field_info<Field,
-                        final_coder_factory_pool<
-                            deep_storage_stack_pool<Field>
-                            > > > > >
-        {};
+            storage_block_info<
+            finite_field_info<Field,
+            final_coder_factory_pool<
+            deep_storage_stack_pool<Field>
+            > > > > >
+        {
+        public:
+            using factory = basic_factory<deep_storage_stack_pool>;
+        };
 
         // Mutable Shallow Symbol Storage
         template<class Field>
-        class mutable_shallow_stack
-            : public mutable_shallow_symbol_storage<
+        class mutable_shallow_stack : public
+            mutable_shallow_symbol_storage<
             storage_bytes_used<
-                storage_block_info<
-                    finite_field_info<Field,
-                        final_coder_factory<
-                            mutable_shallow_stack<Field>
-                            > > > > >
-        {};
+            storage_block_info<
+            finite_field_info<Field,
+            final_coder_factory<
+            mutable_shallow_stack<Field>
+            > > > > >
+        {
+        public:
+            using factory = basic_factory<mutable_shallow_stack>;
+        };
 
         template<class Field>
-        class mutable_shallow_stack_pool
-            : public mutable_shallow_symbol_storage<
+        class mutable_shallow_stack_pool : public
+            mutable_shallow_symbol_storage<
             storage_bytes_used<
-                storage_block_info<
-                    finite_field_info<Field,
-                        final_coder_factory_pool<
-                            mutable_shallow_stack_pool<Field>
-                            > > > > >
-        {};
+            storage_block_info<
+            finite_field_info<Field,
+            final_coder_factory_pool<
+            mutable_shallow_stack_pool<Field>
+            > > > > >
+        {
+        public:
+            using factory = basic_factory<mutable_shallow_stack_pool>;
+        };
 
         // Const Shallow Symbol Storage
         template<class Field>
-        class const_shallow_stack
-            : public const_shallow_symbol_storage<
+        class const_shallow_stack : public
+            const_shallow_symbol_storage<
             storage_bytes_used<
-                storage_block_info<
-                    finite_field_info<Field,
-                        final_coder_factory<
-                            const_shallow_stack<Field>
-                            > > > > >
-        {};
+            storage_block_info<
+            finite_field_info<Field,
+            final_coder_factory<
+            const_shallow_stack<Field>
+            > > > > >
+        {
+        public:
+            using factory = basic_factory<const_shallow_stack>;
+        };
 
         template<class Field>
-        class const_shallow_stack_pool
-            : public const_shallow_symbol_storage<
+        class const_shallow_stack_pool : public
+            const_shallow_symbol_storage<
             storage_bytes_used<
-                storage_block_info<
-                    finite_field_info<Field,
-                        final_coder_factory_pool<
-                            const_shallow_stack_pool<Field>
-                            > > > > >
-        {};
+            storage_block_info<
+            finite_field_info<Field,
+            final_coder_factory_pool<
+            const_shallow_stack_pool<Field>
+            > > > > >
+        {
+        public:
+            using factory = basic_factory<const_shallow_stack_pool>;
+        };
 
         // Partial Shallow Symbol Storage
         template<class Field>
-        class partial_shallow_stack
-            : public partial_shallow_symbol_storage<
+        class partial_shallow_stack : public
+            partial_shallow_symbol_storage<
             storage_bytes_used<
-                storage_block_info<
-                    finite_field_info<Field,
-                        final_coder_factory<
-                            partial_shallow_stack<Field>
-                            > > > > >
-        {};
+            storage_block_info<
+            finite_field_info<Field,
+            final_coder_factory<
+            partial_shallow_stack<Field>
+            > > > > >
+        {
+        public:
+            using factory = basic_factory<partial_shallow_stack>;
+        };
 
         template<class Field>
-        class partial_shallow_stack_pool
-            : public partial_shallow_symbol_storage<
+        class partial_shallow_stack_pool : public
+            partial_shallow_symbol_storage<
             storage_bytes_used<
-                storage_block_info<
-                    finite_field_info<Field,
-                        final_coder_factory_pool<
-                            partial_shallow_stack_pool<Field>
-                            > > > > >
-        {};
+            storage_block_info<
+            finite_field_info<Field,
+            final_coder_factory_pool<
+            partial_shallow_stack_pool<Field>
+            > > > > >
+        {
+        public:
+            using factory = basic_factory<partial_shallow_stack_pool>;
+        };
 
     }
 }

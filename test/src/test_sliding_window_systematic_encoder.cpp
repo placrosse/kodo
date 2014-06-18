@@ -10,6 +10,7 @@
 #include <gtest/gtest.h>
 
 #include <kodo/rlnc/sliding_window_systematic_encoder.hpp>
+#include <kodo/basic_factory.hpp>
 
 namespace kodo
 {
@@ -28,7 +29,6 @@ namespace kodo
 
             struct factory_base
             {
-                /// @copydoc layer::factory_base::factory_base(uint32_t,uint32_t)
                 factory_base(uint32_t max_symbols, uint32_t max_symbol_size)
                     : m_max_symbols(max_symbols),
                       m_max_symbol_size(max_symbol_size)
@@ -160,7 +160,10 @@ namespace kodo
         // Instantiate a stack containing the sliding_window_systematic_encoder
         class dummy_stack
             : public sliding_window_systematic_encoder<dummy_layer>
-        { };
+        {
+        public:
+            using factory = basic_factory<dummy_stack>;
+        };
 
     }
 

@@ -33,7 +33,7 @@
 #include <kodo/coefficient_value_access.hpp>
 #include <kodo/symbol_decoding_status_tracker.hpp>
 #include <kodo/symbol_decoding_status_counter.hpp>
-
+#include <kodo/basic_factory.hpp>
 
 /// Here we define the stacks which should be tested.
 namespace kodo
@@ -45,8 +45,8 @@ namespace kodo
     namespace
     {
 
-        // Test layer against real api to ensure that we get an error if the layer
-        // doesn't complies with the api.
+        // Test layer against real api to ensure that we get an error
+        // if the layer doesn't complies with the api.
         template<class Field>
         class copy_payload_decoder_stack
             : public // Payload API
@@ -77,7 +77,10 @@ namespace kodo
                      // Final type
                      copy_payload_decoder_stack<Field>
                          > > > > > > > > > > > > > > > > >
-        {};
+        {
+        public:
+            using factory = basic_factory<copy_payload_decoder_stack>;
+        };
 
         // A dummi api to replace the real stack
         class dummy_api
@@ -86,6 +89,9 @@ namespace kodo
 
             struct factory_base
             {
+
+                factory_base(uint32_t,uint32_t)
+                {}
 
                 /// @copydoc layer::factory_base::symbol_size() const;
                 uint32_t symbol_size() const
@@ -132,16 +138,21 @@ namespace kodo
         };
 
         // Test functionality of the individual layer
-        typedef copy_payload_decoder<dummy_api> copy_payload_coder;
+        class copy_payload_coder : public copy_payload_decoder<dummy_api>
+        {
+        public:
+
+            using factory = basic_factory<copy_payload_coder>;
+        };
     }
 }
 
 // Test the layer itself - confirms that it acts as expected
-void test_layer(uint32_t /*symbols*/, uint32_t symbol_size)
+void test_layer(uint32_t symbols, uint32_t symbol_size)
 {
     // Create and initialize coder
     kodo::copy_payload_coder coder;
-    kodo::copy_payload_coder::factory the_factory;
+    kodo::copy_payload_coder::factory the_factory(symbols, symbol_size);
     the_factory.set_symbol_size(symbol_size);
     coder.initialize(the_factory);
 

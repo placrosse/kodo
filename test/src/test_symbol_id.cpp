@@ -25,6 +25,7 @@
 #include <kodo/reed_solomon/reed_solomon_symbol_id_writer.hpp>
 #include <kodo/reed_solomon/reed_solomon_symbol_id_reader.hpp>
 #include <kodo/reed_solomon/vandermonde_matrix.hpp>
+#include <kodo/basic_factory.hpp>
 
 #include "kodo_unit_test/basic_api_test_helper.hpp"
 
@@ -49,34 +50,40 @@ namespace kodo
 
 
         template<class Field>
-        class plain_uniform_stack
-            : public plain_symbol_id_reader<
-                     plain_symbol_id_writer<
-                     uniform_generator<
-                     coefficient_info<
-                     dummy_layer<
-                     storage_block_info<
-                     finite_field_info<Field,
-                     final_coder_factory<
-                     plain_uniform_stack<Field>
-                         > > > > > > > >
-        { };
+        class plain_uniform_stack : public
+            plain_symbol_id_reader<
+            plain_symbol_id_writer<
+            uniform_generator<
+            coefficient_info<
+            dummy_layer<
+            storage_block_info<
+            finite_field_info<Field,
+            final_coder_factory<
+            plain_uniform_stack<Field>
+            > > > > > > > >
+        {
+        public:
+            using factory = basic_factory<plain_uniform_stack>;
+        };
 
         template<class Field>
-        class rs_vandermond_nonsystematic_stack
-            : public reed_solomon_symbol_id_reader<
-                     reed_solomon_symbol_id_writer<
-                     vandermonde_matrix<
-                     coefficient_info<
-                     dummy_layer<
-                     storage_block_info<
-                     encode_symbol_tracker<
-                     finite_field_math<typename fifi::default_field<Field>::type,
-                     finite_field_info<Field,
-                     final_coder_factory<
-                     rs_vandermond_nonsystematic_stack<Field>
-                         > > > > > > > > > >
-        { };
+        class rs_vandermond_nonsystematic_stack : public
+            reed_solomon_symbol_id_reader<
+            reed_solomon_symbol_id_writer<
+            vandermonde_matrix<
+            coefficient_info<
+            dummy_layer<
+            storage_block_info<
+            encode_symbol_tracker<
+            finite_field_math<typename fifi::default_field<Field>::type,
+            finite_field_info<Field,
+            final_coder_factory<
+            rs_vandermond_nonsystematic_stack<Field>
+            > > > > > > > > > >
+        {
+        public:
+            using factory = basic_factory<rs_vandermond_nonsystematic_stack>;
+        };
     }
 }
 

@@ -60,5 +60,8 @@ namespace kodo
         // Final type
         reed_solomon_encoder<Field,TraceTag>
         > > > > > > > > > > > > > >
-    { };
+    {
+    public:
+        using factory = pool_factory<reed_solomon_encoder>;
+    };
 }

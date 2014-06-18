@@ -18,6 +18,7 @@
 #include <kodo/finite_field_math.hpp>
 #include <kodo/finite_field_info.hpp>
 #include <kodo/final_coder_factory.hpp>
+#include <kodo/basic_factory.hpp>
 
 #include "kodo_unit_test/basic_api_test_helper.hpp"
 
@@ -51,24 +52,30 @@ namespace kodo
 
 
         template<class Field>
-        class vandermonde_stack
-            : public vandermonde_matrix<
-                     finite_field_math<typename fifi::default_field<Field>::type,
-                     finite_field_info<Field,
-                     final_coder_factory<
-                     vandermonde_stack<Field>
-                         > > > >
-        { };
+        class vandermonde_stack : public
+            vandermonde_matrix<
+            finite_field_math<typename fifi::default_field<Field>::type,
+            finite_field_info<Field,
+            final_coder_factory<
+            vandermonde_stack<Field>
+            > > > >
+        {
+        public:
+            using factory = basic_factory<vandermonde_stack>;
+        };
 
         template<class Field>
-        class systematic_vandermonde_stack
-            : public systematic_vandermonde_matrix<
-                     finite_field_math<typename fifi::default_field<Field>::type,
-                     finite_field_info<Field,
-                     final_coder_factory<
-                     systematic_vandermonde_stack<Field>
-                         > > > >
-        { };
+        class systematic_vandermonde_stack : public
+            systematic_vandermonde_matrix<
+            finite_field_math<typename fifi::default_field<Field>::type,
+            finite_field_info<Field,
+            final_coder_factory<
+            systematic_vandermonde_stack<Field>
+            > > > >
+        {
+        public:
+            using factory = basic_factory<systematic_vandermonde_stack>;
+        };
     }
 }
 

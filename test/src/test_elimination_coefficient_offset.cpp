@@ -6,18 +6,18 @@
 #include <cstdint>
 
 #include <gtest/gtest.h>
+
 #include <kodo/elimination_coefficient_offset.hpp>
 #include <kodo/storage_block_info.hpp>
+#include <kodo/basic_factory.hpp>
 
 namespace kodo
 {
-
     // Put dummy layers and tests classes in an anonymous namespace
     // to avoid violations of ODF (one-definition-rule) in other
     // translation units
     namespace
     {
-
         /// Helper class to test coefficient value access layer
         class test_layer
         {
@@ -62,7 +62,10 @@ namespace kodo
         /// Helper stack for testing the coefficient access layer
         class test_stack :
             public elimination_coefficient_offset<test_layer>
-        { };
+        {
+        public:
+            using factory = basic_factory<test_stack>;
+        };
     }
 }
 

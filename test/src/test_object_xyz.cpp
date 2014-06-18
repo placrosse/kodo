@@ -28,12 +28,12 @@ namespace
 
         typedef boost::shared_ptr<dummy_coder> pointer;
 
-        class factory_base
+        class factory
         {
         public:
 
             /// @copydoc layer::factory_base::factory_base(uint32_t,uint32_t)
-            factory_base(uint32_t max_symbols, uint32_t max_symbol_size)
+            factory(uint32_t max_symbols, uint32_t max_symbol_size)
                 : m_max_symbols(max_symbols),
                   m_max_symbol_size(max_symbol_size),
                   m_symbols(max_symbols),

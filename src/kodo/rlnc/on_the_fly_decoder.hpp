@@ -51,5 +51,8 @@ namespace kodo
         on_the_fly_decoder<Field, TraceTag>
         > > > > > > > > > > > > > >
 
-    { };
+    {
+        public:
+        using factory = pool_factory<on_the_fly_decoder>;
+    };
 }

@@ -10,6 +10,7 @@
 #include <gtest/gtest.h>
 
 #include <kodo/pivot_status_bitset.hpp>
+#include <kodo/basic_factory.hpp>
 
 namespace kodo
 {
@@ -70,7 +71,10 @@ namespace kodo
         class dummy_stack
             : public pivot_status_bitset<
                      dummy_layer>
-          { };
+        {
+        public:
+            using factory = basic_factory<dummy_stack>;
+        };
     }
 }
 

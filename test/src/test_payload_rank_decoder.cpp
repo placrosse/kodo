@@ -10,6 +10,7 @@
 #include <gtest/gtest.h>
 
 #include <kodo/payload_rank_decoder.hpp>
+#include <kodo/basic_factory.hpp>
 
 namespace kodo
 {
@@ -28,7 +29,6 @@ namespace kodo
 
             struct factory_base
             {
-                /// @copydoc layer::factory_base::factory_base(uint32_t,uint32_t)
                 factory_base(uint32_t max_symbols, uint32_t max_symbol_size)
                     : m_max_payload_size(0)
                 {
@@ -89,7 +89,10 @@ namespace kodo
               // Factory API
               // Final type
               dummy_final>
-          { };
+        {
+        public:
+            using factory = basic_factory<rank_decoder_stack>;
+        };
     }
 }
 
