@@ -45,6 +45,8 @@ namespace kodo
                 auto matrix =
                     SuperCoder::factory_base::construct_matrix(symbols);
 
+                assert(matrix);
+
                 return boost::make_shared<generator_matrix>(
                     matrix->transpose());
 

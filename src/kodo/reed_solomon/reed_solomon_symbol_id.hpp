@@ -51,11 +51,9 @@ namespace kodo
             { }
 
 
-            /// @copydoc layer::factory_base::build()
-            pointer build()
+            /// @todo docs
+            boost::shared_ptr<generator_matrix> build_matrix()
             {
-                pointer coder = SuperCoder::factory_base::build();
-
                 uint32_t symbols = SuperCoder::factory_base::symbols();
 
                 if(m_cache.find(symbols) == m_cache.end())
@@ -64,15 +62,7 @@ namespace kodo
                         SuperCoder::factory_base::construct_matrix(symbols);
                 }
 
-                this_pointer this_coder = coder;
-                this_coder->m_matrix = m_cache[symbols];
-
-                // The row size of the generator matrix should fit
-                // the expected coefficient buffer size
-                assert(coder->coefficient_vector_size() ==
-                       this_coder->m_matrix->row_size());
-
-                return coder;
+                return m_cache[symbols];
             }
 
             /// @copydoc layer::max_id_size() const
@@ -90,6 +80,20 @@ namespace kodo
 
 
     public:
+
+        template<class Factory>
+        void initialize(Factory& the_factory)
+        {
+            std::cout << "Initialize" << std::endl;
+            SuperCoder::initialize(the_factory);
+            m_matrix = the_factory.build_matrix();
+            assert(m_matrix);
+
+            // The row size of the generator matrix should fit
+            // the expected coefficient buffer size
+            assert(SuperCoder::coefficient_vector_size() ==
+                   m_matrix->row_size());
+        }
 
         /// @copydoc layer::id_size() const
         uint32_t id_size() const

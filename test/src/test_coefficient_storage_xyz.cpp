@@ -17,6 +17,7 @@
 #include <kodo/coefficient_storage.hpp>
 #include <kodo/coefficient_info.hpp>
 #include <kodo/storage_block_info.hpp>
+#include <kodo/basic_factory.hpp>
 
 #include "kodo_unit_test/basic_api_test_helper.hpp"
 
@@ -50,7 +51,7 @@ namespace kodo
             /// @todo using different factory, on the other hand it
             /// seems excessive to have two stacks here after the
             /// factory split.
-            using factory = pool_factory<coefficient_storage_stack>;
+            using factory = basic_factory<coefficient_storage_stack>;
         };
 
         // Coefficient Storage
@@ -145,32 +146,37 @@ namespace
 
             EXPECT_EQ(length, coder->coefficient_vector_length());
 
+            /// @todo everyting should not be zero as far as I can see
+            ///       the coefficient storage does not zero initialize
+            ///       the coefficient vectors and it should not zero
+            ///       initialize them
+
             // Create a zero vector for comparisons
-            std::vector<uint8_t> zero_vector(size, '\0');
-            auto zero_storage = sak::storage(zero_vector);
+            // std::vector<uint8_t> zero_vector(size, '\0'); auto
+            // zero_storage = sak::storage(zero_vector);
 
-            // Everything should be zero initially
-            for(uint32_t i = 0; i < symbols; ++i)
-            {
-                sak::const_storage s;
+            // // Everything should be zero initially
+            // for(uint32_t i = 0; i < symbols; ++i)
+            // {
+            //     sak::const_storage s;
 
-                s = sak::storage(coder->coefficient_vector_data(i), size);
+            //     s = sak::storage(coder->coefficient_vector_data(i), size);
 
-                EXPECT_TRUE(sak::equal(zero_storage, s));
+            //     EXPECT_TRUE(sak::equal(zero_storage, s));
 
-                s = sak::storage(
-                    const_coder->coefficient_vector_data(i), size);
+            //     s = sak::storage(
+            //         const_coder->coefficient_vector_data(i), size);
 
-                EXPECT_TRUE(sak::equal(zero_storage, s));
+            //     EXPECT_TRUE(sak::equal(zero_storage, s));
 
-                s = sak::storage(coder->coefficient_vector_values(i), size);
-                EXPECT_TRUE(sak::equal(zero_storage, s));
+            //     s = sak::storage(coder->coefficient_vector_values(i), size);
+            //     EXPECT_TRUE(sak::equal(zero_storage, s));
 
-                s = sak::storage(const_coder->coefficient_vector_values(i),
-                                 size);
+            //     s = sak::storage(const_coder->coefficient_vector_values(i),
+            //                      size);
 
-                EXPECT_TRUE(sak::equal(zero_storage, s));
-            }
+            //     EXPECT_TRUE(sak::equal(zero_storage, s));
+            // }
 
             // Create some random coefficients, one for every symbol
             uint32_t vector_size = symbols*size;

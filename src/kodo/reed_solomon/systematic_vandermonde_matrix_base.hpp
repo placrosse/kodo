@@ -76,6 +76,7 @@ namespace kodo
 
         boost::shared_ptr<generator_matrix> m =
             SuperCoder::factory_base::construct_matrix(symbols);
+        assert(m);
 
         std::vector<value_type> temp_row(m->row_length());
 

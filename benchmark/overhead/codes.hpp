@@ -40,7 +40,10 @@ namespace kodo
         // Final type
         full_delayed_rlnc_decoder<Field, TraceTag>
         > > > > > > > > > > > > > > >
-    { };
+    {
+    public:
+        using factory = pool_factory<full_delayed_rlnc_decoder>;
+    };
 
     template<class Field, class TraceTag = kodo::disable_trace>
     class full_rlnc_decoder_unsystematic : public
@@ -69,7 +72,10 @@ namespace kodo
         // Final type
         full_rlnc_decoder_unsystematic<Field, TraceTag>
         > > > > > > > > > > > > > >
-    { };
+    {
+    public:
+        using factory = pool_factory<full_rlnc_decoder_unsystematic>;
+    };
 
     template<class Field, class TraceTag = kodo::disable_trace>
     class full_rlnc_encoder_unsystematic : public
@@ -98,5 +104,8 @@ namespace kodo
         // Final type
         full_rlnc_encoder_unsystematic<Field, TraceTag>
         > > > > > > > > > > > > >
-    { };
+    {
+    public:
+        using factory = pool_factory<full_rlnc_encoder_unsystematic>;
+    };
 }
