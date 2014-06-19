@@ -44,7 +44,7 @@ namespace kodo
         template<class Factory>
         void initialize(Factory& the_factory)
         {
-            SuperCoder::initialize(the_factory);
+            Super::initialize(the_factory);
 
             m_coefficients.resize(
                 Super::coefficient_vector_size(), 0);
@@ -63,6 +63,8 @@ namespace kodo
 
             // Store the index as the symbol id
             sak::big_endian::put<value_type>(symbol_index, symbol_id);
+
+            assert(m_matrix);
 
             sak::copy_storage(
                 sak::storage(m_coefficients),
@@ -89,5 +91,3 @@ namespace kodo
     };
 
 }
-
-

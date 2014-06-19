@@ -10,7 +10,6 @@
 
 namespace kodo
 {
-
     /// @ingroup symbol_id_layers
     ///
     /// @brief Base class for the Reed-Solomon symbol id reader and
@@ -50,7 +49,6 @@ namespace kodo
                 : SuperCoder::factory_base(max_symbols, max_symbol_size)
             { }
 
-
             /// @todo docs
             boost::shared_ptr<generator_matrix> build_matrix()
             {
@@ -60,6 +58,7 @@ namespace kodo
                 {
                     m_cache[symbols] =
                         SuperCoder::factory_base::construct_matrix(symbols);
+                    assert(m_cache[symbols]);
                 }
 
                 return m_cache[symbols];
@@ -84,7 +83,6 @@ namespace kodo
         template<class Factory>
         void initialize(Factory& the_factory)
         {
-            std::cout << "Initialize" << std::endl;
             SuperCoder::initialize(the_factory);
             m_matrix = the_factory.build_matrix();
             assert(m_matrix);
