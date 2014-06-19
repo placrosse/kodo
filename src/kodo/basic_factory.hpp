@@ -47,7 +47,46 @@ namespace kodo
 
     public:
 
-        /// @todo docs
+        /// This type alias allows us to rebind the factory to build
+        /// another type. This is useful in cases where we want to
+        /// exend a stack but reuse the factory define in it. You can
+        /// use the rebind_factory helper to make it look pretty :)
+        ///
+        /// Example:
+        ///
+        /// This example shows how an new layer can be wrapped around an
+        /// existing stack. First lets make some dummy layer:
+        ///
+        ///    template<class SuperCoder>
+        ///    class ping_layer : public SuperCoder
+        ///    {
+        ///    public:
+        ///
+        ///        void ping()
+        ///        {
+        ///            std::cout << "pong?" << std::endl;
+        ///        }
+        ///    };
+        ///
+        /// Now lets show how this layer could be added to an existing stack:
+        ///
+        ///    template<class Codec>
+        ///    class wrap_ping : public ping_layer<Codec>
+        ///    {
+        ///    public:
+        ///        using factory = rebind_factory<Codec, wrap_ping>;
+        ///    };
+        ///
+        /// Usage:
+        ///
+        ///    wrap_ping<full_rlnc_decoder<binary>>::factory f(10,10);
+        ///    auto p = f.build();
+        ///
+        ///  The wrap layer uses the rebind_helper here to use the
+        ///  factory already define in full_rlnc_decoder. The
+        ///  rebind_helper in turn uses the other template alias
+        ///  define here.
+        ///
         template<class U>
         using other = basic_factory<U>;
 

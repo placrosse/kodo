@@ -74,9 +74,7 @@ namespace kodo
 
             /// map for blocks
             std::map<uint32_t, boost::shared_ptr<generator_matrix> > m_cache;
-
         };
-
 
     public:
 

@@ -49,7 +49,6 @@ namespace kodo
 
                 return boost::make_shared<generator_matrix>(
                     matrix->transpose());
-
             }
 
         };
