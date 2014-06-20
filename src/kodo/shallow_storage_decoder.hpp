@@ -96,8 +96,6 @@ namespace kodo
         /// @todo
         using factory = typename base_decoder::factory;
 
-
-
     public:
 
         /// Constructs a new storage decoder
@@ -140,7 +138,5 @@ namespace kodo
 
         /// The storage where the decoded data should be placed
         sak::mutable_storage m_decoding_storage;
-
     };
-
 }

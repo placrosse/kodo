@@ -7,12 +7,10 @@
 
 #include <cstdint>
 #include <vector>
+#include <algorithm>
 
 namespace kodo
 {
-
-    /// @todo clean up this class an it's corresponding unit-test
-
     /// @ingroup payload_codec_layers
     ///
     /// @brief Make decoder work on a copy of the payload
@@ -48,13 +46,12 @@ namespace kodo
             std::copy_n(payload, SuperCoder::payload_size(),
                         m_payload_copy.data());
 
-            SuperCoder::decode(m_payload_copy[0]);
+            SuperCoder::decode(m_payload_copy.data());
         }
 
     protected:
 
         /// Copy of payload
         std::vector<uint8_t> m_payload_copy;
-
     };
 }

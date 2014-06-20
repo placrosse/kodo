@@ -65,6 +65,12 @@ namespace kodo
                 (void) the_factory;
             }
 
+            template<class Factory>
+            void initialize(Factory& the_factory)
+            {
+                (void) the_factory;
+            }
+
             uint32_t payload_size() const
             {
                 return m_payload_size();
@@ -72,13 +78,14 @@ namespace kodo
 
             void decode(uint8_t* payload)
             {
-                m_payload(payload);
+                m_decode(payload);
+
                 // Clear payload
                 std::fill_n(payload, payload_size(), 0);
             }
 
             stub::call<uint32_t()> m_payload_size;
-            stub::call<void(uint8_t*)> m_payload;
+            stub::call<void(uint8_t*)> m_decode;
         };
 
         class dummy_stack : public
@@ -111,5 +118,5 @@ TEST(TestCopyPayloadDecoder, api)
     EXPECT_TRUE(data == data_copy);
 
     // The internal buffer was used
-    EXPECT_TRUE(c->m_decode.called_once_with(c->payload_copy.data()));
+    EXPECT_TRUE(c->m_decode.called_once_with(c->payload_copy().data()));
 }
