@@ -49,7 +49,9 @@ namespace kodo
                 : SuperCoder::factory_base(max_symbols, max_symbol_size)
             { }
 
-            /// @todo docs
+            /// @return A generator matrix for the number of symbols
+            /// specified in the factory. We use a cache to store the
+            /// generator matrix for different number of symbols.
             boost::shared_ptr<generator_matrix> build_matrix()
             {
                 uint32_t symbols = SuperCoder::factory_base::symbols();

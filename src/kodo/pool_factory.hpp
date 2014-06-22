@@ -15,6 +15,7 @@
 
 namespace kodo
 {
+    /// @todo add unit test
     /// @ingroup factory_layers
     ///
     /// Terminates the layered coder and contains the coder final
@@ -59,7 +60,7 @@ namespace kodo
 
     public:
 
-        /// @todo docs
+        /// @copydoc basic_factory::other<U>
         template<class U>
         using other = pool_factory<U>;
 

@@ -7,7 +7,11 @@
 
 namespace kodo
 {
-    /// @todo docs
+    /// @ingroup factory_layers
+    ///
+    /// @brief Helper function to make the rebind functionality of the
+    ///        factories prettier. For an example see
+    ///        basic_factory::other<U>.
     template<class From, class To>
     using rebind_factory = typename From::factory::template other<To>;
 }

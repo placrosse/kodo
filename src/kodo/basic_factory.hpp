@@ -15,6 +15,7 @@
 
 namespace kodo
 {
+    /// @todo add unit test
     /// @ingroup factory_layers
     ///
     /// Terminates the layered coder and contains the coder final
