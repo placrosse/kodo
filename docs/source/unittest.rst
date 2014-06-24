@@ -106,3 +106,48 @@ technique. When unit testing a layer we try to isolate it as much as
 possible. To do this we typically introduce dummy layers with the sole
 purpose of satisfying the layer's dependencies. To see this in action
 lets look at one of the existing unit tests.
+
+The ``storage_bytes_used`` layer is used when we want add
+functionality allowing us to keep track of how many useful bytes an
+encoder or decoder contains.
+
+.. note:: In general the amount of data which can be encoded or
+          decoded will be determined by the number of symbols we are
+          coding and the size of every symbol in bytes (we call this
+          the block size). However, in practical applications we
+          sometimes do not have enough data to fill an entire
+          block. In those cases we can add the storage_bytes_used
+          layer to embed in every encoder and decoder the ability to
+          store the number of actual data bytes.
+
+.. literalinclude:: ../../src/kodo/storage_bytes_used.hpp
+    :language: c++
+    :linenos:
+
+As seen the layer depends on two functions being provided by the
+``SuperCoder`` namely the:
+
+1. ``SuperCoder::initialize(the_factory)``
+2. ``SuperCoder::block_size()``
+
+Using our Doxygen documentation it is possible to look-up what two
+purpose of the two undefined functions are
+(http://bongo.steinwurf.dk/static/files/doxygen/kodo/master/html/index.html)
+
+In this case we want to check that the state is correctly updated when
+calling ``set_bytes_used`` and that the state is correctly reset when
+calling ``initialize``. The following unit test code was implemented
+in ``test/src/test_storage_bytes_used.cpp`` to test this:
+
+.. literalinclude:: ../../test/src/test_storage_bytes_used.hpp
+    :language: c++
+    :linenos:
+
+In the above test code we use one test helper which allows use to
+easily add testing stubs to the unit test.
+
+http://en.wikipedia.org/wiki/Test_stub
+
+The library is called stub and is freely available under the BSD license:
+
+https://github.com/steinwurf/stub
