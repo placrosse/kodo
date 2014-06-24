@@ -99,3 +99,10 @@ The place-holder file in this cases
 
 Once the ``.cpp`` test file has been created we can start to implement
 the unit test code. This is done with the help of the gtest framework.
+
+The Kodo library is build using the
+``parameterized-inheritance``/``mixin-layers`` C++ design
+technique. When unit testing a layer we try to isolate it as much as
+possible. To do this we typically introduce dummy layers with the sole
+purpose of satisfying the layer's dependencies. To see this in action
+lets look at one of the existing unit tests.
