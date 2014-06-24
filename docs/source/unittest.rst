@@ -60,6 +60,7 @@ In some cases it is convenient to run the test binary as part of build
 this can be done by passing the following options to the waf build scripts.
 
 ::
+
   python waf --options=run_tests,run_always
 
 .. note:: If the ``run_always`` option is removed the unit tests will
