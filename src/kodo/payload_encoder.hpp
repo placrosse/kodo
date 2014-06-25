@@ -9,8 +9,8 @@
 
 namespace kodo
 {
-
     /// @ingroup payload_codec_layers
+    ///
     /// @brief The payload encoder splits the payload buffer into
     ///        symbol header and symbol.
     template<class SuperCoder>
@@ -18,6 +18,8 @@ namespace kodo
     {
     public:
 
+        /// @ingroup factory_layers
+        ///
         /// The factory layer associated with this coder.
         /// In this case only needed to provide the max_payload_size()
         /// function.

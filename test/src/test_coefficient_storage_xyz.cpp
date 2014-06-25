@@ -76,7 +76,7 @@ namespace
 {
 
     /// Tests:
-    ///   - layer::factory::max_coefficients_size() const
+    ///   - layer::factory_base::max_coefficients_size() const
     ///   - layer::coefficients_size() const
     ///   - layer::coefficients_length() const
     ///   - layer::coefficients_value(uint32_t)

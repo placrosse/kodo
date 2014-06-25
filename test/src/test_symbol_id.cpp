@@ -86,7 +86,7 @@ namespace kodo
 }
 
 /// Tests:
-///   - layer::factory::max_id_size() const
+///   - layer::factory_base::max_id_size() const
 ///   - layer::read_id(uint8_t*,uint8_t**)
 ///   - layer::write_id(uint8_t*,uint8_t**)
 ///   - layer::id_size()

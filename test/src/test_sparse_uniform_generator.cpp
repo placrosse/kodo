@@ -49,9 +49,7 @@ namespace kodo
         public:
             using factory = pool_factory<sparse_uniform_generator_stack_pool>;
         };
-
     }
-
 }
 
 // Put dummy layers and tests classes in an anonymous namespace

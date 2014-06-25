@@ -15,7 +15,7 @@
 
 namespace kodo
 {
-    /// @ingroup factory_layers
+    /// @ingroup factory
     ///
     /// @brief The pool factory uses a memory pool to recycle
     ///         encoders/decoders, and thereby minimize memory
@@ -32,13 +32,13 @@ namespace kodo
 
     public:
 
-        /// @copydoc layer::factory::factory(uint32_t,uint32_t)
+        /// @copydoc layer::factory_base::factory(uint32_t,uint32_t)
         pool_factory(uint32_t max_symbols, uint32_t max_symbol_size) :
             Codec::factory_base(max_symbols, max_symbol_size),
             m_pool(std::bind(&pool_factory::make_codec, this))
         { }
 
-        /// @copydoc layer::factory::build()
+        /// @copydoc factory::build()
         pointer build()
         {
             pointer codec = m_pool.allocate();

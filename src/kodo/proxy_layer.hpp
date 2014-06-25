@@ -131,7 +131,7 @@ namespace kodo
                 return m_main_stack;
             }
 
-            /// @copydoc layer::factory::build()
+            /// @copydoc factory::build()
             pointer build()
             {
                 assert(m_main_factory != 0);
@@ -148,63 +148,63 @@ namespace kodo
                 return coder;
             }
 
-            /// @copydoc layer::factory::max_symbols() const
+            /// @copydoc layer::factory_base::max_symbols() const
             uint32_t max_symbols() const
             {
                 assert(m_main_factory);
                 return m_main_factory->max_symbols();
             }
 
-            /// @copydoc layer::factory::max_symbol_size() const
+            /// @copydoc layer::factory_base::max_symbol_size() const
             uint32_t max_symbol_size() const
             {
                 assert(m_main_factory);
                 return m_main_factory->max_symbol_size();
             }
 
-            /// @copydoc layer::factory::max_block_size() const
+            /// @copydoc layer::factory_base::max_block_size() const
             uint32_t max_block_size() const
             {
                 assert(m_main_factory);
                 return m_main_factory->max_block_size();
             }
 
-            /// @copydoc layer::factory::max_header_size() const
+            /// @copydoc layer::factory_base::max_header_size() const
             uint32_t max_header_size() const
             {
                 assert(m_main_factory);
                 return m_main_factory->max_header_size();
             }
 
-            /// @copydoc layer::factory::max_id_size() const
+            /// @copydoc layer::factory_base::max_id_size() const
             uint32_t max_id_size() const
             {
                 assert(m_main_factory);
                 return m_main_factory->max_id_size();
             }
 
-            /// @copydoc layer::factory::max_payload_size() const
+            /// @copydoc layer::factory_base::max_payload_size() const
             uint32_t max_payload_size() const
             {
                 assert(m_main_factory);
                 return m_main_factory->max_payload_size();
             }
 
-            /// @copydoc layer::factory::max_coefficient_vector_size() const
+            /// @copydoc layer::factory_base::max_coefficient_vector_size() const
             uint32_t max_coefficient_vector_size() const
             {
                 assert(m_main_factory);
                 return m_main_factory->max_coefficient_vector_size();
             }
 
-            /// @copydoc layer::factory::symbols() const;
+            /// @copydoc layer::factory_base::symbols() const;
             uint32_t symbols() const
             {
                 assert(m_main_factory);
                 return m_main_factory->symbols();
             }
 
-            /// @copydoc layer::factory::symbol_size() const;
+            /// @copydoc layer::factory_base::symbol_size() const;
             uint32_t symbol_size() const
             {
                 assert(m_main_factory);

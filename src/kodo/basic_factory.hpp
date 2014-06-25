@@ -13,7 +13,7 @@
 
 namespace kodo
 {
-    /// @ingroup factory_layers
+    /// @ingroup factory
     ///
     /// @brief The basic factory implementation where a new heap
     ///        allocated codec is create every time the build()
@@ -28,12 +28,12 @@ namespace kodo
 
     public:
 
-        /// @copydoc layer::factory::factory(uint32_t,uint32_t)
+        /// @copydoc layer::factory_base::factory(uint32_t,uint32_t)
         basic_factory(uint32_t max_symbols, uint32_t max_symbol_size) :
             Codec::factory_base(max_symbols, max_symbol_size)
         { }
 
-        /// @copydoc layer::factory::build()
+        /// @copydoc factory::build()
         pointer build()
         {
             auto coder = boost::make_shared<Codec>();
