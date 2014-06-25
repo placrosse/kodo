@@ -14,21 +14,14 @@
 
 namespace kodo
 {
+    /// @todo Delete this layer - it is not really useful
+    ///
     /// @brief Helper layer for layers that require a buffer for storing
     ///        symbol coefficients. The storage is uninitialized. The
     ///        buffer is guaranteed to be aligned (on a 16 byte boundary).
     template<class SuperCoder>
     class aligned_coefficients_buffer : public SuperCoder
     {
-    public:
-
-        /// @copydoc layer::pointer
-        typedef typename SuperCoder::pointer pointer;
-
-        /// Pointer to the type of this layer
-        typedef boost::shared_ptr<
-            aligned_coefficients_buffer<SuperCoder> > this_pointer;
-
     public:
 
         /// @copydoc layer::construct(Factory&)
@@ -50,5 +43,3 @@ namespace kodo
 
     };
 }
-
-

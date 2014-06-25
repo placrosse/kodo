@@ -91,7 +91,6 @@ struct api_generate
 {
 
     typedef typename Coder::factory factory_type;
-    typedef typename Coder::pointer pointer_type;
     typedef typename Coder::field_type field_type;
     typedef typename Coder::value_type value_type;
 
@@ -126,7 +125,7 @@ struct api_generate
         m_factory.set_symbols(symbols);
         m_factory.set_symbol_size(symbol_size);
 
-        pointer_type coder = m_factory.build();
+        auto coder = m_factory.build();
 
         std::vector<uint8_t> vector_a =
             random_vector(coder->coefficient_vector_size());
@@ -159,7 +158,7 @@ struct api_generate
         m_factory.set_symbols(symbols);
         m_factory.set_symbol_size(symbol_size);
 
-        pointer_type coder = m_factory.build();
+        auto coder = m_factory.build();
 
         std::vector<uint8_t> vector_a =
             random_vector(coder->coefficient_vector_size());

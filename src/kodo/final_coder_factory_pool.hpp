@@ -17,6 +17,7 @@
 
 namespace kodo
 {
+    /// @todo clean up after factory re-design
     /// @ingroup factory_layers
     /// Terminates the layered coder and contains the coder final
     /// factory. The pool factory uses a memory pool to recycle

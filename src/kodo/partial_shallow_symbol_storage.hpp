@@ -33,13 +33,6 @@ namespace kodo
         /// The actual SuperCoder type
         typedef const_shallow_symbol_storage<SuperCoder> Super;
 
-        /// Pointer produced by the factory
-        typedef typename Super::pointer pointer;
-
-        /// Pointer to the type of this layer
-        typedef boost::shared_ptr<
-            partial_shallow_symbol_storage> this_pointer;
-
         /// Partial and zero symbol types
         typedef std::vector<uint8_t> symbol_type;
 

@@ -11,16 +11,13 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/make_shared.hpp>
 
-#include <sak/resource_pool.hpp>
-
 namespace kodo
 {
-    /// @todo add unit test
     /// @ingroup factory_layers
     ///
-    /// Terminates the layered coder and contains the coder final
-    /// factory. The pool factory uses a memory pool to recycle
-    /// encoders/decoders, and thereby minimize memory consumption.
+    /// @brief The basic factory implementation where a new heap
+    ///        allocated codec is create every time the build()
+    ///        function is invoked.
     template<class Codec>
     class basic_factory : public Codec::factory_base
     {

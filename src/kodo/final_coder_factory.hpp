@@ -14,7 +14,7 @@
 
 namespace kodo
 {
-
+    /// @todo clean up after factory re-design
     /// @ingroup factory_layers
     /// Terminates the layered coder and contains the coder allocation
     /// policy
@@ -23,20 +23,10 @@ namespace kodo
     {
     public:
 
-        /// Pointer type to the constructed coder
-        typedef boost::shared_ptr<FinalType> pointer;
-
-        //typedef typename FinalType::factory factory_type;
-
         /// @ingroup factory_layers
         /// The final factory
         class factory_base
         {
-        public:
-
-            /// The factory_base type
-            typedef typename FinalType::factory_base factory_type;
-
         public:
 
             /// @copydoc layer::factory_base::factory_base(uint32_t,uint32_t)
@@ -45,29 +35,6 @@ namespace kodo
                 (void) max_symbols;
                 (void) max_symbol_size;
             }
-
-            /// @copydoc layer::factory::build()
-            pointer build()
-            {
-                factory_type *this_factory =
-                    static_cast<factory_type*>(this);
-
-                pointer coder = boost::make_shared<FinalType>();
-
-                coder->construct(*this_factory);
-                coder->initialize(*this_factory);
-
-                return coder;
-            }
-
-        private: // Make non-copyable
-
-            /// Copy constructor
-            factory_base(const factory_base&);
-
-            /// Copy assignment
-            const factory_base& operator=(const factory_base&);
-
         };
 
     public:
@@ -87,24 +54,5 @@ namespace kodo
             /// This is the final factory layer so we do nothing
             (void) the_factory;
         }
-
-    protected:
-
-        /// Constructor
-        final_coder_factory()
-        { }
-
-        /// Destructor
-        ~final_coder_factory()
-        { }
-
-    private: // Make non-copyable
-
-        /// Copy constructor
-        final_coder_factory(const final_coder_factory&);
-
-        /// Copy assignment
-        const final_coder_factory& operator=(
-            const final_coder_factory&);
     };
 }

@@ -29,13 +29,6 @@ namespace kodo
         /// The generator matrix type
         typedef typename SuperCoder::generator_matrix generator_matrix;
 
-        /// Pointer to coder produced by the factories
-        typedef typename SuperCoder::pointer pointer;
-
-        /// Pointer the type of this layer
-        typedef boost::shared_ptr<
-            reed_solomon_symbol_id<SuperCoder> > this_pointer;
-
     public:
 
         /// The factory_base layer associated with this coder. Maintains

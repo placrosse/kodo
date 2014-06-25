@@ -18,9 +18,11 @@ namespace kodo
     /// @todo add unit test
     /// @ingroup factory_layers
     ///
-    /// Terminates the layered coder and contains the coder final
-    /// factory. The pool factory uses a memory pool to recycle
-    /// encoders/decoders, and thereby minimize memory consumption.
+    /// @brief The pool factory uses a memory pool to recycle
+    ///         encoders/decoders, and thereby minimize memory
+    ///         consumption. The current memory pool is not
+    ///         thread-safe and therefore should not be used in
+    ///         multi-threaded environments.
     template<class Codec>
     class pool_factory : public Codec::factory_base
     {

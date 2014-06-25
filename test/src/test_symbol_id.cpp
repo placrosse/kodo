@@ -97,7 +97,6 @@ struct api_symbol_id
 {
 
     typedef typename Coder::factory factory_type;
-    typedef typename Coder::pointer pointer_type;
     typedef typename Coder::field_type field_type;
     typedef typename Coder::value_type value_type;
 
@@ -130,7 +129,7 @@ struct api_symbol_id
             m_factory.set_symbols(symbols);
             m_factory.set_symbol_size(symbol_size);
 
-            pointer_type coder = m_factory.build();
+            auto coder = m_factory.build();
 
             EXPECT_TRUE(m_factory.max_id_size() > 0);
             EXPECT_TRUE(coder->id_size() > 0);

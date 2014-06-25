@@ -248,7 +248,7 @@ namespace kodo
         /// Stores the cache helper object which stores the content of
         /// the data buffers passed to the decode_symbol(...)
         /// functions.
-        typename cache::pointer m_cache;
+        typename cache::factory::pointer m_cache;
 
     };
 }

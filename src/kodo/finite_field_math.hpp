@@ -32,9 +32,6 @@ namespace kodo
         /// Pointer to the finite field implementation
         typedef boost::shared_ptr<field_impl> field_pointer;
 
-        /// Pointer to coder produced by the factories
-        typedef typename SuperCoder::pointer pointer;
-
     private:
 
         /// The field type of the finite field implementation

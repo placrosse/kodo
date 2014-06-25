@@ -91,7 +91,6 @@ namespace
     {
 
         typedef typename Coder::factory factory_type;
-        typedef typename Coder::pointer pointer_type;
         typedef typename Coder::field_type field_type;
 
         api_coefficients_storage(uint32_t max_symbols,
@@ -123,10 +122,10 @@ namespace
             m_factory.set_symbols(symbols);
             m_factory.set_symbol_size(symbol_size);
 
-            pointer_type coder = m_factory.build();
+            auto coder = m_factory.build();
 
             // Make sure we call the const version of the function
-            const pointer_type &const_coder = coder;
+            const auto& const_coder = coder;
 
             EXPECT_EQ(coder->coefficient_vectors(), coder->symbols());
 
