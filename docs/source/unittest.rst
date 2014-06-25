@@ -140,7 +140,7 @@ calling ``set_bytes_used`` and that the state is correctly reset when
 calling ``initialize``. The following unit test code was implemented
 in ``test/src/test_storage_bytes_used.cpp`` to test this:
 
-.. literalinclude:: ../../test/src/test_storage_bytes_used.hpp
+.. literalinclude:: ../../test/src/test_storage_bytes_used.cpp
     :language: c++
     :linenos:
 
