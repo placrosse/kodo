@@ -93,7 +93,7 @@ namespace kodo
         /// Access the partitioning scheme
         using base_decoder::m_partitioning;
 
-        /// @todo
+        /// Get the factory type used in the base_decoder
         using factory = typename base_decoder::factory;
 
     public:
