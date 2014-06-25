@@ -86,7 +86,7 @@ namespace kodo
               // Coefficient Storage API
               // Storage API
               // Finite Field API
-              // Factory API
+              // Final Layer
               // Final type
               dummy_final>
         {

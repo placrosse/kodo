@@ -18,8 +18,7 @@ namespace kodo
     /// @ingroup factory_layers
     /// Terminates the layered coder and contains the coder allocation
     /// policy
-    template<class FinalType>
-    class final_coder_factory
+    class final_layer
     {
     public:
 

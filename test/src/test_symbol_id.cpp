@@ -11,8 +11,8 @@
 
 #include <fifi/default_field.hpp>
 
-#include <kodo/final_coder_factory.hpp>
-#include <kodo/final_coder_factory_pool.hpp>
+#include <kodo/final_layer.hpp>
+#include <kodo/final_layer.hpp>
 #include <kodo/plain_symbol_id_reader.hpp>
 #include <kodo/plain_symbol_id_writer.hpp>
 #include <kodo/uniform_generator.hpp>
@@ -58,9 +58,8 @@ namespace kodo
             dummy_layer<
             storage_block_info<
             finite_field_info<Field,
-            final_coder_factory<
-            plain_uniform_stack<Field>
-            > > > > > > > >
+            final_layer
+            > > > > > > >
         {
         public:
             using factory = basic_factory<plain_uniform_stack>;
@@ -77,9 +76,8 @@ namespace kodo
             encode_symbol_tracker<
             finite_field_math<typename fifi::default_field<Field>::type,
             finite_field_info<Field,
-            final_coder_factory<
-            rs_vandermond_nonsystematic_stack<Field>
-            > > > > > > > > > >
+            final_layer
+            > > > > > > > > >
         {
         public:
             using factory = basic_factory<rs_vandermond_nonsystematic_stack>;

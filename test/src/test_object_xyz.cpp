@@ -15,6 +15,8 @@
 
 #include "kodo_unit_test/basic_api_test_helper.hpp"
 
+/// @todo revisit and restructure this unit test
+
 // Put dummy layers and tests classes in an anonymous namespace
 // to avoid violations of ODF (one-definition-rule) in other
 // translation units
@@ -26,10 +28,12 @@ namespace
     {
     public:
 
-        typedef boost::shared_ptr<dummy_coder> pointer;
-
         class factory
         {
+        public:
+
+            typedef boost::shared_ptr<dummy_coder> pointer;
+
         public:
 
             /// @copydoc layer::factory_base::factory_base(uint32_t,uint32_t)
@@ -157,7 +161,7 @@ namespace
     {
     public:
 
-        typedef dummy_coder::pointer pointer;
+        typedef dummy_coder::factory::pointer pointer;
 
         dummy_object_data(uint32_t size)
             : m_size(size)
@@ -225,8 +229,8 @@ void invoke_object(uint32_t max_symbols,
 
     for(uint32_t i = 0; i < obj_encoder.encoders(); ++i)
     {
-        typename Encoder::pointer encoder = obj_encoder.build(i);
-        typename Decoder::pointer decoder = obj_decoder.build(i);
+        auto encoder = obj_encoder.build(i);
+        auto decoder = obj_decoder.build(i);
 
         EXPECT_EQ(p.symbols(i), encoder->symbols());
         EXPECT_EQ(p.symbols(i), decoder->symbols());

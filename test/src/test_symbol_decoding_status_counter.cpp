@@ -75,7 +75,7 @@ namespace kodo
                      // Coefficient Storage API
                      // Storage API
                      // Finite Field API
-                     // Factory API
+                     // Final Layer
                      // Final type
                     dummy_layer> >
             { };
@@ -176,5 +176,3 @@ TEST(TestSymbolDecodingStatusCounter, api)
     EXPECT_EQ(stack.symbols_uncoded(), 0U);
 
 }
-
-

@@ -57,11 +57,9 @@ namespace kodo
         // Finite Field API
         finite_field_math<typename fifi::default_field<Field>::type,
         finite_field_info<Field,
-        // Factory API
-        final_coder_factory_pool<
-        // Final type
-        rlnc_decoder<Field>
-        > > > > > > > > > > > > > > > >
+        // Final Layer
+        final_layer
+        > > > > > > > > > > > > > > >
     {
     public:
         using factory = basic_factory<rlnc_decoder>;
@@ -90,7 +88,7 @@ int main()
     // In the following we will make an decoder factory.
     // The factory is used to build actual decoders
     rlnc_decoder::factory decoder_factory(symbols, symbol_size);
-    rlnc_decoder::pointer decoder = decoder_factory.build();
+    auto decoder = decoder_factory.build();
 
 
     // To illustrate decoding, random data has been filled into the

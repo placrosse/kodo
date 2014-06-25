@@ -61,11 +61,9 @@ namespace kodo
         deep_storage_layers<TraceTag,
         // Finite Field API
         finite_field_layers<Field,
-        // Factory API
-        final_coder_factory_pool<
-        // Final type
-        sliding_window_decoder<Field, TraceTag>
-        > > > > > > > > > > > > > > > > > >
+        // Final Layer
+        final_layer
+        > > > > > > > > > > > > > > > > >
     {
     public:
         using factory = pool_factory<sliding_window_decoder>;

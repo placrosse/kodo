@@ -11,8 +11,8 @@
 #include <gtest/gtest.h>
 
 
-#include <kodo/final_coder_factory.hpp>
-#include <kodo/final_coder_factory_pool.hpp>
+#include <kodo/final_layer.hpp>
+#include <kodo/final_layer.hpp>
 #include <kodo/finite_field_info.hpp>
 #include <kodo/coefficient_storage.hpp>
 #include <kodo/coefficient_info.hpp>
@@ -43,9 +43,8 @@ namespace kodo
             coefficient_info<
             storage_block_info<
             finite_field_info<Field,
-            final_coder_factory<
-            coefficient_storage_stack<Field>
-            > > > > >
+            final_layer
+            > > > >
         {
         public:
             /// @todo using different factory, on the other hand it
@@ -61,9 +60,8 @@ namespace kodo
             coefficient_info<
             storage_block_info<
             finite_field_info<Field,
-            final_coder_factory<
-            coefficient_storage_stack_pool<Field>
-            > > > > >
+            final_layer
+            > > > >
         {
         public:
             using factory = pool_factory<coefficient_storage_stack_pool>;

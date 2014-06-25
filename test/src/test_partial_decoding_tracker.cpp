@@ -57,7 +57,7 @@ namespace kodo
                      // Coefficient Storage API
                      // Storage API
                      // Finite Field API
-                     // Factory API
+                     // Final Layer
                      // Final type
                      dummy_layer>
         { };
@@ -105,5 +105,3 @@ TEST(TestPartialDecodingTracker, test_partial_decoding)
     EXPECT_FALSE(stack.is_partial_complete());
 
 }
-
-

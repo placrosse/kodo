@@ -39,11 +39,9 @@ namespace kodo
         finite_field_counter<
         finite_field_math<typename fifi::default_field<Field>::type,
         finite_field_info<Field,
-        // Factory API
-        final_coder_factory_pool<
-        // Final type
-        full_rlnc_encoder_count<Field>
-        > > > > > > > > > > > > > > > > > >
+        // Final Layer
+        final_layer
+        > > > > > > > > > > > > > > > > >
     {
     public:
         using factory = pool_factory<full_rlnc_encoder_count>;
@@ -75,11 +73,9 @@ namespace kodo
         finite_field_counter<
         finite_field_math<typename fifi::default_field<Field>::type,
         finite_field_info<Field,
-        // Factory API
-        final_coder_factory_pool<
-        // Final type
-        full_rlnc_decoder_count<Field>
-        > > > > > > > > > > > > > > > > > >
+        // Final Layer
+        final_layer
+        > > > > > > > > > > > > > > > > >
     {
     public:
         using factory = pool_factory<full_rlnc_decoder_count>;
@@ -112,11 +108,9 @@ namespace kodo
         finite_field_counter<
         finite_field_math<typename fifi::default_field<Field>::type,
         finite_field_info<Field,
-        // Factory API
-        final_coder_factory_pool<
-        // Final type
-        full_delayed_rlnc_decoder_count<Field>
-        > > > > > > > > > > > > > > > > > > >
+        // Final Layer
+        final_layer
+        > > > > > > > > > > > > > > > > > >
     {
     public:
         using factory = pool_factory<full_delayed_rlnc_decoder_count>;

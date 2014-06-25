@@ -12,8 +12,8 @@
 
 #include <fifi/fifi_utils.hpp>
 
-#include <kodo/final_coder_factory.hpp>
-#include <kodo/final_coder_factory_pool.hpp>
+#include <kodo/final_layer.hpp>
+#include <kodo/final_layer.hpp>
 #include <kodo/finite_field_info.hpp>
 #include <kodo/coefficient_info.hpp>
 #include <kodo/storage_block_info.hpp>

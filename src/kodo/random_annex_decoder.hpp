@@ -28,7 +28,7 @@ namespace kodo
         typedef typename DecoderType::factory factory_type;
 
         /// Pointer to a decoder
-        typedef typename DecoderType::pointer internal_pointer_type;
+        typedef typename factory_type::pointer internal_pointer_type;
 
         /// The block partitioning scheme used
         typedef BlockPartitioning block_partitioning;

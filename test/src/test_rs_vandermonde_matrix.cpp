@@ -17,7 +17,7 @@
 #include <kodo/reed_solomon/systematic_vandermonde_matrix.hpp>
 #include <kodo/finite_field_math.hpp>
 #include <kodo/finite_field_info.hpp>
-#include <kodo/final_coder_factory.hpp>
+#include <kodo/final_layer.hpp>
 #include <kodo/basic_factory.hpp>
 
 #include "kodo_unit_test/basic_api_test_helper.hpp"
@@ -56,9 +56,8 @@ namespace kodo
             vandermonde_matrix<
             finite_field_math<typename fifi::default_field<Field>::type,
             finite_field_info<Field,
-            final_coder_factory<
-            vandermonde_stack<Field>
-            > > > >
+            final_layer
+            > > >
         {
         public:
             using factory = basic_factory<vandermonde_stack>;
@@ -69,9 +68,8 @@ namespace kodo
             systematic_vandermonde_matrix<
             finite_field_math<typename fifi::default_field<Field>::type,
             finite_field_info<Field,
-            final_coder_factory<
-            systematic_vandermonde_stack<Field>
-            > > > >
+            final_layer
+            > > >
         {
         public:
             using factory = basic_factory<systematic_vandermonde_stack>;

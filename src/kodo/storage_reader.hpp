@@ -25,8 +25,11 @@ namespace kodo
     {
     public:
 
-        /// Pointer to the encoder used
-        typedef typename EncoderType::pointer pointer;
+        /// The factory type
+        using factory_type = typename EncoderType::factory;
+
+        /// Pointer to the encoders
+        using pointer_type = typename factory_type::pointer;
 
     public:
 
@@ -50,7 +53,7 @@ namespace kodo
         /// @param encoder to be initialized
         /// @param offset in bytes into the storage object
         /// @param size the number of bytes to use
-        void read(pointer &encoder, uint32_t offset, uint32_t size)
+        void read(pointer_type &encoder, uint32_t offset, uint32_t size)
         {
             assert(encoder);
             assert(offset < m_storage.m_size);
@@ -79,5 +82,3 @@ namespace kodo
     };
 
 }
-
-

@@ -11,8 +11,8 @@
 
 #include <kodo/storage_bytes_used.hpp>
 #include <kodo/storage_block_info.hpp>
-#include <kodo/final_coder_factory.hpp>
-#include <kodo/final_coder_factory_pool.hpp>
+#include <kodo/final_layer.hpp>
+#include <kodo/final_layer.hpp>
 #include <kodo/finite_field_info.hpp>
 #include <kodo/partial_shallow_symbol_storage.hpp>
 #include <kodo/deep_symbol_storage.hpp>
@@ -47,9 +47,8 @@ namespace kodo
             storage_bytes_used<
             storage_block_info<
             finite_field_info<Field,
-            final_coder_factory<
-            deep_storage_stack<Field>
-            > > > > >
+            final_layer
+            > > > >
         {
         public:
             using factory = basic_factory<deep_storage_stack>;
@@ -61,9 +60,8 @@ namespace kodo
             storage_bytes_used<
             storage_block_info<
             finite_field_info<Field,
-            final_coder_factory_pool<
-            deep_storage_stack_pool<Field>
-            > > > > >
+            final_layer
+            > > > >
         {
         public:
             using factory = basic_factory<deep_storage_stack_pool>;
@@ -76,9 +74,8 @@ namespace kodo
             storage_bytes_used<
             storage_block_info<
             finite_field_info<Field,
-            final_coder_factory<
-            mutable_shallow_stack<Field>
-            > > > > >
+            final_layer
+            > > > >
         {
         public:
             using factory = basic_factory<mutable_shallow_stack>;
@@ -90,9 +87,8 @@ namespace kodo
             storage_bytes_used<
             storage_block_info<
             finite_field_info<Field,
-            final_coder_factory_pool<
-            mutable_shallow_stack_pool<Field>
-            > > > > >
+            final_layer
+            > > > >
         {
         public:
             using factory = basic_factory<mutable_shallow_stack_pool>;
@@ -105,9 +101,8 @@ namespace kodo
             storage_bytes_used<
             storage_block_info<
             finite_field_info<Field,
-            final_coder_factory<
-            const_shallow_stack<Field>
-            > > > > >
+            final_layer
+            > > > >
         {
         public:
             using factory = basic_factory<const_shallow_stack>;
@@ -119,9 +114,8 @@ namespace kodo
             storage_bytes_used<
             storage_block_info<
             finite_field_info<Field,
-            final_coder_factory_pool<
-            const_shallow_stack_pool<Field>
-            > > > > >
+            final_layer
+            > > > >
         {
         public:
             using factory = basic_factory<const_shallow_stack_pool>;
@@ -134,9 +128,8 @@ namespace kodo
             storage_bytes_used<
             storage_block_info<
             finite_field_info<Field,
-            final_coder_factory<
-            partial_shallow_stack<Field>
-            > > > > >
+            final_layer
+            > > > >
         {
         public:
             using factory = basic_factory<partial_shallow_stack>;
@@ -148,9 +141,8 @@ namespace kodo
             storage_bytes_used<
             storage_block_info<
             finite_field_info<Field,
-            final_coder_factory_pool<
-            partial_shallow_stack_pool<Field>
-            > > > > >
+            final_layer
+            > > > >
         {
         public:
             using factory = basic_factory<partial_shallow_stack_pool>;

@@ -36,11 +36,9 @@ namespace kodo
         deep_storage_layers<TraceTag,
         // Finite Field API
         finite_field_layers<Field,
-        // Factory API
-        final_coder_factory_pool<
-        // Final type
-        full_delayed_rlnc_decoder<Field, TraceTag>
-        > > > > > > > > > > > > > > >
+        // Final Layer
+        final_layer
+        > > > > > > > > > > > > > >
     {
     public:
         using factory = pool_factory<full_delayed_rlnc_decoder>;
@@ -68,11 +66,9 @@ namespace kodo
         deep_storage_layers<TraceTag,
         // Finite Field API
         finite_field_layers<Field,
-        // Factory API
-        final_coder_factory_pool<
-        // Final type
-        full_rlnc_decoder_unsystematic<Field, TraceTag>
-        > > > > > > > > > > > > > >
+        // Final Layer
+        final_layer
+        > > > > > > > > > > > > >
     {
     public:
         using factory = pool_factory<full_rlnc_decoder_unsystematic>;
@@ -100,11 +96,9 @@ namespace kodo
         deep_storage_layers<TraceTag,
         // Finite Field API
         finite_field_layers<Field,
-        // Factory API
-        final_coder_factory_pool<
-        // Final type
-        full_rlnc_encoder_unsystematic<Field, TraceTag>
-        > > > > > > > > > > > > >
+        // Final Layer
+        final_layer
+        > > > > > > > > > > > >
     {
     public:
         using factory = pool_factory<full_rlnc_encoder_unsystematic>;
@@ -136,14 +130,11 @@ namespace kodo
         deep_storage_layers<TraceTag,
         // Finite Field API
         finite_field_layers<Field,
-        // Factory API
-        final_coder_factory_pool<
-        // Final type
-        sparse_full_rlnc_encoder<Field, TraceTag>
-        > > > > > > > > > > > > > >
+        // Final Layer
+        final_layer
+        > > > > > > > > > > > > >
     {
     public:
         using factory = pool_factory<sparse_full_rlnc_encoder>;
     };
-
 }

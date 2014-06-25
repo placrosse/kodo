@@ -30,9 +30,8 @@ namespace kodo
                    fake_symbol_storage<
                    storage_block_info<
                    finite_field_info<Field,
-                   final_coder_factory<
-                   uniform_generator_stack<Field>
-                   > > > > > > > >
+                   final_layer
+                   > > > > > > >
         {
         public:
             using factory = basic_factory<uniform_generator_stack>;
@@ -47,9 +46,8 @@ namespace kodo
                    fake_symbol_storage<
                    storage_block_info<
                    finite_field_info<Field,
-                   final_coder_factory_pool<
-                   uniform_generator_stack_pool<Field>
-                   > > > > > > > >
+                   final_layer
+                   > > > > > > >
         {
         public:
             using factory = basic_factory<uniform_generator_stack_pool>;
