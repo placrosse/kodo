@@ -17,7 +17,8 @@
 namespace kodo
 {
 
-    /// @todo think of a nicer way to do this :)
+    /// @todo think of a nicer way to do this :) Would be nice if we
+    ///       wouldn't need to define a new wrap class to do this.
     namespace detail
     {
         template<class DecoderType, class BlockPartitioning>

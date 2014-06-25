@@ -15,7 +15,6 @@
 
 namespace kodo
 {
-    /// @todo add unit test
     /// @ingroup factory_layers
     ///
     /// @brief The pool factory uses a memory pool to recycle
@@ -36,16 +35,16 @@ namespace kodo
         /// @copydoc layer::factory::factory(uint32_t,uint32_t)
         pool_factory(uint32_t max_symbols, uint32_t max_symbol_size) :
             Codec::factory_base(max_symbols, max_symbol_size),
-            m_pool(std::bind(&pool_factory::make_coder, this))
+            m_pool(std::bind(&pool_factory::make_codec, this))
         { }
 
         /// @copydoc layer::factory::build()
         pointer build()
         {
-            pointer coder = m_pool.allocate();
-            coder->initialize(*this);
+            pointer codec = m_pool.allocate();
+            codec->initialize(*this);
 
-            return coder;
+            return codec;
         }
 
         /// @return A reference to the internal resource pool
@@ -77,23 +76,21 @@ namespace kodo
     private:
 
         /// Factory function used by the resource pool to
-        /// build new coders if needed.
-        /// @param max_symbols The maximum symbols that are supported
-        /// @param max_symbol_size The maximum size of a symbol in
-        ///        bytes
-        static pointer make_coder(pool_factory *factory)
+        /// build new codecs if needed.
+        /// @param factory Pointer to the factory object
+        static pointer make_codec(pool_factory *factory)
         {
             assert(factory);
 
-            pointer coder = boost::make_shared<Codec>();
-            coder->construct(*factory);
+            pointer codec = boost::make_shared<Codec>();
+            codec->construct(*factory);
 
-            return coder;
+            return codec;
         }
 
     private:
 
-        /// Resource pool for the coders
+        /// Resource pool for the codecs
         sak::resource_pool<Codec> m_pool;
 
     };

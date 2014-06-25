@@ -8,14 +8,12 @@
 
 #include <fifi/is_binary.hpp>
 #include <kodo/basic_factory.hpp>
+#include <kodo/pool_factory.hpp>
 
 #include "kodo_unit_test/coefficient_generator_helper.hpp"
 
 namespace kodo
 {
-    /// @todo Do we need both stacks here one is pool and the other is
-    /// not. So probably with the new factories we don't need it.
-
     // Put dummy layers and tests classes in an anonymous namespace
     // to avoid violations of ODF (one-definition-rule) in other
     // translation units
@@ -38,18 +36,18 @@ namespace kodo
         };
 
         template<class Field>
-        class sparse_uniform_generator_stack_pool :
-            public sparse_uniform_generator<
-                   fake_codec_layer<
-                   coefficient_info<
-                   fake_symbol_storage<
-                   storage_block_info<
-                   finite_field_info<Field,
-                   final_layer
-                   > > > > > >
+        class sparse_uniform_generator_stack_pool : public
+            sparse_uniform_generator<
+            fake_codec_layer<
+            coefficient_info<
+            fake_symbol_storage<
+            storage_block_info<
+            finite_field_info<Field,
+            final_layer
+            > > > > > >
         {
         public:
-            using factory = basic_factory<sparse_uniform_generator_stack_pool>;
+            using factory = pool_factory<sparse_uniform_generator_stack_pool>;
         };
 
     }
