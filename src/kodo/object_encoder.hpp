@@ -22,7 +22,6 @@ namespace kodo
     /// uses its dependencies to wrap an build encoders for arbitrary
     /// objects.
     ///
-    /// <pre>
     /// +---------------+     +---------------+     +---------------+
     /// | partitioning  |     |encoder factory|     |  object data  |
     /// |---------------|     |---------------|     |---------------|
@@ -46,7 +45,6 @@ namespace kodo
     ///                       | encoders for  |
     ///                       | an object     |
     ///                       +---------------+
-    /// </pre>
     ///
     /// @tparam ObjectData object_data
     /// @tparam EncoderType An encoder stack which should be used

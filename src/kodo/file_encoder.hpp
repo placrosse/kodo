@@ -11,6 +11,13 @@
 
 namespace kodo
 {
+    namespace detail
+    {
+        template<class EncoderType, class BlockPartitioning>
+        using file_encoder_base =
+            object_encoder<
+            file_reader<EncoderType>,EncoderType,BlockPartitioning>;
+    }
 
     /// @brief A file encoder creates a number of encoders
     ///        over the data of a file.
@@ -23,12 +30,12 @@ namespace kodo
         class BlockPartitioning = rfc5052_partitioning_scheme
     >
     class file_encoder : public
-            object_encoder
-            <
-                file_reader<EncoderType>,
-                EncoderType,
-                BlockPartitioning
-            >
+        object_encoder
+        <
+            file_reader<EncoderType>,
+            EncoderType,
+            BlockPartitioning
+        >
     {
     public:
 
@@ -54,6 +61,3 @@ namespace kodo
             { }
     };
 }
-
-
-
