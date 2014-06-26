@@ -9,6 +9,14 @@ Latest
 * Minor: Update to waf 1.8.0-pre1
 * Minor: Made python files comply with pep8
 * Major: Removed unused file ``test/src/kodo_unit_test/test_reuse.hpp``.
+* Major: Restructured the design and use of factories. The factories
+  are no longer defined as the last layer in a stack. The main
+  motivation for this change was that it allows extension of existing
+  stacks but also that it simplifies the structure of the stacks. The
+  ability to extend a stack is convenient when applications need to
+  add/embed additional state into an encoder or decoder. Using the
+  previous design this could only be done by re-defining the stack
+  and all its layers.
 
 17.0.0
 ------
