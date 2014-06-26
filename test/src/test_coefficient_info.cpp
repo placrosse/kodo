@@ -17,7 +17,6 @@
 
 namespace kodo
 {
-
     // Put dummy layers and tests classes in an anonymous namespace
     // to avoid violations of ODF (one-definition-rule) in other
     // translation units
