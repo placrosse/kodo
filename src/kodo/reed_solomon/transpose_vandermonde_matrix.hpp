@@ -27,13 +27,13 @@ namespace kodo
 
         /// The factory layer associated with this coder. Maintains
         /// the block generator needed for the encoding vectors.
-        class factory : public SuperCoder::factory
+        class factory_base : public SuperCoder::factory_base
         {
         public:
 
-            /// @copydoc layer::factory::factory(uint32_t, uint32_t)
-            factory(uint32_t max_symbols, uint32_t max_symbol_size)
-                : SuperCoder::factory(max_symbols, max_symbol_size)
+            /// @copydoc layer::factory_base::factory_base(uint32_t, uint32_t)
+            factory_base(uint32_t max_symbols, uint32_t max_symbol_size)
+                : SuperCoder::factory_base(max_symbols, max_symbol_size)
             { }
 
             /// Transposes the constructed Vandermonde matrix
@@ -43,16 +43,15 @@ namespace kodo
                 uint32_t symbols)
             {
                 auto matrix =
-                    SuperCoder::factory::construct_matrix(symbols);
+                    SuperCoder::factory_base::construct_matrix(symbols);
+
+                assert(matrix);
 
                 return boost::make_shared<generator_matrix>(
                     matrix->transpose());
-
             }
 
         };
 
     };
 }
-
-

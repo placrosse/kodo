@@ -1,3 +1,7 @@
+// Copyright Steinwurf ApS 2011-2013.
+// Distributed under the "STEINWURF RESEARCH LICENSE 1.0".
+// See accompanying file LICENSE.rst or
+// http://www.steinwurf.com/licensing
 
 /// @brief Doxygen dummy class specifying the API available at different
 ///        layers
@@ -26,35 +30,30 @@ public:
     /// Specifies the data type used to store the rank
     typedef rank_type rank_type;
 
-    class factory
+    class factory_base
     {
     public:
 
         //------------------------------------------------------------------
-        // FACTORY API
+        // FACTORY_BASE API
         //------------------------------------------------------------------
 
-        /// @ingroup factory_api
-        /// @brief Factory constructor
+        /// @ingroup factory_base_api
+        /// @brief Factory base constructor
         /// @param max_symbols the maximum symbols coders can expect
         /// @param max_symbol_size the maximum size of a symbol in bytes
         factory(uint32_t max_symbols, uint32_t max_symbol_size);
 
-        /// @ingroup factory_api
-        /// @brief Builds the actual coder
-        /// @return pointer to an instantiation of an encoder or decoder
-        pointer build()
-
         //------------------------------------------------------------------
         // Functions belonging to other APIs but placed required in the
-        // factory in order to correctly build the different layers.
+        // factory base in order to correctly build the different layers.
         //------------------------------------------------------------------
 
-        /// @ingroup factory_api
+        /// @ingroup factory_base_api
         /// @return the maximum number of symbols in a block
         uint32_t max_symbols() const;
 
-        /// @ingroup factory_api
+        /// @ingroup factory_base_api
         /// @return the maximum symbol size in bytes
         uint32_t max_symbol_size() const;
 
@@ -118,12 +117,12 @@ public:
         /// @return the maximum required feedback buffer size in bytes
         uint32_t max_feedback_size() const;
 
-        /// @ingroup factory_api
+        /// @ingroup factory_base_api
         /// Sets the number of symbols
         /// @param symbols the number of symbols
         void set_symbols(uint32_t symbols);
 
-        /// @ingroup factory_api
+        /// @ingroup factory_base_api
         /// Sets the symbol size
         /// @param symbol_size the symbol size
         void set_symbol_size(uint32_t symbol_size);
@@ -133,7 +132,7 @@ public:
     // CONSTRUCTION API
     //------------------------------------------------------------------
 
-    /// @ingroup factory_api
+    /// @ingroup construction_api
     /// @brief Constructs the coder with the maximum parameters it will ever
     ///        see. A coder may only be constructed ONCE, but initialized
     ///        many times.
@@ -142,7 +141,7 @@ public:
     template<class Factory>
     void construct(Factory &the_factory);
 
-    /// @ingroup factory_api
+    /// @ingroup construction_api
     /// @brief Initializes the coder
     /// @param the_factory The factory used to build the codec layer. Provides
     ///        access to cached data and factory functions.
@@ -174,7 +173,7 @@ public:
     ///        some layer specific data.
     ///
     /// @note If you implement this function you most likely also have
-    ///       to implement the layer::factory::max_header_size() function.
+    ///       to implement the layer::factory_base::max_header_size() function.
     ///
     /// @return The size in bytes required for the symbol header buffer.
     uint32_t header_size() const;
@@ -221,7 +220,7 @@ public:
     /// @brief Can be reimplemented by a Symbol ID layer
     ///
     /// @note If you implement this function you most likely also have
-    ///       to implement the layer::factory::max_id_size() function.
+    ///       to implement the layer::factory_base::max_id_size() function.
     ///
     /// @return the size in bytes required for the symbol id buffer.
     uint32_t id_size();
@@ -404,7 +403,7 @@ public:
     /// @ingroup coefficient_storage_api
     ///
     /// @note If you implement this function you most likely also have
-    ///       to implement the layer::factory::max_coefficient_vectors()
+    ///       to implement the layer::factory_base::max_coefficient_vectors()
     ///       function.
     ///
     /// @return The number of coefficient vectors stored. When accessing the
@@ -415,7 +414,7 @@ public:
     /// @ingroup coefficient_storage_api
     ///
     /// @note If you implement this function you most likely also have
-    ///       to implement the layer::factory::max_coefficient_vector_size()
+    ///       to implement the layer::factory_base::max_coefficient_vector_size()
     ///       function.
     ///
     /// @return The number of bytes needed to store the symbol coefficients.
@@ -769,7 +768,7 @@ public:
     /// @ingroup payload_codec_api
     ///
     /// @note If you implement this function you most likely also have
-    ///       to implement the layer::factory::max_header_size() function.
+    ///       to implement the layer::factory_base::max_header_size() function.
     ///
     /// @return the required payload buffer size in bytes
     uint32_t payload_size() const;
@@ -792,7 +791,7 @@ public:
     /// @ingroup feedback_api
     ///
     /// @note If you implement this function you most likely also have
-    ///       to implement the layer::factory::max_feedback_size() function.
+    ///       to implement the layer::factory_base::max_feedback_size() function.
     ///
     /// @return the required feedback buffer size in bytes
     uint32_t feedback_size() const;

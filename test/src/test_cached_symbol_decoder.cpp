@@ -12,7 +12,7 @@
 #include <kodo/empty_decoder.hpp>
 #include <kodo/storage_block_info.hpp>
 #include <kodo/finite_field_info.hpp>
-#include <kodo/final_coder_factory.hpp>
+#include <kodo/final_layer.hpp>
 #include <kodo/coefficient_info.hpp>
 
 namespace kodo
@@ -22,20 +22,20 @@ namespace kodo
     // translation units
     namespace
     {
-
         /// Test stack for the cache_decode_symbol
         template<class Field>
-        class cache_decode_symbol_stack :
-            public cache_decode_symbol<
-                   empty_decoder<
-                   coefficient_info<
-                   storage_block_info<
-                   finite_field_info<Field,
-                   final_coder_factory<
-                   cache_decode_symbol_stack<Field>
-                       > > > > > >
-        { };
-
+        class cache_decode_symbol_stack : public
+            cache_decode_symbol<
+            empty_decoder<
+            coefficient_info<
+            storage_block_info<
+            finite_field_info<Field,
+            final_layer
+            > > > > >
+        {
+        public:
+            using factory = pool_factory<cache_decode_symbol_stack<Field>>;
+        };
     }
 }
 

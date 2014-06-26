@@ -6,7 +6,7 @@
 #pragma once
 
 #include "../payload_decoder.hpp"
-#include "../final_coder_factory_pool.hpp"
+#include "../final_layer.hpp"
 #include "../finite_field_info.hpp"
 #include "../deep_storage_layers.hpp"
 #include "../disable_trace.hpp"
@@ -37,10 +37,11 @@ namespace kodo
         deep_storage_layers<TraceTag,
         // Finite Field API
         finite_field_info<fifi::binary,
-        // Factory API
-        final_coder_factory_pool<
-        // Final type
-        nocode_carousel_decoder<TraceTag>
-        > > > > > >
-    { };
+        // Final Layer
+        final_layer
+        > > > > >
+    {
+    public:
+        using factory = pool_factory<nocode_carousel_decoder>;
+    };
 }

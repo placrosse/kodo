@@ -11,6 +11,7 @@
 #include <gtest/gtest.h>
 
 #include <kodo/feedback_pivot_status.hpp>
+#include <kodo/basic_factory.hpp>
 
 namespace kodo
 {
@@ -25,12 +26,11 @@ namespace kodo
         {
         public:
 
-            class factory
+            class factory_base
             {
             public:
 
-                /// @copydoc layer::factory::factory(uint32_t,uint32_t)
-                factory(uint32_t max_symbols, uint32_t max_symbol_size)
+                factory_base(uint32_t max_symbols, uint32_t max_symbol_size)
                 {
                     (void) max_symbols;
                     (void) max_symbol_size;
@@ -69,10 +69,11 @@ namespace kodo
         };
 
         // Instantiate a stack containing the pivot_status_bitset
-        class dummy_stack
-            : public feedback_pivot_status<
-                     dummy_layer>
-          { };
+        class dummy_stack : public feedback_pivot_status<dummy_layer>
+        {
+        public:
+            using factory = basic_factory<dummy_stack>;
+        };
 
     }
 }
@@ -92,6 +93,3 @@ TEST(TestFeedbackPivotStatus, api)
 
     EXPECT_EQ(stack.feedback_size(), 20U);
 }
-
-
-

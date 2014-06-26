@@ -11,6 +11,7 @@
 
 #include <kodo/rlnc/full_rlnc_codes.hpp>
 #include <kodo/proxy_layer.hpp>
+#include <kodo/basic_factory.hpp>
 
 #include "kodo_unit_test/basic_api_test_helper.hpp"
 
@@ -39,7 +40,10 @@ namespace
             public dummy_layer<
                    kodo::proxy_layer<
                    proxy_test<Coder>, Coder > >
-        { };
+        {
+        public:
+            using factory = kodo::basic_factory<proxy_test>;
+        };
 
 
         /// Tests:

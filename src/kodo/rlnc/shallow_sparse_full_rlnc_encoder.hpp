@@ -45,10 +45,11 @@ namespace kodo
         partial_shallow_storage_layers<TraceTag,
         // Finite Field API
         finite_field_layers<Field,
-        // Factory API
-        final_coder_factory_pool<
-        // Final type
-        shallow_sparse_full_rlnc_encoder<Field, TraceTag>
-        > > > > > > > > > > > > > >
-    { };
+        // Final Layer
+        final_layer
+        > > > > > > > > > > > > >
+    {
+    public:
+        using factory = pool_factory<shallow_sparse_full_rlnc_encoder>;
+    };
 }

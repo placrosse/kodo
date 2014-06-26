@@ -35,7 +35,7 @@ namespace kodo
         typedef typename EncoderType::factory factory_type;
 
         /// Pointer to an encoder
-        typedef typename EncoderType::pointer pointer_type;
+        typedef typename factory_type::pointer pointer_type;
 
         /// The block partitioning scheme used
         typedef BlockPartitioning block_partitioning;
@@ -251,4 +251,3 @@ namespace kodo
 }
 
 #endif
-

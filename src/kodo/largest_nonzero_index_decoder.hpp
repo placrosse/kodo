@@ -77,8 +77,8 @@ namespace kodo
         /// @copydoc layer::value_type
         typedef typename SuperCoder::rank_type rank_type;
 
-        /// @copydoc layer::factory
-        typedef typename SuperCoder::factory factory;
+        /// @copydoc layer::factory_base
+        typedef typename SuperCoder::factory_base factory_base;
 
     public:
 
@@ -196,4 +196,3 @@ namespace kodo
     };
 
 }
-

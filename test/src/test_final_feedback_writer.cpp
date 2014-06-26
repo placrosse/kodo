@@ -3,14 +3,15 @@
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
 
-/// @file test_final_feedback_writer.cpp Unit tests for the final_feedback_writer
-///       layer.
+/// @file test_final_feedback_writer.cpp Unit tests for the
+///       final_feedback_writer layer.
 
 #include <cstdint>
 
 #include <gtest/gtest.h>
 
 #include <kodo/final_feedback_writer.hpp>
+#include <kodo/basic_factory.hpp>
 
 namespace kodo
 {
@@ -24,12 +25,11 @@ namespace kodo
         struct dummy_layer
         {
 
-            class factory
+            class factory_base
             {
             public:
 
-                /// @copydoc layer::factory::factory(uint32_t,uint32_t)
-                factory(uint32_t max_symbols, uint32_t max_symbol_size)
+                factory_base(uint32_t max_symbols, uint32_t max_symbol_size)
                 {
                     (void) max_symbols;
                     (void) max_symbol_size;
@@ -43,7 +43,10 @@ namespace kodo
         class dummy_stack
             : public final_feedback_writer<
                      dummy_layer>
-          { };
+        {
+        public:
+            using factory = basic_factory<dummy_stack>;
+        };
 
 
     }
@@ -61,6 +64,3 @@ TEST(TestFinalFeedbackWriter, api)
     EXPECT_EQ(stack.write_feedback(&ptr), 0U);
 
 }
-
-
-

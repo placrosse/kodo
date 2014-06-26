@@ -11,8 +11,8 @@
 
 #include <fifi/default_field.hpp>
 
-#include <kodo/final_coder_factory.hpp>
-#include <kodo/final_coder_factory_pool.hpp>
+#include <kodo/final_layer.hpp>
+#include <kodo/final_layer.hpp>
 #include <kodo/plain_symbol_id_reader.hpp>
 #include <kodo/plain_symbol_id_writer.hpp>
 #include <kodo/uniform_generator.hpp>
@@ -25,6 +25,7 @@
 #include <kodo/reed_solomon/reed_solomon_symbol_id_writer.hpp>
 #include <kodo/reed_solomon/reed_solomon_symbol_id_reader.hpp>
 #include <kodo/reed_solomon/vandermonde_matrix.hpp>
+#include <kodo/basic_factory.hpp>
 
 #include "kodo_unit_test/basic_api_test_helper.hpp"
 
@@ -49,39 +50,43 @@ namespace kodo
 
 
         template<class Field>
-        class plain_uniform_stack
-            : public plain_symbol_id_reader<
-                     plain_symbol_id_writer<
-                     uniform_generator<
-                     coefficient_info<
-                     dummy_layer<
-                     storage_block_info<
-                     finite_field_info<Field,
-                     final_coder_factory<
-                     plain_uniform_stack<Field>
-                         > > > > > > > >
-        { };
+        class plain_uniform_stack : public
+            plain_symbol_id_reader<
+            plain_symbol_id_writer<
+            uniform_generator<
+            coefficient_info<
+            dummy_layer<
+            storage_block_info<
+            finite_field_info<Field,
+            final_layer
+            > > > > > > >
+        {
+        public:
+            using factory = basic_factory<plain_uniform_stack>;
+        };
 
         template<class Field>
-        class rs_vandermond_nonsystematic_stack
-            : public reed_solomon_symbol_id_reader<
-                     reed_solomon_symbol_id_writer<
-                     vandermonde_matrix<
-                     coefficient_info<
-                     dummy_layer<
-                     storage_block_info<
-                     encode_symbol_tracker<
-                     finite_field_math<typename fifi::default_field<Field>::type,
-                     finite_field_info<Field,
-                     final_coder_factory<
-                     rs_vandermond_nonsystematic_stack<Field>
-                         > > > > > > > > > >
-        { };
+        class rs_vandermond_nonsystematic_stack : public
+            reed_solomon_symbol_id_reader<
+            reed_solomon_symbol_id_writer<
+            vandermonde_matrix<
+            coefficient_info<
+            dummy_layer<
+            storage_block_info<
+            encode_symbol_tracker<
+            finite_field_math<typename fifi::default_field<Field>::type,
+            finite_field_info<Field,
+            final_layer
+            > > > > > > > > >
+        {
+        public:
+            using factory = basic_factory<rs_vandermond_nonsystematic_stack>;
+        };
     }
 }
 
 /// Tests:
-///   - layer::factory::max_id_size() const
+///   - layer::factory_base::max_id_size() const
 ///   - layer::read_id(uint8_t*,uint8_t**)
 ///   - layer::write_id(uint8_t*,uint8_t**)
 ///   - layer::id_size()
@@ -90,7 +95,6 @@ struct api_symbol_id
 {
 
     typedef typename Coder::factory factory_type;
-    typedef typename Coder::pointer pointer_type;
     typedef typename Coder::field_type field_type;
     typedef typename Coder::value_type value_type;
 
@@ -123,7 +127,7 @@ struct api_symbol_id
             m_factory.set_symbols(symbols);
             m_factory.set_symbol_size(symbol_size);
 
-            pointer_type coder = m_factory.build();
+            auto coder = m_factory.build();
 
             EXPECT_TRUE(m_factory.max_id_size() > 0);
             EXPECT_TRUE(coder->id_size() > 0);

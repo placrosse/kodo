@@ -32,18 +32,18 @@ namespace kodo
 
         /// The factory layer associated with this coder. Maintains
         /// the block generator needed for the encoding vectors.
-        class factory : public SuperCoder::factory
+        class factory_base : public SuperCoder::factory_base
         {
         protected:
 
             /// Access to the finite field implementation used stored in
             /// the finite_field_math layer
-            using SuperCoder::factory::m_field;
+            using SuperCoder::factory_base::m_field;
 
         public:
 
-            /// @copydoc layer::factory::factory(uint32_t, uint32_t)
-            factory(uint32_t max_symbols, uint32_t max_symbol_size);
+            /// @copydoc layer::factory_base::factory_base(uint32_t, uint32_t)
+            factory_base(uint32_t max_symbols, uint32_t max_symbol_size);
 
             /// Constructs systematic Vandermonde matrix.
             /// @param symbols The number of source symbols to encode
@@ -56,9 +56,9 @@ namespace kodo
     };
 
     template<class SuperCoder>
-    systematic_vandermonde_matrix_base<SuperCoder>::factory::factory(
+    systematic_vandermonde_matrix_base<SuperCoder>::factory_base::factory_base(
         uint32_t max_symbols, uint32_t max_symbol_size)
-        : SuperCoder::factory(max_symbols, max_symbol_size)
+        : SuperCoder::factory_base(max_symbols, max_symbol_size)
     {
         // A Reed-Solomon code cannot support more symbols
         // than 2^m - 1 where m is the size of the finite
@@ -68,14 +68,15 @@ namespace kodo
 
     template<class SuperCoder>
     inline auto
-    systematic_vandermonde_matrix_base<SuperCoder>::factory::construct_matrix(
+    systematic_vandermonde_matrix_base<SuperCoder>::factory_base::construct_matrix(
         uint32_t symbols) -> boost::shared_ptr<generator_matrix>
     {
         assert(symbols > 0);
         assert(m_field);
 
         boost::shared_ptr<generator_matrix> m =
-            SuperCoder::factory::construct_matrix(symbols);
+            SuperCoder::factory_base::construct_matrix(symbols);
+        assert(m);
 
         std::vector<value_type> temp_row(m->row_length());
 
@@ -104,5 +105,3 @@ namespace kodo
     }
 
 }
-
-

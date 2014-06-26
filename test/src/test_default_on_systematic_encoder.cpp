@@ -11,26 +11,24 @@
 
 #include <kodo/default_on_systematic_encoder.hpp>
 #include <kodo/default_off_systematic_encoder.hpp>
+#include <kodo/basic_factory.hpp>
 
 namespace kodo
 {
-
     // Put dummy layers and tests classes in an anonymous namespace
     // to avoid violations of ODF (one-definition-rule) in other
     // translation units
     namespace
     {
-
         // Small helper struct which provides the API needed by the
         // default_on_systematic_encoder layer.
         struct dummy_layer
         {
         public:
 
-            struct factory
+            struct factory_base
             {
-                /// @copydoc layer::factory::factory(uint32_t,uint32_t)
-                factory(uint32_t max_symbols, uint32_t max_symbol_size)
+                factory_base(uint32_t max_symbols, uint32_t max_symbol_size)
                     : m_max_symbols(max_symbols),
                       m_max_symbol_size(max_symbol_size)
                 { }
@@ -141,12 +139,18 @@ namespace kodo
         // Instantiate a stack containing the default_on_systematic_encoder
         class default_on_stack
             : public default_on_systematic_encoder<dummy_layer>
-        { };
+        {
+        public:
+            using factory = basic_factory<default_on_stack>;
+        };
 
         // Instantiate a stack containing the default_on_systematic_encoder
         class default_off_stack
             : public default_off_systematic_encoder<dummy_layer>
-        { };
+        {
+        public:
+            using factory = basic_factory<default_off_stack>;
+        };
 
     }
 
@@ -242,4 +246,3 @@ TEST(TestDefaultOffSystematicEncoder, api)
 {
     test<false, kodo::default_off_stack>();
 }
-
