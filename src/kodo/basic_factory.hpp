@@ -13,11 +13,81 @@
 
 namespace kodo
 {
-    /// @ingroup factory
+    /// @ingroup factory_types
     ///
     /// @brief The basic factory implementation where a new heap
     ///        allocated codec is create every time the build()
     ///        function is invoked.
+    ///
+    /// The factory objects inherit from the factory_base type defined
+    /// within the Codec. The purpose of this curiously looking
+    /// approach is to all a Codec to "extend" the factory object with
+    /// methods/state needed by the codec during construction and
+    /// initialization.
+    ///
+    /// A small toy example:
+    ///
+    ///     class final
+    ///     {
+    ///     public:
+    ///
+    ///         class factory_base
+    ///         { };
+    ///     };
+    ///
+    ///     template<class SuperCoder>
+    ///     class brewing_layer : public SuperCoder
+    ///     {
+    ///     public:
+    ///
+    ///         class factory_base : public SuperCoder::factory_base
+    ///         {
+    ///         public:
+    ///
+    ///             void set_number_of_cups(uint32_t cups)
+    ///             { m_cups = cups; }
+    ///
+    ///             uint32_t number_of_cups() const
+    ///             { return m_cups; }
+    ///
+    ///         private:
+    ///             uint32_t m_cups;
+    ///         };
+    ///
+    ///      public:
+    ///
+    ///          template<class Factory>
+    ///          void initialize(Factory& the_factory)
+    ///          {
+    ///              m_cups = the_factory.number_of_cups();
+    ///          }
+    ///
+    ///          uint32_t number_of_cups() const
+    ///          { return m_cups; }
+    ///
+    ///       private:
+    ///
+    ///          uint32_t m_cups;
+    ///     };
+    ///
+    ///     class brewer : public brewing_layer<final>
+    ///     {
+    ///     public:
+    ///         using factory = basic_factory<brewer>;
+    ///     };
+    ///
+    /// Usage:
+    ///
+    ///     brewer::factory factory;
+    ///     factory.set_number_of_cups(3);
+    ///
+    ///     auto stack = factory.build();
+    ///
+    /// Notice how the factory functions needed by the brewing_layer
+    /// are specified by extending factory_base in that layer. Once
+    /// the basic_factory is specified it will use the factory_base to
+    /// "adapt" it's functionality to support whatever is needed by
+    /// the specific layers.
     template<class Codec>
     class basic_factory : public Codec::factory_base
     {

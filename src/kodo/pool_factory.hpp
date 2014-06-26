@@ -15,13 +15,16 @@
 
 namespace kodo
 {
-    /// @ingroup factory
+    /// @ingroup factory_types
     ///
     /// @brief The pool factory uses a memory pool to recycle
     ///         encoders/decoders, and thereby minimize memory
     ///         consumption. The current memory pool is not
     ///         thread-safe and therefore should not be used in
     ///         multi-threaded environments.
+    ///
+    /// For further descriptions of the factory pattern use in Kodo
+    /// can be found in basic_factory.hpp
     template<class Codec>
     class pool_factory : public Codec::factory_base
     {
@@ -92,6 +95,5 @@ namespace kodo
 
         /// Resource pool for the codecs
         sak::resource_pool<Codec> m_pool;
-
     };
 }

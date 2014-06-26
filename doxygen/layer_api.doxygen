@@ -132,7 +132,7 @@ public:
     // CONSTRUCTION API
     //------------------------------------------------------------------
 
-    /// @ingroup factory_base_api
+    /// @ingroup construction_api
     /// @brief Constructs the coder with the maximum parameters it will ever
     ///        see. A coder may only be constructed ONCE, but initialized
     ///        many times.
@@ -141,7 +141,7 @@ public:
     template<class Factory>
     void construct(Factory &the_factory);
 
-    /// @ingroup factory_base_api
+    /// @ingroup construction_api
     /// @brief Initializes the coder
     /// @param the_factory The factory used to build the codec layer. Provides
     ///        access to cached data and factory functions.

@@ -8,9 +8,15 @@ class factory
 {
 public:
 
+    /// @typedef pointer
+    /// Type of the pointer returned by the factory objects
+    typedef pointer pointer;
+
     /// @copydoc layer::factory_base::factory_base(uint32_t,uint32_t)
     factory(uint32_t max_symbols, uint32_t max_symbol_size);
 
+    /// @todo This does not show up in the doxygen documentation if you go to
+    ///       Factory and click API then the page is empty
     /// @ingroup factory_api
     /// @brief Builds the actual coder
     /// @return pointer to an instantiation of an encoder or decoder

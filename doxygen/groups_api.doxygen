@@ -97,6 +97,18 @@
 /// @brief Implementations of the coefficient generator API.
 
 //------------------------------------------------------------------
+// CONSTRUCTION API
+//------------------------------------------------------------------
+
+/// @defgroup construction Construction
+/// @ingroup api_layer
+/// @brief Implements API using during construction of a codec.
+
+/// @defgroup construction_api API
+/// @ingroup construction
+/// @brief The construction API
+
+//------------------------------------------------------------------
 // SYMBOL ID API
 //------------------------------------------------------------------
 

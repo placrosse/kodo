@@ -31,7 +31,8 @@ namespace kodo
             {
             public:
 
-                /// @copydoc layer::factory_base::factory(uint32_t,utin32_t)
+                /// @copydoc layer::factory_base::factory_base(
+                ///              uint32_t,utin32_t)
                 factory_base(uint32_t max_symbols, uint32_t max_symbol_size) :
                     DecoderType::factory_base(max_symbols, max_symbol_size)
                 { }
