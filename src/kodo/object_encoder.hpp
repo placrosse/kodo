@@ -14,7 +14,6 @@
 
 namespace kodo
 {
-
     /// @brief The object encoder, allows encoding of objects too
     ///        large for a single block encoder.
     ///

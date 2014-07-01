@@ -25,7 +25,7 @@ namespace kodo
     template
     <
         class DecoderType,
-        class BlockPartitioning = rfc5052_partitioning_scheme
+        class BlockPartitioning
     >
     class object_decoder : boost::noncopyable
     {

@@ -3,11 +3,12 @@
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
 
-#include <kodo/file_encoder.hpp>
 #include <kodo/shallow_storage_decoder.hpp>
 #include <kodo/storage_encoder.hpp>
 #include <kodo/rlnc/full_rlnc_codes.hpp>
 #include <kodo/partial_shallow_symbol_storage.hpp>
+
+/// @todo re-enable this example
 
 /// @example encode_decode_storage.cpp
 ///
@@ -22,70 +23,70 @@
 
 int main()
 {
-    // Set the number of symbols (i.e. the generation size in RLNC
-    // terminology) and the size of a symbol in bytes
-    uint32_t max_symbols = 42;
-    uint32_t max_symbol_size = 64;
-    uint32_t object_size = 23456;
+//     // Set the number of symbols (i.e. the generation size in RLNC
+//     // terminology) and the size of a symbol in bytes
+//     uint32_t max_symbols = 42;
+//     uint32_t max_symbol_size = 64;
+//     uint32_t object_size = 23456;
 
-    typedef kodo::storage_encoder<
-        kodo::shallow_full_rlnc_encoder<fifi::binary> >
-           storage_encoder;
+//     typedef kodo::storage_encoder<
+//         kodo::shallow_full_rlnc_encoder<fifi::binary> >
+//            storage_encoder;
 
-    typedef kodo::shallow_storage_decoder<
-        kodo::shallow_full_rlnc_decoder<fifi::binary> >
-           storage_decoder;
+//     typedef kodo::shallow_storage_decoder<
+//         kodo::shallow_full_rlnc_decoder<fifi::binary> >
+//            storage_decoder;
 
-    storage_encoder::factory encoder_factory(max_symbols, max_symbol_size);
-    storage_decoder::factory decoder_factory(max_symbols, max_symbol_size);
+//     storage_encoder::factory encoder_factory(max_symbols, max_symbol_size);
+//     storage_decoder::factory decoder_factory(max_symbols, max_symbol_size);
 
-    // The storage needed for all decoders
-    uint32_t total_block_size =
-        decoder_factory.total_block_size(object_size);
+//     // The storage needed for all decoders
+//     uint32_t total_block_size =
+//         decoder_factory.total_block_size(object_size);
 
-    std::vector<uint8_t> data_out(total_block_size, '\0');
-    std::vector<uint8_t> data_in(object_size, 'x');
+//     std::vector<uint8_t> data_out(total_block_size, '\0');
+//     std::vector<uint8_t> data_in(object_size, 'x');
 
-    storage_encoder encoder(
-        encoder_factory, sak::storage(data_in));
+//     storage_encoder encoder(
+//         encoder_factory, sak::storage(data_in));
 
-    storage_decoder decoder(
-        decoder_factory, object_size, sak::storage(data_out));
+//     storage_decoder decoder(
+//         decoder_factory, object_size, sak::storage(data_out));
 
-    for (uint32_t i = 0; i < encoder.encoders(); ++i)
-    {
-        auto e = encoder.build(i);
-        auto d = decoder.build(i);
+//     for (uint32_t i = 0; i < encoder.encoders(); ++i)
+//     {
+//         auto e = encoder.build(i);
+//         auto d = decoder.build(i);
 
-        std::vector<uint8_t> payload(e->payload_size());
+//         std::vector<uint8_t> payload(e->payload_size());
 
-        while (!d->is_complete())
-        {
-            e->encode( &payload[0] );
+//         while (!d->is_complete())
+//         {
+//             e->encode( &payload[0] );
 
-            // Here we would send and receive the payload over a
-            // network. Lets throw away some packet to simulate.
-            if ((rand() % 2) == 0)
-            {
-                continue;
-            }
+//             // Here we would send and receive the payload over a
+//             // network. Lets throw away some packet to simulate.
+//             if ((rand() % 2) == 0)
+//             {
+//                 continue;
+//             }
 
-            d->decode( &payload[0] );
+//             d->decode( &payload[0] );
 
-        }
-    }
+//         }
+//     }
 
-    // Resize the output buffer to contain only the object data
-    data_out.resize(object_size);
+//     // Resize the output buffer to contain only the object data
+//     data_out.resize(object_size);
 
-    // Check we properly decoded the data
-    if (data_in == data_out)
-    {
-        std::cout << "Data decoded correctly" << std::endl;
-    }
-    else
-    {
-        std::cout << "Unexpected failure to decode "
-                  << "please file a bug report :)" << std::endl;
-    }
+//     // Check we properly decoded the data
+//     if (data_in == data_out)
+//     {
+//         std::cout << "Data decoded correctly" << std::endl;
+//     }
+//     else
+//     {
+//         std::cout << "Unexpected failure to decode "
+//                   << "please file a bug report :)" << std::endl;
+//     }
 }
