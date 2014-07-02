@@ -34,6 +34,20 @@ int main()
 
     storage_decoder::factory decoder_factory(max_symbols, max_symbol_size);
 
+    // The storage needed for all decoders
+    uint32_t total_block_size =
+        decoder_factory.total_block_size(object_size);
+
+    std::vector<uint8_t> data_out(total_block_size, '\0');
+    std::vector<uint8_t> data_in(object_size, 'x');
+
+    decoder_factory.set_storage(sak::storage(data_out));
+
+    auto object_decoder = decoder_factory.build();
+
+    std::cout << "decoder blocks = " << object_decoder->blocks() << std::endl;
+
+    auto decoder = object_decoder->build(0);
 
 //     typedef kodo::storage_encoder<
 //         kodo::shallow_full_rlnc_encoder<fifi::binary> >

@@ -18,7 +18,8 @@
 #include <kodo/uniform_generator.hpp>
 #include <kodo/coefficient_storage.hpp>
 #include <kodo/coefficient_info.hpp>
-#include <kodo/storage_block_info.hpp>
+#include <kodo/storage_block_length.hpp>
+#include <kodo/storage_block_size.hpp>
 #include <kodo/encode_symbol_tracker.hpp>
 #include <kodo/finite_field_math.hpp>
 #include <kodo/finite_field_info.hpp>
@@ -56,10 +57,11 @@ namespace kodo
             uniform_generator<
             coefficient_info<
             dummy_layer<
-            storage_block_info<
+            storage_block_length<
+            storage_block_size<
             finite_field_info<Field,
             final_layer
-            > > > > > > >
+            > > > > > > > >
         {
         public:
             using factory = basic_factory<plain_uniform_stack>;
@@ -72,12 +74,13 @@ namespace kodo
             vandermonde_matrix<
             coefficient_info<
             dummy_layer<
-            storage_block_info<
+            storage_block_length<
+            storage_block_size<
             encode_symbol_tracker<
             finite_field_math<typename fifi::default_field<Field>::type,
             finite_field_info<Field,
             final_layer
-            > > > > > > > > >
+            > > > > > > > > > >
         {
         public:
             using factory = basic_factory<rs_vandermond_nonsystematic_stack>;

@@ -10,7 +10,8 @@
 #include <gtest/gtest.h>
 
 #include <kodo/storage_bytes_used.hpp>
-#include <kodo/storage_block_info.hpp>
+#include <kodo/storage_block_size.hpp>
+#include <kodo/storage_block_length.hpp>
 #include <kodo/final_layer.hpp>
 #include <kodo/final_layer.hpp>
 #include <kodo/finite_field_info.hpp>
@@ -45,10 +46,11 @@ namespace kodo
         class deep_storage_stack : public
             deep_symbol_storage<
             storage_bytes_used<
-            storage_block_info<
+            storage_block_length<
+            storage_block_size<
             finite_field_info<Field,
             final_layer
-            > > > >
+            > > > > >
         {
         public:
             using factory = basic_factory<deep_storage_stack>;
@@ -58,10 +60,11 @@ namespace kodo
         class deep_storage_stack_pool : public
             deep_symbol_storage<
             storage_bytes_used<
-            storage_block_info<
+            storage_block_length<
+            storage_block_size<
             finite_field_info<Field,
             final_layer
-            > > > >
+            > > > > >
         {
         public:
             using factory = basic_factory<deep_storage_stack_pool>;
@@ -72,10 +75,11 @@ namespace kodo
         class mutable_shallow_stack : public
             mutable_shallow_symbol_storage<
             storage_bytes_used<
-            storage_block_info<
+            storage_block_length<
+            storage_block_size<
             finite_field_info<Field,
             final_layer
-            > > > >
+            > > > > >
         {
         public:
             using factory = basic_factory<mutable_shallow_stack>;
@@ -85,10 +89,11 @@ namespace kodo
         class mutable_shallow_stack_pool : public
             mutable_shallow_symbol_storage<
             storage_bytes_used<
-            storage_block_info<
+            storage_block_length<
+            storage_block_size<
             finite_field_info<Field,
             final_layer
-            > > > >
+            > > > > >
         {
         public:
             using factory = basic_factory<mutable_shallow_stack_pool>;
@@ -99,10 +104,11 @@ namespace kodo
         class const_shallow_stack : public
             const_shallow_symbol_storage<
             storage_bytes_used<
-            storage_block_info<
+            storage_block_length<
+            storage_block_size<
             finite_field_info<Field,
             final_layer
-            > > > >
+            > > > > >
         {
         public:
             using factory = basic_factory<const_shallow_stack>;
@@ -112,10 +118,11 @@ namespace kodo
         class const_shallow_stack_pool : public
             const_shallow_symbol_storage<
             storage_bytes_used<
-            storage_block_info<
+            storage_block_length<
+            storage_block_size<
             finite_field_info<Field,
             final_layer
-            > > > >
+            > > > > >
         {
         public:
             using factory = basic_factory<const_shallow_stack_pool>;
@@ -126,10 +133,11 @@ namespace kodo
         class partial_shallow_stack : public
             partial_shallow_symbol_storage<
             storage_bytes_used<
-            storage_block_info<
+            storage_block_length<
+            storage_block_size<
             finite_field_info<Field,
             final_layer
-            > > > >
+            > > > > >
         {
         public:
             using factory = basic_factory<partial_shallow_stack>;
@@ -139,10 +147,11 @@ namespace kodo
         class partial_shallow_stack_pool : public
             partial_shallow_symbol_storage<
             storage_bytes_used<
-            storage_block_info<
+            storage_block_length<
+            storage_block_size<
             finite_field_info<Field,
             final_layer
-            > > > >
+            > > > > >
         {
         public:
             using factory = basic_factory<partial_shallow_stack_pool>;

@@ -16,7 +16,8 @@
 #include <kodo/final_layer.hpp>
 #include <kodo/finite_field_info.hpp>
 #include <kodo/coefficient_info.hpp>
-#include <kodo/storage_block_info.hpp>
+#include <kodo/storage_block_size.hpp>
+#include <kodo/storage_block_length.hpp>
 #include <kodo/uniform_generator.hpp>
 #include <kodo/sparse_uniform_generator.hpp>
 #include <kodo/fake_symbol_storage.hpp>

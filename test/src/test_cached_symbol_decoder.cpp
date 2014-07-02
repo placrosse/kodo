@@ -10,7 +10,8 @@
 
 #include <kodo/cache_decode_symbol.hpp>
 #include <kodo/empty_decoder.hpp>
-#include <kodo/storage_block_info.hpp>
+#include <kodo/storage_block_length.hpp>
+#include <kodo/storage_block_size.hpp>
 #include <kodo/finite_field_info.hpp>
 #include <kodo/final_layer.hpp>
 #include <kodo/coefficient_info.hpp>
@@ -28,10 +29,11 @@ namespace kodo
             cache_decode_symbol<
             empty_decoder<
             coefficient_info<
-            storage_block_info<
+            storage_block_length<
+            storage_block_size<
             finite_field_info<Field,
             final_layer
-            > > > > >
+            > > > > > >
         {
         public:
             using factory = pool_factory<cache_decode_symbol_stack<Field>>;

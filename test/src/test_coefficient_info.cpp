@@ -12,7 +12,8 @@
 #include <fifi/binary.hpp>
 #include <fifi/binary8.hpp>
 #include <kodo/coefficient_info.hpp>
-#include <kodo/storage_block_info.hpp>
+#include <kodo/storage_block_length.hpp>
+#include <kodo/storage_block_size.hpp>
 #include <kodo/pool_factory.hpp>
 
 namespace kodo
@@ -62,9 +63,10 @@ namespace kodo
         template<class FieldType>
         class test_coefficient_info :
             public coefficient_info<
-                   storage_block_info<
+                   storage_block_length<
+                   storage_block_size<
                    dummy_layer<
-                   FieldType > > >
+                   FieldType > > > >
         {
         public:
             using factory = kodo::pool_factory<test_coefficient_info>;

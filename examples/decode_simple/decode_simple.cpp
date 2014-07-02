@@ -53,13 +53,14 @@ namespace kodo
         trace_symbol_storage<enable_trace,
         deep_symbol_storage<
         storage_bytes_used<
-        storage_block_info<
+        storage_block_length<
+        storage_block_size<
         // Finite Field API
         finite_field_math<typename fifi::default_field<Field>::type,
         finite_field_info<Field,
         // Final Layer
         final_layer
-        > > > > > > > > > > > > > > >
+        > > > > > > > > > > > > > > > >
     {
     public:
         using factory = basic_factory<rlnc_decoder>;

@@ -15,6 +15,7 @@
 #include "rfc5052_partitioning_scheme.hpp"
 #include "final_layer.hpp"
 #include "basic_factory.hpp"
+#include "storage_block_size.hpp"
 
 namespace kodo
 {
@@ -37,23 +38,29 @@ namespace kodo
 
             void set_storage(const storage_type& storage)
             {
+                assert(storage.m_data != 0);
+                assert(storage.m_size > 0);
                 m_storage = storage;
             }
 
             const storage_type& storage() const
             {
+                assert(m_storage.m_data != 0);
+                assert(m_storage.m_size > 0);
+
                 return m_storage;
             }
 
-            uint32_t storage_size() const
+            uint32_t object_size() const
             {
+                assert(m_storage.m_size > 0);
+
                 return m_storage.m_size;
             }
 
         protected:
 
             storage_type m_storage;
-
         };
 
     public:
@@ -63,7 +70,7 @@ namespace kodo
         {
             SuperCoder::initialize(the_factory);
 
-            m_storage = storage;
+            m_storage = the_factory.storage();
         }
 
         const storage_type& storage() const
@@ -95,15 +102,69 @@ namespace kodo
 
     public:
 
+        class factory_base : public SuperCoder::factory_base
+        {
+        public:
+
+            factory_base(uint32_t symbols, uint32_t symbol_size)
+                : SuperCoder::factory_base(symbols, symbol_size),
+                  m_symbols(symbols),
+                  m_symbol_size(symbol_size)
+            {
+                assert(m_symbols > 0);
+                assert(m_symbol_size > 0);
+            }
+
+            uint32_t symbols() const
+            {
+                return m_symbols;
+            }
+
+            uint32_t symbol_size() const
+            {
+                return m_symbol_size;
+            }
+
+            /// This is an unfortunate consequence of not having
+            /// support for variable symbol sizes. Since all
+            /// "generations" are a multiple of the symbol size it
+            /// means that if the object we are try to decode is not a
+            /// multiple of the symbol size we have to allocate more
+            /// space than the actual object so that the decoder will
+            /// not touch invalid memory.
+            ///
+            /// Even with a single generation this is a problem
+            /// imagine have a symbol size of 1400 and 10 symbols but
+            /// the object is only 13900 bytes, then we still have to
+            /// make a buffer of 14000 bytes to make the decoding
+            /// algorithms work.
+            /// @todo To be fixed :)
+            uint32_t total_block_size(uint32_t object_size) const
+            {
+                assert(object_size > 0);
+
+                partitioning_type p(m_symbols, m_symbol_size, object_size);
+                return p.total_block_size();
+            }
+
+        protected:
+
+            uint32_t m_symbols;
+            uint32_t m_symbol_size;
+        };
+
+
+    public:
+
         template<class Factory>
         void initialize(Factory& the_factory)
         {
             SuperCoder::initialize(the_factory);
 
             m_partitioning = partitioning_type(
-                the_factory.max_symbols(),
-                the_factory.max_symbol_size(),
-                the_factory.storage_size());
+                the_factory.symbols(),
+                the_factory.symbol_size(),
+                the_factory.object_size());
         }
 
         const partitioning_type& partitioning() const
@@ -206,13 +267,15 @@ namespace kodo
 
         stack_pointer_type build(uint32_t index)
         {
+            // Get the symbols and symbol size from the partitioning
+            // scheme for this specific index
             uint32_t symbols = SuperCoder::symbols(index);
             uint32_t symbol_size = SuperCoder::symbol_size(index);
 
             m_stack_factory->set_symbols(symbols);
             m_stack_factory->set_symbol_size(symbol_size);
 
-            auto stack = m_stack_factory->build(index);
+            auto stack = m_stack_factory->build();
 
             assert(stack);
             assert(stack->symbols() == symbols);
@@ -234,6 +297,8 @@ namespace kodo
 
         using stack_pointer_type = typename SuperCoder::stack_pointer_type;
 
+    public:
+
         stack_pointer_type build(uint32_t index)
         {
             auto stack = SuperCoder::build(index);
@@ -242,11 +307,15 @@ namespace kodo
             uint32_t offset = SuperCoder::byte_offset(index);
             uint32_t block_size = SuperCoder::block_size(index);
 
-            auto data = SuperCoder::storage() + offset;
+            auto data = SuperCoder::storage();
+            assert(data.m_data != 0);
             assert(data.m_size >= block_size);
 
             // Adjust the size of the decoding buffer to fit this
             // decoder
+            data += offset;
+            assert(data.m_size >= block_size);
+
             data.m_size = block_size;
             stack->set_symbols(data);
 

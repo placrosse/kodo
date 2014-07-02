@@ -5,23 +5,17 @@
 
 #pragma once
 
-#include <fifi/fifi_utils.hpp>
-
 namespace kodo
 {
-
+    /// @todo add missing unit test
+    ///
     /// @ingroup symbol_storage_layers
     ///
     /// @brief Defines several functions to retrieve info about the
     ///        symbol storage layers.
     template<class SuperCoder>
-    class storage_block_info : public SuperCoder
+    class storage_block_size : public SuperCoder
     {
-    public:
-
-        /// @copydoc layer::field_type
-        typedef typename SuperCoder::field_type field_type;
-
     public:
 
         /// @ingroup factory_base_layers
@@ -114,10 +108,9 @@ namespace kodo
     public:
 
         /// Constructor
-        storage_block_info()
+        storage_block_size()
             : m_symbols(0),
-              m_symbol_size(0),
-              m_symbol_length(0)
+              m_symbol_size(0)
         { }
 
         /// @copydoc layer::initialize(Factory&)
@@ -131,9 +124,6 @@ namespace kodo
 
             assert(m_symbols > 0);
             assert(m_symbol_size > 0);
-
-            m_symbol_length =
-                fifi::size_to_length<field_type>(m_symbol_size);
         }
 
         /// @copydoc layer::symbols() const
@@ -146,12 +136,6 @@ namespace kodo
         uint32_t symbol_size() const
         {
             return m_symbol_size;
-        }
-
-        /// @copydoc layer::symbol_length() const
-        uint32_t symbol_length() const
-        {
-            return m_symbol_length;
         }
 
         /// @copydoc layer::block_size() const
@@ -167,9 +151,5 @@ namespace kodo
 
         /// The size of a symbol in bytes
         uint32_t m_symbol_size;
-
-        /// The length of a symbol in value_type elements
-        uint32_t m_symbol_length;
     };
-
 }
