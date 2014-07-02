@@ -23,11 +23,17 @@
 
 int main()
 {
-//     // Set the number of symbols (i.e. the generation size in RLNC
-//     // terminology) and the size of a symbol in bytes
-//     uint32_t max_symbols = 42;
-//     uint32_t max_symbol_size = 64;
-//     uint32_t object_size = 23456;
+    // Set the number of symbols (i.e. the generation size in RLNC
+    // terminology) and the size of a symbol in bytes
+    uint32_t max_symbols = 42;
+    uint32_t max_symbol_size = 64;
+    uint32_t object_size = 23456;
+
+    using storage_decoder = kodo::new_storage_decoder<
+        kodo::shallow_full_rlnc_decoder<fifi::binary> >;
+
+    storage_decoder::factory decoder_factory(max_symbols, max_symbol_size);
+
 
 //     typedef kodo::storage_encoder<
 //         kodo::shallow_full_rlnc_encoder<fifi::binary> >
