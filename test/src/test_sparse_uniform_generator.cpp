@@ -149,7 +149,7 @@ namespace
             auto storage_a = sak::storage(vector_a);
             auto storage_b = sak::storage(vector_b);
 
-            EXPECT_TRUE(sak::equal(storage_a,storage_b));
+            EXPECT_TRUE(sak::is_equal(storage_a,storage_b));
 
             coder->seed(0);
 
