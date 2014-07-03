@@ -67,8 +67,8 @@ void test_cache_decode_symbol(uint32_t symbols, uint32_t symbol_size)
     auto coeff_storage_out = sak::storage(stack->cached_symbol_coefficients(),
                                           stack->coefficient_vector_size());
 
-    EXPECT_TRUE(sak::equal(data_storage_in, data_storage_out));
-    EXPECT_TRUE(sak::equal(coeff_storage_in, coeff_storage_out));
+    EXPECT_TRUE(sak::is_equal(data_storage_in, data_storage_out));
+    EXPECT_TRUE(sak::is_equal(coeff_storage_in, coeff_storage_out));
 
     data_in = random_vector(symbol_size);
 
@@ -85,7 +85,7 @@ void test_cache_decode_symbol(uint32_t symbols, uint32_t symbol_size)
     data_storage_out = sak::storage(stack->cached_symbol_data(),
                                     stack->symbol_size());
 
-    EXPECT_TRUE(sak::equal(data_storage_in, data_storage_out));
+    EXPECT_TRUE(sak::is_equal(data_storage_in, data_storage_out));
     EXPECT_EQ(random_index, stack->cached_symbol_index());
 }
 

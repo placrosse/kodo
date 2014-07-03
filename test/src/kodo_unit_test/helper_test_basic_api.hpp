@@ -101,7 +101,7 @@ inline void run_test_basic_api(uint32_t symbols, uint32_t symbol_size)
     // for prime2325 but still keep the unmodified input data
     sak::mutable_storage storage_in_copy = sak::storage(data_in_copy);
 
-    EXPECT_TRUE(sak::equal(storage_in, storage_in_copy));
+    EXPECT_TRUE(sak::is_equal(storage_in, storage_in_copy));
 
     // Only used for prime fields, lets reconsider how we implement
     // this less intrusive

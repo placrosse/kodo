@@ -123,13 +123,13 @@ namespace
                 coder->set_symbol(index, sak::storage(symbol_one));
                 coder->copy_symbol(index, sak::storage(symbol_two));
 
-                EXPECT_TRUE(sak::equal(sak::storage(symbol_one),
+                EXPECT_TRUE(sak::is_equal(sak::storage(symbol_one),
                                        sak::storage(symbol_two)));
 
                 coder->set_symbols(sak::storage(data_in));
                 proxy->copy_symbols(sak::storage(data_out));
 
-                EXPECT_TRUE(sak::equal(sak::storage(data_in),
+                EXPECT_TRUE(sak::is_equal(sak::storage(data_in),
                                        sak::storage(data_out)));
 
                 EXPECT_EQ(coder->symbols(), proxy->symbols());
@@ -181,7 +181,7 @@ namespace
                 proxy->multiply(&dest_proxy[0], coefficient,
                                 proxy->symbol_length());
 
-                EXPECT_TRUE(sak::equal(sak::storage(dest_coder),
+                EXPECT_TRUE(sak::is_equal(sak::storage(dest_coder),
                                        sak::storage(dest_proxy)));
 
                 coder->multiply_add(&dest_coder[0], &src[0], coefficient,
@@ -190,7 +190,7 @@ namespace
                 proxy->multiply_add(&dest_proxy[0], &src[0], coefficient,
                                 proxy->symbol_length());
 
-                EXPECT_TRUE(sak::equal(sak::storage(dest_coder),
+                EXPECT_TRUE(sak::is_equal(sak::storage(dest_coder),
                                        sak::storage(dest_proxy)));
 
                 coder->add(&dest_coder[0], &src[0],
@@ -199,7 +199,7 @@ namespace
                 proxy->add(&dest_proxy[0], &src[0],
                                 proxy->symbol_length());
 
-                EXPECT_TRUE(sak::equal(sak::storage(dest_coder),
+                EXPECT_TRUE(sak::is_equal(sak::storage(dest_coder),
                                        sak::storage(dest_proxy)));
 
                 coder->multiply_subtract(&dest_coder[0], &src[0], coefficient,
@@ -208,7 +208,7 @@ namespace
                 proxy->multiply_subtract(&dest_proxy[0], &src[0], coefficient,
                                 proxy->symbol_length());
 
-                EXPECT_TRUE(sak::equal(sak::storage(dest_coder),
+                EXPECT_TRUE(sak::is_equal(sak::storage(dest_coder),
                                        sak::storage(dest_proxy)));
 
                 coder->subtract(&dest_coder[0], &src[0],
@@ -217,7 +217,7 @@ namespace
                 proxy->subtract(&dest_proxy[0], &src[0],
                                 proxy->symbol_length());
 
-                EXPECT_TRUE(sak::equal(sak::storage(dest_coder),
+                EXPECT_TRUE(sak::is_equal(sak::storage(dest_coder),
                                        sak::storage(dest_proxy)));
 
                 value_type invert_coder = coder->invert('b');
@@ -247,7 +247,7 @@ namespace
                 coder->encode_symbol(&coder_symbol[0], &coefficients[0]);
                 proxy->encode_symbol(&proxy_symbol[0], &coefficients[0]);
 
-                EXPECT_TRUE(sak::equal(sak::storage(coder_symbol),
+                EXPECT_TRUE(sak::is_equal(sak::storage(coder_symbol),
                                        sak::storage(proxy_symbol)));
 
                 uint32_t index = rand() % coder->symbols();
@@ -255,7 +255,7 @@ namespace
                 coder->encode_symbol(&coder_symbol[0], index);
                 proxy->encode_symbol(&proxy_symbol[0], index);
 
-                EXPECT_TRUE(sak::equal(sak::storage(coder_symbol),
+                EXPECT_TRUE(sak::is_equal(sak::storage(coder_symbol),
                                        sak::storage(proxy_symbol)));
 
                 EXPECT_EQ(coder->rank(), proxy->rank());

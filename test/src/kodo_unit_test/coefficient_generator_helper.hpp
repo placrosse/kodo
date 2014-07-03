@@ -149,7 +149,7 @@ struct api_generate
         auto storage_b = sak::storage(vector_b);
 
 
-        EXPECT_TRUE(sak::equal(storage_a,storage_b));
+        EXPECT_TRUE(sak::is_equal(storage_a,storage_b));
     }
 
 
@@ -185,7 +185,7 @@ struct api_generate
         auto storage_a = sak::storage(vector_a);
         auto storage_c = sak::storage(vector_c);
 
-        EXPECT_TRUE(sak::equal(storage_a,storage_c));
+        EXPECT_TRUE(sak::is_equal(storage_a,storage_c));
 
         uint32_t count_a = 0;
         uint32_t count_b = 0;
