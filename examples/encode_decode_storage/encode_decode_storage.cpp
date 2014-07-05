@@ -29,9 +29,13 @@ int main()
     uint32_t max_symbol_size = 64;
     uint32_t object_size = 23456;
 
+    using storage_encoder = kodo::new_storage_encoder<
+        kodo::shallow_full_rlnc_encoder<fifi::binary> >;
+
     using storage_decoder = kodo::new_storage_decoder<
         kodo::shallow_full_rlnc_decoder<fifi::binary> >;
 
+    storage_encoder::factory encoder_factory(max_symbols, max_symbol_size);
     storage_decoder::factory decoder_factory(max_symbols, max_symbol_size);
 
     // The storage needed for all decoders
@@ -41,72 +45,49 @@ int main()
     std::vector<uint8_t> data_out(total_block_size, '\0');
     std::vector<uint8_t> data_in(object_size, 'x');
 
+    encoder_factory.set_storage(sak::storage(data_in));
     decoder_factory.set_storage(sak::storage(data_out));
 
+    auto object_encoder = encoder_factory.build();
     auto object_decoder = decoder_factory.build();
 
+    std::cout << "encoder blocks = " << object_encoder->blocks() << std::endl;
     std::cout << "decoder blocks = " << object_decoder->blocks() << std::endl;
 
-    auto decoder = object_decoder->build(0);
+    for (uint32_t i = 0; i < object_encoder->blocks(); ++i)
+    {
+        auto e = object_encoder->build(i);
+        auto d = object_decoder->build(i);
 
-//     typedef kodo::storage_encoder<
-//         kodo::shallow_full_rlnc_encoder<fifi::binary> >
-//            storage_encoder;
+        std::vector<uint8_t> payload(e->payload_size());
 
-//     typedef kodo::shallow_storage_decoder<
-//         kodo::shallow_full_rlnc_decoder<fifi::binary> >
-//            storage_decoder;
+        while (!d->is_complete())
+        {
+            e->encode( payload.data() );
 
-//     storage_encoder::factory encoder_factory(max_symbols, max_symbol_size);
-//     storage_decoder::factory decoder_factory(max_symbols, max_symbol_size);
+            // Here we would send and receive the payload over a
+            // network. Lets throw away some packet to simulate.
+            if ((rand() % 2) == 0)
+            {
+                continue;
+            }
 
-//     // The storage needed for all decoders
-//     uint32_t total_block_size =
-//         decoder_factory.total_block_size(object_size);
+            d->decode( payload.data() );
 
-//     std::vector<uint8_t> data_out(total_block_size, '\0');
-//     std::vector<uint8_t> data_in(object_size, 'x');
+        }
+    }
 
-//     storage_encoder encoder(
-//         encoder_factory, sak::storage(data_in));
+    // Resize the output buffer to contain only the object data
+    data_out.resize(object_size);
 
-//     storage_decoder decoder(
-//         decoder_factory, object_size, sak::storage(data_out));
-
-//     for (uint32_t i = 0; i < encoder.encoders(); ++i)
-//     {
-//         auto e = encoder.build(i);
-//         auto d = decoder.build(i);
-
-//         std::vector<uint8_t> payload(e->payload_size());
-
-//         while (!d->is_complete())
-//         {
-//             e->encode( &payload[0] );
-
-//             // Here we would send and receive the payload over a
-//             // network. Lets throw away some packet to simulate.
-//             if ((rand() % 2) == 0)
-//             {
-//                 continue;
-//             }
-
-//             d->decode( &payload[0] );
-
-//         }
-//     }
-
-//     // Resize the output buffer to contain only the object data
-//     data_out.resize(object_size);
-
-//     // Check we properly decoded the data
-//     if (data_in == data_out)
-//     {
-//         std::cout << "Data decoded correctly" << std::endl;
-//     }
-//     else
-//     {
-//         std::cout << "Unexpected failure to decode "
-//                   << "please file a bug report :)" << std::endl;
-//     }
+    // Check we properly decoded the data
+    if (data_in == data_out)
+    {
+        std::cout << "Data decoded correctly" << std::endl;
+    }
+    else
+    {
+        std::cout << "Unexpected failure to decode "
+                  << "please file a bug report :)" << std::endl;
+    }
 }
