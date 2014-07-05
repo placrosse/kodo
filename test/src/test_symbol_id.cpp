@@ -160,7 +160,7 @@ struct api_symbol_id
             auto storage_in =
                 sak::storage(coefficients_in, coder->coefficient_vector_size());
 
-            EXPECT_TRUE(sak::equal(storage_out, storage_in));
+            EXPECT_TRUE(sak::is_equal(storage_out, storage_in));
         }
 
 private:

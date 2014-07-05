@@ -242,7 +242,7 @@ namespace
                     sak::copy_storage(storage_b, symbol_storage[i]);
                 }
 
-                EXPECT_TRUE(sak::equal(storage_a, storage_b));
+                EXPECT_TRUE(sak::is_equal(storage_a, storage_b));
             }
         }
 
@@ -280,7 +280,7 @@ namespace
             coder->set_symbols(storage_in);
             coder->copy_symbols(storage_out);
 
-            EXPECT_TRUE(sak::equal(sak::storage(vector_in),
+            EXPECT_TRUE(sak::is_equal(sak::storage(vector_in),
                                    sak::storage(vector_out)));
         }
 
@@ -327,7 +327,7 @@ namespace
                 sak::mutable_storage symbol_out = sak::storage(vector_out);
                 coder->copy_symbol(i, symbol_out);
 
-                EXPECT_TRUE(sak::equal(symbols[i], symbol_out));
+                EXPECT_TRUE(sak::is_equal(symbols[i], symbol_out));
             }
         }
 
@@ -376,7 +376,7 @@ namespace
                 // Compare the storage
                 auto s1 = symbols[i];
                 auto s2 = sak::storage(symbol, coder->symbol_size());
-                EXPECT_TRUE(sak::equal(s1, s2));
+                EXPECT_TRUE(sak::is_equal(s1, s2));
             }
         }
 
@@ -420,7 +420,7 @@ namespace
                 // Compare the storage
                 auto s1 = symbols[i];
                 auto s2 = sak::storage(symbol, coder->symbol_size());
-                EXPECT_TRUE(sak::equal(s1, s2));
+                EXPECT_TRUE(sak::is_equal(s1, s2));
             }
         }
 
@@ -470,7 +470,7 @@ namespace
                 // Compare the storage
                 auto s1 = symbols[i];
                 auto s2 = sak::storage(symbol, coder->symbol_size());
-                EXPECT_TRUE(sak::equal(s1, s2));
+                EXPECT_TRUE(sak::is_equal(s1, s2));
             }
         }
 
@@ -517,7 +517,7 @@ namespace
                 // Compare the storage
                 auto s1 = symbols[i];
                 auto s2 = sak::storage(symbol, coder->symbol_size());
-                EXPECT_TRUE(sak::equal(s1, s2));
+                EXPECT_TRUE(sak::is_equal(s1, s2));
             }
         }
 
@@ -567,7 +567,7 @@ namespace
                 // Compare the storage
                 auto s1 = symbols[i];
                 auto s2 = sak::storage(symbol, coder->symbol_size());
-                EXPECT_TRUE(sak::equal(s1, s2));
+                EXPECT_TRUE(sak::is_equal(s1, s2));
             }
         }
 
@@ -617,7 +617,7 @@ namespace
                 // Compare the storage
                 auto s1 = symbols[i];
                 auto s2 = sak::storage(symbol, coder->symbol_size());
-                EXPECT_TRUE(sak::equal(s1, s2));
+                EXPECT_TRUE(sak::is_equal(s1, s2));
             }
         }
 
@@ -666,7 +666,7 @@ namespace
                 // Compare the storage
                 auto s1 = symbols[i];
                 auto s2 = sak::storage(symbol, coder->symbol_size());
-                EXPECT_TRUE(sak::equal(s1, s2));
+                EXPECT_TRUE(sak::is_equal(s1, s2));
             }
         }
 
@@ -715,7 +715,7 @@ namespace
                 // Compare the storage
                 auto s1 = symbols[i];
                 auto s2 = sak::storage(symbol, coder->symbol_size());
-                EXPECT_TRUE(sak::equal(s1, s2));
+                EXPECT_TRUE(sak::is_equal(s1, s2));
             }
         }
 
@@ -758,7 +758,7 @@ namespace
             coder->swap_symbols(symbols);
             coder->copy_symbols(storage_out);
 
-            EXPECT_TRUE(sak::equal(sak::storage(vector_in),
+            EXPECT_TRUE(sak::is_equal(sak::storage(vector_in),
                                    sak::storage(vector_out)));
         }
 
@@ -802,7 +802,7 @@ namespace
             coder->swap_symbols(symbols);
             coder->copy_symbols(storage_out);
 
-            EXPECT_TRUE(sak::equal(sak::storage(vector_in),
+            EXPECT_TRUE(sak::is_equal(sak::storage(vector_in),
                                    sak::storage(vector_out)));
         }
 
@@ -843,7 +843,7 @@ namespace
             coder->swap_symbols(vector_swap);
             coder->copy_symbols(storage_out);
 
-            EXPECT_TRUE(sak::equal(sak::storage(vector_in),
+            EXPECT_TRUE(sak::is_equal(sak::storage(vector_in),
                                    sak::storage(vector_out)));
         }
 
