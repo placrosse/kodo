@@ -1,144 +1,50 @@
-// Copyright Steinwurf ApS 2011-2013.
+// Copyright Steinwurf ApS 2011-2014.
 // Distributed under the "STEINWURF RESEARCH LICENSE 1.0".
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
 
 #pragma once
 
-#include <cstdint>
-
-#include <sak/storage.hpp>
-
-#include "object_decoder.hpp"
-#include "rfc5052_partitioning_scheme.hpp"
-#include "has_shallow_symbol_storage.hpp"
-#include "rebind_factory.hpp"
+#include "object_stack_builder.hpp"
+#include "object_stack.hpp"
+#include "rfc5052_object_partitioning.hpp"
+#include "mutable_object_storage.hpp"
+#include "final_layer.hpp"
 
 namespace kodo
 {
-
-    /// @todo think of a nicer way to do this :) Would be nice if we
-    ///       wouldn't need to define a new wrap class to do this.
-    namespace detail
-    {
-        template<class DecoderType, class BlockPartitioning>
-        class wrap : public DecoderType
-        {
-        public:
-
-            /// The factory used by the storage_decoder
-            class factory_base : public DecoderType::factory_base
-            {
-            public:
-
-                /// @copydoc layer::factory_base::factory_base(
-                ///              uint32_t,utin32_t)
-                factory_base(uint32_t max_symbols, uint32_t max_symbol_size) :
-                    DecoderType::factory_base(max_symbols, max_symbol_size)
-                { }
-
-                /// @param object_size The total size of the object to be
-                ///        decoded.
-                /// @return The number of storage bytes needed to decode a
-                ///         object of object_size bytes. A decoder requires
-                ///         symbols*symbols_size bytes, however if a object
-                ///         does not fully cover all decoders we may require
-                ///         additional memory to be able to provide all
-                ///         decoders with the memory needed.
-                uint32_t total_block_size(uint32_t object_size) const
-                {
-                    BlockPartitioning p(
-                        DecoderType::factory_base::max_symbols(),
-                        DecoderType::factory_base::max_symbol_size(),
-                        object_size);
-
-                    return p.total_block_size();
-                }
-            };
-
-            using factory = rebind_factory<DecoderType, wrap>;
-
-        };
-    }
-
-    /// @brief A storage decoder creates a number of decoders decoding
-    ///        into a sak::mutable_storage object
-    template
-    <
-        class DecoderType,
-        class BlockPartitioning = rfc5052_partitioning_scheme
-    >
-    class shallow_storage_decoder :
-        public object_decoder<detail::wrap<DecoderType, BlockPartitioning>,
-                              BlockPartitioning>
+    /// @todo add docs
+    ///
+    /// The shallow variant of the storage decoder refers to the fact
+    /// that it will decode the data in a user provided buffer. So the
+    /// decoder does not maintain any internal data buffer for the
+    /// decoded data. Since this is the case the user must provide the
+    /// memory where the decoded object should be place when building
+    /// the object decoder.
+    ///
+    /// Example:
+    ///
+    ///
+    ///
+    template<class Stack>
+    class shallow_storage_decoder : public
+        mutable_object_storage<
+        object_stack_builder<
+        object_stack<Stack,
+        rfc5052_object_partitioning<
+        final_layer> > > >
     {
     public:
 
-        /// The block partitioning type
-        typedef BlockPartitioning partitioning;
+        /// The factory we will use for the object decoder
+        using factory = basic_factory<shallow_storage_decoder>;
 
-        /// We need the code to use a shallow storage class - since
-        /// we want the decoder to decode directly into the storage
-        /// buffer.
-        static_assert(
-            has_mutable_shallow_symbol_storage<DecoderType>::value,
-            "Storage decoder only works with decoders using"
-            "shallow storage");
-
-        /// The base class
-        typedef object_decoder<detail::wrap<DecoderType, BlockPartitioning>,
-                              BlockPartitioning> base_decoder;
-
-        /// The pointer to the decoder
-        typedef typename base_decoder::pointer pointer;
-
-        /// Access the partitioning scheme
-        using base_decoder::m_partitioning;
-
-        /// Get the factory type used in the base_decoder
-        using factory = typename base_decoder::factory;
-
-    public:
-
-        /// Constructs a new storage decoder
-        /// @param factory The decoder factory to use
-        /// @param object_size The size of the object to be decoded in bytes
-        /// @param decoding_buffer The storage where the object will be
-        ///        decoded. The memory used must be zero initialized.
-        shallow_storage_decoder(
-            factory &factory, uint32_t object_size,
-            const sak::mutable_storage &decoding_storage) :
-            base_decoder(factory, object_size),
-            m_decoding_storage(decoding_storage)
-        {
-            // We have to make sure the decoding buffer is large enough
-            assert(factory.total_block_size(object_size) ==
-                   m_decoding_storage.m_size);
-        }
-
-        /// @copydoc object_decoder::build(uint32_t)
-        pointer build(uint32_t decoder_id)
-        {
-            auto decoder = base_decoder::build(decoder_id);
-
-            uint32_t offset = m_partitioning.byte_offset(decoder_id);
-            uint32_t block_size = m_partitioning.block_size(decoder_id);
-
-            sak::mutable_storage data = m_decoding_storage + offset;
-            assert(data.m_size >= block_size);
-
-            // Adjust the size of the decoding buffer to fit this
-            // decoder
-            data.m_size = block_size;
-
-            decoder->set_symbols(data);
-
-            return decoder;
-        }
-
-    private:
-
-        /// The storage where the decoded data should be placed
-        sak::mutable_storage m_decoding_storage;
+        /// This decoder only works with a shallow stack. The reason
+        /// for this is that we are using the mutable_object_storage
+        /// layer which will call the set_symbols() function on each
+        /// decoder built. So we want the decoder to be shallow and
+        /// therefore use that memory to store the decoded data.
+        ///
+        /// @todo add static assert
     };
 }

@@ -1,4 +1,4 @@
-// Copyright Steinwurf ApS 2011-2012.
+// Copyright Steinwurf ApS 2011-2014.
 // Distributed under the "STEINWURF RESEARCH LICENSE 1.0".
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
@@ -6,7 +6,6 @@
 #include <kodo/shallow_storage_decoder.hpp>
 #include <kodo/storage_encoder.hpp>
 #include <kodo/rlnc/full_rlnc_codes.hpp>
-#include <kodo/partial_shallow_symbol_storage.hpp>
 
 /// @todo re-enable this example
 
@@ -29,10 +28,10 @@ int main()
     uint32_t max_symbol_size = 64;
     uint32_t object_size = 23456;
 
-    using storage_encoder = kodo::new_storage_encoder<
+    using storage_encoder = kodo::storage_encoder<
         kodo::shallow_full_rlnc_encoder<fifi::binary> >;
 
-    using storage_decoder = kodo::new_storage_decoder<
+    using storage_decoder = kodo::shallow_storage_decoder<
         kodo::shallow_full_rlnc_decoder<fifi::binary> >;
 
     storage_encoder::factory encoder_factory(max_symbols, max_symbol_size);

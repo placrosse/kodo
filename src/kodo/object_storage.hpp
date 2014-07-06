@@ -16,15 +16,32 @@
 
 namespace kodo
 {
+    /// @todo + docs
+    ///
+    /// @brief Provides storage and access to the memory used by the object.
+    ///
+    /// When encoding or decoding an object we will be working with
+    /// more memory than what can contained within a single encoder or
+    /// decoder. The object stoarge layer contains a StorageType
+    /// object wich provides information about the memory we are
+    /// either encoding or decoder. The StorageType will typically be
+    /// either a sak::mutable_st
     template<class StorageType, class SuperCoder>
     class object_storage : public SuperCoder
     {
     public:
 
+        /// The storage type
         using storage_type = StorageType;
+
+        /// The type of the pointer to the stack we are building
+        using stack_pointer_type = typename SuperCoder::stack_pointer_type;
 
     public:
 
+        /// @ingroup factory_base_layers
+        ///
+        /// @brief
         class factory_base : public SuperCoder::factory_base
         {
         public:
@@ -41,6 +58,7 @@ namespace kodo
                 m_storage = storage;
             }
 
+            /// @return the stored storage object
             const storage_type& storage() const
             {
                 assert(m_storage.m_data != 0);
@@ -49,6 +67,7 @@ namespace kodo
                 return m_storage;
             }
 
+            /// @return the size of the object storage
             uint32_t object_size() const
             {
                 assert(m_storage.m_size > 0);
@@ -58,11 +77,13 @@ namespace kodo
 
         protected:
 
+            /// The storage of the object to encode
             storage_type m_storage;
         };
 
     public:
 
+        /// @copydoc layer::initialize(Factory&)
         template<class Factory>
         void initialize(Factory& the_factory)
         {
@@ -71,104 +92,11 @@ namespace kodo
             m_storage = the_factory.storage();
         }
 
-        const storage_type& storage() const
-        {
-            return m_storage;
-        }
-
-    protected:
-
-        storage_type m_storage;
-    };
-
-
-    template<class Stack, class SuperCoder>
-    class object_stack : public SuperCoder
-    {
-    public:
-        using stack_type = Stack;
-    };
-
-    template<template <class> class StackWrapper, class SuperCoder>
-    class extend_object_stack : public SuperCoder
-    {
-    public:
-        using stack_type = StackWrapper<typename SuperCoder::stack_type>;
-    };
-
-    template<class SuperCoder>
-    class factory_object_stack : public SuperCoder
-    {
-    public:
-
-        using stack_type = typename SuperCoder::stack_type;
-        using stack_factory_type = typename stack_type::factory;
-        using stack_pointer_type = typename stack_factory_type::pointer;
-        using stack_factory_pointer_type = std::shared_ptr<stack_factory_type>;
-
-    public:
-
-        class factory_base : public SuperCoder::factory_base
-        {
-        public:
-
-            factory_base(uint32_t symbols, uint32_t symbol_size)
-                : SuperCoder::factory_base(symbols, symbol_size),
-                  m_stack_factory(std::make_shared<stack_factory_type>(
-                                      symbols, symbol_size))
-            { }
-
-            stack_factory_pointer_type stack_factory()
-            {
-                return m_stack_factory;
-            }
-
-            stack_factory_pointer_type m_stack_factory;
-        };
-
-    public:
-
-        template<class Factory>
-        void initialize(Factory& the_factory)
-        {
-            SuperCoder::initialize(the_factory);
-            m_stack_factory = the_factory.stack_factory();
-        }
-
-        stack_pointer_type build(uint32_t index)
-        {
-            // Get the symbols and symbol size from the partitioning
-            // scheme for this specific index
-            uint32_t symbols = SuperCoder::symbols(index);
-            uint32_t symbol_size = SuperCoder::symbol_size(index);
-
-            m_stack_factory->set_symbols(symbols);
-            m_stack_factory->set_symbol_size(symbol_size);
-
-            auto stack = m_stack_factory->build();
-
-            assert(stack);
-            assert(stack->symbols() == symbols);
-            assert(stack->symbol_size() == symbol_size);
-
-            stack->set_bytes_used(SuperCoder::bytes_used(index));
-            return stack;
-        }
-
-    protected:
-
-        stack_factory_pointer_type m_stack_factory;
-    };
-
-    template<class SuperCoder>
-    class set_symbols_object_storage : public SuperCoder
-    {
-    public:
-
-        using stack_pointer_type = typename SuperCoder::stack_pointer_type;
-
-    public:
-
+        /// @param index Index of the block to build an encoder or
+        ///        decoder stack for
+        ///
+        /// @return the newly built encoder or decoder initialized
+        ///         with storage through the the set_symbols function
         stack_pointer_type build(uint32_t index)
         {
             auto stack = SuperCoder::build(index);
@@ -177,7 +105,7 @@ namespace kodo
             uint32_t offset = SuperCoder::byte_offset(index);
             uint32_t block_size = SuperCoder::block_size(index);
 
-            auto data = SuperCoder::storage();
+            storage_type data = m_storage;
             assert(data.m_data != 0);
             assert(data.m_size >= block_size);
 
@@ -197,33 +125,16 @@ namespace kodo
 
             return stack;
         }
+
+        /// @return the storage used for this object
+        const storage_type& storage() const
+        {
+            return m_storage;
+        }
+
+    protected:
+
+        /// Stores the storage for the object being encoded or decoded
+        storage_type m_storage;
     };
-
-    template<class Stack>
-    class new_storage_decoder : public
-        set_symbols_object_storage<
-        factory_object_stack<
-        object_stack<Stack,
-        rfc5052_object_partitioning<
-        mutable_object_storage<
-        final_layer> > > > >
-    {
-    public:
-        using factory = basic_factory<new_storage_decoder>;
-    };
-
-    template<class Stack>
-    class new_storage_encoder : public
-        set_symbols_object_storage<
-        factory_object_stack<
-        object_stack<Stack,
-        rfc5052_object_partitioning<
-        const_object_storage<
-        final_layer> > > > >
-    {
-    public:
-        using factory = basic_factory<new_storage_encoder>;
-    };
-
-
 }

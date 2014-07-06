@@ -8,10 +8,16 @@
 namespace kodo
 {
     /// @todo docs
+    ///
+    /// @brief Defines the stack type to use within the object stack.
+    ///
+    ///
     template<class Stack, class SuperCoder>
     class object_stack : public SuperCoder
     {
     public:
+
+        //
         using stack_type = Stack;
     };
 }

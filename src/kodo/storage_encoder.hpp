@@ -1,54 +1,47 @@
-// Copyright Steinwurf ApS 2011-2012.
+// Copyright Steinwurf ApS 2011-2014.
 // Distributed under the "STEINWURF RESEARCH LICENSE 1.0".
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
 
 #pragma once
 
-#include "object_encoder.hpp"
-#include "storage_reader.hpp"
-#include "rfc5052_partitioning_scheme.hpp"
+#include "object_stack_builder.hpp"
+#include "object_stack.hpp"
+#include "rfc5052_object_partitioning.hpp"
+#include "const_object_storage.hpp"
+#include "final_layer.hpp"
 
 namespace kodo
 {
-
     /// @brief A storage encoder creates a number of encoders over a
     ///        sak::const_storage object.
     ///
     /// If the sak::const_storage object is too large for a single
     /// encoder/decoder pair one may use the storage encoder.
-    template
-    <
-        class EncoderType,
-        class BlockPartitioning = rfc5052_partitioning_scheme
-    >
+    ///
+    /// One thing to notice is that we do not need both a shallow and
+    /// deep variant of the storage encoder. The reason for this is
+    /// that for encoding the user always have to set the data to be
+    /// encoded using the set_storage function. So this will correctly
+    /// initialize both a shallow and deep encoder. However, be aware
+    /// that if using a shallow encoder it is the responsability of
+    /// the user to keep the data alive for as long as the object
+    /// encoder is in use.
+    ///
+    /// Example:
+    ///
+    /// @todo finish docs
+    template<class Stack>
     class storage_encoder : public
-        object_encoder
-            <
-            storage_reader<EncoderType>,
-            EncoderType,
-            BlockPartitioning
-            >
+        const_object_storage<
+        object_stack_builder<
+        object_stack<Stack,
+        rfc5052_object_partitioning<
+        final_layer> > > >
     {
     public:
 
-        /// The factory type
-        typedef typename EncoderType::factory factory;
-
-    public:
-
-        /// Constructs a new storage encoder
-        /// @param factory the encoder factory to use
-        /// @param object the object to encode
-        storage_encoder(typename EncoderType::factory &factory,
-                        const sak::const_storage &data)
-            : object_encoder
-                  <
-                  storage_reader<EncoderType>,
-                  EncoderType,
-                  BlockPartitioning
-                  >
-              (factory, storage_reader<EncoderType>(data))
-            { }
+        /// The factory we will use for the object encoder
+        using factory = basic_factory<storage_encoder>;
     };
 }

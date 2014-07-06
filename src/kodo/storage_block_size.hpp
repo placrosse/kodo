@@ -19,6 +19,7 @@ namespace kodo
     public:
 
         /// @ingroup factory_base_layers
+        ///
         /// @brief Provides access to the maximum symbol and symbol size
         ///        information.
         class factory_base : public SuperCoder::factory_base
