@@ -26,6 +26,7 @@ int main()
     // terminology) and the size of a symbol in bytes
     uint32_t max_symbols = 42;
     uint32_t max_symbol_size = 64;
+
     uint32_t object_size = 23456;
 
     using storage_encoder = kodo::storage_encoder<
@@ -50,6 +51,8 @@ int main()
     auto object_encoder = encoder_factory.build();
     auto object_decoder = decoder_factory.build();
 
+    std::cout << "object_size = " << object_size << std::endl;
+    std::cout << "total_block_size = " << total_block_size << std::endl;
     std::cout << "encoder blocks = " << object_encoder->blocks() << std::endl;
     std::cout << "decoder blocks = " << object_decoder->blocks() << std::endl;
 
@@ -66,13 +69,12 @@ int main()
 
             // Here we would send and receive the payload over a
             // network. Lets throw away some packet to simulate.
-            if ((rand() % 2) == 0)
+            if (rand() % 2)
             {
                 continue;
             }
 
             d->decode( payload.data() );
-
         }
     }
 

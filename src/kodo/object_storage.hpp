@@ -107,20 +107,18 @@ namespace kodo
 
             storage_type data = m_storage;
             assert(data.m_data != 0);
-            assert(data.m_size >= block_size);
+
+            std::cout << "offset = " << offset << std::endl;
+            std::cout << "block_size = " << block_size << std::endl;
+            std::cout << "data.m_size = " << data.m_size << std::endl;
+
+            assert(data.m_size > offset);
+            assert(data.m_size - offset >= block_size);
 
             // Adjust the size of the buffer to fit this stack
-            data += offset;
-
-            /// @todo This assert triggers because the encoder
-            /// supports not "full" generations but the decoder does
-            /// not. So for decoding we allocate sometimes more memory
-            /// than we need, but for the encoder we do not. However,
-            /// then this assert fails for the encoder eventhough the
-            /// code works correctly
-            assert(data.m_size >= block_size);
-
+            data.m_data += offset;
             data.m_size = block_size;
+
             stack->set_symbols(data);
 
             return stack;
