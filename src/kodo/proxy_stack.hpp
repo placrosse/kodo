@@ -102,7 +102,7 @@ namespace kodo
         template <class...> class NestedStack,
         class SuperCoder
     >
-    struct proxy_stack;
+    class proxy_stack;
 
     /// Specialization of the proxy_stack allowing the use of the
     /// proxy_args helper to specify additional template arguments in
