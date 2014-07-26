@@ -19,6 +19,7 @@ Latest
   add/embed additional state into an encoder or decoder. Using the
   previous design this could only be done by re-defining the stack
   and all its layers.
+* Bug: Fixed proxy_stack ambiguous definition warnings with clang++
 
 17.0.0
 ------
