@@ -25,21 +25,15 @@ namespace kodo
     /// use it with the partial symbol storage without having to move
     /// it to a 10000 byte temp. buffer.
     template<class SuperCoder>
-    class partial_shallow_symbol_storage
-        : public const_shallow_symbol_storage<SuperCoder>
+    class partial_shallow_symbol_storage : public SuperCoder
     {
-    public:
-
-        /// The actual SuperCoder type
-        typedef const_shallow_symbol_storage<SuperCoder> Super;
-
     public:
 
         /// @copydoc layer::construct(Factory&)
         template<class Factory>
         void construct(Factory &the_factory)
         {
-            Super::construct(the_factory);
+            SuperCoder::construct(the_factory);
 
             assert(the_factory.max_symbol_size() > 0);
             m_partial_symbol.reserve(the_factory.max_symbol_size());
@@ -49,7 +43,7 @@ namespace kodo
         template<class Factory>
         void initialize(Factory &the_factory)
         {
-            Super::initialize(the_factory);
+            SuperCoder::initialize(the_factory);
 
             m_partial_symbol.resize(the_factory.symbol_size());
             m_partial_symbol_size = 0;
@@ -62,14 +56,14 @@ namespace kodo
         /// @copydoc layer::set_symbols(const sak::const_storage &)
         void set_symbols(const sak::const_storage &symbol_storage)
         {
-            uint32_t symbol_size = Super::symbol_size();
+            uint32_t symbol_size = SuperCoder::symbol_size();
 
             const auto& symbol_sequence =
                 sak::split_storage(symbol_storage, symbol_size);
 
             // Check that we have as many symbols in the sequence as
             // we should
-            assert(symbol_sequence.size() == Super::symbols());
+            assert(symbol_sequence.size() == SuperCoder::symbols());
 
             // Check that cast below is safe
             assert(symbol_sequence.size() <=
@@ -80,7 +74,7 @@ namespace kodo
 
             for(uint32_t i = 0; i < last_index; ++i)
             {
-                Super::set_symbol(i, symbol_sequence[i]);
+                SuperCoder::set_symbol(i, symbol_sequence[i]);
             }
 
             const auto& last_symbol = symbol_sequence[last_index];
@@ -90,14 +84,14 @@ namespace kodo
                 const auto& partial_symbol = sak::storage(m_partial_symbol);
 
                 sak::copy_storage(partial_symbol, last_symbol);
-                Super::set_symbol(last_index, partial_symbol);
+                SuperCoder::set_symbol(last_index, partial_symbol);
 
                 m_has_partial_symbol = true;
                 m_partial_symbol_size = last_symbol.m_size;
             }
             else
             {
-                Super::set_symbol(last_index, last_symbol);
+                SuperCoder::set_symbol(last_index, last_symbol);
             }
         }
 
@@ -126,10 +120,10 @@ namespace kodo
         /// The partial symbol
         std::vector<uint8_t> m_partial_symbol;
 
-        ///
+        /// Keeps track of whether the "partial symbol" buffer is in use
         bool m_has_partial_symbol;
 
-        ///
+        /// Keeps track of how much of the "partial symbol" buffer is used
         uint32_t m_partial_symbol_size;
 
     };

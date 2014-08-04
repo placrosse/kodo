@@ -6,6 +6,7 @@
 #pragma once
 
 #include "partial_shallow_symbol_storage.hpp"
+#include "const_shallow_symbol_storage.hpp"
 #include "storage_bytes_used.hpp"
 #include "storage_block_info.hpp"
 #include "trace_symbol_storage.hpp"
@@ -20,6 +21,7 @@ namespace kodo
     using partial_shallow_storage_layers =
         trace_symbol_storage<TraceTag,
         partial_shallow_symbol_storage<
+        const_shallow_symbol_storage<
         storage_bytes_used<
-        storage_block_info<SuperCoder> > > >;
+        storage_block_info<SuperCoder> > > > >;
 }

@@ -125,11 +125,12 @@ namespace kodo
         template<class Field>
         class partial_shallow_stack : public
             partial_shallow_symbol_storage<
+            const_shallow_symbol_storage<
             storage_bytes_used<
             storage_block_info<
             finite_field_info<Field,
             final_layer
-            > > > >
+            > > > > >
         {
         public:
             using factory = basic_factory<partial_shallow_stack>;
@@ -138,11 +139,12 @@ namespace kodo
         template<class Field>
         class partial_shallow_stack_pool : public
             partial_shallow_symbol_storage<
+            const_shallow_symbol_storage<
             storage_bytes_used<
             storage_block_info<
             finite_field_info<Field,
             final_layer
-            > > > >
+            > > > > >
         {
         public:
             using factory = basic_factory<partial_shallow_stack_pool>;
