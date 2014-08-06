@@ -54,7 +54,8 @@ namespace kodo
         /// symbol data are valid. Calling this function will work even
         /// without providing data enough to initialize all symbol pointers.
         /// @copydoc layer::set_symbols(const sak::const_storage &)
-        void set_symbols(const sak::const_storage &symbol_storage)
+        template<class StorageType>
+        void set_symbols(const StorageType &symbol_storage)
         {
             uint32_t symbol_size = SuperCoder::symbol_size();
 
@@ -86,6 +87,7 @@ namespace kodo
                 sak::copy_storage(partial_symbol, last_symbol);
                 SuperCoder::set_symbol(last_index, partial_symbol);
 
+                // Update our state since we now have a partial symbol
                 m_has_partial_symbol = true;
                 m_partial_symbol_size = last_symbol.m_size;
             }
@@ -125,7 +127,5 @@ namespace kodo
 
         /// Keeps track of how much of the "partial symbol" buffer is used
         uint32_t m_partial_symbol_size;
-
     };
-
 }

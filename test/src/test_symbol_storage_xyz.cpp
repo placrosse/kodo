@@ -121,43 +121,15 @@ namespace kodo
             using factory = basic_factory<const_shallow_stack_pool>;
         };
 
-        // Partial Shallow Symbol Storage
-        template<class Field>
-        class partial_shallow_stack : public
-            partial_shallow_symbol_storage<
-            const_shallow_symbol_storage<
-            storage_bytes_used<
-            storage_block_info<
-            finite_field_info<Field,
-            final_layer
-            > > > > >
-        {
-        public:
-            using factory = basic_factory<partial_shallow_stack>;
-        };
-
-        template<class Field>
-        class partial_shallow_stack_pool : public
-            partial_shallow_symbol_storage<
-            const_shallow_symbol_storage<
-            storage_bytes_used<
-            storage_block_info<
-            finite_field_info<Field,
-            final_layer
-            > > > > >
-        {
-        public:
-            using factory = basic_factory<partial_shallow_stack_pool>;
-        };
-
     }
 }
 
 namespace
 {
 
-    /// Tests: Setting partial data on a storage object. Any unfilled or partial
-    ///        symbols should be available but their memory zero'ed.
+    /// Tests: Setting partial data on a storage object. Any unfilled
+    ///        or partial symbols should be available but their memory
+    ///        zero'ed.
     template<class Coder>
     struct set_partial_data
     {
@@ -1673,25 +1645,6 @@ TEST(TestSymbolStorage, test_const_shallow_stack)
     run_const_shallow_stack_tests<kodo::const_shallow_stack_pool>();
 }
 
-/// Run the tests typical partial shallow stack
-TEST(TestSymbolStorage, test_partial_shallow_stack)
-{
-    // The partial shallow symbol stack is API compatible with the
-    // const shallow stack
-    run_const_shallow_stack_tests<kodo::partial_shallow_stack>();
-    run_const_shallow_stack_tests<kodo::partial_shallow_stack_pool>();
-
-    // Run the partial data tests
-    uint32_t symbols = rand_symbols();
-    uint32_t symbol_size = rand_symbol_size();
-
-    run_test<kodo::partial_shallow_stack, set_partial_data>(
-        symbols, symbol_size);
-
-    run_test<kodo::partial_shallow_stack_pool, set_partial_data>(
-        symbols, symbol_size);
-}
-
 /// Helper function for running all the API and related tests
 /// which are compatible with the shallow const stack.
 template<template <class> class Stack>
@@ -1752,14 +1705,6 @@ TEST(TestSymbolStorage, test_mutable_shallow_stack)
 /// Tests the has_shallow_symbol_storage template
 TEST(TestSymbolStorage, test_has_shallow_symbol_storage)
 {
-    EXPECT_TRUE(kodo::has_shallow_symbol_storage<
-                    kodo::partial_shallow_stack<fifi::binary> >::value);
-
-    EXPECT_TRUE(kodo::has_shallow_symbol_storage<
-                    kodo::partial_shallow_stack<fifi::binary8> >::value);
-
-    EXPECT_TRUE(kodo::has_shallow_symbol_storage<
-                    kodo::partial_shallow_stack<fifi::binary16> >::value);
 
     EXPECT_TRUE(kodo::has_shallow_symbol_storage<
                     kodo::const_shallow_stack<fifi::binary> >::value);
@@ -1837,14 +1782,6 @@ TEST(TestSymbolStorage, test_has_shallow_symbol_storage)
 /// Tests the has_deep_symbol_storage template
 TEST(TestSymbolStorage, test_has_deep_symbol_storage)
 {
-    EXPECT_FALSE(kodo::has_deep_symbol_storage<
-                     kodo::partial_shallow_stack<fifi::binary> >::value);
-
-    EXPECT_FALSE(kodo::has_deep_symbol_storage<
-                     kodo::partial_shallow_stack<fifi::binary8> >::value);
-
-    EXPECT_FALSE(kodo::has_deep_symbol_storage<
-                     kodo::partial_shallow_stack<fifi::binary16> >::value);
 
     EXPECT_FALSE(kodo::has_deep_symbol_storage<
                      kodo::const_shallow_stack<fifi::binary> >::value);
