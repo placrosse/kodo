@@ -6,6 +6,9 @@ detailed list of every change, see the Git log.
 
 Latest
 ------
+* Major: Changed the partial_shallow_symbol_storage to become more
+  independent of the underlying storage layers. This ultimately will
+  lead to both a mutable and const version of this layer.
 * Major: Updated to sak version 11.x.y
 * Major: Updated to fifi version 12.x.y
 * Minor: Update to waf 1.8.0-pre1
