@@ -13,10 +13,6 @@
 
 namespace kodo
 {
-    /// @todo Is there a unit test. Update we should not make unit
-    /// tests for the using declarations - put this in the
-    /// documentation
-    ///
     /// @ingroup symbol_storage_layers
     ///
     /// @brief Template alias for the common set of mutable shallow storage
