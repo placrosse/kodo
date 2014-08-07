@@ -50,7 +50,7 @@ namespace kodo
         // Coefficient Storage API
         coefficient_storage_layers<
         // Storage API
-        mutable_shallow_storage_layers<TraceTag,
+        partial_mutable_shallow_storage_layers<TraceTag,
         // Finite Field API
         finite_field_layers<Field,
         // Final Layer
