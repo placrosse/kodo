@@ -19,6 +19,9 @@ a multitude of build blocks and parameters that can be combined in
 order to create codes. To ensure ease of use several codes are
 predefined, and high level API's provided.
 
+.. image:: http://buildbot.steinwurf.dk/svgstatus?project=kodo
+    :target: http://buildbot.steinwurf.dk/stats?projects=kodo
+
 Documentation
 -------------
 To get started see the manual here:
