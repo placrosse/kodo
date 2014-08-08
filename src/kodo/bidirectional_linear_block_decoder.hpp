@@ -76,6 +76,7 @@ namespace kodo
                 direction_policy::min(0, the_factory.symbols() - 1);
         }
 
+        /// @todo kill this variant
         /// @copydoc layer::decode_symbol(value_type*,value_type*)
         template
         <
