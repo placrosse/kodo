@@ -48,7 +48,7 @@ namespace kodo
         final_layer
         > > > > > > > > > > > > >
     {
-        public:
-            using factory = pool_factory<shallow_full_rlnc_encoder>;
+    public:
+        using factory = pool_factory<shallow_full_rlnc_encoder>;
     };
 }

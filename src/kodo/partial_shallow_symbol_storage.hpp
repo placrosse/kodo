@@ -45,6 +45,11 @@ namespace kodo
     {
     public:
 
+        /// Get the storage type used
+        using storage_type = typename SuperCoder::storage_type;
+
+    public:
+
         /// @copydoc layer::construct(Factory&)
         template<class Factory>
         void construct(Factory &the_factory)
