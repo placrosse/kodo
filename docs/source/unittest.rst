@@ -83,13 +83,23 @@ In general we follow the following guidelines regarding unit tests:
 2. If the class is named ``my_fast_code`` then the unit test should be
    implemented in ``test/src/test_my_fast_code.cpp``
 
+.. note:: In some cases we have headers containing only
+          ``type-aliases`` for possible a set of layers we currently
+          do not have explicit unit-test for these composite sets of
+          layers.
+
+          An example is
+          ``src/kodo/partial_mutable_shallow_storage_layers.hpp``
+          which only contains a single ``using`` declaration.
+
 The purpose of this is to make it easy to find the unit test for a
 specific class. In some cases it makes sense to have multiple classes
 tested in the same file. In those cases we still make a place-holder
 cpp file referring to the actual cpp file where the test can be
 found. An example of this can be seen for some of the codecs e.g. the
-``full_rlnc_encoder`` located in ``src/kodo/rlnc/full_rlnc_encoder.cpp
-but tested in full_rlnc_codes.cpp.
+class ``full_rlnc_encoder`` located in
+``src/kodo/rlnc/full_rlnc_encoder.hpp`` is tested in
+``full_rlnc_codes.cpp`` but the place-holder still exists..
 
 The place-holder file in this cases
 (``test/src/test_full_rlnc_encoder.cpp``) looks like the following:
@@ -102,7 +112,7 @@ Once the ``.cpp`` test file has been created we can start to implement
 the unit test code. This is done with the help of the gtest framework.
 
 The Kodo library is build using the
-``parameterized-inheritance``/``mixin-layers`` C++ design
+``parameterized-inheritance``/ ``mixin-layers`` C++ design
 technique. When unit testing a layer we try to isolate it as much as
 possible. To do this we typically introduce dummy layers with the sole
 purpose of satisfying the layer's dependencies. To see this in action

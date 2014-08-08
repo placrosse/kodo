@@ -33,6 +33,7 @@ namespace kodo
         coefficient_info<
         // Symbol Storage API
         partial_shallow_symbol_storage<
+        const_shallow_symbol_storage<
         storage_bytes_used<
         storage_block_info<
         // Finite Field API
@@ -41,7 +42,7 @@ namespace kodo
         finite_field_info<Field,
         // Final Layer
         final_layer
-        > > > > > > > > > > > > > > > > >
+        > > > > > > > > > > > > > > > > > >
     {
     public:
         using factory = pool_factory<full_rlnc_encoder_count>;

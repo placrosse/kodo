@@ -6,6 +6,14 @@ detailed list of every change, see the Git log.
 
 Latest
 ------
+* Major: Changed the partial_shallow_symbol_storage to become more
+  independent of the underlying storage layers. In addition the layer
+  is now more strict it as it only supports a single partial
+  symbol. This means that the user now should select the number of
+  symbols to match this requirement.
+* Major: Renamed the partial_shallow_storage_layers to
+  const_partial_shallow_storage_layers and added
+  mutable_partial_shallow_storage_layers
 * Major: Updated to sak version 11.x.y
 * Major: Updated to fifi version 12.x.y
 * Minor: Update to waf 1.8.0-pre1

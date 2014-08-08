@@ -6,7 +6,7 @@
 #pragma once
 
 #include "../default_on_systematic_encoder.hpp"
-#include "../partial_shallow_storage_layers.hpp"
+#include "../partial_const_shallow_storage_layers.hpp"
 #include "../sparse_uniform_generator.hpp"
 #include "../finite_field_layers.hpp"
 
@@ -42,7 +42,7 @@ namespace kodo
         coefficient_value_access<
         coefficient_info<
         // Symbol Storage API
-        partial_shallow_storage_layers<TraceTag,
+        partial_const_shallow_storage_layers<TraceTag,
         // Finite Field API
         finite_field_layers<Field,
         // Final Layer

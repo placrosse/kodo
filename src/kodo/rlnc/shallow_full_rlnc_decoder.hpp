@@ -8,8 +8,7 @@
 #include "../default_on_systematic_encoder.hpp"
 #include "../has_shallow_symbol_storage.hpp"
 #include "../linear_block_decoder_delayed.hpp"
-#include "../partial_shallow_symbol_storage.hpp"
-#include "../mutable_shallow_storage_layers.hpp"
+#include "../partial_mutable_shallow_storage_layers.hpp"
 
 #include "../common_decoder_layers.hpp"
 #include "../finite_field_layers.hpp"
@@ -39,7 +38,7 @@ namespace kodo
         // Coefficient Storage API
         coefficient_storage_layers<
         // Storage API
-        mutable_shallow_storage_layers<TraceTag,
+        partial_mutable_shallow_storage_layers<TraceTag,
         // Finite Field API
         finite_field_layers<Field,
         // Final Layer
