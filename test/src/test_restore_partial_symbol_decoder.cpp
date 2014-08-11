@@ -185,5 +185,4 @@ TEST(TestRestorePartialSymbolDecoder, restore)
     stack.decode_symbol(pointer, index);
     EXPECT_EQ(stack.m_restore_partial_symbol.calls(), 2U);
     EXPECT_EQ(stack.m_decode_symbol_index.calls(), 3U);
-
 }

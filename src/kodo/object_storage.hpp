@@ -102,6 +102,8 @@ namespace kodo
             auto stack = SuperCoder::build(index);
             assert(stack);
 
+            std::cout << "stack block size = " << stack->block_size() << std::endl;
+
             uint32_t offset = SuperCoder::byte_offset(index);
             uint32_t block_size = SuperCoder::block_size(index);
 
@@ -113,7 +115,7 @@ namespace kodo
             std::cout << "data.m_size = " << data.m_size << std::endl;
 
             assert(data.m_size > offset);
-            assert(data.m_size - offset >= block_size);
+            // assert(data.m_size - offset >= block_size);
 
             // Adjust the size of the buffer to fit this stack
             data.m_data += offset;

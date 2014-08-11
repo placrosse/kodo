@@ -5,8 +5,14 @@
 
 #pragma once
 
+#include "rebind_factory.hpp"
+
 namespace kodo
 {
+
+
+
+
     /// @ingroup payload_codec_layers
     ///
     /// @brief This layer can be added to a decoder stack to make sure
@@ -91,4 +97,17 @@ namespace kodo
         /// so that we only do it once
         bool m_restored;
     };
+
+
+    template<template <class> class Wrap, class Codec>
+    class wrap : public Wrap<Codec>
+    {
+    public:
+        using factory = rebind_factory<Codec, wrap>;
+    };
+
+    template<class Codec>
+    using wrap_restore_partial_symbol_decoder =
+        wrap<restore_partial_symbol_decoder, Codec>;
+
 }

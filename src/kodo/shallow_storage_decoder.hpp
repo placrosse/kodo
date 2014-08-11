@@ -11,6 +11,9 @@
 #include "mutable_object_storage.hpp"
 #include "final_layer.hpp"
 
+#include "extend_object_stack.hpp"
+#include "restore_partial_symbol_decoder.hpp"
+
 namespace kodo
 {
     /// @todo add docs
@@ -30,9 +33,10 @@ namespace kodo
     class shallow_storage_decoder : public
         mutable_object_storage<
         object_stack_builder<
+        extend_object_stack<wrap_restore_partial_symbol_decoder,
         object_stack<Stack,
         rfc5052_object_partitioning<
-        final_layer> > > >
+        final_layer> > > > >
     {
     public:
 

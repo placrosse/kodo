@@ -38,11 +38,7 @@ int main()
     storage_encoder::factory encoder_factory(max_symbols, max_symbol_size);
     storage_decoder::factory decoder_factory(max_symbols, max_symbol_size);
 
-    // The storage needed for all decoders
-    uint32_t total_block_size =
-        decoder_factory.total_block_size(object_size);
-
-    std::vector<uint8_t> data_out(total_block_size, '\0');
+    std::vector<uint8_t> data_out(object_size, '\0');
     std::vector<uint8_t> data_in(object_size, 'x');
 
     encoder_factory.set_storage(sak::storage(data_in));
@@ -52,7 +48,6 @@ int main()
     auto object_decoder = decoder_factory.build();
 
     std::cout << "object_size = " << object_size << std::endl;
-    std::cout << "total_block_size = " << total_block_size << std::endl;
     std::cout << "encoder blocks = " << object_encoder->blocks() << std::endl;
     std::cout << "decoder blocks = " << object_decoder->blocks() << std::endl;
 
@@ -77,9 +72,6 @@ int main()
             d->decode( payload.data() );
         }
     }
-
-    // Resize the output buffer to contain only the object data
-    data_out.resize(object_size);
 
     // Check we properly decoded the data
     if (data_in == data_out)

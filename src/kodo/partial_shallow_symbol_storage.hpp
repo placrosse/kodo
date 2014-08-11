@@ -70,9 +70,8 @@ namespace kodo
             m_has_partial_symbol = false;
         }
 
-        /// @copydoc layer::set_symbols(const sak::const_storage &)
-        template<class StorageType>
-        void set_symbols(const StorageType &symbol_storage)
+        /// @copydoc layer::set_symbols(const storage_type &)
+        void set_symbols(const storage_type &symbol_storage)
         {
             uint32_t symbol_size = SuperCoder::symbol_size();
 
@@ -99,6 +98,7 @@ namespace kodo
 
             if(last_symbol.m_size < symbol_size)
             {
+                std::cout << "Last symbol needed" << std::endl;
                 const auto& internal_symbol = sak::storage(m_internal_symbol);
 
                 /// @todo This copy step is not needed on decoders and
