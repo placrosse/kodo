@@ -98,7 +98,6 @@ namespace kodo
 
             if(last_symbol.m_size < symbol_size)
             {
-                std::cout << "Last symbol needed" << std::endl;
                 const auto& internal_symbol = sak::storage(m_internal_symbol);
 
                 /// @todo This copy step is not needed on decoders and
