@@ -7,49 +7,45 @@
 
 #include <cstdint>
 
-#include <sak/storage.hpp>
-
-#include "rfc5052_partitioning_scheme.hpp"
-#include "final_layer.hpp"
-#include "basic_factory.hpp"
-#include "storage_block_size.hpp"
-
 namespace kodo
 {
     /// @todo + docs
     ///
     /// @brief Provides storage and access to the memory used by the object.
     ///
-    /// When encoding or decoding an object we will be working with
-    /// more memory than what can contained within a single encoder or
-    /// decoder. The object stoarge layer contains a StorageType
-    /// object wich provides information about the memory we are
-    /// either encoding or decoder. The StorageType will typically be
-    /// either a sak::mutable_st
-    template<class StorageType, class SuperCoder>
+    /// The object storage layer contains a StorageType object which
+    /// provides information about the memory we are either encoding
+    /// or decoding. The StorageType will typically be either a
+    /// sak::mutable_storage or a sak::const_storage object depending
+    /// on whether it is used for encoding or decoding.
+    template<class SuperCoder>
     class object_storage : public SuperCoder
     {
     public:
 
-        /// The storage type
-        using storage_type = StorageType;
+        /// The stack used
+        using stack_type = typename SuperCoder::stack_type;
 
-        /// The type of the pointer to the stack we are building
-        using stack_pointer_type = typename SuperCoder::stack_pointer_type;
+        /// The storage type
+        using storage_type = typename stack_type::storage_type;
 
     public:
 
         /// @ingroup factory_base_layers
         ///
-        /// @brief
+        /// @brief The factory layer allows a user to specify the
+        ///        storage that should be used for the
+        ///        encoding/decoding.
         class factory_base : public SuperCoder::factory_base
         {
         public:
 
+            /// @copydoc layer::factory_base::factory_base(uint32_t,uint32_t)
             factory_base(uint32_t symbols, uint32_t symbol_size)
                 : SuperCoder::factory_base(symbols, symbol_size)
             { }
 
+            /// @param storage The object storage that should be used
             void set_storage(const storage_type& storage)
             {
                 assert(storage.m_data != 0);
@@ -58,7 +54,7 @@ namespace kodo
                 m_storage = storage;
             }
 
-            /// @return the stored storage object
+            /// @return The stored storage object
             const storage_type& storage() const
             {
                 assert(m_storage.m_data != 0);
@@ -67,11 +63,10 @@ namespace kodo
                 return m_storage;
             }
 
-            /// @return the size of the object storage
+            /// @return The size of the object storage
             uint32_t object_size() const
             {
                 assert(m_storage.m_size > 0);
-
                 return m_storage.m_size;
             }
 
@@ -80,6 +75,11 @@ namespace kodo
             /// The storage of the object to encode
             storage_type m_storage;
         };
+
+    private:
+
+        template<class T>
+        using return_build_type = decltype(std::declval<T>().build(0));
 
     public:
 
@@ -97,7 +97,7 @@ namespace kodo
         ///
         /// @return the newly built encoder or decoder initialized
         ///         with storage through the the set_symbols function
-        stack_pointer_type build(uint32_t index)
+        auto build(uint32_t index) -> return_build_type<SuperCoder>
         {
             auto stack = SuperCoder::build(index);
             assert(stack);

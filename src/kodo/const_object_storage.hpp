@@ -11,8 +11,8 @@
 
 namespace kodo
 {
-    /// @todo add docs
-    template<class SuperCoder>
-    using const_object_storage =
-        object_storage<sak::const_storage, SuperCoder>;
+    /// @todo delete
+    // template<class SuperCoder>
+    // using const_object_storage =
+    //     object_storage<sak::const_storage, SuperCoder>;
 }

@@ -31,7 +31,7 @@ namespace kodo
     ///
     template<class Stack>
     class shallow_storage_decoder : public
-        mutable_object_storage<
+        object_storage<
         object_stack_builder<
         extend_object_stack<wrap_restore_partial_symbol_decoder,
         object_stack<Stack,

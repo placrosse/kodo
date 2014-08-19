@@ -11,8 +11,8 @@
 
 namespace kodo
 {
-    /// @todo add docs
-    template<class SuperCoder>
-    using mutable_object_storage =
-        object_storage<sak::mutable_storage, SuperCoder>;
+    /// @todo delete
+    // template<class SuperCoder>
+    // using mutable_object_storage =
+    //     object_storage<sak::mutable_storage, SuperCoder>;
 }

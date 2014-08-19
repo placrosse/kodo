@@ -33,7 +33,7 @@ namespace kodo
     /// @todo finish docs
     template<class Stack>
     class storage_encoder : public
-        const_object_storage<
+        object_storage<
         object_stack_builder<
         object_stack<Stack,
         rfc5052_object_partitioning<
