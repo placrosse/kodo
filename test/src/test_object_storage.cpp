@@ -117,7 +117,8 @@ TEST(TestObjectStorage, data_fits)
 
     EXPECT_TRUE(sak::is_same(factory.storage(), sak::storage(data)));
     EXPECT_EQ(factory.object_size(), symbols * symbol_size);
-    EXPECT_TRUE(factory.m_constructor.called_once_with(symbols, symbol_size));
+    EXPECT_TRUE((bool)factory.m_constructor.expect_calls()
+                    .with(symbols, symbol_size));
 
     // Setup the stack
     kodo::dummy_stack stack;

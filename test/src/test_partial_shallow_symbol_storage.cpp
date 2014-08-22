@@ -112,8 +112,8 @@ TEST(TestPartialShallowSymbolStorage, no_partial)
 
     // Check state is correct and that initialize and construct calls
     // were correctly forwarded
-    EXPECT_TRUE(stack.m_construct.called_once_with());
-    EXPECT_TRUE(stack.m_initialize.called_once_with());
+    EXPECT_TRUE((bool) stack.m_construct.expect_calls().with());
+    EXPECT_TRUE((bool) stack.m_initialize.expect_calls().with());
     EXPECT_FALSE(stack.has_partial_symbol());
 
     // Set the remaining needed state in the stack
@@ -144,18 +144,13 @@ TEST(TestPartialShallowSymbolStorage, no_partial)
             return false;
         };
 
+    EXPECT_TRUE((bool) stack.m_set_symbol.expect_calls(p)
+              .with(0, storage_type(data.data() + 0, 5U))
+              .with(1, storage_type(data.data() + 5, 5U))
+              .with(2, storage_type(data.data() + 10, 5U))
+              .with(3, storage_type(data.data() + 15, 5U))
+              .with(4, storage_type(data.data() + 20, 5U)));
 
-    // The actual calls that were made
-    std::vector<parameter> real_calls =
-        {
-            std::make_tuple(0, storage_type(data.data() + 0, 5U)),
-            std::make_tuple(1, storage_type(data.data() + 5, 5U)),
-            std::make_tuple(2, storage_type(data.data() + 10, 5U)),
-            std::make_tuple(3, storage_type(data.data() + 15, 5U)),
-            std::make_tuple(4, storage_type(data.data() + 20, 5U))
-        };
-
-    EXPECT_TRUE(stack.m_set_symbol.has_calls(real_calls, p));
 }
 
 // Test that the stack functions properly when the partial symbol is
@@ -178,8 +173,8 @@ TEST(TestPartialShallowSymbolStorage, partial)
 
     // Check state is correct and that initialize and construct calls
     // were correctly forwarded
-    EXPECT_TRUE(stack.m_construct.called_once_with());
-    EXPECT_TRUE(stack.m_initialize.called_once_with());
+    EXPECT_TRUE((bool) stack.m_construct.expect_calls().with());
+    EXPECT_TRUE((bool) stack.m_initialize.expect_calls().with());
     EXPECT_FALSE(stack.has_partial_symbol());
 
     // Set the remaining needed state in the stack
@@ -210,7 +205,6 @@ TEST(TestPartialShallowSymbolStorage, partial)
 
             return false;
         };
-
 
     EXPECT_EQ(stack.m_set_symbol.calls(), 5U);
 

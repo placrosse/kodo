@@ -91,7 +91,7 @@ TEST(TestRestorePartialSymbolDecoder, no_restore)
 
     stack.initialize(factory);
 
-    EXPECT_TRUE(stack.m_initialize.called_once_with());
+    EXPECT_TRUE((bool) stack.m_initialize.expect_calls().with());
 
     stack.m_is_complete.set_return(false);
     stack.m_has_partial_symbol.set_return(false);
@@ -136,7 +136,7 @@ TEST(TestRestorePartialSymbolDecoder, restore)
 
     stack.initialize(factory);
 
-    EXPECT_TRUE(stack.m_initialize.called_once_with());
+    EXPECT_TRUE((bool) stack.m_initialize.expect_calls().with());
 
     stack.m_is_complete.set_return(false);
     stack.m_has_partial_symbol.set_return(true);

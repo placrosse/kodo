@@ -62,13 +62,13 @@ TEST(TestStorageBytesUsed, api)
     stack.set_bytes_used(9U);
 
     EXPECT_EQ(stack.m_initialize.calls(), 1U);
-    EXPECT_TRUE(stack.m_block_size.called_once_with());
+    EXPECT_TRUE((bool) stack.m_block_size.expect_calls().with());
     EXPECT_EQ(stack.bytes_used(), 9U);
 
     // Initialize again and check that the state is reset
     stack.initialize(factory);
     EXPECT_EQ(stack.m_initialize.calls(), 2U);
-    EXPECT_TRUE(stack.m_block_size.called_once_with());
+    EXPECT_TRUE((bool) stack.m_block_size.expect_calls().with());
     EXPECT_EQ(stack.bytes_used(), 0U);
 
 }
