@@ -12,7 +12,8 @@ namespace kodo
 
 
 
-
+    /// @todo formatting and wrap code at the bottom
+    ///
     /// @ingroup payload_codec_layers
     ///
     /// @brief This layer can be added to a decoder stack to make sure

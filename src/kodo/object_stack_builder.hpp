@@ -21,13 +21,13 @@ namespace kodo
     /// SuperCoder. Using the embeeded factory type the
     /// object_stack_factory will create on stack factory which will
     /// be shared between object stacks.
-    template<class SuperCoder>
+    template<class Stack, class SuperCoder>
     class object_stack_builder : public SuperCoder
     {
     public:
 
         /// The stack that we are building
-        using stack_type = typename SuperCoder::stack_type;
+        using stack_type = Stack;//typename SuperCoder::stack_type;
 
         /// The factory of the stack
         using stack_factory_type = typename stack_type::factory;

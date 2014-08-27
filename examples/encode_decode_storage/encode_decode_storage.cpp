@@ -20,6 +20,57 @@
 /// Both the encoder and decoder uses a shallow storage which means
 /// that they operate directly on the memory provided.
 
+// @todo Proposal is to put the layers related to object encoding/decoding inot
+//       a object namespace. This means we will have things like:
+//
+//       + kodo::object::shallow_storage
+//       + kodo::object::stack_factory
+//       + kodo::object::rfc5052_partitioning
+//       + kodo::object::is_complete
+//
+//       This should be pretty straight forward the only issue I can
+//       see right now is that we might have a class or helper
+//       function in another namesapce e.g. kodo::file or in kodo
+//       itself which has the same name. In it self this does not
+//       cause any problems, but our test naming convention would have
+//       to be updated.
+//
+//       One way to deal with this is to also put things in the object
+//       namespace into a sub-folder in kodo. So the class
+//       kodo::object::shallow_storage would be located in the header:
+//
+//       src/kodo/object/shallow_storage.hpp
+//
+//       And tested in test/src/object/test_shallow_storage.cpp
+//
+//       This keeps the convention of having a class named xyz tested
+//       in test_xyz.cpp it only affect which folder the test is in.
+//
+//       Defining multiple namespaces leads to quite a bit of {
+//       bracket indentation and nesting. I therefore would propose to
+//       do it the same way boost does it:
+//
+//       namespace kodo
+//       {
+//       namespace object
+//       {
+//
+//           template<class SuperCoder>
+//           class shallow_storage : public SuperCoder
+//           {
+//           ....
+//           };
+//
+//       }
+//       }
+//
+//
+// kodo::object::encoder
+// kodo::file::encoder
+// kodo::random_annex::encoder
+//
+
+
 int main()
 {
     // Set the number of symbols (i.e. the generation size in RLNC

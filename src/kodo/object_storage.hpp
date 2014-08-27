@@ -9,15 +9,19 @@
 
 namespace kodo
 {
-    /// @todo + docs
+    /// @todo put in group
     ///
-    /// @brief Provides storage and access to the memory used by the object.
+    /// @brief Initializes the codecs built with the object storage
+    ///        provided
     ///
-    /// The object storage layer contains a StorageType object which
-    /// provides information about the memory we are either encoding
-    /// or decoding. The StorageType will typically be either a
-    /// sak::mutable_storage or a sak::const_storage object depending
-    /// on whether it is used for encoding or decoding.
+    /// When we encode or decode data that does not fit into a single
+    /// encoder or decoder we use the object codecs. This layer is a
+    /// building block in an object codec. It allows the user to
+    /// specify the storage memory which should be used by the
+    /// coded. When we build the object encoder/decoder the factory
+    /// the layer will copy the storage object and use it to
+    /// initialize the actual encoders/decoders build with the right
+    /// piece of memory using the layer::set_symbols() function.
     template<class SuperCoder>
     class object_storage : public SuperCoder
     {
@@ -76,11 +80,6 @@ namespace kodo
             storage_type m_storage;
         };
 
-    private:
-
-        template<class T>
-        using return_build_type = decltype(std::declval<T>().build(0));
-
     public:
 
         /// @copydoc layer::initialize(Factory&)
@@ -97,7 +96,8 @@ namespace kodo
         ///
         /// @return the newly built encoder or decoder initialized
         ///         with storage through the the set_symbols function
-        auto build(uint32_t index) -> return_build_type<SuperCoder>
+        auto build(uint32_t index) ->
+            decltype(std::declval<SuperCoder>().build(0))
         {
             auto stack = SuperCoder::build(index);
             assert(stack);

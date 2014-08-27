@@ -108,49 +108,185 @@ TEST(TestObjectStorage, data_fits)
     // Setup the test data
     uint32_t symbols = 5;
     uint32_t symbol_size = 100;
+    uint32_t blocks = 5;
 
-    std::vector<uint8_t> data(symbols * symbol_size);
+    uint32_t data_size = symbols * symbol_size * blocks;
+
+    std::vector<uint8_t> data(data_size);
 
     // Check the factory
     kodo::dummy_stack::factory_base factory(symbols, symbol_size);
     factory.set_storage(sak::storage(data));
 
     EXPECT_TRUE(sak::is_same(factory.storage(), sak::storage(data)));
-    EXPECT_EQ(factory.object_size(), symbols * symbol_size);
+    EXPECT_EQ(factory.object_size(), data_size);
     EXPECT_TRUE((bool)factory.m_constructor.expect_calls()
                     .with(symbols, symbol_size));
 
     // Setup the stack
     kodo::dummy_stack stack;
 
-    stack.m_byte_offset.set_return({0U, 100U, 200U, 300U, 400U}).no_repeat();
+    auto stack0 = std::make_shared<kodo::dummy_stack::stack>();
+    auto stack1 = std::make_shared<kodo::dummy_stack::stack>();
+    auto stack2 = std::make_shared<kodo::dummy_stack::stack>();
+    auto stack3 = std::make_shared<kodo::dummy_stack::stack>();
+    auto stack4 = std::make_shared<kodo::dummy_stack::stack>();
+
+    stack.m_byte_offset.set_return({0U, 500U, 1000U, 1500U, 2000U}).no_repeat();
     stack.m_block_size.set_return({500U, 500U, 500U, 500U, 500U}).no_repeat();
 
 
-
-
-
-
-
+    stack.m_build.set_return({stack0, stack1, stack2, stack3, stack4})
+        .no_repeat();
 
     stack.initialize(factory);
 
-    // auto object_stack = factory.build();
+    EXPECT_TRUE((bool) stack.m_initialize.expect_calls().with());
+
+    auto b0 = stack.build(0);
+    auto b1 = stack.build(1);
+    auto b2 = stack.build(2);
+    auto b3 = stack.build(3);
+    auto b4 = stack.build(4);
+
+    EXPECT_TRUE(stack0 == b0);
+    EXPECT_TRUE(stack1 == b1);
+    EXPECT_TRUE(stack2 == b2);
+    EXPECT_TRUE(stack3 == b3);
+    EXPECT_TRUE(stack4 == b4);
+
+    EXPECT_TRUE((bool) stack.m_byte_offset.expect_calls()
+                    .with(0)
+                    .with(1)
+                    .with(2)
+                    .with(3)
+                    .with(4));
+
+    EXPECT_TRUE((bool) stack.m_block_size.expect_calls()
+                    .with(0)
+                    .with(1)
+                    .with(2)
+                    .with(3)
+                    .with(4));
+
+    auto compare = [](const std::tuple<sak::const_storage> &a,
+                      const std::tuple<sak::const_storage> &b) -> bool
+        {
+            return sak::is_same(std::get<0>(a), std::get<0>(b));
+        };
+
+    EXPECT_TRUE((bool) b0->m_set_symbols.expect_calls(compare)
+                    .with(sak::storage(data.data(), 500)));
 
 
-    // stack.m_block_size.set_return(10U);
+    EXPECT_TRUE((bool) b1->m_set_symbols.expect_calls(compare)
+                    .with(sak::storage(data.data() + 500, 500)));
 
-    // stack.initialize(factory);
-    // stack.set_bytes_used(9U);
+    EXPECT_TRUE((bool) b2->m_set_symbols.expect_calls(compare)
+                    .with(sak::storage(data.data() + 1000, 500)));
 
-    // EXPECT_EQ(stack.m_initialize.calls(), 1U);
-    // EXPECT_TRUE(stack.m_block_size.called_once_with());
-    // EXPECT_EQ(stack.bytes_used(), 9U);
+    EXPECT_TRUE((bool) b3->m_set_symbols.expect_calls(compare)
+                    .with(sak::storage(data.data() + 1500, 500)));
 
-    // // Initialize again and check that the state is reset
-    // stack.initialize(factory);
-    // EXPECT_EQ(stack.m_initialize.calls(), 2U);
-    // EXPECT_TRUE(stack.m_block_size.called_once_with());
-    // EXPECT_EQ(stack.bytes_used(), 0U);
+    EXPECT_TRUE((bool) b4->m_set_symbols.expect_calls(compare)
+                    .with(sak::storage(data.data() + 2000, 500)));
+}
 
+/// Test the object storage class sets the correct storage objects
+/// when the data fits perfectly
+TEST(TestObjectStorage, data_does_not_fit)
+{
+    // Setup the test data
+    uint32_t symbols = 5;
+    uint32_t symbol_size = 100;
+    uint32_t blocks = 5;
+
+    uint32_t data_size = symbols * symbol_size * blocks;
+
+    // Lets reduce the data size so that it is not a multiple of the
+    // symbol size. Just as a note in general it does not make sense
+    // to reduce the data size with more than the symbol size. Because
+    // if that was the case we could simply have on less symbol.
+    data_size -= 50;
+
+    std::vector<uint8_t> data(data_size);
+
+    // Check the factory
+    kodo::dummy_stack::factory_base factory(symbols, symbol_size);
+    factory.set_storage(sak::storage(data));
+
+    EXPECT_TRUE(sak::is_same(factory.storage(), sak::storage(data)));
+    EXPECT_EQ(factory.object_size(), data_size);
+    EXPECT_TRUE((bool)factory.m_constructor.expect_calls()
+                    .with(symbols, symbol_size));
+
+    // Setup the stack
+    kodo::dummy_stack stack;
+
+    auto stack0 = std::make_shared<kodo::dummy_stack::stack>();
+    auto stack1 = std::make_shared<kodo::dummy_stack::stack>();
+    auto stack2 = std::make_shared<kodo::dummy_stack::stack>();
+    auto stack3 = std::make_shared<kodo::dummy_stack::stack>();
+    auto stack4 = std::make_shared<kodo::dummy_stack::stack>();
+
+    stack.m_byte_offset.set_return({0U, 500U, 1000U, 1500U, 2000U}).no_repeat();
+    stack.m_block_size.set_return({500U, 500U, 500U, 500U, 500U}).no_repeat();
+
+
+    stack.m_build.set_return({stack0, stack1, stack2, stack3, stack4})
+        .no_repeat();
+
+    stack.initialize(factory);
+
+    EXPECT_TRUE((bool) stack.m_initialize.expect_calls().with());
+
+    auto b0 = stack.build(0);
+    auto b1 = stack.build(1);
+    auto b2 = stack.build(2);
+    auto b3 = stack.build(3);
+    auto b4 = stack.build(4);
+
+    EXPECT_TRUE(stack0 == b0);
+    EXPECT_TRUE(stack1 == b1);
+    EXPECT_TRUE(stack2 == b2);
+    EXPECT_TRUE(stack3 == b3);
+    EXPECT_TRUE(stack4 == b4);
+
+    EXPECT_TRUE((bool) stack.m_byte_offset.expect_calls()
+                    .with(0)
+                    .with(1)
+                    .with(2)
+                    .with(3)
+                    .with(4));
+
+    EXPECT_TRUE((bool) stack.m_block_size.expect_calls()
+                    .with(0)
+                    .with(1)
+                    .with(2)
+                    .with(3)
+                    .with(4));
+
+    auto compare = [](const std::tuple<sak::const_storage> &a,
+                      const std::tuple<sak::const_storage> &b) -> bool
+        {
+            return sak::is_same(std::get<0>(a), std::get<0>(b));
+        };
+
+    EXPECT_TRUE((bool) b0->m_set_symbols.expect_calls(compare)
+                    .with(sak::storage(data.data(), 500)));
+
+
+    EXPECT_TRUE((bool) b1->m_set_symbols.expect_calls(compare)
+                    .with(sak::storage(data.data() + 500, 500)));
+
+    EXPECT_TRUE((bool) b2->m_set_symbols.expect_calls(compare)
+                    .with(sak::storage(data.data() + 1000, 500)));
+
+    EXPECT_TRUE((bool) b3->m_set_symbols.expect_calls(compare)
+                    .with(sak::storage(data.data() + 1500, 500)));
+
+    // The last coding block get a storage object which is not a
+    // multiple of the symbol size and number of symbols.
+    EXPECT_TRUE((bool) b4->m_set_symbols.expect_calls(compare)
+                    .with(sak::storage(data.data() + 2000, 450)));
 }

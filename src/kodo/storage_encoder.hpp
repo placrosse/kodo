@@ -34,10 +34,10 @@ namespace kodo
     template<class Stack>
     class storage_encoder : public
         object_storage<
-        object_stack_builder<
-        object_stack<Stack,
+        object_stack_builder<Stack,
+//        object_stack<Stack,
         rfc5052_object_partitioning<
-        final_layer> > > >
+            final_layer> > > //>
     {
     public:
 

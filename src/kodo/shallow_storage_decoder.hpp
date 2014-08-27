@@ -33,10 +33,11 @@ namespace kodo
     class shallow_storage_decoder : public
         object_storage<
         object_stack_builder<
-        extend_object_stack<wrap_restore_partial_symbol_decoder,
-        object_stack<Stack,
+            wrap_restore_partial_symbol_decoder<Stack>,
+        // extend_object_stack<wrap_restore_partial_symbol_decoder,
+            // object_stack<wrap_restore_partial_symbol_decoder<Stack>,
         rfc5052_object_partitioning<
-        final_layer> > > > >
+            final_layer> > > //> //>
     {
     public:
 
