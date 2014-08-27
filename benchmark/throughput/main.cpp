@@ -23,6 +23,7 @@
 #include <kodo/set_systematic_off.hpp>
 #include <kodo/rlnc/full_rlnc_codes.hpp>
 #include <kodo/rlnc/fulcrum_codes.hpp>
+#include <kodo/rlnc/fulcrum_encoder_optimized.hpp>
 
 #include <tables/table.hpp>
 
@@ -899,6 +900,43 @@ typedef fulcrum_throughput_benchmark<
     setup_fulcrum_combined_throughput;
 
 BENCHMARK_F(setup_fulcrum_combined_throughput, FulcrumCombined, Binary8, 5)
+{
+    run_benchmark();
+}
+
+//------------------------------------------------------------------
+// Fulcrum optimized RNG: mt19927, ValueType: uint8
+//------------------------------------------------------------------
+
+typedef fulcrum_throughput_benchmark<
+    kodo::fulcrum_encoder_mt19937_uint8<fifi::binary8>,
+    kodo::fulcrum_inner_decoder<fifi::binary>>
+    setup_fulcrum_inner_throughput_mt19937_uint8;
+
+BENCHMARK_F(setup_fulcrum_inner_throughput_mt19937_uint8,
+            FulcrumInnerOptimized, Binary, 5)
+{
+    run_benchmark();
+}
+
+typedef fulcrum_throughput_benchmark<
+    kodo::fulcrum_encoder_mt19937_uint8<fifi::binary8>,
+    kodo::fulcrum_outer_decoder<fifi::binary8>>
+    setup_fulcrum_outer_throughput_mt19937_uint8;
+
+BENCHMARK_F(setup_fulcrum_outer_throughput_mt19937_uint8,
+            FulcrumOuterOptimized, Binary8, 5)
+{
+    run_benchmark();
+}
+
+typedef fulcrum_throughput_benchmark<
+    kodo::fulcrum_encoder_mt19937_uint8<fifi::binary8>,
+    kodo::fulcrum_combined_decoder<fifi::binary8>>
+    setup_fulcrum_combined_throughput_mt19937_uint8;
+
+BENCHMARK_F(setup_fulcrum_combined_throughput_mt19937_uint8,
+            FulcrumCombinedOptimized, Binary8, 5)
 {
     run_benchmark();
 }

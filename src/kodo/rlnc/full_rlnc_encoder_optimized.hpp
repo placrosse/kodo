@@ -8,7 +8,7 @@
 #include <kodo/coefficient_storage.hpp>
 #include <kodo/coefficient_info.hpp>
 #include <kodo/plain_symbol_id_writer.hpp>
-#include "new_uniform_generator.hpp"
+#include <kodo/new_uniform_generator.hpp>
 #include <kodo/storage_aware_encoder.hpp>
 #include <kodo/encode_symbol_tracker.hpp>
 #include <kodo/linear_block_encoder.hpp>
