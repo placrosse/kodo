@@ -7,34 +7,38 @@ design and functionality.
 
 Introduction
 ------------
-With Kodo we wanted to build a library which allowed easy experimentation
-with erasure correcting codes, in particular Network Codes. One of the
-major challenges has been to produce a design which allowed experimentation
-with variants of different codes, but without having to rewrite or duplicate
-a lot of code. To support this we went through a large number of design
-iterations e.g. using traditional polymorphic OO (Object Oriented) designs.
-We have finally settled for using a special C++ design technique known as
-`mixin layers`_ or parametrized inheritance. Utilizing this technique has
-made it possible to create a component based library with a high level
-of code reuse.
 
-In the following we will attempt to provide an overview of the Kodo design
-and the current architecture. Along the way we will provide definitions of
-the terminology we use throughout the library. The goal is that this
-overview should be readable for an as wide as possible audience. Therefore
-if you should find something missing, unclear or which could be improved
-please let us know.
+With Kodo we wanted to build a library which allowed easy
+experimentation with erasure correcting codes, in particular Network
+Codes. One of the major challenges has been to produce a design which
+allowed experimentation with variants of different codes, but without
+having to rewrite or duplicate a lot of code. To support this we went
+through a large number of design iterations e.g. using traditional
+polymorphic OOP (Object Oriented Programming) designs.  We have
+finally settled for using a special C++ design technique known as
+`mixin layers`_ or parametrized inheritance. Utilizing this technique
+has made it possible to create a component based library with a high
+level of code reuse.
+
+In the following we will attempt to provide an overview of the Kodo
+design and the current architecture. Along the way we will provide
+definitions of the terminology we use throughout the library. The goal
+is that this overview should be readable for an as wide as possible
+audience. Therefore if you should find something missing, unclear or
+which could be improved please let us know.
+
 
 API Layer Specifications
 ------------------------
-Although the mixin-layer technique provides many benefits in terms of reuse
-and flexibility it also provides you with ample ways of shooting yourself
-in the foot, by accidentally reordering layers in wrong ways or by not
-having compatible layers in both encoders and decoders. Some of these
-problems will be caught at compile time, but others can result in subtle
-and hard to find errors at run time. You should therefore always pay close
-attention when adding, removing or reordering layers in encoders and
-decoders.
+
+Although the mixin-layer technique provides many benefits in terms of
+reuse and flexibility it also provides you with ample ways of shooting
+yourself in the foot, by accidentally reordering layers in wrong ways
+or by not having compatible layers in both encoders and decoders. Some
+of these problems will be caught at compile time, but others can
+result in subtle and hard to find errors at run time. You should
+therefore always pay close attention when adding, removing or
+reordering layers in encoders and decoders.
 
 In an attempt to reduce the amount of problems that can arise from
 misconfigured encoders and decoders we have created a set of API
