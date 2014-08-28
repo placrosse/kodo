@@ -1,4 +1,4 @@
-.. _unittest:
+.. _unit_testing:
 
 Unit Testing
 ============

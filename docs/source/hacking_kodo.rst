@@ -234,3 +234,63 @@ You can use the factory API if you wish to:
 * Pre-allocate memory needed for different codecs and thereby
   minimize the amount of memory allocations needed during
   encoding or decoding.
+
+
+Coding style
+------------
+
+We follow the Steinwurf coding style found `here
+<https://github.com/steinwurf/steinwurf-labs/blob/master/docs/coding_style.rst>`_. Please
+make sure you follow this style when adding new code to the Kodo
+library. If you find code not consistent with the code style please
+let us know :) :ref:`contact_us`
+
+.. _files_and_classes:
+
+Files and Classes
+-----------------
+
+We have a one class per one file rule. If you make a new class ``happy``, then
+put it in ``happy.hpp``. This makes the classes easier to find in the
+source tree. Exceptions to this rule are nested classes.
+
+.. note:: Remember to also add a unit test for your new
+          functionality. Find more informati on about this in our
+          :ref:`unit_testing` section.
+
+.. note:: If you new class resides in a namespace make sure to place
+          the source files in the right directory see the
+          :ref:`namespaces_and_directories` section.
+
+.. _namespaces_and_directories:
+
+Namespaces and Directories
+--------------------------
+
+If you create a class in a nested namespace for example:
+
+::
+
+    namespace kodo
+    {
+    namespace object
+    {
+
+        template<class SuperCoder>
+        class smart : public SuperCoder
+        {
+        ...
+        };
+    }
+    }
+
+
+Then this file should be called ``smart.hpp`` as described in
+:ref:`files_and_classes`. In addition to this the file should be
+placed in the ´´src/kodo/object/smart.hpp´´ directory. Similarly the
+corresponding test file ``test_smart.cpp`` should be placed in
+``test/src/object/test_smart.cpp``.
+
+The general rule is that namespaces are represented by a directory in
+the filesystem. This means if you see a class in a namespace you know
+which folder the corresponding source files should be in.
