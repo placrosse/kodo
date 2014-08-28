@@ -23,25 +23,25 @@ namespace kodo
     /// @brief Generates an uniform random coefficient (from the chosen
     /// Finite Field) for every symbol.
     template<class RandomNumberGenerator,
-        class ValueType,
+        typename ValueType,
         class SuperCoder>
     class new_uniform_generator : public SuperCoder
     {
 
     public:
 
-    using factory =
-        basic_factory<new_uniform_generator<RandomNumberGenerator,
-                          SuperCoder,
-                          ValueType>>;
+     // using factory =
+         // basic_factory<new_uniform_generator<RandomNumberGenerator,
+                          // ValueType,
+                          // SuperCoder>>;
 
     public:
 
         /// @copydoc layer::value_type
-         typedef typename SuperCoder::field_type field_type;
+        typedef typename SuperCoder::field_type field_type;
 
         /// @copydoc layer::value_type
-         typedef typename SuperCoder::value_type value_type;
+        typedef typename SuperCoder::value_type value_type;
 
         /// The random generator used
          typedef  RandomNumberGenerator generator_type;
@@ -64,12 +64,12 @@ namespace kodo
 
     public:
 
-        class factory_base : public SuperCoder::factory_base
+        class factory: public SuperCoder::factory
         {
         public:
             // @copydoc layer::factory_base::factory_base(uint32_t, uint32_t)
-            factory_base(uint32_t max_symbols, uint32_t max_symbol_size)
-                : SuperCoder::factory_base(max_symbols, max_symbol_size)
+            factory(uint32_t max_symbols, uint32_t max_symbol_size)
+                : SuperCoder::factory(max_symbols, max_symbol_size)
             { }
         };
 
