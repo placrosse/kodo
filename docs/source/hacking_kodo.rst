@@ -235,6 +235,7 @@ You can use the factory API if you wish to:
   minimize the amount of memory allocations needed during
   encoding or decoding.
 
+.. _coding_style:
 
 Coding style
 ------------
