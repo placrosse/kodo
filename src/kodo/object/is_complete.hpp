@@ -10,15 +10,18 @@ namespace kodo
 namespace object
 {
     /// @todo docs + tests
+    ///
+    /// The question here is how should the completion callback be specified?
+    ///
+    /// The codec factory can be shared between the between different
+    /// object encoders/decoders. One codec factory is created by the
+    /// object factory. So every object should configure the stack
+    /// factory before building a stack with it.
+    ///
     template<class SuperCoder>
     class is_complete : public SuperCoder
     {
     public:
-
-        /// Constructor
-        storage_bytes_used()
-            : m_bytes_used(0)
-        {}
 
         /// @copydoc layer::initialize(Factory&)
         template<class Factory>
