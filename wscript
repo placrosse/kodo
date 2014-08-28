@@ -137,7 +137,7 @@ def build(bld):
         bld.recurse('benchmark/decoding_probability')
         bld.recurse('benchmark/overhead')
         bld.recurse('benchmark/throughput')
-        bld.recurse*'benchmark/random_number_generation')
+        bld.recurse('benchmark/random_number_generation')
 
     # Export own includes
     bld(name='kodo_includes',
