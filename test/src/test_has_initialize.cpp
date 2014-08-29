@@ -15,13 +15,11 @@
 
 namespace kodo
 {
-
     // Put dummy layers and tests classes in an anonymous namespace
     // to avoid violations of ODF (one-definition-rule) in other
     // translation units
     namespace
     {
-
         struct dummy_one
         {
             template<class Factory>
@@ -38,7 +36,6 @@ namespace kodo
 
         };
 
-
         struct dummy_one_parent : public dummy_one
         { };
 
@@ -47,7 +44,6 @@ namespace kodo
 
         struct dummy_false
         { };
-
     }
 }
 

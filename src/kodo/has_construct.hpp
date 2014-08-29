@@ -21,7 +21,7 @@ namespace kodo
     ///     // Do something here
     /// }
     ///
-    template<typename T>
+    template<class T>
     struct has_construct
     {
     private:
@@ -35,11 +35,11 @@ namespace kodo
         // Because construct takes a reference we cast 0 to a pointer
         // and dereference it to get a refence. The fact that we use
         // int as the type does not matter for the check.
-        template<typename U>
+        template<class U>
         static auto test(int) ->
             decltype(std::declval<U>().construct(*(int*)0), yes());
 
-        template<typename> static no test(...);
+        template<class> static no test(...);
 
     public:
 
