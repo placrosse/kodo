@@ -237,7 +237,7 @@ You can use the factory API if you wish to:
 
 .. _coding_style:
 
-Coding style
+Coding Style
 ------------
 
 We follow the Steinwurf coding style found `here
@@ -268,6 +268,31 @@ source tree. Exceptions to this rule are nested classes.
 Namespaces and Directories
 --------------------------
 
+All classes defined in the ``kodo`` namespaces should be placed in the
+``src/kodo`` folder and their corresponding unit tests should be
+placed in ``test/src/``
+
+Example if you create a class ``speedy``:
+
+::
+
+    namespace kodo
+    {
+
+        template<class SuperCoder>
+        class speedy : public SuperCoder
+        {
+        ...
+        };
+
+    }
+
+Then it should be placed in ``speedy.hpp` (as described in
+:ref:`files_and_classes`) and the file should be placed in
+``src/kodo/speedy.hpp`` and the corresponding unit test in
+``test/src/test_speedy.cpp``.
+
+
 If you create a class in a nested namespace for example:
 
 ::
@@ -288,7 +313,7 @@ If you create a class in a nested namespace for example:
 
 Then this file should be called ``smart.hpp`` as described in
 :ref:`files_and_classes`. In addition to this the file should be
-placed in the ´´src/kodo/object/smart.hpp´´ directory. Similarly the
+placed in the ``src/kodo/object/smart.hpp`` directory. Similarly the
 corresponding test file ``test_smart.cpp`` should be placed in
 ``test/src/object/test_smart.cpp``.
 
