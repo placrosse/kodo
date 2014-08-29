@@ -287,7 +287,7 @@ Example if you create a class ``speedy``:
 
     }
 
-Then it should be placed in ``speedy.hpp` (as described in
+Then it should be placed in ``speedy.hpp`` (as described in
 :ref:`files_and_classes`) and the file should be placed in
 ``src/kodo/speedy.hpp`` and the corresponding unit test in
 ``test/src/test_speedy.cpp``.
