@@ -6,6 +6,10 @@ detailed list of every change, see the Git log.
 
 Latest
 ------
+* Minor: Added generic helpers for invoking the initialize(...) and
+  construct(...) functions. We now use this in our factories which
+  allows them to work even when codecs do not specify one or both of
+  these functions.
 * Major: Changed the partial_shallow_symbol_storage to become more
   independent of the underlying storage layers. In addition the layer
   is now more strict it as it only supports a single partial
