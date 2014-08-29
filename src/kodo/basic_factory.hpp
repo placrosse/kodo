@@ -11,6 +11,9 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/make_shared.hpp>
 
+#include "initialize.hpp"
+#include "construct.hpp"
+
 namespace kodo
 {
     /// @ingroup factory_types
@@ -106,11 +109,12 @@ namespace kodo
         /// @copydoc factory::build()
         pointer build()
         {
-            auto coder = boost::make_shared<Codec>();
-            coder->construct(*this);
-            coder->initialize(*this);
+            auto codec = boost::make_shared<Codec>();
 
-            return coder;
+            kodo::construct(*codec, *this);
+            kodo::initialize(*codec, *this);
+
+            return codec;
         }
 
     public:
