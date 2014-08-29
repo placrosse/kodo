@@ -12,6 +12,7 @@
 #include <stub/call.hpp>
 
 #include <kodo/restore_partial_symbol_decoder.hpp>
+#include <kodo/wrap_restore_partial_symbol_decoder.hpp>
 
 namespace kodo
 {
@@ -32,21 +33,9 @@ namespace kodo
                 m_initialize();
             }
 
-
             void decode(uint8_t *payload)
             {
                 m_decode(payload);
-            }
-
-            void decode_symbol(uint8_t *symbol_data,
-                               uint8_t *symbol_coefficients)
-            {
-                m_decode_symbol(symbol_data, symbol_coefficients);
-            }
-
-            void decode_symbol(uint8_t *symbol_data, uint32_t symbol_index)
-            {
-                m_decode_symbol_index(symbol_data, symbol_index);
             }
 
             bool is_complete()
@@ -66,8 +55,6 @@ namespace kodo
 
             stub::call<void()> m_initialize;
             stub::call<void(uint8_t*)> m_decode;
-            stub::call<void(uint8_t*, uint8_t*)> m_decode_symbol;
-            stub::call<void(uint8_t*, uint32_t)> m_decode_symbol_index;
             stub::call<bool()> m_is_complete;
             stub::call<bool()> m_has_partial_symbol;
             stub::call<void()> m_restore_partial_symbol;
@@ -80,6 +67,8 @@ namespace kodo
         // Helper factory
         class dummy_factory
         { };
+
+
     }
 }
 
@@ -98,34 +87,16 @@ TEST(TestRestorePartialSymbolDecoder, no_restore)
 
     // dummy variables
     uint8_t* pointer = (uint8_t*)0xdeadbeef;
-    uint32_t index = 10;
 
     stack.decode(pointer);
     EXPECT_EQ(stack.m_restore_partial_symbol.calls(), 0U);
     EXPECT_EQ(stack.m_decode.calls(), 1U);
-
-    stack.decode_symbol(pointer, pointer);
-    EXPECT_EQ(stack.m_restore_partial_symbol.calls(), 0U);
-    EXPECT_EQ(stack.m_decode_symbol.calls(), 1U);
-
-    stack.decode_symbol(pointer, index);
-    EXPECT_EQ(stack.m_restore_partial_symbol.calls(), 0U);
-    EXPECT_EQ(stack.m_decode_symbol_index.calls(), 1U);
 
     stack.m_is_complete.set_return(true);
 
     stack.decode(pointer);
     EXPECT_EQ(stack.m_restore_partial_symbol.calls(), 0U);
     EXPECT_EQ(stack.m_decode.calls(), 2U);
-
-    stack.decode_symbol(pointer, pointer);
-    EXPECT_EQ(stack.m_restore_partial_symbol.calls(), 0U);
-    EXPECT_EQ(stack.m_decode_symbol.calls(), 2U);
-
-    stack.decode_symbol(pointer, index);
-    EXPECT_EQ(stack.m_restore_partial_symbol.calls(), 0U);
-    EXPECT_EQ(stack.m_decode_symbol_index.calls(), 2U);
-
 }
 
 /// Tests cases where the restore_partial_symbol should be called
@@ -143,19 +114,10 @@ TEST(TestRestorePartialSymbolDecoder, restore)
 
     // dummy variables
     uint8_t* pointer = (uint8_t*)0xdeadbeef;
-    uint32_t index = 10;
 
     stack.decode(pointer);
     EXPECT_EQ(stack.m_restore_partial_symbol.calls(), 0U);
     EXPECT_EQ(stack.m_decode.calls(), 1U);
-
-    stack.decode_symbol(pointer, pointer);
-    EXPECT_EQ(stack.m_restore_partial_symbol.calls(), 0U);
-    EXPECT_EQ(stack.m_decode_symbol.calls(), 1U);
-
-    stack.decode_symbol(pointer, index);
-    EXPECT_EQ(stack.m_restore_partial_symbol.calls(), 0U);
-    EXPECT_EQ(stack.m_decode_symbol_index.calls(), 1U);
 
     stack.m_is_complete.set_return(true);
 
@@ -163,26 +125,19 @@ TEST(TestRestorePartialSymbolDecoder, restore)
     EXPECT_EQ(stack.m_restore_partial_symbol.calls(), 1U);
     EXPECT_EQ(stack.m_decode.calls(), 2U);
 
-    stack.decode_symbol(pointer, pointer);
-    EXPECT_EQ(stack.m_restore_partial_symbol.calls(), 1U);
-    EXPECT_EQ(stack.m_decode_symbol.calls(), 2U);
-
-    stack.decode_symbol(pointer, index);
-    EXPECT_EQ(stack.m_restore_partial_symbol.calls(), 1U);
-    EXPECT_EQ(stack.m_decode_symbol_index.calls(), 2U);
-
     // We initialize again, the stack should restore on the first call
     stack.initialize(factory);
 
     stack.decode(pointer);
     EXPECT_EQ(stack.m_restore_partial_symbol.calls(), 2U);
     EXPECT_EQ(stack.m_decode.calls(), 3U);
+}
 
-    stack.decode_symbol(pointer, pointer);
-    EXPECT_EQ(stack.m_restore_partial_symbol.calls(), 2U);
-    EXPECT_EQ(stack.m_decode_symbol.calls(), 3U);
 
-    stack.decode_symbol(pointer, index);
-    EXPECT_EQ(stack.m_restore_partial_symbol.calls(), 2U);
-    EXPECT_EQ(stack.m_decode_symbol_index.calls(), 3U);
+
+/// Test that we can wrap an stack with the
+/// wrap_restore_partial_symbol_decoder layer
+TEST(TestRestorePartialSymbolDecoder, wrap)
+{
+    /// @todo missing
 }

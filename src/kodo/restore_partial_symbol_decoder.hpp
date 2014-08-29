@@ -5,15 +5,8 @@
 
 #pragma once
 
-#include "rebind_factory.hpp"
-
 namespace kodo
 {
-
-
-
-    /// @todo formatting and wrap code at the bottom
-    ///
     /// @ingroup payload_codec_layers
     ///
     /// @brief This layer can be added to a decoder stack to make sure
@@ -56,29 +49,7 @@ namespace kodo
         void decode(uint8_t *payload)
         {
             SuperCoder::decode(payload);
-            restore_on_decode();
-        }
 
-        /// @copydoc layer::decode_symbol(uint8_t*,uint8_t*)
-        void decode_symbol(uint8_t *symbol_data,
-                           uint8_t *symbol_coefficients)
-        {
-            SuperCoder::decode_symbol(symbol_data, symbol_coefficients);
-            restore_on_decode();
-        }
-
-        /// @copydoc layer::decode_symbol(uint8_t*, uint32_t)
-        void decode_symbol(uint8_t *symbol_data, uint32_t symbol_index)
-        {
-            SuperCoder::decode_symbol(symbol_data, symbol_index);
-            restore_on_decode();
-        }
-
-    private:
-
-        /// This function will restore the partial symbol if needed
-        void restore_on_decode()
-        {
             if (!SuperCoder::is_complete())
                 return;
 
@@ -98,17 +69,4 @@ namespace kodo
         /// so that we only do it once
         bool m_restored;
     };
-
-
-    template<template <class> class Wrap, class Codec>
-    class wrap : public Wrap<Codec>
-    {
-    public:
-        using factory = rebind_factory<Codec, wrap>;
-    };
-
-    template<class Codec>
-    using wrap_restore_partial_symbol_decoder =
-        wrap<restore_partial_symbol_decoder, Codec>;
-
 }

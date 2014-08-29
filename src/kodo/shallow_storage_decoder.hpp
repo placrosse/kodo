@@ -12,7 +12,7 @@
 #include "final_layer.hpp"
 
 #include "extend_object_stack.hpp"
-#include "restore_partial_symbol_decoder.hpp"
+#include "wrap_restore_partial_symbol_decoder.hpp"
 
 namespace kodo
 {

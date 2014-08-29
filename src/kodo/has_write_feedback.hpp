@@ -7,8 +7,8 @@
 
 namespace kodo
 {
-
     /// @ingroup type_traits
+    ///
     /// Type trait helper allows compile time detection of whether a
     /// codec contains a layer with the member function write_feedback()
     ///
@@ -38,7 +38,4 @@ namespace kodo
 
         enum { value = std::is_same<decltype(test<T>(0)),yes>::value };
     };
-
 }
-
-
