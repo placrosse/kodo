@@ -256,7 +256,7 @@ put it in ``happy.hpp``. This makes the classes easier to find in the
 source tree. Exceptions to this rule are nested classes.
 
 .. note:: Remember to also add a unit test for your new
-          functionality. Find more informati on about this in our
+          functionality. Find more information about this in our
           :ref:`unit_testing` section.
 
 .. note:: If you new class resides in a namespace make sure to place
@@ -268,7 +268,7 @@ source tree. Exceptions to this rule are nested classes.
 Namespaces and Directories
 --------------------------
 
-All classes defined in the ``kodo`` namespaces should be placed in the
+All classes defined in the ``kodo`` namespace should be placed in the
 ``src/kodo`` folder and their corresponding unit tests should be
 placed in ``test/src/``
 
@@ -311,12 +311,12 @@ If you create a class in a nested namespace for example:
     }
 
 
-Then this file should be called ``smart.hpp`` as described in
-:ref:`files_and_classes`. In addition to this the file should be
+Then this file should be called ``smart.hpp`` (as described in
+:ref:`files_and_classes`). In addition to this the file should be
 placed in the ``src/kodo/object/smart.hpp`` directory. Similarly the
 corresponding test file ``test_smart.cpp`` should be placed in
 ``test/src/object/test_smart.cpp``.
 
 The general rule is that namespaces are represented by a directory in
 the filesystem. This means if you see a class in a namespace you know
-which folder the corresponding source files should be in.
+which directory the corresponding source files should be in.
