@@ -13,6 +13,7 @@
 
 #include <kodo/restore_partial_symbol_decoder.hpp>
 #include <kodo/wrap_restore_partial_symbol_decoder.hpp>
+#include <kodo/basic_factory.hpp>
 
 namespace kodo
 {
@@ -67,8 +68,6 @@ namespace kodo
         // Helper factory
         class dummy_factory
         { };
-
-
     }
 }
 
@@ -136,8 +135,44 @@ TEST(TestRestorePartialSymbolDecoder, restore)
 
 
 /// Test that we can wrap an stack with the
-/// wrap_restore_partial_symbol_decoder layer
+/// wrap_restore_partial_symbol_decoder layer we won't actually do
+/// anything but check that it compiles, because the
+/// restore_partial_symbol_decoder is already tested in the above unit
+/// tests
+namespace kodo
+{
+
+// Put dummy layers and tests classes in an anonymous namespace
+// to avoid violations of ODF (one-definition-rule) in other
+// translation units
+namespace
+{
+    /// Helper layer
+    class wrap_dummy_stack : public dummy_layer
+    {
+    public:
+
+        class factory_base
+        {
+        public:
+            factory_base(uint32_t symbols, uint32_t symbol_size)
+            {
+                (void) symbols;
+                (void) symbol_size;
+            }
+        };
+
+        using factory = basic_factory<wrap_dummy_stack>;
+    };
+}
+}
+
 TEST(TestRestorePartialSymbolDecoder, wrap)
 {
-    /// @todo missing
+    using stack =
+        kodo::wrap_restore_partial_symbol_decoder<kodo::wrap_dummy_stack>;
+
+    stack::factory f(10,10);
+    auto s = f.build();
+    (void) s;
 }

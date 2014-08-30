@@ -21,6 +21,8 @@ namespace kodo
         restore_partial_symbol_decoder<Codec>
     {
     public:
+
+        /// Rebind the factory to build the correct stack
         using factory =
             rebind_factory<Codec, wrap_restore_partial_symbol_decoder>;
     };

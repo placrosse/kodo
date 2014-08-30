@@ -56,7 +56,7 @@ def options(opt):
     bundle.add_dependency(opt, resolve.ResolveGitMajorVersion(
         name='stub',
         git_repository='github.com/steinwurf/stub.git',
-        major_version=1))
+        major_version=2))
 
     bundle.add_dependency(opt, resolve.ResolveGitMajorVersion(
         name='tables',
