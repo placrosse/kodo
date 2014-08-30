@@ -3,7 +3,7 @@
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
 
-#include <kodo/shallow_storage_decoder.hpp>
+#include <kodo/object/shallow_storage_decoder.hpp>
 #include <kodo/storage_encoder.hpp>
 #include <kodo/rlnc/full_rlnc_codes.hpp>
 
@@ -83,7 +83,7 @@ int main()
     using storage_encoder = kodo::storage_encoder<
         kodo::shallow_full_rlnc_encoder<fifi::binary> >;
 
-    using storage_decoder = kodo::shallow_storage_decoder<
+    using storage_decoder = kodo::object::shallow_storage_decoder<
         kodo::shallow_full_rlnc_decoder<fifi::binary> >;
 
     storage_encoder::factory encoder_factory(max_symbols, max_symbol_size);

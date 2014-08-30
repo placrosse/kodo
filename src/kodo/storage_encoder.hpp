@@ -7,7 +7,7 @@
 
 #include "object_stack_builder.hpp"
 #include "object_stack.hpp"
-#include "rfc5052_object_partitioning.hpp"
+#include "object/rfc5052_partitioning.hpp"
 #include "const_object_storage.hpp"
 #include "final_layer.hpp"
 
@@ -35,8 +35,7 @@ namespace kodo
     class storage_encoder : public
         object_storage<
         object_stack_builder<Stack,
-//        object_stack<Stack,
-        rfc5052_object_partitioning<
+        object::rfc5052_partitioning<
             final_layer> > > //>
     {
     public:

@@ -9,14 +9,16 @@
 
 namespace kodo
 {
+namespace object
+{
     /// @todo docs
-    template<class Partitioning, class SuperCoder>
-    class object_partitioning : public SuperCoder
+    template<class PartitioningScheme, class SuperCoder>
+    class partitioning : public SuperCoder
     {
     public:
 
         /// The partitioning scheme used
-        using partitioning_type = Partitioning;
+        using partitioning_scheme_type = PartitioningScheme;
 
     public:
 
@@ -61,7 +63,7 @@ namespace kodo
             {
                 assert(object_size > 0);
 
-                partitioning_type p(m_symbols, m_symbol_size, object_size);
+                partitioning_scheme_type p(m_symbols, m_symbol_size, object_size);
                 return p.total_block_size();
             }
 
@@ -79,50 +81,51 @@ namespace kodo
         {
             SuperCoder::initialize(the_factory);
 
-            m_partitioning = partitioning_type(
+            m_partitioning_scheme = partitioning_scheme_type(
                 the_factory.symbols(),
                 the_factory.symbol_size(),
                 the_factory.object_size());
         }
 
-        const partitioning_type& partitioning() const
+        const partitioning_scheme_type& partitioning_scheme() const
         {
-            return m_partitioning;
+            return m_partitioning_scheme;
         }
 
         uint32_t blocks() const
         {
-            return m_partitioning.blocks();
+            return m_partitioning_scheme.blocks();
         }
 
         uint32_t symbols(uint32_t index)
         {
-            return m_partitioning.symbols(index);
+            return m_partitioning_scheme.symbols(index);
         }
 
         uint32_t symbol_size(uint32_t index)
         {
-            return m_partitioning.symbol_size(index);
+            return m_partitioning_scheme.symbol_size(index);
         }
 
         uint32_t bytes_used(uint32_t index)
         {
-            return m_partitioning.bytes_used(index);
+            return m_partitioning_scheme.bytes_used(index);
         }
 
         uint32_t byte_offset(uint32_t index)
         {
-            return m_partitioning.byte_offset(index);
+            return m_partitioning_scheme.byte_offset(index);
         }
 
         uint32_t block_size(uint32_t index)
         {
-            return m_partitioning.block_size(index);
+            return m_partitioning_scheme.block_size(index);
         }
 
     protected:
 
-        partitioning_type m_partitioning;
+        partitioning_scheme_type m_partitioning_scheme;
 
     };
+}
 }

@@ -5,16 +5,20 @@
 
 #pragma once
 
-#include "object_stack_builder.hpp"
-#include "object_stack.hpp"
-#include "rfc5052_object_partitioning.hpp"
-#include "mutable_object_storage.hpp"
-#include "final_layer.hpp"
+#include "is_complete_decoder.hpp"
+#include "../object_stack_builder.hpp"
+#include "../object_stack.hpp"
+#include "rfc5052_partitioning.hpp"
+#include "../mutable_object_storage.hpp"
+#include "../final_layer.hpp"
 
-#include "extend_object_stack.hpp"
-#include "wrap_restore_partial_symbol_decoder.hpp"
+#include "../extend_object_stack.hpp"
+#include "../wrap_restore_partial_symbol_decoder.hpp"
+#include "../wrap_is_complete_callback_decoder.hpp"
 
 namespace kodo
+{
+namespace object
 {
     /// @todo add docs
     ///
@@ -31,13 +35,13 @@ namespace kodo
     ///
     template<class Stack>
     class shallow_storage_decoder : public
+        is_complete_decoder<
         object_storage<
         object_stack_builder<
-            wrap_restore_partial_symbol_decoder<Stack>,
-        // extend_object_stack<wrap_restore_partial_symbol_decoder,
-            // object_stack<wrap_restore_partial_symbol_decoder<Stack>,
-        rfc5052_object_partitioning<
-            final_layer> > > //> //>
+            wrap_is_complete_callback_decoder<
+            wrap_restore_partial_symbol_decoder<Stack>>,
+        rfc5052_partitioning<
+        final_layer> > > >
     {
     public:
 
@@ -52,4 +56,5 @@ namespace kodo
         ///
         /// @todo add static assert
     };
+}
 }

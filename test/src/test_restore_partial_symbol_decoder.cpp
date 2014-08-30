@@ -132,8 +132,6 @@ TEST(TestRestorePartialSymbolDecoder, restore)
     EXPECT_EQ(stack.m_decode.calls(), 3U);
 }
 
-
-
 /// Test that we can wrap an stack with the
 /// wrap_restore_partial_symbol_decoder layer we won't actually do
 /// anything but check that it compiles, because the

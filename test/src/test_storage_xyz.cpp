@@ -9,7 +9,7 @@
 
 #include <gtest/gtest.h>
 
-#include <kodo/shallow_storage_decoder.hpp>
+// #include <kodo/shallow_storage_decoder.hpp>
 #include <kodo/deep_storage_decoder.hpp>
 #include <kodo/storage_encoder.hpp>
 #include <kodo/rfc5052_partitioning_scheme.hpp>

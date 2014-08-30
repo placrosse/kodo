@@ -5,13 +5,16 @@
 
 #pragma once
 
-#include "rfc5052_partitioning_scheme.hpp"
-#include "object_partitioning.hpp"
+#include "../rfc5052_partitioning_scheme.hpp"
+#include "partitioning.hpp"
 
 namespace kodo
 {
+namespace object
+{
     /// @todo docs
     template<class SuperCoder>
-    using rfc5052_object_partitioning =
-        object_partitioning<rfc5052_partitioning_scheme, SuperCoder>;
+    using rfc5052_partitioning =
+        partitioning<rfc5052_partitioning_scheme, SuperCoder>;
+}
 }
