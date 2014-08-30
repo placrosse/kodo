@@ -111,8 +111,15 @@ namespace kodo
         {
             auto codec = boost::make_shared<Codec>();
 
-            kodo::construct(*codec, *this);
-            kodo::initialize(*codec, *this);
+            if (kodo::has_construct<Codec>::value)
+            {
+                kodo::construct(*codec, *this);
+            }
+
+            if (kodo::has_initialize<Codec>::value)
+            {
+                kodo::initialize(*codec, *this);
+            }
 
             return codec;
         }
