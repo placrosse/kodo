@@ -48,7 +48,11 @@ namespace kodo
         pointer build()
         {
             auto codec = m_pool.allocate();
-            kodo::initialize(*codec, *this);
+
+            if (kodo::has_initialize<Codec>::value)
+            {
+                kodo::initialize(*codec, *this);
+            }
 
             return codec;
         }
@@ -89,7 +93,11 @@ namespace kodo
             assert(factory);
 
             pointer codec = boost::make_shared<Codec>();
-            kodo::construct(*codec, *factory);
+
+            if (kodo::has_construct<Codec>::value)
+            {
+                kodo::construct(*codec, *factory);
+            }
 
             return codec;
         }
