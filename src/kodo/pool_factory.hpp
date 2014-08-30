@@ -13,6 +13,9 @@
 
 #include <sak/resource_pool.hpp>
 
+#include "initialize.hpp"
+#include "construct.hpp"
+
 namespace kodo
 {
     /// @ingroup factory_types
@@ -44,8 +47,8 @@ namespace kodo
         /// @copydoc factory::build()
         pointer build()
         {
-            pointer codec = m_pool.allocate();
-            codec->initialize(*this);
+            auto codec = m_pool.allocate();
+            kodo::initialize(*codec, *this);
 
             return codec;
         }
@@ -86,7 +89,7 @@ namespace kodo
             assert(factory);
 
             pointer codec = boost::make_shared<Codec>();
-            codec->construct(*factory);
+            kodo::construct(*codec, *factory);
 
             return codec;
         }

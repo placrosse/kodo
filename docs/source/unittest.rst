@@ -1,4 +1,4 @@
-.. _unittest:
+.. _unit_testing:
 
 Unit Testing
 ============
@@ -80,8 +80,8 @@ building Kodo with waf.
 In general we follow the following guidelines regarding unit tests:
 
 1. Every class should have a corresponding unit test cpp file.
-2. If the class is named ``my_fast_code`` then the unit test should be
-   implemented in ``test/src/test_my_fast_code.cpp``
+2. Remember to place the test file as described in
+   :ref:`namespaces_and_directories`
 
 .. note:: In some cases we have headers containing only
           ``type-aliases`` for possible a set of layers we currently

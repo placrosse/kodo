@@ -31,8 +31,11 @@ The basic rules we use are the following:
  * Bug fix: Increment z when you fix something e.g. a bug (without breaking
    backward-compatibility)
 
+.. _contact_us:
+
 Contact Us
 ----------
+
 There are several ways in which you may contact us:
  * Questions about libraries or the technology used may be redirected to our
    mailing list (the mailing list is hosted on Google Groups) you may view the
@@ -43,5 +46,3 @@ There are several ways in which you may contact us:
 
 .. _github issue tracker: https://github.com/steinwurf/kodo/issues
 .. _mailing list here: http://groups.google.com/group/steinwurf-dev
-
-

@@ -11,7 +11,6 @@
 
 namespace kodo
 {
-
     /// @ingroup generic_api
     /// @copydoc set_symbols(const T&, uint32_t)
     template
@@ -44,5 +43,3 @@ namespace kodo
     }
 
 }
-
-
