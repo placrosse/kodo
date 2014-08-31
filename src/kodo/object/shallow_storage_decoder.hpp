@@ -6,6 +6,7 @@
 #pragma once
 
 #include "is_complete_decoder.hpp"
+#include "stack_factory.hpp"
 #include "../object_stack_builder.hpp"
 #include "../object_stack.hpp"
 #include "rfc5052_partitioning.hpp"
@@ -37,7 +38,8 @@ namespace object
     class shallow_storage_decoder : public
         is_complete_decoder<
         object_storage<
-        object_stack_builder<
+        // stack_factory<
+            object_stack_builder<
             wrap_is_complete_callback_decoder<
             wrap_restore_partial_symbol_decoder<Stack>>,
         rfc5052_partitioning<

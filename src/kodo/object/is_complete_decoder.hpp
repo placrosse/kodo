@@ -25,6 +25,11 @@ namespace object
     ///
     /// For this reason we just initialize the callback
     ///
+    /// This layer expects that a decoder exposes the
+    /// set_is_complete_callback(...) which we will use to register a
+    /// callback function. This functionality will be available in
+    /// stacks using the is_complete_callback_decoder.hpp layer.
+    ///
     template<class SuperCoder>
     class is_complete_decoder : public SuperCoder
     {
@@ -37,7 +42,8 @@ namespace object
             SuperCoder::initialize(the_factory);
             m_completed_count = 0;
 
-            m_completed.resize(SuperCoder::blocks(), false);
+            m_completed.resize(SuperCoder::blocks());
+            fill(begin(m_completed), end(m_completed), false);
         }
 
         /// @param index Index of the block to build an encoder or
@@ -52,18 +58,22 @@ namespace object
             assert(stack);
 
             stack->set_is_complete_callback(
-                std::bind(&is_complete_decoder::is_complete_callback, this, index));
+                std::bind(&is_complete_decoder::is_complete_callback,
+                          this, index));
 
             return stack;
         }
 
-        ///
+        /// @return true if all decoders have been decoded
         bool is_complete() const
         {
             return m_completed_count == SuperCoder::blocks();
         }
 
+        /// @param index The index of the block we want to check
+        ///        whether is complete
         ///
+        /// @return true if the specific block is complete
         bool is_block_complete(uint32_t index) const
         {
             assert(index < SuperCoder::blocks());
@@ -72,12 +82,13 @@ namespace object
 
     private:
 
+        /// The callback function which will be invoked by the
+        /// different decoders once they complete.
         void is_complete_callback(uint32_t index)
         {
             assert(index < m_completed.size());
             assert(m_completed[index] == false);
 
-            std::cout << "Index complete " << index << std::endl;
             ++m_completed_count;
             assert(m_completed_count <= m_completed.size());
             m_completed[index] = true;

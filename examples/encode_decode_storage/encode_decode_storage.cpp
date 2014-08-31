@@ -3,6 +3,8 @@
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
 
+#include <cstring>
+#include <utility>
 #include <kodo/object/shallow_storage_decoder.hpp>
 #include <kodo/storage_encoder.hpp>
 #include <kodo/rlnc/full_rlnc_codes.hpp>
