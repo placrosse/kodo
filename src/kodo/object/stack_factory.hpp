@@ -34,9 +34,6 @@ namespace object
         /// The factory of the stack
         using stack_factory_type = typename stack_type::factory;
 
-        /// Pointer produced by the stack factory
-        using stack_pointer_type = typename stack_factory_type::pointer;
-
     public:
 
         /// @ingroup factory_base_layers
@@ -62,7 +59,7 @@ namespace object
                 return m_stack_factory;
             }
 
-//        private:
+       private:
 
             /// The factory of the codec
             std::shared_ptr<stack_factory_type> m_stack_factory;
@@ -74,18 +71,18 @@ namespace object
         template<class Factory>
         void initialize(Factory& the_factory)
         {
-SuperCoder::initialize(the_factory);
-m_stack_factory = the_factory.stack_factory();
-}
+            SuperCoder::initialize(the_factory);
+            m_stack_factory = the_factory.stack_factory();
+        }
 
         /// @param index Index of the block to build an encoder or
         ///        decoder stack for
         ///
         /// @return the newly built encoder or decoder initialized
         ///         with storage through the the set_symbols function
-stack_pointer_type /*auto*/ build(uint32_t index)// ->
-//decltype(std::declval<stack_factory_type>().build(0))
-{
+        auto build(uint32_t index) ->
+            decltype(std::declval<stack_factory_type>().build())
+        {
             // Get the symbols and symbol size from the partitioning
             // scheme for this specific index
             uint32_t symbols = SuperCoder::symbols(index);
@@ -103,9 +100,8 @@ stack_pointer_type /*auto*/ build(uint32_t index)// ->
             assert(stack->symbols() == symbols);
             assert(stack->symbol_size() == symbol_size);
 
-stack->set_bytes_used(SuperCoder::bytes_used(index));
-return stack;
-}
+            return stack;
+        }
 
     protected:
 

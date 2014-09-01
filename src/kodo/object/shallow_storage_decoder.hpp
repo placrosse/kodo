@@ -38,8 +38,8 @@ namespace object
     class shallow_storage_decoder : public
         is_complete_decoder<
         object_storage<
-        // stack_factory<
-            object_stack_builder<
+        stack_factory<
+            //    object_stack_builder<
             wrap_is_complete_callback_decoder<
             wrap_restore_partial_symbol_decoder<Stack>>,
         rfc5052_partitioning<
