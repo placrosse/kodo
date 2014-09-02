@@ -5,13 +5,16 @@
 
 #pragma once
 
-#include "object_stack_builder.hpp"
-#include "object_stack.hpp"
-#include "object/rfc5052_partitioning.hpp"
-#include "const_object_storage.hpp"
-#include "final_layer.hpp"
+#include "stack_factory.hpp"
+#include "rfc5052_partitioning.hpp"
+#include "object_storage.hpp"
+
+#include "../rebind_factory.hpp"
+#include "../final_layer.hpp"
 
 namespace kodo
+{
+namespace object
 {
     /// @brief A storage encoder creates a number of encoders over a
     ///        sak::const_storage object.
@@ -34,13 +37,14 @@ namespace kodo
     template<class Stack>
     class storage_encoder : public
         object_storage<
-        object_stack_builder<Stack,
-        object::rfc5052_partitioning<
-            final_layer> > > //>
+        stack_factory<Stack,
+        rfc5052_partitioning<
+        final_layer> > >
     {
     public:
 
-        /// The factory we will use for the object encoder
-        using factory = basic_factory<storage_encoder>;
+        /// We will use the same factory as the stack
+        using factory = rebind_factory<Stack, storage_encoder>;
     };
+}
 }

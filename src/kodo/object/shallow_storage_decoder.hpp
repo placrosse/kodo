@@ -7,13 +7,11 @@
 
 #include "is_complete_decoder.hpp"
 #include "stack_factory.hpp"
-#include "../object_stack_builder.hpp"
-#include "../object_stack.hpp"
 #include "rfc5052_partitioning.hpp"
-#include "../mutable_object_storage.hpp"
-#include "../final_layer.hpp"
+#include "object_storage.hpp"
 
-#include "../extend_object_stack.hpp"
+#include "../rebind_factory.hpp"
+#include "../final_layer.hpp"
 #include "../wrap_restore_partial_symbol_decoder.hpp"
 #include "../wrap_is_complete_callback_decoder.hpp"
 
@@ -39,16 +37,15 @@ namespace object
         is_complete_decoder<
         object_storage<
         stack_factory<
-            //    object_stack_builder<
             wrap_is_complete_callback_decoder<
             wrap_restore_partial_symbol_decoder<Stack>>,
         rfc5052_partitioning<
-        final_layer> > > >
+        final_layer>>>>
     {
     public:
 
-        /// The factory we will use for the object decoder
-        using factory = basic_factory<shallow_storage_decoder>;
+        /// We will use the same factory as the stack
+        using factory = rebind_factory<Stack, shallow_storage_decoder>;
 
         /// This decoder only works with a shallow stack. The reason
         /// for this is that we are using the mutable_object_storage

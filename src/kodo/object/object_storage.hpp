@@ -9,6 +9,8 @@
 
 namespace kodo
 {
+namespace object
+{
     /// @todo put in group
     ///
     /// @brief Initializes the codecs built with the object storage
@@ -132,4 +134,5 @@ namespace kodo
         /// Stores the storage for the object being encoded or decoded
         storage_type m_storage;
     };
+}
 }

@@ -39,6 +39,24 @@ namespace
             std::shared_ptr<codec_stack> build()
             {
                 auto codec = std::make_shared<codec_stack>();
+
+                // Make sure our codec has the right settings
+                uint32_t symbols;
+                uint32_t symbol_size;
+
+                assert(m_set_symbols.calls() > 0);
+                assert(m_set_symbol_size.calls() > 0);
+
+                std::tie(symbols) = m_set_symbols.call_arguments(
+                    m_set_symbols.calls() - 1);
+
+                std::tie(symbol_size) = m_set_symbol_size.call_arguments(
+                    m_set_symbol_size.calls() - 1);
+
+                codec->m_symbols.set_return(symbols);
+                codec->m_symbol_size.set_return(symbol_size);
+
+                return codec;
             }
 
             void set_symbols(uint32_t symbols)
@@ -145,7 +163,15 @@ TEST(ObjectTestStackFactory, api)
 
     auto codec = stack.build(0);
 
+    EXPECT_TRUE((bool) stack.m_symbols.expect_calls().with(0));
+    EXPECT_TRUE((bool) stack.m_symbol_size.expect_calls().with(0));
 
+    stack.m_symbols.set_return(7);
+    stack.m_symbol_size.set_return(9);
 
+    codec = stack.build(10);
+
+    EXPECT_TRUE((bool) stack.m_symbols.expect_calls().with(0).with(10));
+    EXPECT_TRUE((bool) stack.m_symbol_size.expect_calls().with(0).with(10));
 
 }

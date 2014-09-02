@@ -15,7 +15,8 @@
 
 namespace kodo
 {
-
+    /// @todo this is now obsolete
+    ///
     /// @brief A storage decoder creates a number of decoders decoding
     ///        into a sak::mutable_storage object
     template

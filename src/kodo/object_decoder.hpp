@@ -16,7 +16,7 @@
 #include "final_layer.hpp"
 #include "basic_factory.hpp"
 #include "storage_block_size.hpp"
-#include "object_storage.hpp"
+
 
 /// @todo I think this file will be obsolete once we have storage
 /// decoder and file decoder

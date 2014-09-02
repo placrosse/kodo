@@ -11,7 +11,7 @@
 
 // #include <kodo/shallow_storage_decoder.hpp>
 #include <kodo/deep_storage_decoder.hpp>
-#include <kodo/storage_encoder.hpp>
+// #include <kodo/storage_encoder.hpp>
 #include <kodo/rfc5052_partitioning_scheme.hpp>
 #include <kodo/rlnc/full_rlnc_codes.hpp>
 #include <kodo/partial_shallow_symbol_storage.hpp>
