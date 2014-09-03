@@ -11,6 +11,8 @@
 
 namespace kodo
 {
+    /// @todo delete this
+
     namespace detail
     {
         template<class EncoderType, class BlockPartitioning>

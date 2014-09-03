@@ -12,7 +12,7 @@
 
 namespace kodo
 {
-
+    /// @todo delete this
     /// @ingroup object_data_implementation
     ///
     /// @brief The file reader class reads data from a local file
