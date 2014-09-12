@@ -17,12 +17,12 @@ namespace kodo
     ///        the incoming symbols
     template<class SuperCoder>
     class mutable_shallow_symbol_storage : public
-        shallow_symbol_storage<false, SuperCoder>
+        shallow_symbol_storage<sak::mutable_storage, SuperCoder>
     {
     public:
 
         /// The actual SuperCoder type
-        typedef shallow_symbol_storage<false, SuperCoder> Super;
+        typedef shallow_symbol_storage<sak::mutable_storage, SuperCoder> Super;
 
         /// @copydoc layer::value_type
         typedef typename Super::value_type value_type;

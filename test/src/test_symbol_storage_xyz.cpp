@@ -1550,8 +1550,8 @@ void run_deep_stack_tests()
         symbols, symbol_size);
     run_test<Stack, api_set_symbol_mutable_storage>(
         symbols, symbol_size);
-    run_test<Stack, api_swap_symbols_data>(
-        symbols, symbol_size);
+    // run_test<Stack, api_swap_symbols_data>(
+        // symbols, symbol_size);
     run_test<Stack, api_factory_max_symbols>(
         symbols, symbol_size);
     run_test<Stack, api_factory_max_symbol_size>(
@@ -1568,8 +1568,8 @@ void run_deep_stack_tests()
         symbols, symbol_size);
     run_test<Stack, api_deep_storage_status>(
         symbols, symbol_size);
-    run_test<Stack, api_deep_swap_storage_status>(
-        symbols, symbol_size);
+    // run_test<Stack, api_deep_swap_storage_status>(
+        // symbols, symbol_size);
 
 
 
@@ -1612,8 +1612,8 @@ void run_const_shallow_stack_tests()
         symbols, symbol_size);
     run_test<Stack, api_set_symbol_mutable_storage>(
         symbols, symbol_size);
-    run_test<Stack, api_swap_symbols_const_pointer>(
-        symbols, symbol_size);
+    // run_test<Stack, api_swap_symbols_const_pointer>(
+        // symbols, symbol_size);
     run_test<Stack, api_factory_max_symbols>(
         symbols, symbol_size);
     run_test<Stack, api_factory_max_symbol_size>(
@@ -1630,8 +1630,8 @@ void run_const_shallow_stack_tests()
         symbols, symbol_size);
     run_test<Stack, api_shallow_storage_status>(
         symbols, symbol_size);
-    run_test<Stack, api_const_shallow_swap_storage_status>(
-        symbols, symbol_size);
+    // run_test<Stack, api_const_shallow_swap_storage_status>(
+        // symbols, symbol_size);
 
 }
 
@@ -1668,8 +1668,8 @@ void run_mutable_shallow_stack_tests()
         symbols, symbol_size);
     run_test<Stack, api_set_symbol_mutable_storage>(
         symbols, symbol_size);
-    run_test<Stack, api_swap_symbols_pointer>(
-        symbols, symbol_size);
+    // run_test<Stack, api_swap_symbols_pointer>(
+        // symbols, symbol_size);
     run_test<Stack, api_factory_max_symbols>(
         symbols, symbol_size);
     run_test<Stack, api_factory_max_symbol_size>(
@@ -1686,8 +1686,8 @@ void run_mutable_shallow_stack_tests()
         symbols, symbol_size);
     run_test<Stack, api_shallow_storage_status>(
         symbols, symbol_size);
-    run_test<Stack, api_mutable_shallow_swap_storage_status>(
-        symbols, symbol_size);
+    // run_test<Stack, api_mutable_shallow_swap_storage_status>(
+        // symbols, symbol_size);
 
 
 }

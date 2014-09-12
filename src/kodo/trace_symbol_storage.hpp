@@ -120,11 +120,9 @@ namespace kodo
 
             print_symbol_info(out, index);
 
-            uint32_t size = SuperCoder::symbol_size();
             if(SuperCoder::is_symbol_available(index))
             {
-                const uint8_t* symbol = SuperCoder::symbol(index);
-                auto storage = sak::storage(symbol, size);
+                auto storage = SuperCoder::symbol_storage(index);
 
                 hexdump hex(storage);
                 hex.set_max_size(32);

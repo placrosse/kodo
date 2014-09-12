@@ -22,7 +22,7 @@ namespace kodo
     /// This is useful in cases where incoming data is to be
     /// decoded and no existing decoding buffer exist.
     template<class SuperCoder>
-    class status_deep_symbol_storage : public SuperCoder
+    class initialized_symbol_storage : public SuperCoder
     {
     public:
 
@@ -57,6 +57,7 @@ namespace kodo
             // This will specify all symbols, also in the case
             // of partial data. If this is not desired then the
             // symbols need to be set individually.
+
             m_symbols_count = SuperCoder::symbols();
             std::fill(m_symbols.begin(), m_symbols.end(), true);
         }
@@ -73,14 +74,6 @@ namespace kodo
                 ++m_symbols_count;
                 m_symbols[index] = true;
             }
-        }
-
-        /// @copydoc layer::swap_symbols(std::vector<uint8_t> &)
-        void swap_symbols(std::vector<uint8_t> &symbols)
-        {
-            SuperCoder::swap_symbols(symbols);
-            m_symbols_count = SuperCoder::symbols();
-            std::fill(m_symbols.begin(), m_symbols.end(), true);
         }
 
         /// @copydoc layer::symbols_initialized() const

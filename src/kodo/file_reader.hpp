@@ -101,7 +101,7 @@ namespace kodo
             m_file->read(reinterpret_cast<char*>(&m_data[0]), size);
             assert(size == static_cast<uint32_t>(m_file->gcount()));
 
-            encoder->swap_symbols(m_data);
+            encoder->set_symbols(sak::storage(m_data));
 
             // Check that the swapped vector has the same size
             assert(m_data.size() == data_size);

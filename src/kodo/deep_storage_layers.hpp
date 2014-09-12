@@ -6,6 +6,8 @@
 #pragma once
 
 #include "deep_symbol_storage.hpp"
+#include "available_deep_symbol_storage.hpp"
+#include "initialized_symbol_storage.hpp"
 #include "status_deep_symbol_storage.hpp"
 #include "storage_bytes_used.hpp"
 #include "storage_block_info.hpp"
@@ -20,8 +22,13 @@ namespace kodo
     template<class TraceTag, class SuperCoder>
     using deep_storage_layers =
         trace_symbol_storage<TraceTag,
-        status_deep_symbol_storage<
+        mutable_symbol_data<
+        const_symbol_data<
+        mutable_symbol_value<
+        const_symbol_value<
+        available_deep_symbol_storage<
+        initialized_symbol_storage<
         deep_symbol_storage<
         storage_bytes_used<
-        storage_block_info<SuperCoder> > > > >;
+        storage_block_info<SuperCoder> > > > > > > > > >;
 }

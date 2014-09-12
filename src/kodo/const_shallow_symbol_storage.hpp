@@ -15,5 +15,5 @@ namespace kodo
     /// operate on.
     template<class SuperCoder>
     using const_shallow_symbol_storage =
-        shallow_symbol_storage<true, SuperCoder>;
+        shallow_symbol_storage<sak::const_storage, SuperCoder>;
 }

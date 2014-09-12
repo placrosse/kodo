@@ -26,7 +26,7 @@ namespace kodo
     template<class T>
     struct has_shallow_symbol_storage
     {
-        template<bool V, class U>
+        template<class V, class U>
         static uint8_t test(const kodo::shallow_symbol_storage<V,U> *);
 
         static uint32_t test(...);
@@ -39,7 +39,7 @@ namespace kodo
     struct has_const_shallow_symbol_storage
     {
         template<class U>
-        static uint8_t test(const kodo::shallow_symbol_storage<true,U> *);
+        static uint8_t test(const kodo::shallow_symbol_storage<sak::const_storage,U> *);
 
         static uint32_t test(...);
 
@@ -51,7 +51,7 @@ namespace kodo
     struct has_mutable_shallow_symbol_storage
     {
         template<class U>
-        static uint8_t test(const kodo::shallow_symbol_storage<false,U> *);
+        static uint8_t test(const kodo::shallow_symbol_storage<sak::mutable_storage,U> *);
 
         static uint32_t test(...);
 
@@ -60,5 +60,3 @@ namespace kodo
 
 
 }
-
-
