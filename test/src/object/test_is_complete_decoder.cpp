@@ -161,5 +161,4 @@ TEST(ObjectTestIsCompleteDecoder, api)
 
     EXPECT_TRUE(stack.is_block_complete(0U));
     EXPECT_TRUE(stack.is_block_complete(1U));
-
 }

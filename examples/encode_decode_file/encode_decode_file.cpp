@@ -56,7 +56,7 @@ int main()
     encoder_factory.set_filename(encode_filename);
 
     decoder_factory.set_filename(decode_filename);
-    decoder_factory.set_filesize(file_size);
+    decoder_factory.set_file_size(file_size);
 
     auto file_encoder = encoder_factory.build();
     auto file_decoder = decoder_factory.build();

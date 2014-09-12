@@ -21,14 +21,7 @@ namespace kodo
 {
 namespace object
 {
-    /// @todo add docs
-    ///
-    /// The shallow variant of the storage decoder refers to the fact
-    /// that it will decode the data in a user provided buffer. So the
-    /// decoder does not maintain any internal data buffer for the
-    /// decoded data. Since this is the case the user must provide the
-    /// memory where the decoded object should be place when building
-    /// the object decoder.
+    /// @ingroup object_fec_stacks
     ///
     /// Example:
     ///

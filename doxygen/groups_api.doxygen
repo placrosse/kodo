@@ -410,3 +410,18 @@
 /// @defgroup trace_layers Layers
 /// @ingroup trace
 /// @brief Implementations of the trace API.
+
+//------------------------------------------------------------------
+// OBJECT
+//------------------------------------------------------------------
+
+/// @defgroup object Object
+/// @ingroup api_layer
+///
+/// @brief The object layers are used to implement stacks capable of
+///        encoding/decoding multiple blocks of data (such as large
+///        memory buffers or files).
+///
+/// @defgroup object_layers Layers
+/// @ingroup object
+/// @brief Implementations of the object API.

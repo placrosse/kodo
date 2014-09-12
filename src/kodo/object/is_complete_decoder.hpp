@@ -9,21 +9,14 @@
 #include <cassert>
 #include <vector>
 
-#include <iostream> /// @todo delete
-
 namespace kodo
 {
 namespace object
 {
-    /// @todo docs + tests
+    /// @ingroup object_layers
     ///
-    /// The codec factory can be shared between the between different
-    /// object encoders/decoders. One codec factory is created by the
-    /// object factory and shared with all object stacks. So every
-    /// object should configure the stack factory before building a
-    /// stack with it.
-    ///
-    /// For this reason we just initialize the callback
+    /// This layer makes sure that we can track the completion of all the
+    /// decoders built.
     ///
     /// This layer expects that a decoder exposes the
     /// set_is_complete_callback(...) which we will use to register a
