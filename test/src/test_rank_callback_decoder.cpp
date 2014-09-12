@@ -33,6 +33,9 @@
 #include <kodo/symbol_decoding_status_tracker.hpp>
 #include <kodo/symbol_decoding_status_counter.hpp>
 #include <kodo/basic_factory.hpp>
+#include <kodo/deep_storage_layers.hpp>
+
+/// @todo Rewrite to just test the layer, not make stacks etc.
 
 /// Here we define the stacks which should be tested.
 namespace kodo
@@ -58,15 +61,13 @@ namespace kodo
             coefficient_storage<
             coefficient_info<
             // Storage api
-            deep_symbol_storage<
-            storage_bytes_used<
-            storage_block_info<
+            deep_storage_layers<enable_trace,
             // Finite Field Math API
             finite_field_math<typename fifi::default_field<Field>::type,
             finite_field_info<Field,
             // Final Layer
             final_layer
-            > > > > > > > > > > > >
+            > > > > > > > > > >
          {
          public:
              using factory = basic_factory<rank_callback_decoder_stack>;

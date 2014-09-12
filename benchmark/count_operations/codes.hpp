@@ -67,16 +67,14 @@ namespace kodo
         coefficient_storage<
         coefficient_info<
         // Storage API
-        deep_symbol_storage<
-        storage_bytes_used<
-        storage_block_info<
+        deep_storage_layers<disable_trace,
         // Finite Field API
         finite_field_counter<
         finite_field_math<typename fifi::default_field<Field>::type,
         finite_field_info<Field,
         // Final Layer
         final_layer
-        > > > > > > > > > > > > > > > > >
+        > > > > > > > > > > > > > > >
     {
     public:
         using factory = pool_factory<full_rlnc_decoder_count>;
@@ -102,16 +100,14 @@ namespace kodo
         coefficient_storage<
         coefficient_info<
         // Storage API
-        deep_symbol_storage<
-        storage_bytes_used<
-        storage_block_info<
+        deep_storage_layers<disable_trace,
         // Finite Field API
         finite_field_counter<
         finite_field_math<typename fifi::default_field<Field>::type,
         finite_field_info<Field,
         // Final Layer
         final_layer
-        > > > > > > > > > > > > > > > > > >
+        > > > > > > > > > > > > > > > >
     {
     public:
         using factory = pool_factory<full_delayed_rlnc_decoder_count>;

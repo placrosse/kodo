@@ -46,23 +46,6 @@ namespace kodo
             // m_data.size() should be zero
             assert(m_data.size() == 0);
             m_data.resize(max_data_needed, 0);
-
-            m_symbols.resize(the_factory.max_symbols(), false);
-        }
-
-        /// @copydoc layer::initialize(Factory&)
-        template<class Factory>
-        void initialize(Factory& the_factory)
-        {
-            SuperCoder::initialize(the_factory);
-
-            /// @todo This should not be necessary - we should not
-            ///       use data which has not been initialized yet
-            ///       anyway
-            std::fill(m_data.begin(), m_data.end(), 0);
-            std::fill(m_symbols.begin(), m_symbols.end(), false);
-
-            m_symbols_count = 0;
         }
 
         /// @copydoc layer::symbol(uint32_t)
@@ -96,9 +79,6 @@ namespace kodo
         {
             assert(m_data.size() == symbols.size());
             m_data.swap(symbols);
-
-            m_symbols_count = SuperCoder::symbols();
-            std::fill(m_symbols.begin(), m_symbols.end(), true);
         }
 
         /// @copydoc layer::set_symbols(const sak::const_storage&)
@@ -110,13 +90,7 @@ namespace kodo
                    SuperCoder::symbols() * SuperCoder::symbol_size());
 
             // Use the copy function
-            copy_storage(sak::storage(m_data), symbol_storage);
-
-            // This will specify all symbols, also in the case
-            // of partial data. If this is not desired then the
-            // symbols need to be set individually.
-            m_symbols_count = SuperCoder::symbols();
-            std::fill(m_symbols.begin(), m_symbols.end(), true);
+            sak::copy_storage(sak::storage(m_data), symbol_storage);
         }
 
         /// @copydoc layer::set_symbol(uint32_t, const sak::const_storage&)
@@ -141,13 +115,6 @@ namespace kodo
 
             // Copy the data
             sak::copy_storage(dest_data, symbol);
-
-            if(m_symbols[index] == false)
-            {
-                ++m_symbols_count;
-                m_symbols[index] = true;
-            }
-
         }
 
         /// @copydoc layer::copy_symbols(const sak::mutable_storage&)
@@ -203,52 +170,23 @@ namespace kodo
             set_symbol(index, src);
         }
 
-        /// @copydoc layer::symbols_available() const
-        uint32_t symbols_available() const
+        /// @return A pointer to the memory stored by the deep storage
+        ///         layer
+        uint8_t* storage_data()
         {
-            return SuperCoder::symbols();
+            return m_data.data();
         }
 
-        /// @copydoc layer::symbols_initialized() const
-        uint32_t symbols_initialized() const
+        /// @return A pointer to the memory stored by the deep storage
+        ///         layer
+        const uint8_t* storage_data() const
         {
-            return m_symbols_count;
-        }
-
-        /// @copydoc layer::is_symbols_available() const
-        bool is_symbols_available() const
-        {
-            return true;
-        }
-
-        /// @copydoc layer::is_symbols_initialized() const
-        bool is_symbols_initialized() const
-        {
-            return m_symbols_count == SuperCoder::symbols();
-        }
-
-        /// @copydoc layer::is_symbol_available(uint32_t) const
-        bool is_symbol_available(uint32_t /*symbol_index*/) const
-        {
-            return true;
-        }
-
-        /// @copydoc layer::is_symbol_initialized(uint32_t) const
-        bool is_symbol_initialized(uint32_t symbol_index) const
-        {
-            return m_symbols[symbol_index];
+            return m_data.data();
         }
 
     private:
 
         /// Storage for the symbol data
         std::vector<uint8_t> m_data;
-
-        /// Symbols count
-        uint32_t m_symbols_count;
-
-        /// Tracks which symbols have been set
-        std::vector<bool> m_symbols;
-
     };
 }

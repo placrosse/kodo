@@ -25,6 +25,7 @@
 #include "elimination_coefficient_info.hpp"
 #include "elimination_coefficient_value_access.hpp"
 #include "elimination_coefficient_offset.hpp"
+#include "deep_storage_layers.hpp"
 
 namespace kodo
 {
@@ -38,7 +39,7 @@ namespace kodo
     ///        it will effectively be able to eliminate that part for
     ///        the encoding, while still producing valid encoded
     ///        symbols.
-    template<class Field>
+    template<class Field, class TraceTag = kodo::disable_trace>
     class elimination_decoder : public
         // Decoder API
         forward_linear_block_decoder<
@@ -52,15 +53,13 @@ namespace kodo
         coefficient_value_access<
         coefficient_info<
         // Storage API
-        deep_symbol_storage<
-        storage_bytes_used<
-        storage_block_info<
+        deep_storage_layers<TraceTag,
         // Finite Field API
         finite_field_math<typename fifi::default_field<Field>::type,
         finite_field_info<Field,
         // Final Layer
         final_layer
-        > > > > > > > > > > > > > >
+        > > > > > > > > > > > >
     {
     public:
         using factory = pool_factory<elimination_decoder>;

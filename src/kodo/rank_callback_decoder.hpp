@@ -11,7 +11,8 @@
 
 namespace kodo
 {
-
+    /// @fix unit test for this class
+    ///
     /// @ingroup decoder_layers
     /// @brief Allows a callback function to be invoked after rank changed
     ///
@@ -118,5 +119,3 @@ namespace kodo
     };
 
 }
-
-

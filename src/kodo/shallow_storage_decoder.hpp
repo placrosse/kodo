@@ -16,6 +16,7 @@
 
 namespace kodo
 {
+    /// @todo kill this
 
     /// @todo think of a nicer way to do this :) Would be nice if we
     ///       wouldn't need to define a new wrap class to do this.
