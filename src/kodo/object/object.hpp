@@ -9,4 +9,4 @@
 #include "file_encoder.hpp"
 
 #include "storage_encoder.hpp"
-#include "shallow_storage_decoder.hpp" /// @todo fix this so that we can use deep storage here as well. Once done rename it.
+#include "storage_decoder.hpp" /// @todo fix this so that we can use deep storage here as well. Once done rename it.

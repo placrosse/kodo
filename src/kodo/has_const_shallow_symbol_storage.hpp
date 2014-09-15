@@ -10,24 +10,23 @@
 namespace kodo
 {
     /// @ingroup type_traits
-    ///
     /// Type trait helper allows compile time detection of whether an
-    /// encoder / decoder contains the shallow_symbol_storage layer
+    /// encoder / decoder contains the const_shallow_symbol_storage layer
     ///
     /// Example:
     ///
     /// typedef kodo::full_rlnc8_encoder encoder_t;
     ///
-    /// if(kodo::has_shallow_symbol_storage<encoder_t>::value)
+    /// if(kodo::has_const_shallow_symbol_storage<encoder_t>::value)
     /// {
     ///     // Do something here
     /// }
     ///
     template<class T>
-    struct has_shallow_symbol_storage
+    struct has_const_shallow_symbol_storage
     {
-        template<bool V, class U>
-        static uint8_t test(const kodo::shallow_symbol_storage<V,U> *);
+        template<class U>
+        static uint8_t test(const kodo::shallow_symbol_storage<true,U> *);
 
         static uint32_t test(...);
 

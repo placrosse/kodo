@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include "shallow_symbol_storage.hpp"
+#include "has_shallow_symbol_storage.hpp"
 
 namespace kodo
 {
@@ -18,16 +18,16 @@ namespace kodo
     ///
     /// typedef kodo::full_rlnc8_encoder encoder_t;
     ///
-    /// if(kodo::has_shallow_symbol_storage<encoder_t>::value)
+    /// if(kodo::has_mutable_shallow_symbol_storage<encoder_t>::value)
     /// {
     ///     // Do something here
     /// }
     ///
     template<class T>
-    struct has_shallow_symbol_storage
+    struct has_mutable_shallow_symbol_storage
     {
-        template<bool V, class U>
-        static uint8_t test(const kodo::shallow_symbol_storage<V,U> *);
+        template<class U>
+        static uint8_t test(const kodo::shallow_symbol_storage<false,U> *);
 
         static uint32_t test(...);
 

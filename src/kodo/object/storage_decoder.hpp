@@ -14,6 +14,7 @@
 #include "../final_layer.hpp"
 #include "../wrap_restore_partial_symbol_decoder.hpp"
 #include "../wrap_is_complete_callback_decoder.hpp"
+#include "../has_mutable_shallow_symbol_storage.hpp"
 
 namespace kodo
 {
@@ -33,7 +34,7 @@ namespace object
     ///
     ///
     template<class Stack>
-    class shallow_storage_decoder : public
+    class storage_decoder : public
         is_complete_decoder<
         object_storage<
         stack_factory<
@@ -45,7 +46,7 @@ namespace object
     public:
 
         /// We will use the same factory as the stack
-        using factory = rebind_factory<Stack, shallow_storage_decoder>;
+        using factory = rebind_factory<Stack, storage_decoder>;
 
         /// This decoder only works with a shallow stack. The reason
         /// for this is that we are using the mutable_object_storage
@@ -53,7 +54,10 @@ namespace object
         /// decoder built. So we want the decoder to be shallow and
         /// therefore use that memory to store the decoded data.
         ///
-        /// @todo add static assert
+        static_assert(
+            has_mutable_shallow_symbol_storage<Stack>::value,
+            "Deep storage decoder only works with decoders using"
+            "shallow storage");
     };
 }
 }

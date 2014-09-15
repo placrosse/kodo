@@ -6,6 +6,10 @@ detailed list of every change, see the Git log.
 
 Latest
 ------
+* Major: Place type traits for detection of the storage layers in
+  their own headers according to our one class per file
+  guideline. This affects the has_const_shallow_symbol_storage and
+  has_mutable_shallow_symbol_storage traits.
 * Minor: Added generic helpers for invoking the initialize(...) and
   construct(...) functions. We now use this in our factories which
   allows them to work even when codecs do not specify one or both of

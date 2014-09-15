@@ -6,7 +6,7 @@
 #include <cstring>
 #include <utility>
 
-#include <kodo/object/shallow_storage_decoder.hpp>
+#include <kodo/object/storage_decoder.hpp>
 #include <kodo/object/storage_encoder.hpp>
 
 #include <kodo/rlnc/full_rlnc_codes.hpp>
@@ -36,7 +36,7 @@ int main()
     using storage_encoder = kodo::object::storage_encoder<
         kodo::shallow_full_rlnc_encoder<fifi::binary> >;
 
-    using storage_decoder = kodo::object::shallow_storage_decoder<
+    using storage_decoder = kodo::object::storage_decoder<
         kodo::shallow_full_rlnc_decoder<fifi::binary> >;
 
     storage_encoder::factory encoder_factory(max_symbols, max_symbol_size);
