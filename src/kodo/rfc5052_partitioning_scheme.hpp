@@ -1,12 +1,12 @@
-// Copyright Steinwurf ApS 2011-2012.
+// Copyright Steinwurf ApS 2011-2014.
 // Distributed under the "STEINWURF RESEARCH LICENSE 1.0".
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
 
-#ifndef KODO_RFC5052_PARTITIONING_SCHEME_HPP
-#define KODO_RFC5052_PARTITIONING_SCHEME_HPP
+#pragma once
 
 #include <cstdint>
+#include <algorithm>
 
 namespace kodo
 {
@@ -213,4 +213,3 @@ namespace kodo
 }
 
 #endif
-
