@@ -79,12 +79,40 @@ TEST(ObjectTestMappedFileSink, api)
     EXPECT_EQ(factory.file_size(), 1234);
     stack.initialize(factory);
 
-    // @todo check the set_storage function
+    // Comparison function which checks the size of the storage object
+    // and that the data pointer is not null
+    auto compare = [](const std::tuple<sak::mutable_storage>& actual,
+                      const std::tuple<sak::mutable_storage>& expected) -> bool
+        {
+            auto actual_storage = std::get<0>(actual);
+            auto expected_storage = std::get<0>(expected);
+
+            if (actual_storage.m_size != expected_storage.m_size)
+                return false;
+
+            if (actual_storage.m_data == 0)
+                return false;
+
+            if (expected_storage.m_data != (uint8_t*)0xdeadbeef)
+                return false;
+
+            return true;
+        };
+
+    sak::mutable_storage check_one = {(uint8_t*)0xdeadbeef, 1234};
+    EXPECT_TRUE((bool) factory.m_set_storage.expect_calls(compare)
+                    .with(check_one));
 
     // Initialize again
     factory.m_filename.set_return("mapped_file_sink_two");
-    factory.set_file_size(1234);
+    factory.set_file_size(4321);
 
-    EXPECT_EQ(factory.file_size(), 1234);
+    EXPECT_EQ(factory.file_size(), 4321);
     stack.initialize(factory);
+
+    sak::mutable_storage check_two = {(uint8_t*)0xdeadbeef, 4321};
+    EXPECT_TRUE((bool) factory.m_set_storage.expect_calls(compare)
+                    .with(check_one)
+                    .with(check_two));
+
 }
