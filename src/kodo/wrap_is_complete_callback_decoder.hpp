@@ -17,7 +17,8 @@ namespace kodo
     ///        is_complete_callback_decoder class for more
     ///        information.
     template<class Codec>
-    class wrap_is_complete_callback_decoder : public is_complete_callback_decoder<Codec>
+    class wrap_is_complete_callback_decoder : public
+        is_complete_callback_decoder<Codec>
     {
     public:
 
