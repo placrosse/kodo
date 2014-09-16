@@ -8,6 +8,7 @@
 #include <functional>
 #include <cassert>
 #include <vector>
+#include <cstdint>
 
 namespace kodo
 {
