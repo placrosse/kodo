@@ -146,7 +146,6 @@ namespace
 }
 }
 
-/// @todo figure out is this is the right naming
 TEST(ObjectTestStackFactory, api)
 {
     uint32_t symbols = 10;

@@ -55,7 +55,7 @@ namespace object
                 std::bind(&is_complete_decoder::is_complete_callback,
                           this, index));
 
-            return stack;
+           return stack;
         }
 
         /// @return true if all decoders have been decoded

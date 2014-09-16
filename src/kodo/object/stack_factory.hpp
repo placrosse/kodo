@@ -12,7 +12,7 @@ namespace kodo
 {
 namespace object
 {
-    /// @todo ingroup
+    /// @ingroup object_layers
     ///
     /// @brief Stores a factory for the stack type.
     ///

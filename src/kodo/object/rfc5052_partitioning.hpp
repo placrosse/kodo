@@ -12,7 +12,9 @@ namespace kodo
 {
 namespace object
 {
-    /// @todo docs
+    /// @ingroup object_layers
+    ///
+    /// @brief Alias using the rfc5052 as the object partitioning scheme
     template<class SuperCoder>
     using rfc5052_partitioning =
         partitioning<rfc5052_partitioning_scheme, SuperCoder>;

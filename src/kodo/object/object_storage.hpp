@@ -11,7 +11,7 @@ namespace kodo
 {
 namespace object
 {
-    /// @todo put in group
+    /// @ingroup object_layers
     ///
     /// @brief Initializes the codecs built with the object storage
     ///        provided
@@ -20,7 +20,7 @@ namespace object
     /// encoder or decoder we use the object codecs. This layer is a
     /// building block in an object codec. It allows the user to
     /// specify the storage memory which should be used by the
-    /// coded. When we build the object encoder/decoder the factory
+    /// codec. When we build the object encoder/decoder the factory
     /// the layer will copy the storage object and use it to
     /// initialize the actual encoders/decoders build with the right
     /// piece of memory using the layer::set_symbols() function.

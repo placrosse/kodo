@@ -131,9 +131,11 @@ TEST(ObjectTestObjectStorage, data_fits)
     auto stack3 = std::make_shared<kodo::dummy_stack::stack>();
     auto stack4 = std::make_shared<kodo::dummy_stack::stack>();
 
-    stack.m_byte_offset.set_return({0U, 500U, 1000U, 1500U, 2000U}).no_repeat();
-    stack.m_block_size.set_return({500U, 500U, 500U, 500U, 500U}).no_repeat();
+    stack.m_byte_offset.set_return(
+        {0U, 500U, 1000U, 1500U, 2000U}).no_repeat();
 
+    stack.m_block_size.set_return(
+        {500U, 500U, 500U, 500U, 500U}).no_repeat();
 
     stack.m_build.set_return({stack0, stack1, stack2, stack3, stack4})
         .no_repeat();
@@ -228,9 +230,11 @@ TEST(ObjectTestObjectStorage, data_does_not_fit)
     auto stack3 = std::make_shared<kodo::dummy_stack::stack>();
     auto stack4 = std::make_shared<kodo::dummy_stack::stack>();
 
-    stack.m_byte_offset.set_return({0U, 500U, 1000U, 1500U, 2000U}).no_repeat();
-    stack.m_block_size.set_return({500U, 500U, 500U, 500U, 500U}).no_repeat();
+    stack.m_byte_offset.set_return(
+        {0U, 500U, 1000U, 1500U, 2000U}).no_repeat();
 
+    stack.m_block_size.set_return(
+        {500U, 500U, 500U, 500U, 500U}).no_repeat();
 
     stack.m_build.set_return({stack0, stack1, stack2, stack3, stack4})
         .no_repeat();

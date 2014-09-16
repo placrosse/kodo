@@ -162,3 +162,23 @@ http://en.wikipedia.org/wiki/Test_stub
 The library is called stub and is freely available under the BSD license:
 
 https://github.com/steinwurf/stub
+
+Naming the test case
+--------------------
+
+When we define a test using gtest we use the ``TEST(test_case_name,
+test_name)`` macro to define and name a test function. In Kodo we use
+the following naming guideline:
+
+1. The ``test_case_name`` should be name according to its placement in
+   the ``test/src`` directory. If the file is place in the root of the
+   ``test/src`` folder e.g. ``test/src/test_my_fancy_code.cpp`` we
+   name the ``test_case_name`` as ``TestMyFancyCode``. Similarly if
+   the file is placed in a subdirectory
+   e.g. ``object/test_new_code.cpp`` we will specify the
+   ``test_case_name`` as ``ObjectTestNewCode``. This hopefully makes
+   it easy to find the source code of a failing unit test. Remember to
+   place the test file as described in
+   :ref:`namespaces_and_directories`
+2. The ``test_name`` is up to the developer but should be as
+   descriptive of the purpose of the unit test as possible.
