@@ -191,7 +191,7 @@ struct throughput_benchmark : public gauge::time_benchmark
         // storage decoder will just gets its internal memory
         // initialized by m_data_out)
         m_decoder->set_symbols(sak::storage(m_data_out));
-
+        // printf("The size of m_decoder->payload_size() is %u\n", m_decoder->payload_size());
         // Create the payload buffer
         m_temp_payload.resize(m_decoder->payload_size());
 
@@ -199,10 +199,13 @@ struct throughput_benchmark : public gauge::time_benchmark
         uint32_t payload_count = symbols * m_factor;
         assert(payload_count > 0);
 
+        // printf("Test one. Payload count: %u\n", payload_count);
         m_payloads.resize(payload_count);
+        // printf("Test\n");
         for (auto& payload : m_payloads)
         {
             payload.resize(m_encoder->payload_size());
+            // printf("payload size is %u\n", m_encoder->payload_size());
         }
     }
 
@@ -270,8 +273,14 @@ struct throughput_benchmark : public gauge::time_benchmark
             ///
             /// Changing this would most likely improve the throughput
             /// of the decoders. We are open to suggestions :)
-            std::copy_n(payload.data(), payload.size(), m_temp_payload.data());
+            assert(payload.data() != NULL);
+            // printf("The size of m_decoder->payload_size() is %u\n", m_decoder->payload_size());
+            // printf("The payload size is: %u\n", payload.size());
+            // printf("The m_temp_payload size is: %u\n", m_temp_payload.data());
 
+            assert(m_temp_payload.data() != NULL);
+            std::copy_n(payload.data(), payload.size(), m_temp_payload.data());
+            // printf("Succes?\n");
             m_decoder->decode(m_temp_payload.data());
 
             ++m_decoded_symbols;
@@ -573,6 +582,99 @@ typedef throughput_benchmark<
     kodo::shallow_full_rlnc_decoder<fifi::prime2325> > setup_rlnc_throughput2325;
 
 BENCHMARK_F(setup_rlnc_throughput2325, FullRLNC, Prime2325, 5)
+{
+    run_benchmark();
+}
+
+//------------------------------------------------------------------
+// Shallow FullRLNC, optimized generator with mt19937
+// Generates uint8_t numbers
+//------------------------------------------------------------------
+typedef throughput_benchmark<
+    kodo::shallow_full_rlnc_encoder_mt19937<fifi::binary>,
+    kodo::shallow_full_rlnc_decoder<fifi::binary>> setup_rlnc_throughput_mt19937;
+
+BENCHMARK_F(setup_rlnc_throughput_mt19937, FullRLNC_mt19937_uint8, Binary, 5)
+{
+    run_benchmark();
+}
+
+typedef throughput_benchmark<
+    kodo::shallow_full_rlnc_encoder_mt19937<fifi::binary8>,
+    kodo::shallow_full_rlnc_decoder<fifi::binary8>> setup_rlnc_throughput_mt19937_8;
+
+BENCHMARK_F(setup_rlnc_throughput_mt19937_8, FullRLNC_mt19937_uint8, Binary8, 5)
+{
+    run_benchmark();
+}
+
+typedef throughput_benchmark<
+    kodo::shallow_full_rlnc_encoder_mt19937<fifi::binary16>,
+    kodo::shallow_full_rlnc_decoder<fifi::binary16>> setup_rlnc_throughput_mt19937_16;
+
+BENCHMARK_F(setup_rlnc_throughput_mt19937_16, FullRLNC_mt19937_uint8, Binary16, 5)
+{
+    run_benchmark();
+}
+
+//------------------------------------------------------------------
+// Shallow FullRLNC, optimized generator with mt19937
+// Generates uint16_t numbers
+//------------------------------------------------------------------
+typedef throughput_benchmark<
+    kodo::shallow_full_rlnc_encoder_mt19937<fifi::binary, uint16_t>,
+    kodo::shallow_full_rlnc_decoder<fifi::binary>> setup_rlnc_throughput_uint16_mt19937;
+
+BENCHMARK_F(setup_rlnc_throughput_uint16_mt19937, FullRLNC_mt19937_uint16, Binary, 5)
+{
+    run_benchmark();
+}
+
+typedef throughput_benchmark<
+    kodo::shallow_full_rlnc_encoder_mt19937<fifi::binary8, uint16_t>,
+    kodo::shallow_full_rlnc_decoder<fifi::binary8>> setup_rlnc_throughput_uint16_mt19937_8;
+
+BENCHMARK_F(setup_rlnc_throughput_uint16_mt19937_8, FullRLNC_mt19937_uint16, Binary8, 5)
+{
+    run_benchmark();
+}
+
+typedef throughput_benchmark<
+    kodo::shallow_full_rlnc_encoder_mt19937<fifi::binary16, uint16_t>,
+    kodo::shallow_full_rlnc_decoder<fifi::binary16>> setup_rlnc_throughput_uint16_mt19937_16;
+
+BENCHMARK_F(setup_rlnc_throughput_uint16_mt19937_16, FullRLNC_mt19937_uint16, Binary16, 5)
+{
+    run_benchmark();
+}
+
+//------------------------------------------------------------------
+// Shallow FullRLNC, optimized generator with mt19937
+// Generates uint32_t numbers
+//------------------------------------------------------------------
+typedef throughput_benchmark<
+    kodo::shallow_full_rlnc_encoder_mt19937<fifi::binary, uint32_t>,
+    kodo::shallow_full_rlnc_decoder<fifi::binary>> setup_rlnc_throughput_uint32_mt19937;
+
+BENCHMARK_F(setup_rlnc_throughput_uint32_mt19937, FullRLNC_mt19937_uint32, Binary, 5)
+{
+    run_benchmark();
+}
+
+typedef throughput_benchmark<
+    kodo::shallow_full_rlnc_encoder_mt19937<fifi::binary8, uint32_t>,
+    kodo::shallow_full_rlnc_decoder<fifi::binary8>> setup_rlnc_throughput_uint32_mt19937_8;
+
+BENCHMARK_F(setup_rlnc_throughput_uint32_mt19937_8, FullRLNC_mt19937_uint32, Binary8, 5)
+{
+    run_benchmark();
+}
+
+typedef throughput_benchmark<
+    kodo::shallow_full_rlnc_encoder_mt19937<fifi::binary16, uint32_t>,
+    kodo::shallow_full_rlnc_decoder<fifi::binary16>> setup_rlnc_throughput_uint32_mt19937_16;
+
+BENCHMARK_F(setup_rlnc_throughput_uint32_mt19937_16, FullRLNC_mt19937_uint32, Binary16, 5)
 {
     run_benchmark();
 }
