@@ -48,6 +48,11 @@ namespace object
         auto build(uint32_t index) ->
             decltype(std::declval<SuperCoder>().build(0))
         {
+            assert(index < SuperCoder::blocks());
+
+            // We don't allow building decoders already completed
+            assert(m_completed[index] == false);
+
             auto stack = SuperCoder::build(index);
             assert(stack);
 
