@@ -26,8 +26,8 @@ namespace kodo
 // Put dummy layers and tests classes in an anonymous namespace
 // to avoid violations of ODF (one-definition-rule) in other
 // translation units
-namespace
-{
+//namespace
+//{
     // The encoder we will use
     template<class SuperTest>
     class setup_file : public SuperTest
@@ -356,42 +356,46 @@ namespace
             (void) max_symbol_size;
         }
     };
+}
+
+namespace
+{
 
     template<class ObjectEncoder, class ObjectDecoder>
     using test_file =
-        setup_file<
-        remove_output_file<
-        basic_run<
-        object_stacks<ObjectEncoder, ObjectDecoder,
-        final>>>>;
+        kodo::setup_file<
+        kodo::remove_output_file<
+        kodo::basic_run<
+        kodo::object_stacks<ObjectEncoder, ObjectDecoder,
+        kodo::final>>>>;
 
     template<class ObjectEncoder, class ObjectDecoder>
     using test_file_output_exists =
-        setup_file<
-        remove_output_file<
-        create_random_output_file<
-        basic_run<
-        object_stacks<ObjectEncoder, ObjectDecoder,
-        final>>>>>;
+        kodo::setup_file<
+        kodo::remove_output_file<
+        kodo::create_random_output_file<
+        kodo::basic_run<
+        kodo::object_stacks<ObjectEncoder, ObjectDecoder,
+        kodo::final>>>>>;
 
     template<class ObjectEncoder, class ObjectDecoder>
     using test_file_random =
-        setup_file<
-        remove_output_file<
-        random_run<
-        object_stacks<ObjectEncoder, ObjectDecoder,
-        final>>>>;
+        kodo::setup_file<
+        kodo::remove_output_file<
+        kodo::random_run<
+        kodo::object_stacks<ObjectEncoder, ObjectDecoder,
+        kodo::final>>>>;
 
     template<class ObjectEncoder, class ObjectDecoder>
     using test_file_duplicate_blocks =
-        setup_file<
-        remove_output_file<
-        duplicate_blocks<
-        object_stacks<ObjectEncoder, ObjectDecoder,
-        final>>>>;
+        kodo::setup_file<
+        kodo::remove_output_file<
+        kodo::duplicate_blocks<
+        kodo::object_stacks<ObjectEncoder, ObjectDecoder,
+        kodo::final>>>>;
 
 }
-}
+
 
 /// Just run though the basic functionality of the file_encoder and
 /// file_decoder and check that everything works
@@ -408,7 +412,10 @@ TEST(ObjectTestFileEncoder, api)
     using decoder = kodo::object::file_decoder<
         kodo::shallow_full_rlnc_decoder<fifi::binary>>;
 
-    using test = kodo::test_file<encoder, decoder>;
+//    using test = kodo::test_file<encoder, decoder>;
+    using test = test_file<encoder, decoder>;
+    //template<class
+    //typedef kodo::test_file<encoder, decoder> test;
 
     test t(max_symbols, max_symbol_size);
     t.run();
@@ -430,7 +437,7 @@ TEST(ObjectTestFileEncoder, output_exists)
     using decoder = kodo::object::file_decoder<
         kodo::shallow_full_rlnc_decoder<fifi::binary>>;
 
-    using test = kodo::test_file_output_exists<encoder, decoder>;
+    using test = test_file_output_exists<encoder, decoder>;
 
     test t(max_symbols, max_symbol_size);
     t.run();
@@ -450,7 +457,7 @@ TEST(ObjectTestFileEncoder, duplicate_blocks)
     using decoder = kodo::object::file_decoder<
         kodo::shallow_full_rlnc_decoder<fifi::binary>>;
 
-    using test = kodo::test_file_duplicate_blocks<encoder, decoder>;
+    using test = test_file_duplicate_blocks<encoder, decoder>;
 
     test t(max_symbols, max_symbol_size);
     t.run();
@@ -470,7 +477,7 @@ TEST(ObjectTestFileEncoder, random_blocks)
     using decoder = kodo::object::file_decoder<
         kodo::shallow_full_rlnc_decoder<fifi::binary>>;
 
-    using test = kodo::test_file_random<encoder, decoder>;
+    using test = test_file_random<encoder, decoder>;
 
     test t(max_symbols, max_symbol_size);
     t.run();
