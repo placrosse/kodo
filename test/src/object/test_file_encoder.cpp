@@ -21,13 +21,11 @@
 
 #include <kodo/rlnc/full_rlnc_codes.hpp>
 
+#include "../kodo_unit_test/declare_stack_factories.hpp"
+#include "../kodo_unit_test/basic_run_object_stacks.hpp"
+
 namespace kodo
 {
-// Put dummy layers and tests classes in an anonymous namespace
-// to avoid violations of ODF (one-definition-rule) in other
-// translation units
-//namespace
-//{
     // The encoder we will use
     template<class SuperTest>
     class setup_file : public SuperTest
@@ -66,6 +64,7 @@ namespace kodo
             EXPECT_EQ(boost::filesystem::file_size(decode_filename),
                       file_size);
 
+            // Compare the decoded data with the input data
             std::ifstream decode_file;
             decode_file.open(decode_filename, std::ios::binary);
             std::vector<char> data_out(file_size);
@@ -84,7 +83,7 @@ namespace kodo
     public:
 
         remove_output_file(uint32_t max_symbols,
-                                  uint32_t max_symbol_size)
+                           uint32_t max_symbol_size)
             : SuperTest(max_symbols, max_symbol_size)
         { }
 
@@ -137,87 +136,6 @@ namespace kodo
             random_file.close();
 
             SuperTest::run();
-        }
-    };
-
-
-    template<class ObjectEncoder, class ObjectDecoder, class SuperTest>
-    class object_stacks : public SuperTest
-    {
-    public:
-
-        using object_encoder_type = ObjectEncoder;
-        using object_decoder_type = ObjectDecoder;
-
-        using object_encoder_factory_type =
-            typename object_encoder_type::factory;
-
-        using object_decoder_factory_type =
-            typename object_decoder_type::factory;
-
-    public:
-
-        object_stacks(uint32_t max_symbols, uint32_t max_symbol_size)
-            : SuperTest(max_symbols, max_symbol_size),
-              m_encoder_factory(max_symbols, max_symbol_size),
-              m_decoder_factory(max_symbols, max_symbol_size)
-        { }
-
-        object_encoder_factory_type& encoder_factory()
-        {
-            return m_encoder_factory;
-        }
-
-        object_decoder_factory_type& decoder_factory()
-        {
-            return m_decoder_factory;
-        }
-
-    private:
-
-        object_encoder_factory_type m_encoder_factory;
-        object_decoder_factory_type m_decoder_factory;
-    };
-
-    template<class SuperTest>
-    class basic_run : public SuperTest
-    {
-    public:
-
-        basic_run(uint32_t max_symbols, uint32_t max_symbol_size)
-            : SuperTest(max_symbols, max_symbol_size)
-        { }
-
-        void run()
-        {
-
-            auto file_encoder = SuperTest::encoder_factory().build();
-            auto file_decoder = SuperTest::decoder_factory().build();
-
-            EXPECT_TRUE(file_encoder->blocks() > 0);
-            EXPECT_EQ(file_encoder->blocks(), file_decoder->blocks());
-
-            for (uint32_t i = 0; i < file_encoder->blocks(); ++i)
-            {
-                auto e = file_encoder->build(i);
-                auto d = file_decoder->build(i);
-
-                std::vector<uint8_t> payload(e->payload_size());
-
-                while (!d->is_complete())
-                {
-                    e->encode( payload.data() );
-
-                    // Here we would send and receive the payload over a
-                    // network. Lets throw away some packet to simulate.
-                    if (rand() % 2)
-                    {
-                        continue;
-                    }
-
-                    d->decode( payload.data() );
-                }
-            }
         }
     };
 
@@ -358,6 +276,9 @@ namespace kodo
     };
 }
 
+// Put dummy layers and tests classes in an anonymous namespace
+// to avoid violations of ODF (one-definition-rule) in other
+// translation units
 namespace
 {
 
@@ -365,8 +286,8 @@ namespace
     using test_file =
         kodo::setup_file<
         kodo::remove_output_file<
-        kodo::basic_run<
-        kodo::object_stacks<ObjectEncoder, ObjectDecoder,
+        kodo::basic_run_object_stacks<
+        kodo::declare_stack_factories<ObjectEncoder, ObjectDecoder,
         kodo::final>>>>;
 
     template<class ObjectEncoder, class ObjectDecoder>
@@ -374,8 +295,8 @@ namespace
         kodo::setup_file<
         kodo::remove_output_file<
         kodo::create_random_output_file<
-        kodo::basic_run<
-        kodo::object_stacks<ObjectEncoder, ObjectDecoder,
+        kodo::basic_run_object_stacks<
+        kodo::declare_stack_factories<ObjectEncoder, ObjectDecoder,
         kodo::final>>>>>;
 
     template<class ObjectEncoder, class ObjectDecoder>
@@ -383,7 +304,7 @@ namespace
         kodo::setup_file<
         kodo::remove_output_file<
         kodo::random_run<
-        kodo::object_stacks<ObjectEncoder, ObjectDecoder,
+        kodo::declare_stack_factories<ObjectEncoder, ObjectDecoder,
         kodo::final>>>>;
 
     template<class ObjectEncoder, class ObjectDecoder>
@@ -391,11 +312,10 @@ namespace
         kodo::setup_file<
         kodo::remove_output_file<
         kodo::duplicate_blocks<
-        kodo::object_stacks<ObjectEncoder, ObjectDecoder,
+        kodo::declare_stack_factories<ObjectEncoder, ObjectDecoder,
         kodo::final>>>>;
 
 }
-
 
 /// Just run though the basic functionality of the file_encoder and
 /// file_decoder and check that everything works
@@ -412,10 +332,7 @@ TEST(ObjectTestFileEncoder, api)
     using decoder = kodo::object::file_decoder<
         kodo::shallow_full_rlnc_decoder<fifi::binary>>;
 
-//    using test = kodo::test_file<encoder, decoder>;
     using test = test_file<encoder, decoder>;
-    //template<class
-    //typedef kodo::test_file<encoder, decoder> test;
 
     test t(max_symbols, max_symbol_size);
     t.run();
