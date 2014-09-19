@@ -10,7 +10,7 @@
 #include <algorithm>
 #include <vector>
 #include <random>
-#include <chrono>
+
 #include <numeric>
 
 #include <gtest/gtest.h>
@@ -23,10 +23,15 @@
 
 #include "../kodo_unit_test/declare_stack_factories.hpp"
 #include "../kodo_unit_test/basic_run_object_stacks.hpp"
+#include "../kodo_unit_test/random_run_object_stacks.hpp"
+#include "../kodo_unit_test/partial_decode_object_stacks.hpp"
+#include "../kodo_unit_test/final_test.hpp"
+#include "../kodo_unit_test/basic_api_test_helper.hpp"
 
 namespace kodo
 {
-    // The encoder we will use
+    /// Initialize the file_encoder and file_decoder with the file
+    /// names and the file size needed
     template<class SuperTest>
     class setup_file : public SuperTest
     {
@@ -91,6 +96,7 @@ namespace kodo
         {
             /// @todo rename the filename function to file_name
             auto file_name = SuperTest::decoder_factory().filename();
+            EXPECT_TRUE(file_name != "");
 
             if (boost::filesystem::is_regular_file(file_name))
             {
@@ -124,6 +130,7 @@ namespace kodo
 
             // Make the random size a random value between [1:file_size*2]
             auto random_size = (rand() % (file_size * 2)) + 1;
+            EXPECT_TRUE(random_size > 0);
 
             // Create some random data
             std::vector<char> data(random_size);
@@ -138,142 +145,6 @@ namespace kodo
             SuperTest::run();
         }
     };
-
-
-    template<class SuperTest>
-    class random_run : public SuperTest
-    {
-    public:
-
-        random_run(uint32_t max_symbols, uint32_t max_symbol_size)
-            : SuperTest(max_symbols, max_symbol_size)
-        { }
-
-        void run()
-        {
-            auto file_encoder = SuperTest::encoder_factory().build();
-            auto file_decoder = SuperTest::decoder_factory().build();
-
-            EXPECT_TRUE(file_encoder->blocks() > 0);
-            EXPECT_EQ(file_encoder->blocks(), file_decoder->blocks());
-
-            // Generate the sequence of block ids which we will go through
-            std::vector<uint32_t> blocks(file_encoder->blocks());
-            std::iota(blocks.begin(), blocks.end(), 0U);
-
-            // Shuffle the block ids
-            auto time = std::chrono::system_clock::now();
-            auto seed = time.time_since_epoch().count();
-
-            std::shuffle(blocks.begin(), blocks.end(),
-                         std::default_random_engine(seed));
-
-            for (uint32_t i = 0; i < blocks.size(); ++i)
-            {
-                auto id = blocks[i];
-
-                auto e = file_encoder->build(id);
-                auto d = file_decoder->build(id);
-
-                std::vector<uint8_t> payload(e->payload_size());
-
-                while (!d->is_complete())
-                {
-                    e->encode( payload.data() );
-
-                    // Here we would send and receive the payload over a
-                    // network. Lets throw away some packet to simulate.
-                    if (rand() % 2)
-                    {
-                        continue;
-                    }
-
-                    d->decode( payload.data() );
-                }
-            }
-        }
-    };
-
-    template<class SuperTest>
-    class duplicate_blocks : public SuperTest
-    {
-    public:
-
-        duplicate_blocks(uint32_t max_symbols, uint32_t max_symbol_size)
-            : SuperTest(max_symbols, max_symbol_size)
-        { }
-
-        void run()
-        {
-            auto file_encoder = SuperTest::encoder_factory().build();
-            auto file_decoder = SuperTest::decoder_factory().build();
-
-            EXPECT_TRUE(file_encoder->blocks() > 0);
-            EXPECT_EQ(file_encoder->blocks(), file_decoder->blocks());
-
-            // In the first loop we decode until we just need one more
-            // symbol to decode then we move on.
-            for (uint32_t i = 0; i < file_encoder->blocks(); ++i)
-            {
-                auto e = file_encoder->build(i);
-                auto d = file_decoder->build(i);
-
-                std::vector<uint8_t> payload(e->payload_size());
-
-                while (d->rank() < d->symbols() - 1)
-                {
-                    e->encode( payload.data() );
-
-                    // Here we would send and receive the payload over a
-                    // network. Lets throw away some packet to simulate.
-                    if (rand() % 2)
-                    {
-                        continue;
-                    }
-
-                    d->decode( payload.data() );
-                }
-            }
-
-            // Run the encoding/decoding loop again, by this we will
-            // build the same encoders and decoders as in the previous
-            // loop
-            for (uint32_t i = 0; i < file_encoder->blocks(); ++i)
-            {
-                auto e = file_encoder->build(i);
-                auto d = file_decoder->build(i);
-
-                std::vector<uint8_t> payload(e->payload_size());
-
-                while (!d->is_complete())
-                {
-                    e->encode( payload.data() );
-
-                    // Here we would send and receive the payload over a
-                    // network. Lets throw away some packet to simulate.
-                    if (rand() % 2)
-                    {
-                        continue;
-                    }
-
-                    d->decode( payload.data() );
-                }
-            }
-
-
-        }
-    };
-
-
-    class final
-    {
-    public:
-        final(uint32_t max_symbols, uint32_t max_symbol_size)
-        {
-            (void) max_symbols;
-            (void) max_symbol_size;
-        }
-    };
 }
 
 // Put dummy layers and tests classes in an anonymous namespace
@@ -281,14 +152,13 @@ namespace kodo
 // translation units
 namespace
 {
-
     template<class ObjectEncoder, class ObjectDecoder>
     using test_file =
         kodo::setup_file<
         kodo::remove_output_file<
         kodo::basic_run_object_stacks<
         kodo::declare_stack_factories<ObjectEncoder, ObjectDecoder,
-        kodo::final>>>>;
+        kodo::final_test>>>>;
 
     template<class ObjectEncoder, class ObjectDecoder>
     using test_file_output_exists =
@@ -297,35 +167,27 @@ namespace
         kodo::create_random_output_file<
         kodo::basic_run_object_stacks<
         kodo::declare_stack_factories<ObjectEncoder, ObjectDecoder,
-        kodo::final>>>>>;
+        kodo::final_test>>>>>;
 
     template<class ObjectEncoder, class ObjectDecoder>
     using test_file_random =
         kodo::setup_file<
         kodo::remove_output_file<
-        kodo::random_run<
+        kodo::random_run_object_stacks<
         kodo::declare_stack_factories<ObjectEncoder, ObjectDecoder,
-        kodo::final>>>>;
+        kodo::final_test>>>>;
 
     template<class ObjectEncoder, class ObjectDecoder>
     using test_file_duplicate_blocks =
         kodo::setup_file<
         kodo::remove_output_file<
-        kodo::duplicate_blocks<
+        kodo::partial_decode_object_stacks<
         kodo::declare_stack_factories<ObjectEncoder, ObjectDecoder,
-        kodo::final>>>>;
-
+        kodo::final_test>>>>;
 }
 
-/// Just run though the basic functionality of the file_encoder and
-/// file_decoder and check that everything works
-TEST(ObjectTestFileEncoder, api)
+void run_test_file(uint32_t max_symbols, uint32_t max_symbol_size)
 {
-    // Set the number of symbols (i.e. the generation size in RLNC
-    // terminology) and the size of a symbol in bytes
-    uint32_t max_symbols = 42;
-    uint32_t max_symbol_size = 64;
-
     using encoder = kodo::object::file_encoder<
         kodo::shallow_full_rlnc_encoder<fifi::binary>>;
 
@@ -337,6 +199,21 @@ TEST(ObjectTestFileEncoder, api)
     test t(max_symbols, max_symbol_size);
     t.run();
 }
+
+
+/// Just run though the basic functionality of the file_encoder and
+/// file_decoder and check that everything works
+TEST(ObjectTestFileEncoder, api)
+{
+    run_test_file(42, 64);
+    run_test_file(1, 64);
+
+    uint32_t symbols = rand_symbols();
+    uint32_t symbol_size = rand_symbol_size();
+
+    run_test_file(symbols, symbol_size);
+}
+
 
 // Tests that we decode correctly even if the file we want to decode
 // into already exists

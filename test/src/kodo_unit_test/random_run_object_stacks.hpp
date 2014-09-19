@@ -3,24 +3,26 @@
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
 
+#include <chrono>
+
 namespace kodo
 {
     /// Test helper for running though an object encoder/decoder.
     ///
-    /// It will run though the blocks of the object in linear order
+    /// It will run though the blocks of the object in random order
     ///
     template<class SuperTest>
-    class basic_run_object_stacks : public SuperTest
+    class random_run_object_stacks : public SuperTest
     {
     public:
 
-        basic_run_object_stacks(uint32_t max_symbols, uint32_t max_symbol_size)
+        random_run_object_stacks(uint32_t max_symbols,
+                                 uint32_t max_symbol_size)
             : SuperTest(max_symbols, max_symbol_size)
         { }
 
         void run()
         {
-
             auto object_encoder = SuperTest::encoder_factory().build();
             auto object_decoder = SuperTest::decoder_factory().build();
 
@@ -32,10 +34,23 @@ namespace kodo
 
             EXPECT_EQ(object_encoder->blocks(), object_decoder->blocks());
 
-            for (uint32_t i = 0; i < object_encoder->blocks(); ++i)
+            // Generate the sequence of block ids which we will go through
+            std::vector<uint32_t> blocks(object_encoder->blocks());
+            std::iota(blocks.begin(), blocks.end(), 0U);
+
+            // Shuffle the block ids
+            auto time = std::chrono::system_clock::now();
+            auto seed = time.time_since_epoch().count();
+
+            std::shuffle(blocks.begin(), blocks.end(),
+                         std::default_random_engine(seed));
+
+            for (uint32_t i = 0; i < blocks.size(); ++i)
             {
-                auto e = object_encoder->build(i);
-                auto d = object_decoder->build(i);
+                auto id = blocks[i];
+
+                auto e = object_encoder->build(id);
+                auto d = object_decoder->build(id);
 
                 EXPECT_TRUE((bool) e);
                 EXPECT_TRUE((bool) d);
@@ -46,8 +61,6 @@ namespace kodo
                 EXPECT_EQ(e->payload_size(), d->payload_size());
 
                 std::vector<uint8_t> payload(e->payload_size());
-
-                EXPECT_FALSE(d->is_complete());
 
                 while (!d->is_complete())
                 {
