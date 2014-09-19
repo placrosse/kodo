@@ -69,7 +69,7 @@ TEST(ObjectTestMappedFileSource, exception)
     kodo::dummy_stack stack;
     kodo::dummy_factory factory;
 
-    factory.m_filename.set_return("file_which_should_not_exist");
+    factory.m_file_name.set_return("file_which_should_not_exist");
 
     bool exception_caught = false;
 
@@ -108,7 +108,7 @@ TEST(ObjectTestMappedFileSource, api)
     kodo::dummy_stack stack;
     kodo::dummy_factory factory;
 
-    factory.m_filename.set_return(path_one);
+    factory.m_file_name.set_return(path_one);
     stack.initialize(factory);
 
     // Comparison function which checks the size of the storage object
@@ -136,7 +136,7 @@ TEST(ObjectTestMappedFileSource, api)
                     .with(check_one));
 
     // Initialize again
-    factory.m_filename.set_return(path_two);
+    factory.m_file_name.set_return(path_two);
     stack.initialize(factory);
 
     sak::mutable_storage check_two = {(uint8_t*)0xdeadbeef, size_two};

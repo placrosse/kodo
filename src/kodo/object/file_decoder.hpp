@@ -16,6 +16,7 @@
 #include "../final_layer.hpp"
 #include "../wrap_restore_partial_symbol_decoder.hpp"
 #include "../wrap_is_complete_callback_decoder.hpp"
+#include "../has_mutable_shallow_symbol_storage.hpp"
 
 namespace kodo
 {
