@@ -34,7 +34,7 @@ namespace
                 (void) symbol_size;
             }
 
-            std::string filename() const
+            std::string file_name() const
             {
                 return m_filename();
             }

@@ -32,7 +32,7 @@ namespace object
             // correctly to the encoders
 
             m_file = boost::iostreams::mapped_file_source(
-                the_factory.filename());
+                the_factory.file_name());
 
             assert(m_file.is_open());
 

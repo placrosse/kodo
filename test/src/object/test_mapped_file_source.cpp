@@ -43,9 +43,9 @@ namespace
     {
     public:
 
-        std::string filename() const
+        std::string file_name() const
         {
-            return m_filename();
+            return m_file_name();
         }
 
         void set_storage(const sak::const_storage& storage)
@@ -53,7 +53,7 @@ namespace
             m_set_storage(storage);
         }
 
-        stub::call<std::string()> m_filename;
+        stub::call<std::string()> m_file_name;
         stub::call<void(const sak::const_storage&)> m_set_storage;
     };
 

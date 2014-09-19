@@ -11,8 +11,6 @@
 
 #include <kodo/rlnc/full_rlnc_codes.hpp>
 
-/// @todo re-enable this example
-
 /// @example encode_decode_storage.cpp
 ///
 /// Often we want to encode / decode data that exceed a single

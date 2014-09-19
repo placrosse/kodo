@@ -23,9 +23,15 @@ namespace object
 {
     /// @ingroup object_fec_stacks
     ///
-    /// Example:
+    /// @brief A file decoder creates a number of decoders over a
+    ///        file in the filesystem
     ///
+    /// If the file is too large for a single encoder/decoder pair one
+    /// the file decoder will make sure that we create as many
+    /// encoder/decoder pairs as we need.
     ///
+    /// For an example of how it works see the encode_decode_file
+    /// example in the /kodo/examples folder.
     ///
     template<class Stack>
     class file_decoder : public
@@ -50,7 +56,11 @@ namespace object
         /// decoder built. So we want the decoder to be shallow and
         /// therefore use that memory to store the decoded data.
         ///
-        /// @todo add static assert
+        static_assert(
+            has_mutable_shallow_symbol_storage<Stack>::value,
+            "The file decoder only works with decoders using"
+            "shallow storage");
+
     };
 }
 }

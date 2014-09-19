@@ -9,8 +9,6 @@
 #include <kodo/object/file_decoder.hpp>
 #include <kodo/rlnc/full_rlnc_codes.hpp>
 
-/// @todo re-enable this unit test
-
 /// @example encode_decode_file.cpp
 ///
 /// Often we want to encode / decode data that exceed a single

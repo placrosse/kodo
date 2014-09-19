@@ -47,7 +47,7 @@ namespace object
 
             /// @return The filename associate with the object we are
             ///         about to encode/decode
-            const std::string& filename() const
+            const std::string& file_name() const
             {
                 assert(!m_filename.empty());
                 return m_filename;
@@ -66,12 +66,12 @@ namespace object
         void initialize(Factory& the_factory)
         {
             SuperCoder::initialize(the_factory);
-            m_filename = the_factory.filename();
+            m_filename = the_factory.file_name();
         }
 
         /// @return The filename associate with the object we
         ///        are encoding/decoding
-        const std::string& filename() const
+        const std::string& file_name() const
         {
             return m_filename;
         }

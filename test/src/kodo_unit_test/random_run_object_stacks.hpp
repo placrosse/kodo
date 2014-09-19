@@ -5,6 +5,7 @@
 
 #include <chrono>
 #include <numeric>
+#include <random>
 
 namespace kodo
 {

@@ -9,7 +9,6 @@
 #include <fstream>
 #include <algorithm>
 #include <vector>
-#include <random>
 
 #include <gtest/gtest.h>
 #include <boost/filesystem.hpp>
@@ -93,7 +92,7 @@ namespace kodo
         void run()
         {
             /// @todo rename the filename function to file_name
-            auto file_name = SuperTest::decoder_factory().filename();
+            auto file_name = SuperTest::decoder_factory().file_name();
             EXPECT_TRUE(file_name != "");
 
             if (boost::filesystem::is_regular_file(file_name))
@@ -120,7 +119,7 @@ namespace kodo
         void run()
         {
             /// @todo rename the filename function to file_name
-            auto file_name = SuperTest::decoder_factory().filename();
+            auto file_name = SuperTest::decoder_factory().file_name();
             auto file_size = SuperTest::decoder_factory().file_size();
 
             EXPECT_TRUE(file_name != "");

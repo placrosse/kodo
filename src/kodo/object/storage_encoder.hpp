@@ -16,6 +16,8 @@ namespace kodo
 {
 namespace object
 {
+    /// @ingroup object_fec_stacks
+    ///
     /// @brief A storage encoder creates a number of encoders over a
     ///        sak::const_storage object.
     ///
@@ -31,9 +33,9 @@ namespace object
     /// the user to keep the data alive for as long as the object
     /// encoder is in use.
     ///
-    /// Example:
+    /// For an example of how it works see the encode_decode_storage
+    /// example in the /kodo/examples folder.
     ///
-    /// @todo finish docs
     template<class Stack>
     class storage_encoder : public
         object_storage<

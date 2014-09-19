@@ -20,18 +20,19 @@ namespace kodo
 {
 namespace object
 {
-    /// @todo add docs
+    /// @ingroup object_fec_stacks
     ///
-    /// The shallow variant of the storage decoder refers to the fact
-    /// that it will decode the data in a user provided buffer. So the
-    /// decoder does not maintain any internal data buffer for the
-    /// decoded data. Since this is the case the user must provide the
-    /// memory where the decoded object should be place when building
-    /// the object decoder.
+    /// @brief A storage decoder creates a number of decoders over a
+    ///        sak::const_storage object.
     ///
-    /// Example:
+    /// The purpose of the storage decoder is to provide functionality
+    /// to decode objects larger than a single block/generation. The
+    /// storage decoder will use a partitioning scheme to create
+    /// multiple decoders each covering a different part of the object
+    /// being decoded.
     ///
-    ///
+    /// For an example of how it works see the encode_decode_storage
+    /// example in the /kodo/examples folder.
     ///
     template<class Stack>
     class storage_decoder : public
@@ -56,7 +57,7 @@ namespace object
         ///
         static_assert(
             has_mutable_shallow_symbol_storage<Stack>::value,
-            "Deep storage decoder only works with decoders using"
+            "The storage decoder only works with decoders using"
             "shallow storage");
     };
 }

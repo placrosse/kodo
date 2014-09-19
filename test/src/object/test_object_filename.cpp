@@ -64,8 +64,8 @@ TEST(ObjectTestObjectFilename, api)
     auto filename = "yoyo.dat";
 
     factory.set_filename(filename);
-    EXPECT_EQ(factory.filename(), filename);
+    EXPECT_EQ(factory.file_name(), filename);
 
     stack.initialize(factory);
-    EXPECT_EQ(stack.filename(), filename);
+    EXPECT_EQ(stack.file_name(), filename);
 }

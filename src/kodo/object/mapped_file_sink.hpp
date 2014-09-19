@@ -67,7 +67,7 @@ namespace object
             // correctly to the encoders
 
             boost::iostreams::mapped_file_params params;
-            params.path = the_factory.filename();
+            params.path = the_factory.file_name();
             params.new_file_size = the_factory.file_size();
 
             m_file = boost::iostreams::mapped_file_sink(params);

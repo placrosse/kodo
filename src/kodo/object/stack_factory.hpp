@@ -43,9 +43,6 @@ namespace object
         {
         public:
 
-            /// @todo make sure the factory_base constructor is
-            /// documented in the layer
-            ///
             /// @copydoc layer::factory_base::factory_base(uint32_t,uint32_t)
             factory_base(uint32_t symbols, uint32_t symbol_size)
                 : SuperCoder::factory_base(symbols, symbol_size),
