@@ -94,7 +94,6 @@ void run_test_storage(uint32_t max_symbols, uint32_t max_symbol_size)
     t.run();
 }
 
-
 /// Just run though the basic functionality of the storage_encoder and
 /// storage_decoder and check that everything works
 TEST(ObjectTestStorageEncoder, api)

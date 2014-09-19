@@ -11,8 +11,6 @@
 #include <vector>
 #include <random>
 
-#include <numeric>
-
 #include <gtest/gtest.h>
 #include <boost/filesystem.hpp>
 
