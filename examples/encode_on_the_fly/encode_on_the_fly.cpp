@@ -41,29 +41,29 @@ int main()
     std::vector<uint8_t> data_in(encoder->block_size());
 
     // Just for fun - fill the data with random data
-    for(auto &e: data_in)
+    for (auto &e: data_in)
         e = rand() % 256;
 
-    // Lets split the data into symbols and feed the encoder one symbol
+    // Let's split the data into symbols and feed the encoder one symbol
     // at a time
     auto symbol_storage =
         sak::split_storage(sak::storage(data_in), symbol_size);
 
-    while( !decoder->is_complete() )
+    while (!decoder->is_complete())
     {
         // Encode a packet into the payload buffer
-        encoder->encode( &payload[0] );
+        encoder->encode(&payload[0]);
 
         // Send the data to the decoders, here we just for fun
         // simulate that we are loosing 50% of the packets
-        if((rand() % 2) == 0)
+        if ((rand() % 2) == 0)
            continue;
 
         // Packet got through - pass that packet to the decoder
-        decoder->decode( &payload[0] );
+        decoder->decode(&payload[0]);
 
         // Randomly choose to insert a symbol
-        if((rand() % 2) == 0 && encoder->rank() < symbols)
+        if ((rand() % 2) == 0 && encoder->rank() < symbols)
         {
             // For an encoder the rank specifies the number of symbols
             // it has available for encoding
@@ -87,6 +87,4 @@ int main()
         std::cout << "Unexpected failure to decode "
                   << "please file a bug report :)" << std::endl;
     }
-
 }
-
