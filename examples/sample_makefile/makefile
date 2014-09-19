@@ -83,7 +83,8 @@ EXAMPLE_SRC = ../encode_decode_simple/encode_decode_simple.cpp
 
 TARGET ?= encode_decode_simple
 
+CPP_SOURCES = $(CPUID_CPP_FILES) $(FIFI_CPP_FILES) $(EXAMPLE_SRC)
+
 # Invoke the compiler
 all:
-	$(CXX) $(CPUID_CPP_FILES) $(FIFI_CPP_FILES) $(EXAMPLE_SRC) -o $(TARGET) \
-        $(CXXFLAGS) $(INCLUDES)
+	$(CXX) $(CPP_SOURCES) -o $(TARGET) $(CXXFLAGS) $(INCLUDES)
