@@ -22,6 +22,7 @@
 #include "../kodo_unit_test/basic_run_object_stacks.hpp"
 #include "../kodo_unit_test/random_run_object_stacks.hpp"
 #include "../kodo_unit_test/partial_decode_object_stacks.hpp"
+#include "../kodo_unit_test/rebuild_object_stacks.hpp"
 #include "../kodo_unit_test/final_test.hpp"
 #include "../kodo_unit_test/basic_api_test_helper.hpp"
 
@@ -181,6 +182,13 @@ namespace
         kodo::partial_decode_object_stacks<
         kodo::declare_stack_factories<ObjectEncoder, ObjectDecoder,
         kodo::final_test>>>>;
+
+    template<class ObjectEncoder, class ObjectDecoder>
+    using test_file_rebuild =
+        kodo::setup_file<
+        kodo::rebuild_object_stacks<
+        kodo::declare_stack_factories<ObjectEncoder, ObjectDecoder,
+        kodo::final_test>>>;
 }
 
 void run_test_file(uint32_t max_symbols, uint32_t max_symbol_size)
@@ -269,6 +277,27 @@ TEST(ObjectTestFileEncoder, random_blocks)
         kodo::shallow_full_rlnc_decoder<fifi::binary>>;
 
     using test = test_file_random<encoder, decoder>;
+
+    test t(max_symbols, max_symbol_size);
+    t.run();
+}
+
+// Test that we decode correctly even if we rebuild the
+// file_encoder/file_decoder
+TEST(ObjectTestFileEncoder, rebuild)
+{
+    // Set the number of symbols (i.e. the generation size in RLNC
+    // terminology) and the size of a symbol in bytes
+    uint32_t max_symbols = 42;
+    uint32_t max_symbol_size = 64;
+
+    using encoder = kodo::object::file_encoder<
+        kodo::shallow_full_rlnc_encoder<fifi::binary>>;
+
+    using decoder = kodo::object::file_decoder<
+        kodo::shallow_full_rlnc_decoder<fifi::binary>>;
+
+    using test = test_file_rebuild<encoder, decoder>;
 
     test t(max_symbols, max_symbol_size);
     t.run();

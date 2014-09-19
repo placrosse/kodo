@@ -34,7 +34,7 @@ namespace kodo
     public:
 
         /// Pointer type to the constructed coder
-        typedef boost::shared_ptr<Codec> pointer;
+        using pointer = typename sak::resource_pool<Codec>::value_ptr;
 
     public:
 
