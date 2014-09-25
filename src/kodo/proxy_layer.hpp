@@ -47,7 +47,7 @@ namespace kodo
         typedef typename MainStack::value_type value_type;
 
         /// Pointer type to the constructed coder
-        typedef boost::shared_ptr<FinalType> pointer;
+        typedef std::shared_ptr<FinalType> pointer;
 
         /// The type of the main stack
         typedef MainStack main_stack_type;
@@ -137,7 +137,7 @@ namespace kodo
                 assert(m_main_factory != 0);
                 assert(m_main_stack != 0);
 
-                pointer coder = boost::make_shared<FinalType>();
+                pointer coder = std::make_shared<FinalType>();
 
                 factory_type *this_factory =
                     static_cast<factory_type*>(this);

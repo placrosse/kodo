@@ -71,7 +71,7 @@ namespace kodo
         class T,
         class Filter
     >
-    inline void trace(boost::shared_ptr<T>& t, std::ostream& out,
+    inline void trace(std::shared_ptr<T>& t, std::ostream& out,
                       const Filter& filter)
     {
         kodo::trace(*t, out, filter);
@@ -84,7 +84,7 @@ namespace kodo
     <
         class T
     >
-    inline void trace(boost::shared_ptr<T>& t, std::ostream& out)
+    inline void trace(std::shared_ptr<T>& t, std::ostream& out)
     {
         // The default filter returns true for any zone
         auto filter = [] (const std::string&){ return true; };
