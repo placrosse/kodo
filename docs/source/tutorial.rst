@@ -122,7 +122,7 @@ As shown above this is done by passing a type defining the finite field, as the
 first argument to the chosen encoder and decoder. Since fast finite field
 computations are not only useful in erasure correcting codes this part of the
 functionality has be split into a second `library called Fifi
-<www.github.com/steinwurf/fifi>`_. The Fifi library defines a number of
+<https://github.com/steinwurf/fifi>`_. The Fifi library defines a number of
 different finite fields such as ``binary``, ``binary4``, ``binary8``, and
 ``binary16``. To switch between the different field you can simple replace
 ``fifi::binary8`` with one of the other field types e.g. ``fifi::binary``.
