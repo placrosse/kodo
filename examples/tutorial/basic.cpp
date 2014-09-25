@@ -6,6 +6,7 @@
 //! [0]
 #include <kodo/rlnc/full_rlnc_codes.hpp>
 //! [1]
+#include <vector>
 
 int main()
 {
@@ -17,8 +18,8 @@ int main()
     //! [3]
 
     //! [4]
-    typedef kodo::full_rlnc_encoder<fifi::binary8> rlnc_encoder;
-    typedef kodo::full_rlnc_decoder<fifi::binary8> rlnc_decoder;
+    using rlnc_encoder = kodo::full_rlnc_encoder<fifi::binary8>;
+    using rlnc_decoder = kodo::full_rlnc_decoder<fifi::binary8>;
     //! [5]
 
     //! [6]
@@ -36,8 +37,8 @@ int main()
     std::vector<uint8_t> block_in(encoder->block_size());
 
     // Just for fun - fill the data with random data
-    for(auto &e: block_in)
-        e = rand() % 256;
+    std::generate(block_in.begin(), block_in.end(), rand);
+
     //! [9]
 
     //! [10]
@@ -48,20 +49,19 @@ int main()
 
     uint32_t encoded_count = 0;
 
-    while( !decoder->is_complete() )
+    while (!decoder->is_complete())
     {
         // Encode a packet into the payload buffer
-        uint32_t bytes_used = encoder->encode( &payload[0] );
+        uint32_t bytes_used = encoder->encode(payload.data());
         std::cout << "Bytes used = " << bytes_used << std::endl;
 
         ++encoded_count;
 
         // Pass that packet to the decoder
-        decoder->decode( &payload[0] );
+        decoder->decode(payload.data());
     }
 
     std::cout << "Encoded count = " << encoded_count << std::endl;
 
     return 0;
-
 }

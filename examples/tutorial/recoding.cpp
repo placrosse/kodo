@@ -7,6 +7,8 @@
 #include <kodo/is_systematic_on.hpp>
 #include <kodo/set_systematic_off.hpp>
 
+#include <vector>
+
 int main()
 {
     // Set the number of symbols (i.e. the generation size in RLNC
@@ -14,8 +16,8 @@ int main()
     uint32_t max_symbols = 16;
     uint32_t max_symbol_size = 1400;
 
-    typedef kodo::full_rlnc_encoder<fifi::binary8> rlnc_encoder;
-    typedef kodo::full_rlnc_decoder<fifi::binary8> rlnc_decoder;
+    using rlnc_encoder = kodo::full_rlnc_encoder<fifi::binary8>;
+    using rlnc_decoder = kodo::full_rlnc_decoder<fifi::binary8>;
 
     // In the following we will make an encoder/decoder factory.
     // The factories are used to build actual encoders/decoders
@@ -30,8 +32,7 @@ int main()
     std::vector<uint8_t> block_in(encoder->block_size());
 
     // Just for fun - fill the data with random data
-    for(auto &e: block_in)
-        e = rand() % 256;
+    std::generate(block_in.begin(), block_in.end(), rand);
 
     // Assign the data buffer to the encoder so that we may start
     // to produce encoded symbols from it
@@ -42,32 +43,31 @@ int main()
 
     // We switch any systematic operations off so we code
     // symbols from the beginning
-    if(kodo::is_systematic_on(encoder))
+    if (kodo::is_systematic_on(encoder))
         kodo::set_systematic_off(encoder);
 
-    while( !decoder2->is_complete() )
+    while (!decoder2->is_complete())
     {
         // Encode a packet into the payload buffer
-        uint32_t bytes_used = encoder->encode( &payload[0] );
+        uint32_t bytes_used = encoder->encode(payload.data());
         std::cout << "Bytes used = " << bytes_used << std::endl;
 
         ++encoded_count;
 
-        if((rand() % 2) == 0)
+        if (rand() % 2)
         {
             ++dropped_count;
             continue;
         }
 
         // Pass that packet to the decoder1
-        decoder1->decode( &payload[0] );
+        decoder1->decode(payload.data());
 
         // Create a recoded packet from decoder1
-        decoder1->recode( &payload[0] );
+        decoder1->recode(payload.data());
 
         // Pass the recoded packet to decoder two
-        decoder2->decode( &payload[0] );
-
+        decoder2->decode(payload.data());
     }
 
     std::cout << "Encoded count = " << encoded_count << std::endl;
@@ -81,5 +81,4 @@ int main()
     delete [] block_out;
 
     return 0;
-
 }

@@ -9,6 +9,8 @@
 #include <kodo/rlnc/sliding_window_decoder.hpp>
 #include <kodo/trace.hpp>
 
+#include <vector>
+
 /// @example sliding_window.cpp
 ///
 /// This example shows how to use sliding window encoder and decoder
@@ -28,8 +30,8 @@ int main()
     uint32_t symbol_size = 160;
 
     // Typdefs for the encoder/decoder type we wish to use
-    typedef kodo::sliding_window_encoder<fifi::binary8> rlnc_encoder;
-    typedef kodo::sliding_window_decoder<fifi::binary8> rlnc_decoder;
+    using rlnc_encoder = kodo::sliding_window_encoder<fifi::binary8>;
+    using rlnc_decoder = kodo::sliding_window_decoder<fifi::binary8>;
 
     // In the following we will make an encoder/decoder factory.
     // The factories are used to build actual encoders/decoders
@@ -61,9 +63,8 @@ int main()
     auto symbol_storage =
         sak::split_storage(sak::storage(data_in), symbol_size);
 
-    while ( !decoder->is_complete() )
+    while (!decoder->is_complete())
     {
-
         if (kodo::has_trace<rlnc_decoder>::value)
         {
             kodo::trace(decoder, std::cout);
@@ -135,5 +136,4 @@ int main()
         std::cout << "Unexpected failure to decode "
                   << "please file a bug report :)" << std::endl;
     }
-
 }

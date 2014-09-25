@@ -3,14 +3,15 @@
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
 
-#include <kodo/rlnc/full_rlnc_codes.hpp>
 #include <kodo/is_systematic_on.hpp>
+#include <kodo/rebind_factory.hpp>
+#include <kodo/rlnc/full_rlnc_codes.hpp>
 #include <kodo/set_systematic_off.hpp>
 
+#include <vector>
 
-namespace kodo
+namespace
 {
-
     template<class SuperCoder>
     class encoded_count : public SuperCoder
     {
@@ -39,53 +40,19 @@ namespace kodo
         uint32_t m_count;
     };
 
-    /// @ingroup fec_stacks
-    /// @brief Complete stack implementing a RLNC encoder.
+    /// @ingroup payload_codec_layers
     ///
-    /// The key features of this configuration is the following:
-    /// - Systematic encoding (uncoded symbols produced before switching
-    ///   to coding)
-    /// - Full encoding vectors, this stack uses the plain_symbol_id_writer
-    ///   which sends the full encoding vector with every encoded symbol.
-    ///   Encoding vectors are generated using a random uniform generator.
-    /// - Deep symbol storage which makes the encoder allocate its own
-    ///   internal memory.
-    template<class Field>
-    class custom_encoder :
-        public // Payload Codec API
-               encoded_count<
-               payload_encoder<
-               // Codec Header API
-               default_on_systematic_encoder<
-               symbol_id_encoder<
-               // Symbol ID API
-               plain_symbol_id_writer<
-               // Coefficient Generator API
-               uniform_generator<
-               // Codec API
-               encode_symbol_tracker<
-               zero_symbol_encoder<
-               linear_block_encoder<
-               storage_aware_encoder<
-               // Coefficient Storage API
-               coefficient_value_access<
-               coefficient_info<
-               // Symbol Storage API
-               deep_symbol_storage<
-               storage_bytes_used<
-               storage_block_info<
-               // Finite Field API
-               finite_field_math<typename fifi::default_field<Field>::type,
-               finite_field_info<Field,
-               // Factory API
-               final_layer
-               > > > > > > > > > > > > > > > > >
+    /// @brief This helper is used to wrap an exting codec stack with the
+    ///        encoded_count layer. See the encoded_count class for more
+    ///        information.
+    template<class Codec>
+    class wrap_encoded_count : public encoded_count<Codec>
     {
-        public:
-            using factory = pool_factory<custom_encoder>;
+    public:
+
+        /// Rebind the factory to build the correct stack
+        using factory = kodo::rebind_factory<Codec, wrap_encoded_count>;
     };
-
-
 }
 
 int main()
@@ -95,8 +62,10 @@ int main()
     uint32_t max_symbols = 16;
     uint32_t max_symbol_size = 1400;
 
-    typedef kodo::custom_encoder<fifi::binary8> rlnc_encoder;
-    typedef kodo::full_rlnc_decoder<fifi::binary8> rlnc_decoder;
+    using rlnc_encoder =
+        wrap_encoded_count<kodo::full_rlnc_encoder<fifi::binary8>>;
+
+    using rlnc_decoder = kodo::full_rlnc_decoder<fifi::binary8>;
 
     // In the following we will make an encoder/decoder factory.
     // The factories are used to build actual encoders/decoders
@@ -111,8 +80,7 @@ int main()
     std::vector<uint8_t> block_in(encoder->block_size());
 
     // Just for fun - fill the data with random data
-    for(auto &e: block_in)
-        e = rand() % 256;
+    std::generate(block_in.begin(), block_in.end(), rand);
 
     // Assign the data buffer to the encoder so that we may start
     // to produce encoded symbols from it
@@ -120,27 +88,26 @@ int main()
 
     // We switch any systematic operations off so we code
     // symbols from the beginning
-    if(kodo::is_systematic_on(encoder))
+    if (kodo::is_systematic_on(encoder))
         kodo::set_systematic_off(encoder);
 
-    while( !decoder2->is_complete() )
+    while (!decoder2->is_complete())
     {
         // Encode a packet into the payload buffer
-        uint32_t bytes_used = encoder->encode( &payload[0] );
+        uint32_t bytes_used = encoder->encode(payload.data());
         std::cout << "Bytes used = " << bytes_used << std::endl;
 
-        if((rand() % 2) == 0)
+        if (rand() % 2)
             continue;
 
         // Pass that packet to the decoder1
-        decoder1->decode( &payload[0] );
+        decoder1->decode(payload.data());
 
         // Create a recoded packet from decoder1
-        decoder1->recode( &payload[0] );
+        decoder1->recode(payload.data());
 
         // Pass the recoded packet to decoder two
-        decoder2->decode( &payload[0] );
-
+        decoder2->decode(payload.data());
     }
 
     std::cout << "Encoded count = " << encoder->get_encoded_count()
@@ -154,5 +121,4 @@ int main()
     delete [] block_out;
 
     return 0;
-
 }

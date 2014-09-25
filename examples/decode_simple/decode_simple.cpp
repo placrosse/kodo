@@ -69,7 +69,7 @@ namespace kodo
 
 int main()
 {
-    typedef fifi::binary field_type;
+    using field_type = fifi::binary;
 
     // Set the number of symbols (i.e. the generation size in RLNC
     // terminology) and the number of elements in a symbol
@@ -83,7 +83,7 @@ int main()
         fifi::elements_to_size<field_type>(symbols);
 
     // Typdefs for the decoder type we wish to use
-    typedef kodo::rlnc_decoder<field_type> rlnc_decoder;
+    using rlnc_decoder = kodo::rlnc_decoder<field_type>;
 
     // In the following we will make an decoder factory.
     // The factory is used to build actual decoders
@@ -200,5 +200,4 @@ int main()
         std::cout << "Error: Decoded data differs from original data";
     }
     std::cout << std::endl << std::endl;
-
 }

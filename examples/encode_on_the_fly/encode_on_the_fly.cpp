@@ -5,6 +5,8 @@
 
 #include <kodo/rlnc/on_the_fly_codes.hpp>
 
+#include <vector>
+
 /// @example encode_on_the_fly.cpp
 ///
 /// This example shows how to use a storage aware encoder which will
@@ -20,8 +22,8 @@ int main()
     uint32_t symbol_size = 160;
 
     // Typdefs for the encoder/decoder type we wish to use
-    typedef kodo::on_the_fly_encoder<fifi::binary8> rlnc_encoder;
-    typedef kodo::on_the_fly_decoder<fifi::binary8> rlnc_decoder;
+    using rlnc_encoder = kodo::on_the_fly_encoder<fifi::binary8>;
+    using rlnc_decoder = kodo::on_the_fly_decoder<fifi::binary8>;
 
     // In the following we will make an encoder/decoder factory.
     // The factories are used to build actual encoders/decoders
@@ -41,29 +43,28 @@ int main()
     std::vector<uint8_t> data_in(encoder->block_size());
 
     // Just for fun - fill the data with random data
-    for(auto &e: data_in)
-        e = rand() % 256;
+    std::generate(data_in.begin(), data_in.end(), rand);
 
     // Lets split the data into symbols and feed the encoder one symbol
     // at a time
     auto symbol_storage =
         sak::split_storage(sak::storage(data_in), symbol_size);
 
-    while( !decoder->is_complete() )
+    while (!decoder->is_complete())
     {
         // Encode a packet into the payload buffer
-        encoder->encode( &payload[0] );
+        encoder->encode(payload.data());
 
         // Send the data to the decoders, here we just for fun
         // simulate that we are loosing 50% of the packets
-        if((rand() % 2) == 0)
+        if (rand() % 2)
            continue;
 
         // Packet got through - pass that packet to the decoder
-        decoder->decode( &payload[0] );
+        decoder->decode(payload.data());
 
         // Randomly choose to insert a symbol
-        if((rand() % 2) == 0 && encoder->rank() < symbols)
+        if ((rand() % 2) && (encoder->rank() < symbols))
         {
             // For an encoder the rank specifies the number of symbols
             // it has available for encoding
@@ -87,6 +88,4 @@ int main()
         std::cout << "Unexpected failure to decode "
                   << "please file a bug report :)" << std::endl;
     }
-
 }
-
