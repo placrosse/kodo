@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include "../final_coder_factory_pool.hpp"
+#include "../final_layer.hpp"
 #include "../systematic_decoder.hpp"
 #include "../payload_decoder.hpp"
 #include "../symbol_id_decoder.hpp"
@@ -44,10 +44,11 @@ namespace kodo
         deep_storage_layers<TraceTag,
         // Finite Field API
         finite_field_layers<Field,
-        // Factory API
-        final_coder_factory_pool<
-        // Final type
-        reed_solomon_decoder<Field,TraceTag>
-        > > > > > > > > > >
-    { };
+        // Final Layer
+        final_layer
+        > > > > > > > > >
+    {
+    public:
+        using factory = pool_factory<reed_solomon_decoder>;
+    };
 }

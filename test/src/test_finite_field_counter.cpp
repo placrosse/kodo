@@ -14,6 +14,7 @@
 
 #include <kodo/operations_counter.hpp>
 #include <kodo/finite_field_counter.hpp>
+#include <kodo/basic_factory.hpp>
 
 #include "kodo_unit_test/operations_counter_helper.hpp"
 
@@ -37,12 +38,6 @@ namespace kodo
 
             /// @copydoc layer::value_type
             typedef typename field_type::value_type value_type;
-
-        public:
-
-            /// Dummy factory
-            struct factory
-            {};
 
         public:
 
@@ -122,6 +117,9 @@ namespace kodo
                    dummy_finite_field<Field> >
         { };
 
+        struct dummy_factory
+        { };
+
     }
 }
 
@@ -183,13 +181,10 @@ TEST(TestFiniteFieldCounter, invoke_counters)
 
     test_values(counter, 3U);
 
-    kodo::counter_test_stack<fifi::binary>::factory f;
+    kodo::dummy_factory f;
     stack.initialize(f);
 
     counter = stack.get_operations_counter();
 
     test_values(counter, 0U);
 }
-
-
-

@@ -9,6 +9,7 @@
 
 #include <kodo/proxy_stack.hpp>
 #include <kodo/proxy_layer.hpp>
+#include <kodo/basic_factory.hpp>
 
 #include "kodo_unit_test/helper_test_nested_stack.hpp"
 
@@ -37,16 +38,20 @@ namespace kodo
         template<class MainStack>
         class dummy_proxy_stack : public
               proxy_layer<dummy_proxy_stack<MainStack>, MainStack>
-        { };
+        {
+        public:
+            using factory = basic_factory<dummy_proxy_stack>;
+        };
 
         /// The stack represents the main stack used in unit test
         class dummy_stack : public
         proxy_stack<proxy_args<>, dummy_proxy_stack,
             main_stack_types<helper_nested_layer> >
-        { };
-
+        {
+        public:
+            using factory = basic_factory<dummy_stack>;
+        };
     }
-
 }
 
 

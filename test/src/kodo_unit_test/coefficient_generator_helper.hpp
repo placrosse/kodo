@@ -12,8 +12,8 @@
 
 #include <fifi/fifi_utils.hpp>
 
-#include <kodo/final_coder_factory.hpp>
-#include <kodo/final_coder_factory_pool.hpp>
+#include <kodo/final_layer.hpp>
+#include <kodo/final_layer.hpp>
 #include <kodo/finite_field_info.hpp>
 #include <kodo/coefficient_info.hpp>
 #include <kodo/storage_block_info.hpp>
@@ -91,7 +91,6 @@ struct api_generate
 {
 
     typedef typename Coder::factory factory_type;
-    typedef typename Coder::pointer pointer_type;
     typedef typename Coder::field_type field_type;
     typedef typename Coder::value_type value_type;
 
@@ -126,7 +125,7 @@ struct api_generate
         m_factory.set_symbols(symbols);
         m_factory.set_symbol_size(symbol_size);
 
-        pointer_type coder = m_factory.build();
+        auto coder = m_factory.build();
 
         std::vector<uint8_t> vector_a =
             random_vector(coder->coefficient_vector_size());
@@ -150,7 +149,7 @@ struct api_generate
         auto storage_b = sak::storage(vector_b);
 
 
-        EXPECT_TRUE(sak::equal(storage_a,storage_b));
+        EXPECT_TRUE(sak::is_equal(storage_a,storage_b));
     }
 
 
@@ -159,7 +158,7 @@ struct api_generate
         m_factory.set_symbols(symbols);
         m_factory.set_symbol_size(symbol_size);
 
-        pointer_type coder = m_factory.build();
+        auto coder = m_factory.build();
 
         std::vector<uint8_t> vector_a =
             random_vector(coder->coefficient_vector_size());
@@ -186,7 +185,7 @@ struct api_generate
         auto storage_a = sak::storage(vector_a);
         auto storage_c = sak::storage(vector_c);
 
-        EXPECT_TRUE(sak::equal(storage_a,storage_c));
+        EXPECT_TRUE(sak::is_equal(storage_a,storage_c));
 
         uint32_t count_a = 0;
         uint32_t count_b = 0;

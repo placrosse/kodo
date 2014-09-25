@@ -26,63 +26,64 @@ namespace kodo
     {
 
         template<class Field>
-        class test_forward_stack
-            : public // Payload API
-                     // Codec Header API
-                     // Symbol ID API
-                     // Decoder API
-                     trace_linear_block_decoder<enable_trace,
-                     forward_linear_block_decoder<
-                     symbol_decoding_status_counter<
-                     symbol_decoding_status_tracker<
-                     // Coefficient Storage API
-                     coefficient_value_access<
-                     coefficient_storage<
-                     coefficient_info<
-                     // Storage API
-                     deep_symbol_storage<
-                     storage_bytes_used<
-                     storage_block_info<
-                     // Finite Field API
-                     finite_field_math<typename fifi::default_field<Field>::type,
-                     finite_field_info<Field,
-                     // Factory API
-                     final_coder_factory_pool<
-                     // Final type
-                     test_forward_stack<Field>
-                         > > > > > > > > > > > > >
-        { };
+        class test_forward_stack : public
+            // Payload API
+            // Codec Header API
+            // Symbol ID API
+            // Decoder API
+            trace_linear_block_decoder<enable_trace,
+            forward_linear_block_decoder<
+            symbol_decoding_status_counter<
+            symbol_decoding_status_tracker<
+            // Coefficient Storage API
+            coefficient_value_access<
+            coefficient_storage<
+            coefficient_info<
+            // Storage API
+            deep_symbol_storage<
+            storage_bytes_used<
+            storage_block_info<
+            // Finite Field API
+            finite_field_math<typename fifi::default_field<Field>::type,
+            finite_field_info<Field,
+            // Final Layer
+            final_layer
+            > > > > > > > > > > > >
+        {
+        public:
+            using factory = basic_factory<test_forward_stack>;
+        };
 
         template<class Field>
-        class test_forward_delayed_stack
-            : public // Payload API
-                     // Codec Header API
-                     // Symbol ID API
-                     // Decoder API
-                     trace_linear_block_decoder<enable_trace,
-                     linear_block_decoder_delayed<
-                     forward_linear_block_decoder<
-                     symbol_decoding_status_counter<
-                     symbol_decoding_status_tracker<
-                     // Coefficient Storage API
-                     coefficient_value_access<
-                     coefficient_storage<
-                     coefficient_info<
-                     // Storage API
-                     deep_symbol_storage<
-                     storage_bytes_used<
-                     storage_block_info<
-                     // Finite Field API
-                     finite_field_math<typename fifi::default_field<Field>::type,
-                     finite_field_info<Field,
-                     // Factory API
-                     final_coder_factory_pool<
-                     // Final type
-                     test_forward_delayed_stack<Field>
-                         > > > > > > > > > > > > > >
-        { };
+        class test_forward_delayed_stack : public
+            // Payload API
+            // Codec Header API
+            // Symbol ID API
+            // Decoder API
+            trace_linear_block_decoder<enable_trace,
+            linear_block_decoder_delayed<
+            forward_linear_block_decoder<
+            symbol_decoding_status_counter<
+            symbol_decoding_status_tracker<
+            // Coefficient Storage API
+            coefficient_value_access<
+            coefficient_storage<
+            coefficient_info<
+            // Storage API
+            deep_symbol_storage<
+            storage_bytes_used<
+            storage_block_info<
+            // Finite Field API
+            finite_field_math<typename fifi::default_field<Field>::type,
+            finite_field_info<Field,
+            // Final Layer
+            final_layer
+            > > > > > > > > > > > > >
+        {
+        public:
+            using factory = basic_factory<test_forward_delayed_stack>;
+        };
     }
-
 }
 
 template<template <class> class Stack>

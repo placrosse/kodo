@@ -10,6 +10,7 @@
 #include <gtest/gtest.h>
 
 #include <kodo/payload_rank_writer.hpp>
+#include <kodo/basic_factory.hpp>
 
 namespace kodo
 {
@@ -30,9 +31,9 @@ namespace kodo
 
         public:
 
-            struct factory
+            struct factory_base
             {
-                factory(uint32_t max_symbols, uint32_t max_symbol_size)
+                factory_base(uint32_t max_symbols, uint32_t max_symbol_size)
                 {
                     (void) max_symbols;
                     (void) max_symbol_size;
@@ -86,7 +87,10 @@ namespace kodo
         class dummy_stack
             : public payload_rank_writer<
                      dummy_layer>
-        { };
+        {
+        public:
+            using factory = basic_factory<dummy_stack>;
+        };
     }
 }
 

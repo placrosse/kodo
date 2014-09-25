@@ -7,6 +7,7 @@
 #include <kodo/is_systematic_on.hpp>
 #include <kodo/set_systematic_off.hpp>
 
+
 namespace kodo
 {
 
@@ -15,9 +16,8 @@ namespace kodo
     {
     public:
 
-        typedef typename SuperCoder::factory factory;
-
-        void initialize(factory& the_factory)
+        template<class Factory>
+        void initialize(Factory& the_factory)
         {
             SuperCoder::initialize(the_factory);
             m_count = 0;
@@ -78,11 +78,13 @@ namespace kodo
                finite_field_math<typename fifi::default_field<Field>::type,
                finite_field_info<Field,
                // Factory API
-               final_coder_factory_pool<
-               // Final type
-               custom_encoder<Field
-               > > > > > > > > > > > > > > > > > > >
-    { };
+               final_layer
+               > > > > > > > > > > > > > > > > >
+    {
+        public:
+            using factory = pool_factory<custom_encoder>;
+    };
+
 
 }
 

@@ -30,23 +30,23 @@ namespace kodo
 
     public:
 
-        /// The factory layer
-        class factory : public SuperCoder::factory
+        /// The factory_base layer
+        class factory_base : public SuperCoder::factory_base
         {
         public:
 
-            /// @copydoc layer::factory::factory(uint32_t,uint32_t)
-            factory(uint32_t max_symbols, uint32_t max_symbol_size)
-                : SuperCoder::factory(max_symbols, max_symbol_size)
+            /// @copydoc layer::factory_base::factory_base(uint32_t,uint32_t)
+            factory_base(uint32_t max_symbols, uint32_t max_symbol_size)
+                : SuperCoder::factory_base(max_symbols, max_symbol_size)
             { }
 
-            /// @copydoc layer::factory::max_pivot_status_size() const
+            /// @copydoc layer::factory_base::max_pivot_status_size() const
             uint32_t max_pivot_status_size() const
             {
                 // Assuming we will use one bit per pivot element here and that
                 // a byte is 8 bit :)
                 return sak::ceil_division(
-                    SuperCoder::factory::max_symbols(), 8);
+                    SuperCoder::factory_base::max_symbols(), 8);
             }
         };
 
@@ -96,4 +96,3 @@ namespace kodo
     };
 
 }
-

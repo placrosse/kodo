@@ -26,8 +26,11 @@ namespace
     {
     public:
 
-        // Pointer to the dummy encoder
-        typedef boost::shared_ptr<dummy_encoder> pointer;
+        class factory
+        {
+        public:
+            using pointer = std::shared_ptr<dummy_encoder>;
+        };
 
     public:
 
@@ -68,18 +71,18 @@ TEST(TestStorageReader, test_storage_reader)
 
     EXPECT_EQ(reader.size(), data_size);
 
-    auto encoder = boost::make_shared<dummy_encoder>();
+    auto encoder = std::make_shared<dummy_encoder>();
 
     reader.read(encoder, 10U, 10U);
 
     EXPECT_EQ(encoder->m_bytes_used, 10U);
-    EXPECT_TRUE(sak::equal(encoder->m_symbol_storage,
+    EXPECT_TRUE(sak::is_equal(encoder->m_symbol_storage,
                            sak::storage(&data[10], 10U)));
 
     reader.read(encoder, 57U, 101U);
 
     EXPECT_EQ(encoder->m_bytes_used, 101U);
-    EXPECT_TRUE(sak::equal(encoder->m_symbol_storage,
+    EXPECT_TRUE(sak::is_equal(encoder->m_symbol_storage,
                            sak::storage(&data[57], 101U)));
 
     // Try with some random values
@@ -89,12 +92,7 @@ TEST(TestStorageReader, test_storage_reader)
     reader.read(encoder, random_offset, random_size);
 
     EXPECT_EQ(encoder->m_bytes_used, random_size);
-    EXPECT_TRUE(sak::equal(encoder->m_symbol_storage,
+    EXPECT_TRUE(sak::is_equal(encoder->m_symbol_storage,
                            sak::storage(&data[random_offset], random_size)));
 
 }
-
-
-
-
-

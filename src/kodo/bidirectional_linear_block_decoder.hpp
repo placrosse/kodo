@@ -44,7 +44,7 @@ namespace kodo
         typedef typename field_type::value_type value_type;
 
         /// @copydoc layer::factory
-        typedef typename SuperCoder::factory factory;
+        typedef typename SuperCoder::factory_base factory;
 
         /// The direction policy determining the direction we iterate through
         /// the coding coefficients

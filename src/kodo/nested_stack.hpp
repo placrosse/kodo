@@ -17,13 +17,13 @@ namespace kodo
     ///
     /// Essentially this layer will build and store another stack as a
     /// member. Other layers may access the nested stack through the
-    /// nested() functions available in the factory and the layer.
+    /// nested() functions available in the factory_base and the layer.
     ///
     /// This is useful in cases where we want to redirect some calls
     /// to e.g. a different encoder or decoder depending on some
     /// policy.
     ///
-    /// In this case the nested stack factory will be constructed
+    /// In this case the nested stack factory_base will be constructed
     /// using the same parameters as the "main" stack.
     template
     <
@@ -37,23 +37,23 @@ namespace kodo
         /// Typedef of the nested stack
         typedef NestedStack nested_stack_type;
 
-        /// The nested code factory
-        typedef typename nested_stack_type::factory nested_factory_type;
+        /// The nested code factory_base
+        typedef typename nested_stack_type::factory_base nested_factory_type;
 
         /// The nested code pointer
         typedef typename nested_stack_type::pointer nested_pointer;
 
     public:
 
-        /// @ingroup factory_layers
-        /// The factory layer associated with this coder.
-        class factory : public SuperCoder::factory
+        /// @ingroup factory_base_layers
+        /// The factory_base layer associated with this coder.
+        class factory_base : public SuperCoder::factory_base
         {
         public:
 
-            /// @copydoc layer::factory::factory(uint32_t,uint32_t)
-            factory(uint32_t max_symbols, uint32_t max_symbol_size) :
-                SuperCoder::factory(max_symbols, max_symbol_size),
+            /// @copydoc layer::factory_base::factory_base(uint32_t,uint32_t)
+            factory_base(uint32_t max_symbols, uint32_t max_symbol_size) :
+                SuperCoder::factory_base(max_symbols, max_symbol_size),
                 m_nested_factory(max_symbols, max_symbol_size)
             { }
 
@@ -136,4 +136,3 @@ namespace kodo
     };
 
 }
-

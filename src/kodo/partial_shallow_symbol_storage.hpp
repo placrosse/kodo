@@ -25,93 +25,46 @@ namespace kodo
     /// use it with the partial symbol storage without having to move
     /// it to a 10000 byte temp. buffer.
     template<class SuperCoder>
-    class partial_shallow_symbol_storage
-        : public const_shallow_symbol_storage<SuperCoder>
+    class partial_shallow_symbol_storage : public SuperCoder
     {
-    public:
-
-        /// The actual SuperCoder type
-        typedef const_shallow_symbol_storage<SuperCoder> Super;
-
-        /// Pointer produced by the factory
-        typedef typename Super::pointer pointer;
-
-        /// Pointer to the type of this layer
-        typedef boost::shared_ptr<
-            partial_shallow_symbol_storage> this_pointer;
-
-        /// Partial and zero symbol types
-        typedef std::vector<uint8_t> symbol_type;
-
-        /// Symbol data wrapped in smart ptr
-        typedef boost::shared_ptr<symbol_type> symbol_ptr;
-
-        /// Access to the SuperCoder mapping variable
-        using Super::m_data;
-
-    public:
-
-        /// @ingroup factory_layers
-        /// The factory layer associated with this coder. We create
-        /// a zero symbol which may be shared with all the
-        /// symbol storage partial
-        class factory : public Super::factory
-        {
-        public:
-
-            /// @copydoc layer::factory::factory(uint32_t,uint32_t)
-            factory(uint32_t max_symbols, uint32_t max_symbol_size)
-                : Super::factory(max_symbols, max_symbol_size)
-            {
-                assert(max_symbol_size > 0);
-
-                m_zero_symbol = boost::make_shared<symbol_type>();
-                m_zero_symbol->resize(max_symbol_size, 0);
-            }
-
-        private:
-
-            /// Grant the layer access
-            friend class partial_shallow_symbol_storage;
-
-            /// The zero symbol
-            symbol_ptr m_zero_symbol;
-
-        };
-
     public:
 
         /// @copydoc layer::construct(Factory&)
         template<class Factory>
         void construct(Factory &the_factory)
         {
-            Super::construct(the_factory);
+            SuperCoder::construct(the_factory);
 
             assert(the_factory.max_symbol_size() > 0);
-
-            m_zero_symbol = the_factory.m_zero_symbol;
-            m_partial_symbol = boost::make_shared<symbol_type>();
-            m_partial_symbol->resize(the_factory.max_symbol_size(), 0);
+            m_partial_symbol.reserve(the_factory.max_symbol_size());
         }
 
         /// @copydoc layer::initialize(Factory&)
         template<class Factory>
         void initialize(Factory &the_factory)
         {
-            Super::initialize(the_factory);
+            SuperCoder::initialize(the_factory);
 
-            std::fill(m_partial_symbol->begin(),
-                      m_partial_symbol->end(), 0);
+            m_partial_symbol.resize(the_factory.symbol_size());
+            m_partial_symbol_size = 0;
+            m_has_partial_symbol = false;
         }
 
         /// Initializes the symbol storage layer so that the pointers to the
         /// symbol data are valid. Calling this function will work even
         /// without providing data enough to initialize all symbol pointers.
         /// @copydoc layer::set_symbols(const sak::const_storage &)
-        void set_symbols(const sak::const_storage &symbol_storage)
+        template<class StorageType>
+        void set_symbols(const StorageType &symbol_storage)
         {
-            auto symbol_sequence =
-                sak::split_storage(symbol_storage, Super::symbol_size());
+            uint32_t symbol_size = SuperCoder::symbol_size();
+
+            const auto& symbol_sequence =
+                sak::split_storage(symbol_storage, symbol_size);
+
+            // Check that we have as many symbols in the sequence as
+            // we should
+            assert(symbol_sequence.size() == SuperCoder::symbols());
 
             // Check that cast below is safe
             assert(symbol_sequence.size() <=
@@ -122,44 +75,57 @@ namespace kodo
 
             for(uint32_t i = 0; i < last_index; ++i)
             {
-                Super::set_symbol(i, symbol_sequence[i]);
+                SuperCoder::set_symbol(i, symbol_sequence[i]);
             }
 
-            auto last_symbol =
-                symbol_sequence[last_index];
+            const auto& last_symbol = symbol_sequence[last_index];
 
-            uint32_t symbol_size = Super::symbol_size();
-
-            auto partial_symbol =
-                sak::storage(&m_partial_symbol->at(0), symbol_size);
-
-            auto zero_symbol =
-                sak::storage(&m_zero_symbol->at(0), symbol_size);
-
-            if(last_symbol.m_size < Super::symbol_size())
+            if(last_symbol.m_size < symbol_size)
             {
+                const auto& partial_symbol = sak::storage(m_partial_symbol);
+
                 sak::copy_storage(partial_symbol, last_symbol);
-                Super::set_symbol(last_index, partial_symbol);
+                SuperCoder::set_symbol(last_index, partial_symbol);
+
+                // Update our state since we now have a partial symbol
+                m_has_partial_symbol = true;
+                m_partial_symbol_size = last_symbol.m_size;
             }
             else
             {
-                Super::set_symbol(last_index, last_symbol);
+                SuperCoder::set_symbol(last_index, last_symbol);
             }
+        }
 
-            for(uint32_t i = last_index + 1; i < Super::symbols(); ++i)
-            {
-                Super::set_symbol(i, zero_symbol);
-            }
+        /// @returns true if the partial symbol buffer is in use
+        bool has_partial_symbol() const
+        {
+            return m_has_partial_symbol;
+        }
+
+        /// @returns the size of the valid bytes in the partial symbol buffer
+        uint32_t partial_symbol_size() const
+        {
+            assert(m_has_partial_symbol);
+            return m_partial_symbol_size;
+        }
+
+        /// @return a pointer to the data of the partial symbol
+        const uint8_t* partial_symbol() const
+        {
+            assert(m_has_partial_symbol);
+            return m_partial_symbol.data();
         }
 
     protected:
 
-        /// The zero symbol
-        symbol_ptr m_zero_symbol;
-
         /// The partial symbol
-        symbol_ptr m_partial_symbol;
+        std::vector<uint8_t> m_partial_symbol;
 
+        /// Keeps track of whether the "partial symbol" buffer is in use
+        bool m_has_partial_symbol;
+
+        /// Keeps track of how much of the "partial symbol" buffer is used
+        uint32_t m_partial_symbol_size;
     };
-
 }

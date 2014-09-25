@@ -31,10 +31,10 @@ struct decoding_probability_benchmark : public gauge::benchmark
 public:
 
     typedef typename Encoder::factory encoder_factory;
-    typedef typename Encoder::pointer encoder_ptr;
+    typedef typename Encoder::factory::pointer encoder_ptr;
 
     typedef typename Decoder::factory decoder_factory;
-    typedef typename Decoder::pointer decoder_ptr;
+    typedef typename Decoder::factory::pointer decoder_ptr;
 
     static_assert(kodo::has_deep_symbol_storage<Decoder>::value,
                   "The decoder should bring its own memory");

@@ -10,7 +10,6 @@
 
 namespace kodo
 {
-
     /// @ingroup symbol_id_layers
     ///
     /// @brief Base class for the Reed-Solomon symbol id reader and
@@ -30,49 +29,34 @@ namespace kodo
         /// The generator matrix type
         typedef typename SuperCoder::generator_matrix generator_matrix;
 
-        /// Pointer to coder produced by the factories
-        typedef typename SuperCoder::pointer pointer;
-
-        /// Pointer the type of this layer
-        typedef boost::shared_ptr<
-            reed_solomon_symbol_id<SuperCoder> > this_pointer;
-
     public:
 
-        /// The factory layer associated with this coder. Maintains
+        /// The factory_base layer associated with this coder. Maintains
         /// the block generator needed for the encoding vectors.
-        class factory : public SuperCoder::factory
+        class factory_base : public SuperCoder::factory_base
         {
         public:
 
-            /// @copydoc layer::factory::factory(uint32_t,uint32_t)
-            factory(uint32_t max_symbols, uint32_t max_symbol_size)
-                : SuperCoder::factory(max_symbols, max_symbol_size)
+            /// @copydoc layer::factory_base::factory_base(uint32_t,uint32_t)
+            factory_base(uint32_t max_symbols, uint32_t max_symbol_size)
+                : SuperCoder::factory_base(max_symbols, max_symbol_size)
             { }
 
-
-            /// @copydoc layer::factory::build()
-            pointer build()
+            /// @return A generator matrix for the number of symbols
+            /// specified in the factory. We use a cache to store the
+            /// generator matrix for different number of symbols.
+            boost::shared_ptr<generator_matrix> build_matrix()
             {
-                pointer coder = SuperCoder::factory::build();
-
-                uint32_t symbols = SuperCoder::factory::symbols();
+                uint32_t symbols = SuperCoder::factory_base::symbols();
 
                 if(m_cache.find(symbols) == m_cache.end())
                 {
                     m_cache[symbols] =
-                        SuperCoder::factory::construct_matrix(symbols);
+                        SuperCoder::factory_base::construct_matrix(symbols);
+                    assert(m_cache[symbols]);
                 }
 
-                this_pointer this_coder = coder;
-                this_coder->m_matrix = m_cache[symbols];
-
-                // The row size of the generator matrix should fit
-                // the expected coefficient buffer size
-                assert(coder->coefficient_vector_size() ==
-                       this_coder->m_matrix->row_size());
-
-                return coder;
+                return m_cache[symbols];
             }
 
             /// @copydoc layer::max_id_size() const
@@ -85,11 +69,22 @@ namespace kodo
 
             /// map for blocks
             std::map<uint32_t, boost::shared_ptr<generator_matrix> > m_cache;
-
         };
 
-
     public:
+
+        template<class Factory>
+        void initialize(Factory& the_factory)
+        {
+            SuperCoder::initialize(the_factory);
+            m_matrix = the_factory.build_matrix();
+            assert(m_matrix);
+
+            // The row size of the generator matrix should fit
+            // the expected coefficient buffer size
+            assert(SuperCoder::coefficient_vector_size() ==
+                   m_matrix->row_size());
+        }
 
         /// @copydoc layer::id_size() const
         uint32_t id_size() const
@@ -105,5 +100,3 @@ namespace kodo
     };
 
 }
-
-

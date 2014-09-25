@@ -6,9 +6,32 @@ detailed list of every change, see the Git log.
 
 Latest
 ------
+* Minor: Added generic helpers for invoking the initialize(...) and
+  construct(...) functions. We now use this in our factories which
+  allows them to work even when codecs do not specify one or both of
+  these functions.
+* Major: Changed the partial_shallow_symbol_storage to become more
+  independent of the underlying storage layers. In addition the layer
+  is now more strict it as it only supports a single partial
+  symbol. This means that the user now should select the number of
+  symbols to match this requirement.
+* Major: Renamed the partial_shallow_storage_layers to
+  const_partial_shallow_storage_layers and added
+  mutable_partial_shallow_storage_layers
+* Major: Updated to sak version 11.x.y
+* Major: Updated to fifi version 12.x.y
 * Minor: Update to waf 1.8.0-pre1
 * Minor: Made python files comply with pep8
 * Major: Removed unused file ``test/src/kodo_unit_test/test_reuse.hpp``.
+* Major: Restructured the design and use of factories. The factories
+  are no longer defined as the last layer in a stack. The main
+  motivation for this change was that it allows extension of existing
+  stacks but also that it simplifies the structure of the stacks. The
+  ability to extend a stack is convenient when applications need to
+  add/embed additional state into an encoder or decoder. Using the
+  previous design this could only be done by re-defining the stack
+  and all its layers.
+* Bug: Fixed proxy_stack ambiguous definition warnings with clang++
 
 17.0.0
 ------

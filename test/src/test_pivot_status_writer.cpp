@@ -11,6 +11,7 @@
 #include <fifi/fifi_utils.hpp>
 
 #include <kodo/pivot_status_writer.hpp>
+#include <kodo/basic_factory.hpp>
 
 namespace kodo
 {
@@ -27,10 +28,10 @@ namespace kodo
         {
         public:
 
-            struct factory
+            struct factory_base
             {
 
-                factory(uint32_t max_symbols, uint32_t max_symbol_size)
+                factory_base(uint32_t max_symbols, uint32_t max_symbol_size)
                     : m_max_symbols(max_symbols),
                       m_max_symbol_size(max_symbol_size)
                 { }
@@ -92,7 +93,10 @@ namespace kodo
         class dummy_stack
             : public pivot_status_writer<
                      dummy_layer>
-          { };
+        {
+        public:
+            using factory = basic_factory<dummy_stack>;
+        };
     }
 }
 
@@ -164,5 +168,3 @@ TEST(TestPivotStatusWriter, api)
     EXPECT_EQ(fifi::get_value<fifi::binary>(&buffer[0], 8), 0U);
 
 }
-
-

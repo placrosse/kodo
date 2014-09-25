@@ -15,6 +15,8 @@
 
 #include "kodo_unit_test/basic_api_test_helper.hpp"
 
+/// @todo revisit and restructure this unit test
+
 // Put dummy layers and tests classes in an anonymous namespace
 // to avoid violations of ODF (one-definition-rule) in other
 // translation units
@@ -26,13 +28,15 @@ namespace
     {
     public:
 
-        typedef boost::shared_ptr<dummy_coder> pointer;
-
         class factory
         {
         public:
 
-            /// @copydoc layer::factory::factory(uint32_t,uint32_t)
+            typedef boost::shared_ptr<dummy_coder> pointer;
+
+        public:
+
+            /// @copydoc layer::factory_base::factory_base(uint32_t,uint32_t)
             factory(uint32_t max_symbols, uint32_t max_symbol_size)
                 : m_max_symbols(max_symbols),
                   m_max_symbol_size(max_symbol_size),
@@ -40,37 +44,37 @@ namespace
                   m_symbol_size(max_symbol_size)
             {}
 
-            /// @copydoc layer::factory::build()
+            /// @copydoc layer::factory_base::build()
             pointer build()
             {
                 return boost::make_shared<dummy_coder>(m_symbols, m_symbol_size);
             }
 
-            /// @copydoc layer::factory::max_symbols() const
+            /// @copydoc layer::factory_base::max_symbols() const
             uint32_t max_symbols() const
             {
                 return m_max_symbols;
             }
 
-            /// @copydoc layer::factory::max_symbol_size() const
+            /// @copydoc layer::factory_base::max_symbol_size() const
             uint32_t max_symbol_size() const
             {
                 return m_max_symbol_size;
             }
 
-            /// @copydoc layer::factory::symbols() const;
+            /// @copydoc layer::factory_base::symbols() const;
             uint32_t symbols() const
             {
                 return m_symbols;
             }
 
-            /// @copydoc layer::factory::symbol_size() const;
+            /// @copydoc layer::factory_base::symbol_size() const;
             uint32_t symbol_size() const
             {
                 return m_symbol_size;
             }
 
-            /// @copydoc layer::factory::set_symbols(uint32_t)
+            /// @copydoc layer::factory_base::set_symbols(uint32_t)
             void set_symbols(uint32_t symbols)
             {
                 assert(symbols > 0);
@@ -79,7 +83,7 @@ namespace
                 m_symbols = symbols;
             }
 
-            /// @copydoc layer::factory::set_symbol_size(uint32_t)
+            /// @copydoc layer::factory_base::set_symbol_size(uint32_t)
             void set_symbol_size(uint32_t symbol_size)
             {
                 assert(symbol_size > 0);
@@ -157,7 +161,7 @@ namespace
     {
     public:
 
-        typedef dummy_coder::pointer pointer;
+        typedef dummy_coder::factory::pointer pointer;
 
         dummy_object_data(uint32_t size)
             : m_size(size)
@@ -225,8 +229,8 @@ void invoke_object(uint32_t max_symbols,
 
     for(uint32_t i = 0; i < obj_encoder.encoders(); ++i)
     {
-        typename Encoder::pointer encoder = obj_encoder.build(i);
-        typename Decoder::pointer decoder = obj_decoder.build(i);
+        auto encoder = obj_encoder.build(i);
+        auto decoder = obj_decoder.build(i);
 
         EXPECT_EQ(p.symbols(i), encoder->symbols());
         EXPECT_EQ(p.symbols(i), decoder->symbols());
@@ -275,4 +279,3 @@ TEST(TestObjectCoder, construct_and_invoke_the_basic_api)
 
     test_object_coders(symbols, symbol_size, multiplier);
 }
-

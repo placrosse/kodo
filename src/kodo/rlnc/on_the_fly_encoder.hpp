@@ -6,7 +6,7 @@
 #pragma once
 
 #include "on_the_fly_generator.hpp"
-#include "../final_coder_factory_pool.hpp"
+#include "../final_layer.hpp"
 #include "../rank_info.hpp"
 #include "../payload_encoder.hpp"
 #include "../payload_rank_encoder.hpp"
@@ -64,10 +64,11 @@ namespace kodo
         deep_storage_layers<TraceTag,
         // Finite Field API
         finite_field_layers<Field,
-        // Factory API
-        final_coder_factory_pool<
-        // Final type
-        on_the_fly_encoder<Field, TraceTag>
-        > > > > > > > > > > > > > > > >
-    { };
+        // Final Layer
+        final_layer
+        > > > > > > > > > > > > > > >
+    {
+    public:
+        using factory = pool_factory<on_the_fly_encoder>;
+    };
 }

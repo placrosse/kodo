@@ -13,6 +13,7 @@ namespace kodo
 {
 
     /// @ingroup debug
+    ///
     /// This layer "intercepts" all calls to the finite_field_math
     /// layer counting the different operations
     template<class SuperCoder>
@@ -20,14 +21,8 @@ namespace kodo
     {
     public:
 
-        /// @copydoc layer::field_type
-        typedef typename SuperCoder::field_type field_type;
-
         /// @copydoc layer::value_type
         typedef typename SuperCoder::value_type value_type;
-
-        /// @copydoc layer::factory
-        typedef typename SuperCoder::factory factory;
 
     public:
 
@@ -119,4 +114,3 @@ namespace kodo
     };
 
 }
-

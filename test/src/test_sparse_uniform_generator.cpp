@@ -7,6 +7,9 @@
 ///       coefficient generators
 
 #include <fifi/is_binary.hpp>
+#include <kodo/basic_factory.hpp>
+#include <kodo/pool_factory.hpp>
+
 #include "kodo_unit_test/coefficient_generator_helper.hpp"
 
 namespace kodo
@@ -16,36 +19,37 @@ namespace kodo
     // translation units
     namespace
     {
-
         // Sparse uniform generator
         template<class Field>
-        class sparse_uniform_generator_stack :
-            public sparse_uniform_generator<
-                   fake_codec_layer<
-                   coefficient_info<
-                   fake_symbol_storage<
-                   storage_block_info<
-                   finite_field_info<Field,
-                   final_coder_factory<
-                   sparse_uniform_generator_stack<Field>
-                   > > > > > > >
-        { };
+        class sparse_uniform_generator_stack : public
+            sparse_uniform_generator<
+            fake_codec_layer<
+            coefficient_info<
+            fake_symbol_storage<
+            storage_block_info<
+            finite_field_info<Field,
+            final_layer
+            > > > > > >
+        {
+        public:
+            using factory = basic_factory<sparse_uniform_generator_stack>;
+        };
 
         template<class Field>
-        class sparse_uniform_generator_stack_pool :
-            public sparse_uniform_generator<
-                   fake_codec_layer<
-                   coefficient_info<
-                   fake_symbol_storage<
-                   storage_block_info<
-                   finite_field_info<Field,
-                   final_coder_factory_pool<
-                   sparse_uniform_generator_stack_pool<Field>
-                   > > > > > > >
-        { };
-
+        class sparse_uniform_generator_stack_pool : public
+            sparse_uniform_generator<
+            fake_codec_layer<
+            coefficient_info<
+            fake_symbol_storage<
+            storage_block_info<
+            finite_field_info<Field,
+            final_layer
+            > > > > > >
+        {
+        public:
+            using factory = pool_factory<sparse_uniform_generator_stack_pool>;
+        };
     }
-
 }
 
 // Put dummy layers and tests classes in an anonymous namespace
@@ -63,7 +67,6 @@ namespace
     {
 
         typedef typename Coder::factory factory_type;
-        typedef typename Coder::pointer pointer_type;
         typedef typename Coder::field_type field_type;
         typedef typename Coder::value_type value_type;
 
@@ -101,7 +104,7 @@ namespace
             m_factory.set_symbols(symbols);
             m_factory.set_symbol_size(symbol_size);
 
-            pointer_type coder = m_factory.build();
+            auto coder = m_factory.build();
 
             std::vector<uint8_t> vector_a =
                 random_vector(coder->coefficient_vector_size());
@@ -146,7 +149,7 @@ namespace
             auto storage_a = sak::storage(vector_a);
             auto storage_b = sak::storage(vector_b);
 
-            EXPECT_TRUE(sak::equal(storage_a,storage_b));
+            EXPECT_TRUE(sak::is_equal(storage_a,storage_b));
 
             coder->seed(0);
 

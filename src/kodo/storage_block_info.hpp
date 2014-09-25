@@ -24,18 +24,18 @@ namespace kodo
 
     public:
 
-        /// @ingroup factory_layers
+        /// @ingroup factory_base_layers
         /// @brief Provides access to the maximum symbol and symbol size
         ///        information.
-        class factory : public SuperCoder::factory
+        class factory_base : public SuperCoder::factory_base
         {
         public:
 
             /// Constructor
             /// @param max_symbols the maximum symbols this coder can expect
             /// @param max_symbol_size the maximum size of a symbol in bytes
-            factory(uint32_t max_symbols, uint32_t max_symbol_size)
-                : SuperCoder::factory(max_symbols, max_symbol_size),
+            factory_base(uint32_t max_symbols, uint32_t max_symbol_size)
+                : SuperCoder::factory_base(max_symbols, max_symbol_size),
                   m_max_symbols(max_symbols),
                   m_max_symbol_size(max_symbol_size),
                   m_symbols(max_symbols),
@@ -47,37 +47,37 @@ namespace kodo
                 assert(m_symbol_size > 0);
             }
 
-            /// @copydoc layer::factory::max_symbols() const
+            /// @copydoc layer::factory_base::max_symbols() const
             uint32_t max_symbols() const
             {
                 return m_max_symbols;
             }
 
-            /// @copydoc layer::factory::max_symbol_size() const
+            /// @copydoc layer::factory_base::max_symbol_size() const
             uint32_t max_symbol_size() const
             {
                 return m_max_symbol_size;
             }
 
-            /// @copydoc layer::factory::max_block_size() const
+            /// @copydoc layer::factory_base::max_block_size() const
             uint32_t max_block_size() const
             {
                 return m_max_symbols*m_max_symbol_size;
             }
 
-            /// @copydoc layer::factory::symbols() const;
+            /// @copydoc layer::factory_base::symbols() const;
             uint32_t symbols() const
             {
                 return m_symbols;
             }
 
-            /// @copydoc layer::factory::symbol_size() const;
+            /// @copydoc layer::factory_base::symbol_size() const;
             uint32_t symbol_size() const
             {
                 return m_symbol_size;
             }
 
-            /// @copydoc layer::factory::set_symbols(uint32_t)
+            /// @copydoc layer::factory_base::set_symbols(uint32_t)
             void set_symbols(uint32_t symbols)
             {
                 assert(symbols > 0);
@@ -86,7 +86,7 @@ namespace kodo
                 m_symbols = symbols;
             }
 
-            /// @copydoc layer::factory::set_symbol_size(uint32_t)
+            /// @copydoc layer::factory_base::set_symbol_size(uint32_t)
             void set_symbol_size(uint32_t symbol_size)
             {
                 assert(symbol_size > 0);
@@ -173,5 +173,3 @@ namespace kodo
     };
 
 }
-
-

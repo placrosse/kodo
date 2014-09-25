@@ -26,7 +26,7 @@ namespace kodo
         {
         public:
 
-            struct factory
+            struct factory_base
             { };
 
         public:

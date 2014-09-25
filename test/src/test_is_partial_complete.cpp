@@ -124,7 +124,7 @@ TEST(TestIsPartialComplete, check_true)
                 auto symbol_storage =
                     sak::storage(decoder->symbol(i), decoder->symbol_size());
 
-                EXPECT_TRUE(sak::equal(symbol_storage, symbol_sequence[i]));
+                EXPECT_TRUE(sak::is_equal(symbol_storage, symbol_sequence[i]));
             }
 
             EXPECT_EQ(symbols_uncoded, decoder->symbols_uncoded());
@@ -216,7 +216,7 @@ TEST(TestIsPartialComplete, check_two_encoders)
                 auto symbol_storage =
                     sak::storage(decoder->symbol(i), decoder->symbol_size());
 
-                EXPECT_TRUE(sak::equal(symbol_storage, symbol_sequence[i]));
+                EXPECT_TRUE(sak::is_equal(symbol_storage, symbol_sequence[i]));
             }
 
             EXPECT_EQ(symbols_uncoded, decoder->symbols_uncoded());
