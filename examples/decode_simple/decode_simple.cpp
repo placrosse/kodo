@@ -19,18 +19,17 @@
 /// the "Codec API" has been kept as they provide functionalities that are
 /// required.
 
-#include <cstdint>
-#include <iostream>
-#include <vector>
-
-#include <kodo/rlnc/full_rlnc_codes.hpp>
 #include <kodo/cache_decode_symbol.hpp>
+#include <kodo/rlnc/full_rlnc_codes.hpp>
 #include <kodo/trace_decode_symbol.hpp>
 #include <kodo/trace_linear_block_decoder.hpp>
-
 #include <kodo/trace_symbol_storage.hpp>
 
 #include <fifi/fifi_utils.hpp>
+
+#include <cstdint>
+#include <iostream>
+#include <vector>
 
 /// @todo review this example
 
