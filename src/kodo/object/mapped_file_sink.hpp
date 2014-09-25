@@ -33,12 +33,15 @@ namespace object
                 : SuperCoder::factory_base(symbols, symbol_size)
             { }
 
+            /// @param file_size Set the size in bytes of the file we
+            ///        want to decode
             void set_file_size(uint32_t file_size)
             {
                 assert(file_size > 0);
                 m_file_size = file_size;
             }
 
+            /// @return The size in bytes of the file we want to decode
             uint32_t file_size() const
             {
                 assert(m_file_size > 0);

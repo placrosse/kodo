@@ -92,7 +92,7 @@ namespace kodo
         {
             assert(factory);
 
-            pointer codec = boost::make_shared<Codec>();
+            pointer codec = std::make_shared<Codec>();
 
             if (kodo::has_construct<Codec>::value)
             {
