@@ -1,4 +1,4 @@
-// Copyright Steinwurf ApS 2011-2012.
+// Copyright Steinwurf ApS 2011.
 // Distributed under the "STEINWURF RESEARCH LICENSE 1.0".
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
@@ -85,4 +85,3 @@ TEST(TestRfc5052PartitioningScheme, partition_size)
         ASSERT_TRUE(partitioning.symbols(i-1) >= partitioning.symbols(i));
     }
 }
-
