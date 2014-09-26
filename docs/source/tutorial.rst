@@ -68,10 +68,20 @@ will have the following effects:
 * The per-symbol decoding delay will become larger. The reason for this is that
   when we increase the number of symbols that are encoded the decoder has to
   receive more symbols before decoding.
-* Less protocol complexity
-* Less dependency on field size
-
-.. todo:: Explain the last two in further detail
+* The protocol complexity can be decreased. If you increase the number of
+  symbols so that all the data you want to encode can fit in a single
+  generation. Your protocol will not have to handle multiple generations.
+  If you need multiple generations, the receivers will have to tell which
+  generations the server should send data from, and hence increasing the
+  complexity of your protocol.
+* The need for a high field size decreases (which is an advantage since, in
+  short, a higher field size leads to higher complexity).
+  The reason for this is that when the decoder is only missing a few symbols,
+  the chance for it to receive a *useful* encoded symbol decreases.
+  This decrease depends on the field size (higher is better). You pay this price
+  at each generation, but if the generations contains many symbols this issue
+  becomes smaller, and furthermore the generation will be bigger, and hence the
+  number of needed generations is also smaller.
 
 Symbol Size
 ...........
@@ -203,36 +213,141 @@ increases its rank.
 
 A Lossy Example
 ---------------
+In this example we will expand the previous basic example by adding some loss.
+This can be done simply by not "transmitting" encoded symbol to the decoder.
+The complete example is shown below.
 
 .. literalinclude:: ../../examples/tutorial/add_loss.cpp
     :language: c++
     :linenos:
 
-we always finish if error < 1 (called rate-less)
-bytes used increases
+As the attentive reader might notice, only the coding loop is changed from the
+basic example.
 
-* after sending symbols payload
-* this is because we exit the systematic phase.
+.. literalinclude:: ../../examples/tutorial/add_loss.cpp
+    :language: c++
+    :start-after: //! [0]
+    :end-before: //! [1]
+    :linenos:
+
+The change is fairly simple. We introduce a 50% loss using ``rand() % 2`` and
+add a variable ``dropped_count`` to keep track of the dropped symbols.
+
+The encoder can, in theory, create an infinite number of packages. This is a
+feature called rate-less which is unique to network coding. This means that as
+long as the loss is below 100% the decoder will be able to finish the decoding.
+
+Running the example will result in the following output (
+the output will always be the same as the random function is never seeded):
+
+.. code-block:: none
+    Bytes used = 1405
+    Bytes used = 1405
+    Bytes used = 1405
+    Bytes used = 1405
+    Bytes used = 1405
+    Bytes used = 1405
+    Bytes used = 1405
+    Bytes used = 1405
+    Bytes used = 1405
+    Bytes used = 1405
+    Bytes used = 1405
+    Bytes used = 1405
+    Bytes used = 1405
+    Bytes used = 1405
+    Bytes used = 1405
+    Bytes used = 1405
+    Bytes used = 1417
+    Bytes used = 1417
+    Bytes used = 1417
+    Bytes used = 1417
+    Bytes used = 1417
+    Bytes used = 1417
+    Bytes used = 1417
+    Bytes used = 1417
+    Bytes used = 1417
+    Bytes used = 1417
+    Bytes used = 1417
+    Encoded count = 27
+    Dropped count = 11
+
+An interesting thing to notice is the number of bytes used. It increases
+slightly after the encoder has encoded 16 symbols (the same number as the number
+of symbols in the generation). This is because the encoder exits the systematic
+phase where it sends the symbols uncoded. This technique will be explained in
+following example.
 
 A Systematic Example
 --------------------
+A simple, yet clever technique called systematic encoding can be used to improve
+the performance of network coding. The way it works is to initially send
+everything uncoded, and then start the encoding.
+The benefit of this is that as the receivers initially has no data, all data
+will be useful for them. So if the symbols are safely received by the decoder,
+it can get the data "for free" without the need for decoding.
+The Kodo library has built-in support for this approach. The sample code, for
+this is again build based on the basic example.
 
 .. literalinclude:: ../../examples/tutorial/turn_systematic_off.cpp
     :language: c++
     :linenos:
 
-Send everything uncoded once first
+What's added in this example here is the use of ``is_systematic_on`` and
+``set_systematic_off``.
 
-advantages
+.. literalinclude:: ../../examples/tutorial/turn_systematic_off.cpp
+    :language: c++
+    :start-after: //! [0]
+    :end-before: //! [1]
+    :linenos:
 
-* no error -> free coding
-* if error -> we still benefit
+Initially Kodo's Full RLNC encoder has the systematic phase enabled per default.
+As seen in the previous example, this is automatically turned off when all
+symbols has been send once. In this example we turn off the systematic phase
+before entering the coding loop. This can easily seen from the output when
+running the example:
 
-Avoid if
+.. code-block:: none
+    Bytes used = 1417
+    Bytes used = 1417
+    Bytes used = 1417
+    Bytes used = 1417
+    Bytes used = 1417
+    Bytes used = 1417
+    Bytes used = 1417
+    Bytes used = 1417
+    Bytes used = 1417
+    Bytes used = 1417
+    Bytes used = 1417
+    Bytes used = 1417
+    Bytes used = 1417
+    Bytes used = 1417
+    Bytes used = 1417
+    Bytes used = 1417
+    Bytes used = 1417
+    Bytes used = 1417
+    Bytes used = 1417
+    Bytes used = 1417
+    Bytes used = 1417
+    Bytes used = 1417
+    Bytes used = 1417
+    Bytes used = 1417
+    Bytes used = 1417
+    Bytes used = 1417
+    Bytes used = 1417
+    Encoded count = 27
+    Dropped count = 11
 
-* The state of receivers is unknown
-* Multiple sources
+Here the bytes used is always the same as all the symbols are encoded by the
+encoder.
+For most use cases the systematic phase is beneficial. However it should be
+avoided if
 
+* The state of receivers is unknown. If that's the case, using the systematic
+  approach might result in sending redundant data, as the receivers might
+  already have some of the data.
+* The setup has multiple sources. If this is the case, the sources should not
+  send the same data, as this can be redundant for the receivers.
 
 Seed Example
 ------------

@@ -40,10 +40,12 @@ int main()
     uint32_t encoded_count = 0;
     uint32_t dropped_count = 0;
 
+    //! [0]
     // We switch any systematic operations off so we code
     // symbols from the beginning
     if (kodo::is_systematic_on(encoder))
         kodo::set_systematic_off(encoder);
+    //! [1]
 
     while (!decoder->is_complete())
     {

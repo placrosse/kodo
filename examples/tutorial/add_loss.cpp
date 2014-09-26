@@ -34,6 +34,7 @@ int main()
     // to produce encoded symbols from it
     encoder->set_symbols(sak::storage(block_in));
 
+    //! [0]
     uint32_t encoded_count = 0;
     uint32_t dropped_count = 0;
 
@@ -64,6 +65,6 @@ int main()
     decoder->copy_symbols(sak::storage(block_out, decoder->block_size()));
 
     delete [] block_out;
-
+    //! [1]
     return 0;
 }
