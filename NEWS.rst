@@ -4,6 +4,7 @@ News for Kodo
 This file lists the major changes between versions. For a more
 detailed list of every change, see the Git log.
 
+
 Latest
 ------
 * Major: Overhaul of the file/storage encoders/decoders. These are
