@@ -28,8 +28,8 @@ int main()
     uint32_t symbol_size = 160;
 
     // Typdefs for the encoder/decoder type we wish to use
-    typedef kodo::sliding_window_encoder<fifi::binary8> rlnc_encoder;
-    typedef kodo::sliding_window_decoder<fifi::binary8> rlnc_decoder;
+    using rlnc_encoder = kodo::sliding_window_encoder<fifi::binary8>;
+    using rlnc_decoder = kodo::sliding_window_decoder<fifi::binary8>;
 
     // In the following we will make an encoder/decoder factory.
     // The factories are used to build actual encoders/decoders
