@@ -211,8 +211,3 @@ namespace kodo
     }
 
 }
-<<<<<<< HEAD
-=======
-
-#endif
->>>>>>> master

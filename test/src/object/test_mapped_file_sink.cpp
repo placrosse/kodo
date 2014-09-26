@@ -1,4 +1,4 @@
-// Copyright Steinwurf ApS 2011-2014.
+// Copyright Steinwurf ApS 2011.
 // Distributed under the "STEINWURF RESEARCH LICENSE 1.0".
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
@@ -56,6 +56,12 @@ namespace
             (void) the_factory;
         }
 
+        template<class Factory>
+        void deinitialize(Factory& the_factory)
+        {
+            (void) the_factory;
+        }
+
     };
 
     // Helper stack
@@ -77,6 +83,10 @@ TEST(ObjectTestMappedFileSink, api)
     factory.set_file_size(1234);
 
     EXPECT_EQ(factory.file_size(), 1234);
+
+    // Check that we are fine
+    stack.deinitialize(factory);
+
     stack.initialize(factory);
 
     // Comparison function which checks the size of the storage object
@@ -115,4 +125,5 @@ TEST(ObjectTestMappedFileSink, api)
                     .with(check_one)
                     .with(check_two));
 
+    stack.deinitialize(factory);
 }

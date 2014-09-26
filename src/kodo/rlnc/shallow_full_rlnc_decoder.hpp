@@ -13,6 +13,14 @@
 #include "../common_decoder_layers.hpp"
 #include "../finite_field_layers.hpp"
 #include "../coefficient_storage_layers.hpp"
+#include "../nested_payload_recoder.hpp"
+#include "../proxy_stack.hpp"
+#include "../payload_decoder.hpp"
+#include "../systematic_decoder.hpp"
+#include "../symbol_id_decoder.hpp"
+#include "../plain_symbol_id_reader.hpp"
+
+#include "full_rlnc_recoding_stack.hpp"
 
 namespace kodo
 {

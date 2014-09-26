@@ -1,4 +1,4 @@
-// Copyright Steinwurf ApS 2011-2014.
+// Copyright Steinwurf ApS 2011.
 // Distributed under the "STEINWURF RESEARCH LICENSE 1.0".
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
@@ -39,6 +39,18 @@ namespace object
             the_factory.set_storage(sak::storage(m_file.data(), m_file.size()));
 
             SuperCoder::initialize(the_factory);
+        }
+
+        /// @copydoc layer::deinitialize(Factory&)
+        template<class Factory>
+        void deinitialize(Factory& the_factory)
+        {
+            SuperCoder::deinitialize(the_factory);
+
+            if (m_file.is_open())
+            {
+                m_file.close();
+            }
         }
 
     protected:

@@ -62,10 +62,20 @@ namespace kodo
                 m_initialize();
             }
 
+            template<class Factory>
+            void deinitialize(Factory& the_factory)
+            {
+                the_factory.member();
+                m_deinitialize();
+            }
+
+
         public:
 
-            stub::call<void()> m_initialize;
             stub::call<void()> m_construct;
+            stub::call<void()> m_initialize;
+            stub::call<void()> m_deinitialize;
+
         };
     }
 }
@@ -83,20 +93,43 @@ TEST(TestPoolFactory, api)
     factory.member();
     EXPECT_EQ(factory.m_member.calls(), 1U);
 
-    {
-        auto stack_one = factory.build();
-        EXPECT_EQ(stack_one->m_construct.calls(), 1U);
-        EXPECT_EQ(stack_one->m_initialize.calls(), 1U);
-    }
+    auto stack_one = factory.build();
+    EXPECT_EQ(stack_one->m_construct.calls(), 1U);
+    EXPECT_EQ(stack_one->m_initialize.calls(), 1U);
+    EXPECT_EQ(stack_one->m_deinitialize.calls(), 0U);
 
-    // We invoke the member in the construct and initialize stacks
+    // We invoke the member in the construct and initialize
     EXPECT_EQ(factory.m_member.calls(), 3U);
+
+    stack_one.reset();
+
+    // We invoke the member in the deinitialize function
+    EXPECT_EQ(factory.m_member.calls(), 4U);
 
     // Check that we get a recycled
     auto stack_two = factory.build();
     EXPECT_EQ(stack_two->m_construct.calls(), 1U);
     EXPECT_EQ(stack_two->m_initialize.calls(), 2U);
+    EXPECT_EQ(stack_two->m_deinitialize.calls(), 1U);
 
-    // We invoke the member in the construct and initialize stacks
-    EXPECT_EQ(factory.m_member.calls(), 4U);
+    // We invoke the member in the initialize function
+    EXPECT_EQ(factory.m_member.calls(), 5U);
+
+    stack_two.reset();
+
+    // We invoke the member in the deinitialize function
+    EXPECT_EQ(factory.m_member.calls(), 6U);
+
+    auto stack_three = factory.build();
+    EXPECT_EQ(stack_three->m_construct.calls(), 1U);
+    EXPECT_EQ(stack_three->m_initialize.calls(), 3U);
+    EXPECT_EQ(stack_three->m_deinitialize.calls(), 2U);
+
+    // We invoke the member in the initialize function
+    EXPECT_EQ(factory.m_member.calls(), 7U);
+
+    stack_three.reset();
+
+    // We invoke the member in the deinitialize function
+    EXPECT_EQ(factory.m_member.calls(), 8U);
 }

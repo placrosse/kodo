@@ -13,8 +13,9 @@
 
 #include <sak/resource_pool.hpp>
 
-#include "initialize.hpp"
 #include "construct.hpp"
+#include "initialize.hpp"
+#include "deinitialize.hpp"
 
 namespace kodo
 {
@@ -41,7 +42,9 @@ namespace kodo
         /// @copydoc layer::factory_base::factory(uint32_t,uint32_t)
         pool_factory(uint32_t max_symbols, uint32_t max_symbol_size) :
             Codec::factory_base(max_symbols, max_symbol_size),
-            m_pool(std::bind(&pool_factory::make_codec, this))
+            m_pool(std::bind(&pool_factory::make_codec, this),
+                   std::bind(&pool_factory::recycle_codec,
+                                 std::placeholders::_1, this))
         { }
 
         /// @copydoc factory::build()
@@ -100,6 +103,16 @@ namespace kodo
             }
 
             return codec;
+        }
+
+        static void recycle_codec(const pointer& codec, pool_factory *factory)
+        {
+            assert(codec);
+
+            if (kodo::has_deinitialize<Codec>::value)
+            {
+                kodo::deinitialize(*codec, *factory);
+            }
         }
 
     private:
