@@ -2,7 +2,7 @@ STEINWURF RESEARCH LICENSE
 ==========================
 
 Version 1.0
-Copyright (c) Steinwurf ApS and its licensors. 2011-2012. All rights reserved.
+Copyright (c) Steinwurf ApS and its licensors. 2011. All rights reserved.
 
 I. DEFINITIONS
 --------------
@@ -25,9 +25,9 @@ Other than the rights granted herein, Steinwurf ApS and its licensors retain all
 III. LICENSE RESTRICTIONS
 -------------------------
 
-You agree with all terms and conditions in this license, and you agree that you shall comply with all restrictions and responsibilities herein. This agreement does not include the right to grant sublicenses.  
+You agree with all terms and conditions in this license, and you agree that you shall comply with all restrictions and responsibilities herein. This agreement does not include the right to grant sublicenses.
 
-You may not resell, distribute, rent, assign, sell, loan, lease, sublicense or use the Software or any component thereof to provide services or hosted services to third parties, nor deploy the Software or any derivative work thereof internally for non-research or non-educational purposes or externally for the benefit of another party. 
+You may not resell, distribute, rent, assign, sell, loan, lease, sublicense or use the Software or any component thereof to provide services or hosted services to third parties, nor deploy the Software or any derivative work thereof internally for non-research or non-educational purposes or externally for the benefit of another party.
 
 IV. GENERAL TERMS
 -----------------
@@ -38,14 +38,14 @@ IV. GENERAL TERMS
 
 2. Limitation of Liability
 
- IN NO EVENT UNLESS REQUIRED BY APPLICABLE LAW WILL STEINWURF APS OR ITS LICENSORS BE LIABLE TO YOU FOR ANY LOST PROFITS, LOST SAVINGS OR INCIDENTAL, INDIRECT, SPECIAL OR CONSEQUENTIAL DAMAGES, ARISING OUT OF YOUR USE OR INABILITY TO USE THE PRODUCT OR THE BREACH OF THIS AGREEMENT, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGES. ALSO, YOU MUST PASS THIS LIMITATION OF LIABILITY ON WHENEVER YOU DISTRIBUTE THE SOFTWARE OR DERIVATIVE WORKS. 
+ IN NO EVENT UNLESS REQUIRED BY APPLICABLE LAW WILL STEINWURF APS OR ITS LICENSORS BE LIABLE TO YOU FOR ANY LOST PROFITS, LOST SAVINGS OR INCIDENTAL, INDIRECT, SPECIAL OR CONSEQUENTIAL DAMAGES, ARISING OUT OF YOUR USE OR INABILITY TO USE THE PRODUCT OR THE BREACH OF THIS AGREEMENT, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGES. ALSO, YOU MUST PASS THIS LIMITATION OF LIABILITY ON WHENEVER YOU DISTRIBUTE THE SOFTWARE OR DERIVATIVE WORKS.
 
 3. Termination
 
  You may terminate this license at any time.
 
  Steinwurf ApS may terminate this license at any time, including, without limitation, if you bring or assist any third party in bringing any challenge to the validity, patentability, enforceability and/or non-infringement of, or otherwise oppose, any patent rights controlled by Steinwurf ApS or licensed to Steinwurf ApS.
- 
+
  Upon termination, you must discontinue using and distributing the Software under this agreement, and delete all versions of the Software in your possession, both original and derived versions.
 
 4. License and Copyright Notices
