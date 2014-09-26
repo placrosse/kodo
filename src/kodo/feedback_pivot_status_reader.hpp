@@ -7,24 +7,15 @@
 
 #include <cstdint>
 
-#include "feedback_pivot_status.hpp"
-
 namespace kodo
 {
-
     /// @ingroup feedback_layers
     ///
     /// @brief This layer reads the pivot status information using the feedback
     ///        convenience API
     template<class SuperCoder>
-    class feedback_pivot_status_reader :
-        public feedback_pivot_status<SuperCoder>
+    class feedback_pivot_status_reader : public SuperCoder
     {
-    public:
-
-        /// The actual super type
-        typedef feedback_pivot_status<SuperCoder> Super;
-
     public:
 
         /// @copydoc layer::read_feedback(const uint8_t*)
@@ -32,12 +23,10 @@ namespace kodo
         {
             assert(feedback);
 
-            Super::read_pivot_status(feedback);
-            uint32_t read = Super::pivot_status_size();
+            SuperCoder::read_pivot_status(feedback);
+            uint32_t read = SuperCoder::pivot_status_size();
 
-            Super::read_feedback(feedback + read);
+            SuperCoder::read_feedback(feedback + read);
         }
-
     };
-
 }

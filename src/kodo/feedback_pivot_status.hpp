@@ -9,7 +9,6 @@
 
 namespace kodo
 {
-
     /// @ingroup feedback_layers
     ///
     /// @brief The feedback_pivot_status provides a building block for
@@ -48,7 +47,5 @@ namespace kodo
             return SuperCoder::feedback_size() +
                 SuperCoder::pivot_status_size();
         }
-
     };
-
 }
