@@ -10,7 +10,7 @@
 # git clone https://github.com/steinwurf/fifi.git
 # git clone https://github.com/steinwurf/platform.git
 # git clone https://github.com/steinwurf/cpuid.git
-# git clone https://github.com/steinwurf/external-boost-light.git
+# git clone https://github.com/steinwurf/boost.git
 # git clone https://github.com/steinwurf/kodo.git
 # Then build this example:
 # cd kodo/examples/sample_makefile
@@ -33,7 +33,7 @@ FIFI_DIR ?= ../../../fifi/src
 FIFI_CPP_FILES := $(wildcard $(FIFI_DIR)/fifi/*.cpp)
 
 # The include path to the boost sources
-BOOST_DIR ?= ../../../external-boost-light
+BOOST_DIR ?= ../../../boost
 
 # The include path for the platform sources
 PLATFORM_DIR ?= ../../../platform/src
@@ -78,9 +78,13 @@ ifneq (,$(findstring android,$(CXX)))
                -D_GLIBCXX_USE_WCHAR_T -D_GLIBCXX_USE_C99_STDINT_TR1
 endif
 
-TARGET ?= example
+# Point to the source file of our selected example
+EXAMPLE_SRC = ../encode_decode_simple/encode_decode_simple.cpp
+
+TARGET ?= encode_decode_simple
+
+CPP_SOURCES = $(CPUID_CPP_FILES) $(FIFI_CPP_FILES) $(EXAMPLE_SRC)
 
 # Invoke the compiler
 all:
-	$(CXX) $(CPUID_CPP_FILES) $(FIFI_CPP_FILES) main.cpp -o $(TARGET) \
-        $(CXXFLAGS) $(INCLUDES)
+	$(CXX) $(CPP_SOURCES) -o $(TARGET) $(CXXFLAGS) $(INCLUDES)
