@@ -6,6 +6,11 @@ detailed list of every change, see the Git log.
 
 Latest
 ------
+* Major: Overhaul of the file/storage encoders/decoders. These are
+  used to encode/decode objects larger than a single generation. You
+  can find updated examples in examples/encode_decode_file and
+  examples/encode_decode_storage. Notice also that these classes are
+  now located in the kodo::object namespace.
 * Major: Place type traits for detection of the storage layers in
   their own headers according to our one class per file
   guideline. This affects the has_const_shallow_symbol_storage and
