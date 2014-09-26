@@ -9,9 +9,9 @@
 #include <cstdint>
 
 #include <gtest/gtest.h>
+#include <stub/call.hpp>
 
 #include <kodo/feedback_pivot_status_writer.hpp>
-#include <kodo/basic_factory.hpp>
 
 namespace kodo
 {
@@ -24,90 +24,48 @@ namespace kodo
         {
         public:
 
-            class factory_base
-            {
-            public:
-
-                factory_base(uint32_t max_symbols, uint32_t max_symbol_size)
-                {
-                    (void) max_symbols;
-                    (void) max_symbol_size;
-                }
-
-                uint32_t max_feedback_size() const
-                {
-                    return m_max_feedback_size;
-                }
-
-                uint32_t max_pivot_status_size() const
-                {
-                    return m_max_pivot_status_size;
-                }
-
-                uint32_t m_max_feedback_size;
-                uint32_t m_max_pivot_status_size;
-
-            };
-
-        public:
-
             void write_pivot_status(uint8_t* feedback) const
             {
-                m_write_pivot_status = feedback;
+                m_write_pivot_status(feedback);
             }
 
             uint32_t pivot_status_size() const
             {
-                return m_pivot_status_size;
+                return m_pivot_status_size();
             }
 
             uint32_t write_feedback(uint8_t* buffer) const
             {
-                m_write_feedback = buffer;
-                return m_feedback_size;
+                return m_write_feedback(buffer);
             }
 
-            uint32_t feedback_size() const
-            {
-                return m_feedback_size;
-            }
-
-            mutable uint8_t* m_write_pivot_status;
-            uint32_t m_pivot_status_size;
-
-            mutable uint8_t* m_write_feedback;
-            uint32_t m_feedback_size;
+            stub::call<void(uint8_t*)> m_write_pivot_status;
+            stub::call<uint32_t()> m_pivot_status_size;
+            stub::call<uint32_t(uint8_t*)> m_write_feedback;
 
         };
 
         // Instantiate a stack containing the pivot_status_bitset
         class dummy_stack :
             public feedback_pivot_status_writer<dummy_layer>
-        {
-        public:
-            using factory = basic_factory<dummy_stack>;
-        };
+        { };
     }
 }
 
 TEST(TestFeedbackPivotStatusWriter, api)
 {
     kodo::dummy_stack stack;
-    kodo::dummy_stack::factory factory(10, 10);
+    stack.m_pivot_status_size.set_return(10U);
+    stack.m_write_feedback.set_return(2U);
 
-    factory.m_max_feedback_size = 10;
-    factory.m_max_pivot_status_size = 10;
+    std::vector<uint8_t> data(20);
 
-    EXPECT_EQ(factory.max_feedback_size(), 20U);
+    uint32_t written = stack.write_feedback(data.data());
+    EXPECT_EQ(written, 12U);
 
-    stack.m_pivot_status_size = 10;
-    stack.m_feedback_size = 10;
+    EXPECT_TRUE((bool) stack.m_write_pivot_status.expect_calls()
+                    .with(data.data()));
 
-    EXPECT_EQ(stack.feedback_size(), 20U);
-
-    uint8_t ptr[20];
-    EXPECT_EQ(stack.write_feedback(ptr), 20U);
-    EXPECT_EQ(stack.m_write_pivot_status, &ptr[0]);
-    EXPECT_EQ(stack.m_write_feedback, &ptr[10]);
-
+    EXPECT_TRUE((bool) stack.m_write_feedback.expect_calls()
+                    .with(data.data() + 10U));
 }
