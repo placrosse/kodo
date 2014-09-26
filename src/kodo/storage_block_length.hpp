@@ -9,8 +9,6 @@
 
 namespace kodo
 {
-    /// @todo add missing unit test & check copydoc statments
-    ///
     /// @ingroup symbol_storage_layers
     ///
     /// @brief Defines several functions to retrieve info about the

@@ -54,7 +54,6 @@ namespace kodo
             (void) the_factory;
         }
 
-        /// @todo add to docs layers
         /// @copydoc layer::deinitialize(Factory&)
         template<class Factory>
         void deinitialize(Factory &the_factory)

@@ -12,8 +12,9 @@ namespace kodo
 {
 namespace object
 {
-    /// @todo can we make some factory which closes the memory
-    ///       mapped file even when recycling the object encoder/decoders.
+    /// @ingroup object_layers
+    ///
+    /// @brief Layer which memory maps a file for reading
     template<class SuperCoder>
     class mapped_file_source : public SuperCoder
     {

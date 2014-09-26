@@ -7,8 +7,6 @@
 
 namespace kodo
 {
-    /// @todo add missing unit test
-    ///
     /// @ingroup symbol_storage_layers
     ///
     /// @brief Defines several functions to retrieve info about the
