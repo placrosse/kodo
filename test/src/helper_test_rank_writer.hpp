@@ -1,4 +1,4 @@
-// Copyright Steinwurf ApS 2011-2013.
+// Copyright Steinwurf ApS 2011.
 // Distributed under the "STEINWURF RESEARCH LICENSE 1.0".
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
@@ -28,8 +28,3 @@ inline void test_rank_writer()
     EXPECT_EQ(sak::big_endian::get<rank_type>(&buffer[0]), 11U);
 
 }
-
-
-
-
-
