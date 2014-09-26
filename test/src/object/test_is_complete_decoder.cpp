@@ -73,7 +73,6 @@ namespace
 }
 }
 
-/// @todo figure out is this is the right naming
 TEST(ObjectTestIsCompleteDecoder, api)
 {
 
