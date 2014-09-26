@@ -241,6 +241,7 @@ Running the example will result in the following output (
 the output will always be the same as the random function is never seeded):
 
 .. code-block:: none
+
     Bytes used = 1405
     Bytes used = 1405
     Bytes used = 1405
@@ -308,6 +309,7 @@ before entering the coding loop. This can easily seen from the output when
 running the example:
 
 .. code-block:: none
+
     Bytes used = 1417
     Bytes used = 1417
     Bytes used = 1417
