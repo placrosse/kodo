@@ -70,7 +70,6 @@ namespace
 }
 }
 
-/// @todo figure out is this is the right naming
 TEST(ObjectTestMappedFileSink, api)
 {
     uint32_t symbols = 10;

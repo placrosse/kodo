@@ -92,7 +92,6 @@ namespace kodo
 
         void run()
         {
-            /// @todo rename the filename function to file_name
             auto file_name = SuperTest::decoder_factory().file_name();
             EXPECT_TRUE(file_name != "");
 
@@ -119,7 +118,6 @@ namespace kodo
 
         void run()
         {
-            /// @todo rename the filename function to file_name
             auto file_name = SuperTest::decoder_factory().file_name();
             auto file_size = SuperTest::decoder_factory().file_size();
 
