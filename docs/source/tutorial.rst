@@ -8,9 +8,9 @@ show how it can be used to encode and decode data.
 
 Basic Example
 -------------
-In the following we will walk through the process of creating an
-encoder and decoder for a single buffer of data. We will start from an
-empty file and slowly expand it. Once we have a working example we
+In the following, we will walk through the process of creating an
+encoder and a decoder for a single buffer of data. We will start from an
+empty file and slowly expand it. Once we have a working example, we
 will modify it in a number of steps to show different properties and
 features of the erasure correcting codes and the library.
 
@@ -21,7 +21,7 @@ Our starting point will be the following:
     :linenos:
 
 Kodo implements a number of different erasure correcting codes. In
-this example we have chosen to use a particular version of a RLNC
+this example, we have chosen to use a particular version of a RLNC
 (Random Linear Network Code) located in the following header file:
 
 .. literalinclude:: ../../examples/tutorial/empty.cpp
@@ -35,24 +35,24 @@ provides several of the advantages that RLNCs have over traditional erasure
 correcting codes. However, for the time being we will just use it as a standard
 erasure correcting code, namely to encode and decode some data.
 
-In the following we will go through three of the key-parameters to choose when
+In the following, we will go through three of the key-parameters to choose when
 configuring an erasure correcting code:
 
-* The number of ``symbols``,
-* The ``symbol_size``, and
+* The number of ``symbols``
+* The ``symbol_size``
 * The finite field, or more specifically the field size used.
 
 In general if a block of data is to be encoded, it's split into a number of
 symbols of a specific size. If you multiply the number of symbols with the
-symbol size you get the total amount of data in bytes that will be either
+symbol size, you get the total amount of data in bytes that will be either
 encoded or decoded per generation.
 
 .. note:: Sizes in Kodo are always measured in bytes. So if you see a variable
-          of function name that includes the word "size", bytes is the unit
+          or function name that includes the word "size", bytes is the unit
           used.
 
-.. note:: In network applications a single symbol typically corresponds to a
-          single packet (for example an UDP datagram).
+.. note:: In network applications, a single symbol typically corresponds to a
+          single packet (for example, a UDP datagram).
 
 Let us briefly outline the impact of changing the three parameters.
 
@@ -61,7 +61,7 @@ Number of Symbols
 Denotes the number of symbols in a block/generation. Increasing this number
 will have the following effects:
 
-* The computational complexity will increase, and can therefore slow the
+* The computational complexity will increase, and can therefore slow down the
   encoding/decoding.
 * For some variants of RLNC, the per-packet overhead will increase due to added
   coding coefficients.
@@ -71,15 +71,15 @@ will have the following effects:
 * The protocol complexity can be decreased. If the number of symbols is
   increased so that all the data which is to be encoded can fit in a single
   generation, the protocol will only have to handle a single generation.
-  If multiple generations are needed, the receivers will have to tell which
-  generations the server should send data from, and hence increasing the
+  If multiple generations are needed, the receivers will have to tell from which
+  generations the server should send data, and hence increasing the
   complexity of the protocol.
 * The need for a high field size decreases (which is an advantage since, in
   short, a higher field size leads to higher complexity).
   The reason for this is that when the decoder is only missing a few symbols,
   the chance for it to receive a *useful* encoded symbol decreases.
-  This decrease depends on the field size (higher is better). You pay this price
-  at each generation, but if the generations contains many symbols this issue
+  This reduction depends on the field size (higher is better). You pay this price
+  at each generation, but if a generation contains many symbols this issue
   becomes smaller. Furthermore with many symbols, the generations will be
   bigger, and hence fewer generations are needed.
 
