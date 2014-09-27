@@ -1,4 +1,4 @@
-// Copyright Steinwurf ApS 2011-2013.
+// Copyright Steinwurf ApS 2011.
 // Distributed under the "STEINWURF RESEARCH LICENSE 1.0".
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
@@ -44,7 +44,7 @@ namespace kodo
         template<class Factory>
         void initialize(Factory& the_factory)
         {
-            SuperCoder::initialize(the_factory);
+            Super::initialize(the_factory);
 
             m_coefficients.resize(
                 Super::coefficient_vector_size(), 0);
@@ -63,6 +63,8 @@ namespace kodo
 
             // Store the index as the symbol id
             sak::big_endian::put<value_type>(symbol_index, symbol_id);
+
+            assert(m_matrix);
 
             sak::copy_storage(
                 sak::storage(m_coefficients),
@@ -89,5 +91,3 @@ namespace kodo
     };
 
 }
-
-

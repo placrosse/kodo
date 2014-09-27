@@ -1,7 +1,9 @@
-// Copyright Steinwurf ApS 2011-2012.
+// Copyright Steinwurf ApS 2011.
 // Distributed under the "STEINWURF RESEARCH LICENSE 1.0".
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
+
+#include <iostream>
 
 #include <kodo/rlnc/full_rlnc_codes.hpp>
 
@@ -39,20 +41,20 @@ int main()
     std::vector<uint8_t> data_in(encoder->block_size());
 
     // Just for fun - fill the data with random data
-    for(auto &e: data_in)
+    for (auto &e: data_in)
         e = rand() % 256;
 
     // Assign the data buffer to the encoder so that we may start
     // to produce encoded symbols from it
     encoder->set_symbols(sak::storage(data_in));
 
-    while( !decoder->is_complete() )
+    while (!decoder->is_complete())
     {
         // Encode a packet into the payload buffer
-        encoder->encode( &payload[0] );
+        encoder->encode(&payload[0]);
 
         // Pass that packet to the decoder
-        decoder->decode( &payload[0] );
+        decoder->decode(&payload[0]);
     }
 
     // The decoder is complete, now copy the symbols from the decoder

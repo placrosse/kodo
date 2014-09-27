@@ -1,4 +1,4 @@
-// Copyright Steinwurf ApS 2011-2012.
+// Copyright Steinwurf ApS 2011.
 // Distributed under the "STEINWURF RESEARCH LICENSE 1.0".
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
@@ -42,10 +42,11 @@ namespace kodo
         deep_storage_layers<TraceTag,
         // Finite Field Math API
         finite_field_layers<Field,
-        // Factory API
-        final_coder_factory_pool<
-        // Final type
-        seed_rlnc_decoder<Field, TraceTag>
-        > > > > > > > > > >
-    { };
+        // Final Layer
+        final_layer
+        > > > > > > > > >
+    {
+    public:
+        using factory = pool_factory<seed_rlnc_decoder>;
+    };
 }

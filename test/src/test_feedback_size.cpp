@@ -1,4 +1,4 @@
-// Copyright Steinwurf ApS 2011-2013.
+// Copyright Steinwurf ApS 2011.
 // Distributed under the "STEINWURF RESEARCH LICENSE 1.0".
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
@@ -10,7 +10,7 @@
 #include <gtest/gtest.h>
 
 #include <kodo/feedback_size.hpp>
-#include <kodo/rlnc/full_rlnc_codes.hpp>
+#include <kodo/rlnc/sliding_window_decoder.hpp>
 
 namespace kodo
 {
@@ -57,12 +57,11 @@ TEST(TestFeedbackSize, invoke)
 
     {
         // Check that the code compiles with a normal stack
-        // typedef kodo::full_rlnc_encoder<fifi::binary8> encoder_type;
+        using decoder_type = kodo::sliding_window_decoder<fifi::binary8>;
 
-        // encoder_type::factory factory(10,10);
-        // auto encoder = factory.build();
+        decoder_type::factory factory(10,10);
+        auto decoder = factory.build();
 
-        // EXPECT_EQ(kodo::feedback_size(encoder), 0U);
+        EXPECT_TRUE(kodo::feedback_size(decoder) > 0U);
     }
-
 }

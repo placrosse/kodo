@@ -1,4 +1,4 @@
-// Copyright Steinwurf ApS 2011-2012.
+// Copyright Steinwurf ApS 2011.
 // Distributed under the "STEINWURF RESEARCH LICENSE 1.0".
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
@@ -35,7 +35,7 @@ namespace kodo
         typedef typename EncoderType::factory factory_type;
 
         /// Pointer to an encoder
-        typedef typename EncoderType::pointer pointer_type;
+        typedef typename factory_type::pointer pointer_type;
 
         /// The block partitioning scheme used
         typedef BlockPartitioning block_partitioning;
@@ -251,4 +251,3 @@ namespace kodo
 }
 
 #endif
-

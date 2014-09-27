@@ -1,16 +1,17 @@
-// Copyright Steinwurf ApS 2011-2013.
+// Copyright Steinwurf ApS 2011.
 // Distributed under the "STEINWURF RESEARCH LICENSE 1.0".
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
 
-/// @file test_final_feedback_reader.cpp Unit tests for the final_feedback_reader
-///       layer.
+/// @file test_final_feedback_reader.cpp Unit tests for the
+///       final_feedback_reader layer.
 
 #include <cstdint>
 
 #include <gtest/gtest.h>
 
 #include <kodo/final_feedback_reader.hpp>
+#include <kodo/basic_factory.hpp>
 
 namespace kodo
 {
@@ -24,12 +25,11 @@ namespace kodo
         struct dummy_layer
         {
 
-            class factory
+            class factory_base
             {
             public:
 
-                /// @copydoc layer::factory::factory(uint32_t,uint32_t)
-                factory(uint32_t max_symbols, uint32_t max_symbol_size)
+                factory_base(uint32_t max_symbols, uint32_t max_symbol_size)
                 {
                     (void) max_symbols;
                     (void) max_symbol_size;
@@ -40,10 +40,11 @@ namespace kodo
         };
 
         // Instantiate a stack containing the pivot_status_bitset
-        class dummy_stack
-            : public final_feedback_reader<
-                     dummy_layer>
-          { };
+        class dummy_stack : public final_feedback_reader<dummy_layer>
+        {
+        public:
+            using factory = basic_factory<dummy_stack>;
+        };
 
     }
 }
@@ -60,6 +61,3 @@ TEST(TestFinalFeedbackReader, api)
     stack.read_feedback(&ptr);
 
 }
-
-
-

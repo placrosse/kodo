@@ -1,4 +1,4 @@
-// Copyright Steinwurf ApS 2011-2013.
+// Copyright Steinwurf ApS 2011.
 // Distributed under the "STEINWURF RESEARCH LICENSE 1.0".
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
@@ -12,7 +12,7 @@
 #include <kodo/empty_decoder.hpp>
 #include <kodo/storage_block_info.hpp>
 #include <kodo/finite_field_info.hpp>
-#include <kodo/final_coder_factory.hpp>
+#include <kodo/final_layer.hpp>
 #include <kodo/coefficient_info.hpp>
 
 namespace kodo
@@ -22,20 +22,20 @@ namespace kodo
     // translation units
     namespace
     {
-
         /// Test stack for the cache_decode_symbol
         template<class Field>
-        class cache_decode_symbol_stack :
-            public cache_decode_symbol<
-                   empty_decoder<
-                   coefficient_info<
-                   storage_block_info<
-                   finite_field_info<Field,
-                   final_coder_factory<
-                   cache_decode_symbol_stack<Field>
-                       > > > > > >
-        { };
-
+        class cache_decode_symbol_stack : public
+            cache_decode_symbol<
+            empty_decoder<
+            coefficient_info<
+            storage_block_info<
+            finite_field_info<Field,
+            final_layer
+            > > > > >
+        {
+        public:
+            using factory = pool_factory<cache_decode_symbol_stack<Field>>;
+        };
     }
 }
 
@@ -67,8 +67,8 @@ void test_cache_decode_symbol(uint32_t symbols, uint32_t symbol_size)
     auto coeff_storage_out = sak::storage(stack->cached_symbol_coefficients(),
                                           stack->coefficient_vector_size());
 
-    EXPECT_TRUE(sak::equal(data_storage_in, data_storage_out));
-    EXPECT_TRUE(sak::equal(coeff_storage_in, coeff_storage_out));
+    EXPECT_TRUE(sak::is_equal(data_storage_in, data_storage_out));
+    EXPECT_TRUE(sak::is_equal(coeff_storage_in, coeff_storage_out));
 
     data_in = random_vector(symbol_size);
 
@@ -85,7 +85,7 @@ void test_cache_decode_symbol(uint32_t symbols, uint32_t symbol_size)
     data_storage_out = sak::storage(stack->cached_symbol_data(),
                                     stack->symbol_size());
 
-    EXPECT_TRUE(sak::equal(data_storage_in, data_storage_out));
+    EXPECT_TRUE(sak::is_equal(data_storage_in, data_storage_out));
     EXPECT_EQ(random_index, stack->cached_symbol_index());
 }
 

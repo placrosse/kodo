@@ -1,4 +1,4 @@
-// Copyright Steinwurf ApS 2011-2013.
+// Copyright Steinwurf ApS 2011.
 // Distributed under the "STEINWURF RESEARCH LICENSE 1.0".
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
@@ -26,61 +26,63 @@ namespace kodo
     {
 
         template<class Field>
-        class test_backward_stack
-            : public // Payload API
-                     // Codec Header API
-                     // Symbol ID API
-                     // Decoder API
-                     trace_linear_block_decoder<enable_trace,
-                     backward_linear_block_decoder<
-                     symbol_decoding_status_counter<
-                     symbol_decoding_status_tracker<
-                     // Coefficient Storage API
-                     coefficient_value_access<
-                     coefficient_storage<
-                     coefficient_info<
-                     // Storage API
-                     deep_symbol_storage<
-                     storage_bytes_used<
-                     storage_block_info<
-                     // Finite Field API
-                     finite_field_math<typename fifi::default_field<Field>::type,
-                     finite_field_info<Field,
-                     // Factory API
-                     final_coder_factory_pool<
-                     // Final type
-                     test_backward_stack<Field>
-                         > > > > > > > > > > > > >
-        { };
+        class test_backward_stack : public
+            // Payload API
+            // Codec Header API
+            // Symbol ID API
+            // Decoder API
+            trace_linear_block_decoder<enable_trace,
+            backward_linear_block_decoder<
+            symbol_decoding_status_counter<
+            symbol_decoding_status_tracker<
+            // Coefficient Storage API
+            coefficient_value_access<
+            coefficient_storage<
+            coefficient_info<
+            // Storage API
+            deep_symbol_storage<
+            storage_bytes_used<
+            storage_block_info<
+            // Finite Field API
+            finite_field_math<typename fifi::default_field<Field>::type,
+            finite_field_info<Field,
+            // Final Layer
+            final_layer
+            > > > > > > > > > > > >
+        {
+        public:
+            using factory = basic_factory<test_backward_stack>;
+        };
 
         template<class Field>
-        class test_backward_delayed_stack
-            : public // Payload API
-                     // Codec Header API
-                     // Symbol ID API
-                     // Codec API
-                     trace_linear_block_decoder<enable_trace,
-                     linear_block_decoder_delayed<
-                     backward_linear_block_decoder<
-                     symbol_decoding_status_counter<
-                     symbol_decoding_status_tracker<
-                     // Coefficient Storage API
-                     coefficient_value_access<
-                     coefficient_storage<
-                     coefficient_info<
-                     // Storage API
-                     deep_symbol_storage<
-                     storage_bytes_used<
-                     storage_block_info<
-                     // Finite Field API
-                     finite_field_math<typename fifi::default_field<Field>::type,
-                     finite_field_info<Field,
-                     // Factory API
-                     final_coder_factory_pool<
-                     // Final type
-                     test_backward_stack<Field>
-                         > > > > > > > > > > > > > >
-        { };
+        class test_backward_delayed_stack : public
+            // Payload API
+            // Codec Header API
+            // Symbol ID API
+            // Codec API
+            trace_linear_block_decoder<enable_trace,
+            linear_block_decoder_delayed<
+            backward_linear_block_decoder<
+            symbol_decoding_status_counter<
+            symbol_decoding_status_tracker<
+            // Coefficient Storage API
+            coefficient_value_access<
+            coefficient_storage<
+            coefficient_info<
+            // Storage API
+            deep_symbol_storage<
+            storage_bytes_used<
+            storage_block_info<
+            // Finite Field API
+            finite_field_math<typename fifi::default_field<Field>::type,
+            finite_field_info<Field,
+            // Final Layer
+            final_layer
+            > > > > > > > > > > > > >
+        {
+        public:
+            using factory = basic_factory<test_backward_delayed_stack>;
+        };
     }
 }
 

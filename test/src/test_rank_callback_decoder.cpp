@@ -1,4 +1,4 @@
-// Copyright Steinwurf ApS 2011-2013.
+// Copyright Steinwurf ApS 2011.
 // Distributed under the "STEINWURF RESEARCH LICENSE 1.0".
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
@@ -28,11 +28,11 @@
 #include <kodo/deep_symbol_storage.hpp>
 #include <kodo/storage_bytes_used.hpp>
 #include <kodo/storage_block_info.hpp>
-#include <kodo/final_coder_factory_pool.hpp>
+#include <kodo/final_layer.hpp>
 #include <kodo/coefficient_value_access.hpp>
 #include <kodo/symbol_decoding_status_tracker.hpp>
 #include <kodo/symbol_decoding_status_counter.hpp>
-
+#include <kodo/basic_factory.hpp>
 
 /// Here we define the stacks which should be tested.
 namespace kodo
@@ -47,38 +47,39 @@ namespace kodo
          // Test layer against real api to ensure that we get an error if the
          // layer doesn't complies with the api.
          template<class Field>
-         class rank_callback_decoder_stack
-             : public // Codec API
-                      rank_callback_decoder<
-                      forward_linear_block_decoder<
-                      symbol_decoding_status_counter<
-                      symbol_decoding_status_tracker<
-                      // Coefficient Storage API
-                      coefficient_value_access<
-                      coefficient_storage<
-                      coefficient_info<
-                      // Storage api
-                      deep_symbol_storage<
-                      storage_bytes_used<
-                      storage_block_info<
-                      // Finite Field Math API
-                      finite_field_math<typename fifi::default_field<Field>::type,
-                      finite_field_info<Field,
-                      // Factory API
-                      final_coder_factory_pool<
-                      // Final type
-                      rank_callback_decoder_stack<Field>
-                          > > > > > > > > > > > > >
-         { };
+         class rank_callback_decoder_stack : public
+            // Codec API
+            rank_callback_decoder<
+            forward_linear_block_decoder<
+            symbol_decoding_status_counter<
+            symbol_decoding_status_tracker<
+            // Coefficient Storage API
+            coefficient_value_access<
+            coefficient_storage<
+            coefficient_info<
+            // Storage api
+            deep_symbol_storage<
+            storage_bytes_used<
+            storage_block_info<
+            // Finite Field Math API
+            finite_field_math<typename fifi::default_field<Field>::type,
+            finite_field_info<Field,
+            // Final Layer
+            final_layer
+            > > > > > > > > > > > >
+         {
+         public:
+             using factory = basic_factory<rank_callback_decoder_stack>;
+         };
 
         // A dummi api to replace the real stack
         class dummy_codec_api
         {
         public:
 
-            struct factory
+            struct factory_base
             {
-                factory(uint32_t max_symbols, uint32_t max_symbol_size)
+                factory_base(uint32_t max_symbols, uint32_t max_symbol_size)
                     : m_max_symbols(max_symbols),
                       m_max_symbol_size(max_symbol_size)
                 {
@@ -131,14 +132,19 @@ namespace kodo
         };
 
         // Test functionality of the individual layer
-        typedef rank_callback_decoder<dummy_codec_api> rank_coder;
+        class rank_coder : public rank_callback_decoder<dummy_codec_api>
+        {
+        public:
+            using factory = basic_factory<rank_coder>;
+        };
 
     }
 
 }
 
 // callback handler
-void rank_changed_event(kodo::rank_coder& coder, uint32_t& callback_count, uint32_t rank)
+void rank_changed_event(kodo::rank_coder& coder, uint32_t& callback_count,
+                        uint32_t rank)
 {
     ++callback_count;
     EXPECT_EQ(coder.rank(), rank);

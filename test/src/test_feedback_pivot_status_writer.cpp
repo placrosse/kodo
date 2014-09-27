@@ -1,4 +1,4 @@
-// Copyright Steinwurf ApS 2011-2013.
+// Copyright Steinwurf ApS 2011.
 // Distributed under the "STEINWURF RESEARCH LICENSE 1.0".
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
@@ -11,26 +11,24 @@
 #include <gtest/gtest.h>
 
 #include <kodo/feedback_pivot_status_writer.hpp>
+#include <kodo/basic_factory.hpp>
 
 namespace kodo
 {
-
     // Put dummy layers and tests classes in an anonymous namespace
     // to avoid violations of ODF (one-definition-rule) in other
     // translation units
     namespace
     {
-
         struct dummy_layer
         {
         public:
 
-            class factory
+            class factory_base
             {
             public:
 
-                /// @copydoc layer::factory::factory(uint32_t,uint32_t)
-                factory(uint32_t max_symbols, uint32_t max_symbol_size)
+                factory_base(uint32_t max_symbols, uint32_t max_symbol_size)
                 {
                     (void) max_symbols;
                     (void) max_symbol_size;
@@ -83,11 +81,12 @@ namespace kodo
         };
 
         // Instantiate a stack containing the pivot_status_bitset
-        class dummy_stack
-            : public feedback_pivot_status_writer<
-                     dummy_layer>
-          { };
-
+        class dummy_stack :
+            public feedback_pivot_status_writer<dummy_layer>
+        {
+        public:
+            using factory = basic_factory<dummy_stack>;
+        };
     }
 }
 
@@ -112,6 +111,3 @@ TEST(TestFeedbackPivotStatusWriter, api)
     EXPECT_EQ(stack.m_write_feedback, &ptr[10]);
 
 }
-
-
-

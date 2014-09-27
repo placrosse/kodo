@@ -1,4 +1,4 @@
-// Copyright Steinwurf ApS 2011-2013.
+// Copyright Steinwurf ApS 2011.
 // Distributed under the "STEINWURF RESEARCH LICENSE 1.0".
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
@@ -105,8 +105,8 @@ inline void run_test_reuse(uint32_t symbols, uint32_t symbol_size)
     {
         uint32_t coders = rand_nonzero(5);
 
-        std::vector<typename Encoder::pointer> encoders;
-        std::vector<typename Decoder::pointer> decoders;
+        std::vector<typename Encoder::factory::pointer> encoders;
+        std::vector<typename Decoder::factory::pointer> decoders;
 
         for (uint32_t j = 0; j < coders; ++j)
         {
@@ -127,8 +127,8 @@ inline void run_test_reuse(uint32_t symbols, uint32_t symbol_size)
     {
         uint32_t coders = rand_nonzero(3);
 
-        std::vector<typename Encoder::pointer> encoders;
-        std::vector<typename Decoder::pointer> decoders;
+        std::vector<typename Encoder::factory::pointer> encoders;
+        std::vector<typename Decoder::factory::pointer> decoders;
 
         for (uint32_t j = 0; j < coders; ++j)
         {

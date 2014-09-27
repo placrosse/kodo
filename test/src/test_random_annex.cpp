@@ -1,4 +1,4 @@
-// Copyright Steinwurf ApS 2011-2012.
+// Copyright Steinwurf ApS 2011.
 // Distributed under the "STEINWURF RESEARCH LICENSE 1.0".
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
@@ -126,7 +126,7 @@ void run_test_random_annex_partial(uint32_t max_symbols,
 
     for(uint32_t i = 0; i < obj_encoder.encoders(); ++i)
     {
-        typename Encoder::pointer encoder = obj_encoder.build(i);
+        auto encoder = obj_encoder.build(i);
         typename random_annex_decoder::pointer_type decoder =
             obj_decoder.build(i);
 

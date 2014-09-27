@@ -1,4 +1,4 @@
-// Copyright Steinwurf ApS 2011-2012.
+// Copyright Steinwurf ApS 2011.
 // Distributed under the "STEINWURF RESEARCH LICENSE 1.0".
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
@@ -32,9 +32,6 @@ namespace kodo
         /// Pointer to the finite field implementation
         typedef boost::shared_ptr<field_impl> field_pointer;
 
-        /// Pointer to coder produced by the factories
-        typedef typename SuperCoder::pointer pointer;
-
     private:
 
         /// The field type of the finite field implementation
@@ -49,13 +46,13 @@ namespace kodo
         /// @ingroup factory_layers
         /// The factory layer associated with this coder. We create
         /// an instance of the used field and share this with all coders
-        class factory : public SuperCoder::factory
+        class factory_base : public SuperCoder::factory_base
         {
         public:
 
-            /// @copydoc layer::factory::factory(uint32_t,uint32_t)
-            factory(uint32_t max_symbols, uint32_t max_symbol_size) :
-                SuperCoder::factory(max_symbols, max_symbol_size)
+            /// @copydoc layer::factory_base::factory_base(uint32_t,uint32_t)
+            factory_base(uint32_t max_symbols, uint32_t max_symbol_size) :
+                SuperCoder::factory_base(max_symbols, max_symbol_size)
             {
                 m_field = boost::make_shared<field_impl>();
             }
@@ -190,5 +187,3 @@ namespace kodo
     };
 
 }
-
-

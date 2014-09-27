@@ -1,4 +1,4 @@
-// Copyright Steinwurf ApS 2011-2013.
+// Copyright Steinwurf ApS 2011.
 // Distributed under the "STEINWURF RESEARCH LICENSE 1.0".
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
@@ -24,23 +24,23 @@ namespace kodo
     {
     public:
 
-        /// The factory layer associated with this coder.
+        /// The factory_base layer associated with this coder.
         /// In this case only needed to provide the max_payload_size()
         /// function.
-        class factory : public SuperCoder::factory
+        class factory_base : public SuperCoder::factory_base
         {
         public:
 
-            /// @copydoc layer::factory::factory(uint32_t,uint32_t)
-            factory(uint32_t max_symbols, uint32_t max_symbol_size)
-                : SuperCoder::factory(max_symbols, max_symbol_size)
+            /// @copydoc layer::factory_base::factory_base(uint32_t,uint32_t)
+            factory_base(uint32_t max_symbols, uint32_t max_symbol_size)
+                : SuperCoder::factory_base(max_symbols, max_symbol_size)
             { }
 
-            /// @copydoc layer::factory::max_payload_size() const
+            /// @copydoc layer::factory_base::max_payload_size() const
             uint32_t max_payload_size() const
             {
-                return SuperCoder::factory::max_payload_size() +
-                    SuperCoder::factory::max_rank_size();
+                return SuperCoder::factory_base::max_payload_size() +
+                    SuperCoder::factory_base::max_rank_size();
             }
 
         };
@@ -68,4 +68,3 @@ namespace kodo
     };
 
 }
-

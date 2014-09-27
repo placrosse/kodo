@@ -1,10 +1,11 @@
-// Copyright Steinwurf ApS 2011-2012.
+// Copyright Steinwurf ApS 2011.
 // Distributed under the "STEINWURF RESEARCH LICENSE 1.0".
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
 
 #include <kodo/rlnc/full_rlnc_codes.hpp>
 #include <kodo/cache_decode_symbol.hpp>
+#include <kodo/basic_factory.hpp>
 
 namespace kodo
 {
@@ -40,12 +41,13 @@ namespace kodo
                  storage_block_info<
                  // Finite Field API
                  finite_field_info<Field,
-                 // Factory API
-                 final_coder_factory_pool<
-                 // Final type
-                 symbol_info_decoder<Field>
-                     > > > > > > > > > >
-    { };
+                 // Final Layer
+                 final_layer
+                     > > > > > > > > >
+    {
+    public:
+        using factory = basic_factory<symbol_info_decoder>;
+    };
 
 }
 

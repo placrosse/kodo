@@ -1,9 +1,12 @@
-// Copyright Steinwurf ApS 2011-2013.
+// Copyright Steinwurf ApS 2011.
 // Distributed under the "STEINWURF RESEARCH LICENSE 1.0".
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
 
+#include <iostream>
 #include <algorithm>
+#include <set>
+#include <string>
 
 #include <kodo/rlnc/sliding_window_encoder.hpp>
 #include <kodo/rlnc/sliding_window_decoder.hpp>
@@ -14,22 +17,24 @@
 /// This example shows how to use sliding window encoder and decoder
 /// stacks. The sliding window is special in that it does not require
 /// that all symbols are available at the encoder before encoding can
-/// start. In addition it uses feedback beteen the decoder and encoder
+/// start. In addition, it uses feedback between the decoder and encoder
 /// such that symbols that have already been received at the decoder
 /// are not included in the encoding again (saving computations).
 
 int main()
 {
-    srand((uint32_t)time(0));
+    // Seed random number generator to produce different results every time
+    srand(static_cast<uint32_t>(time(0)));
 
     // Set the number of symbols (i.e. the generation size in RLNC
     // terminology) and the size of a symbol in bytes
-    uint32_t symbols = 16;
+    uint32_t symbols = 6;
     uint32_t symbol_size = 160;
 
     // Typdefs for the encoder/decoder type we wish to use
     typedef kodo::sliding_window_encoder<fifi::binary8> rlnc_encoder;
-    typedef kodo::sliding_window_decoder<fifi::binary8> rlnc_decoder;
+    typedef kodo::sliding_window_decoder<fifi::binary8, kodo::enable_trace>
+        rlnc_decoder;
 
     // In the following we will make an encoder/decoder factory.
     // The factories are used to build actual encoders/decoders
@@ -61,18 +66,14 @@ int main()
     auto symbol_storage =
         sak::split_storage(sak::storage(data_in), symbol_size);
 
-    while ( !decoder->is_complete() )
+    while (!decoder->is_complete())
     {
-
-        if (kodo::has_trace<rlnc_decoder>::value)
-        {
-            kodo::trace(decoder, std::cout);
-        }
+        std::cout << std::endl;
 
         // Randomly choose to insert a symbol
         if ((rand() % 2) && (encoder->rank() < symbols))
         {
-            // For an encoder the rank specifies the number of symbols
+            // The rank of an encoder specifies the number of symbols
             // it has available for encoding
             uint32_t rank = encoder->rank();
 
@@ -82,13 +83,18 @@ int main()
                       << std::endl;
         }
 
+        if (encoder->rank() == 0)
+        {
+            continue;
+        }
+
         // Encode a packet into the payload buffer
         encoder->encode(payload.data());
 
         std::cout << "Packet encoded" << std::endl;
 
         // Send the data to the decoders, here we just for fun
-        // simulate that we are loosing 50% of the packets
+        // simulate that we are losing 50% of the packets
         if (rand() % 2)
         {
             std::cout << "Packet dropped on channel" << std::endl;
@@ -99,6 +105,20 @@ int main()
 
         // Packet got through - pass that packet to the decoder
         decoder->decode(payload.data());
+
+        if (kodo::has_trace<rlnc_decoder>::value)
+        {
+            auto filter = [](const std::string& zone)
+            {
+                std::set<std::string> filters =
+                    {"decoder_state", "input_symbol_coefficients"};
+
+                return filters.count(zone);
+            };
+
+            std::cout << "Trace decoder:" << std::endl;
+            kodo::trace(decoder, std::cout, filter);
+        }
 
         std::cout << "Encoder rank = " << encoder->rank() << std::endl;
         std::cout << "Decoder rank = " << decoder->rank() << std::endl;
@@ -135,5 +155,4 @@ int main()
         std::cout << "Unexpected failure to decode "
                   << "please file a bug report :)" << std::endl;
     }
-
 }

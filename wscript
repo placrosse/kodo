@@ -31,7 +31,7 @@ def options(opt):
     bundle.add_dependency(opt, resolve.ResolveGitMajorVersion(
         name='fifi',
         git_repository='github.com/steinwurf/fifi.git',
-        major_version=11))
+        major_version=12))
 
     bundle.add_dependency(opt, resolve.ResolveGitMajorVersion(
         name='gauge',
@@ -51,7 +51,12 @@ def options(opt):
     bundle.add_dependency(opt, resolve.ResolveGitMajorVersion(
         name='sak',
         git_repository='github.com/steinwurf/sak.git',
-        major_version=10))
+        major_version=11))
+
+    bundle.add_dependency(opt, resolve.ResolveGitMajorVersion(
+        name='stub',
+        git_repository='github.com/steinwurf/stub.git',
+        major_version=1))
 
     bundle.add_dependency(opt, resolve.ResolveGitMajorVersion(
         name='tables',
@@ -88,6 +93,7 @@ def configure(conf):
         recurse_helper(conf, 'gtest')
         recurse_helper(conf, 'platform')
         recurse_helper(conf, 'sak')
+        recurse_helper(conf, 'stub')
         recurse_helper(conf, 'tables')
 
         conf.recurse('examples/sample_makefile')
@@ -106,6 +112,7 @@ def build(bld):
         recurse_helper(bld, 'gtest')
         recurse_helper(bld, 'platform')
         recurse_helper(bld, 'sak')
+        recurse_helper(bld, 'stub')
         recurse_helper(bld, 'tables')
 
         # Only build test when executed from the

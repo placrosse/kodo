@@ -1,4 +1,4 @@
-// Copyright Steinwurf ApS 2011-2012.
+// Copyright Steinwurf ApS 2011.
 // Distributed under the "STEINWURF RESEARCH LICENSE 1.0".
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
@@ -26,10 +26,10 @@ class operations_benchmark : public gauge::benchmark
 public:
 
     typedef typename Encoder::factory encoder_factory;
-    typedef typename Encoder::pointer encoder_ptr;
+    typedef typename Encoder::factory::pointer encoder_ptr;
 
     typedef typename Decoder::factory decoder_factory;
-    typedef typename Decoder::pointer decoder_ptr;
+    typedef typename Decoder::factory::pointer decoder_ptr;
 
     /// Starts a measurement and saves the counter
     void start()
@@ -324,4 +324,3 @@ int main(int argc, const char* argv[])
 
     return 0;
 }
-

@@ -1,4 +1,4 @@
-// Copyright Steinwurf ApS 2011-2013.
+// Copyright Steinwurf ApS 2011.
 // Distributed under the "STEINWURF RESEARCH LICENSE 1.0".
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
@@ -36,12 +36,13 @@ namespace kodo
         deep_storage_layers<TraceTag,
         // Finite Field API
         finite_field_layers<Field,
-        // Factory API
-        final_coder_factory_pool<
-        // Final type
-        full_delayed_rlnc_decoder<Field, TraceTag>
-        > > > > > > > > > > > > > > >
-    { };
+        // Final Layer
+        final_layer
+        > > > > > > > > > > > > > >
+    {
+    public:
+        using factory = pool_factory<full_delayed_rlnc_decoder>;
+    };
 
     template<class Field, class TraceTag = kodo::disable_trace>
     class full_rlnc_decoder_unsystematic : public
@@ -65,12 +66,13 @@ namespace kodo
         deep_storage_layers<TraceTag,
         // Finite Field API
         finite_field_layers<Field,
-        // Factory API
-        final_coder_factory_pool<
-        // Final type
-        full_rlnc_decoder_unsystematic<Field, TraceTag>
-        > > > > > > > > > > > > > >
-    { };
+        // Final Layer
+        final_layer
+        > > > > > > > > > > > > >
+    {
+    public:
+        using factory = pool_factory<full_rlnc_decoder_unsystematic>;
+    };
 
     template<class Field, class TraceTag = kodo::disable_trace>
     class full_rlnc_encoder_unsystematic : public
@@ -94,12 +96,13 @@ namespace kodo
         deep_storage_layers<TraceTag,
         // Finite Field API
         finite_field_layers<Field,
-        // Factory API
-        final_coder_factory_pool<
-        // Final type
-        full_rlnc_encoder_unsystematic<Field, TraceTag>
-        > > > > > > > > > > > > >
-    { };
+        // Final Layer
+        final_layer
+        > > > > > > > > > > > >
+    {
+    public:
+        using factory = pool_factory<full_rlnc_encoder_unsystematic>;
+    };
 
     /// RLNC encoder using a density based random generator, which can be
     /// used to control the density i.e. the number of non-zero elements in
@@ -127,11 +130,11 @@ namespace kodo
         deep_storage_layers<TraceTag,
         // Finite Field API
         finite_field_layers<Field,
-        // Factory API
-        final_coder_factory_pool<
-        // Final type
-        sparse_full_rlnc_encoder<Field, TraceTag>
-        > > > > > > > > > > > > > >
-    { };
-
+        // Final Layer
+        final_layer
+        > > > > > > > > > > > > >
+    {
+    public:
+        using factory = pool_factory<sparse_full_rlnc_encoder>;
+    };
 }

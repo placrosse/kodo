@@ -1,4 +1,4 @@
-// Copyright Steinwurf ApS 2011-2014.
+// Copyright Steinwurf ApS 2011.
 // Distributed under the "STEINWURF RESEARCH LICENSE 1.0".
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
@@ -50,13 +50,14 @@ namespace kodo
         // Coefficient Storage API
         coefficient_storage_layers<
         // Storage API
-        mutable_shallow_storage_layers<TraceTag,
+        partial_mutable_shallow_storage_layers<TraceTag,
         // Finite Field API
         finite_field_layers<Field,
-        // Factory API
-        final_coder_factory_pool<
-        // Final type
-        shallow_delayed_full_rlnc_decoder<Field, TraceTag>
-        > > > > > > > > > > > > > > >
-    { };
+        // Final Layer
+        final_layer
+        > > > > > > > > > > > > > >
+    {
+    public:
+        using factory = basic_factory<shallow_delayed_full_rlnc_decoder>;
+    };
 }

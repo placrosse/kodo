@@ -1,17 +1,18 @@
-// Copyright Steinwurf ApS 2011-2013.
+// Copyright Steinwurf ApS 2011.
 // Distributed under the "STEINWURF RESEARCH LICENSE 1.0".
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
 
 /// @example rank_callback.cpp
 ///
-/// It may be that we want a function to be called on some event within the decoder.
-/// This can be done using callback functions.
-/// The following example illustrates how this can be done by adding the
-/// rank_callback_decoder layer to the decoder stack and how the rank changed event
-/// can be handled in three different ways. Other callback layers could also be
-/// used instead of the rank callback layer provided that they are added at the
-/// correct position in the stack.
+/// It may be that we want a function to be called on some event
+/// within the decoder.  This can be done using callback functions.
+/// The following example illustrates how this can be done by adding
+/// the rank_callback_decoder layer to the decoder stack and how the
+/// rank changed event can be handled in three different ways. Other
+/// callback layers could also be used instead of the rank callback
+/// layer provided that they are added at the correct position in the
+/// stack.
 
 #include <functional>
 
@@ -22,42 +23,43 @@ namespace kodo
 {
     // Added rank_callback layer to decoder stack
     template<class Field>
-    class full_rlnc_callback_decoder
-        : public // Payload API
-                 payload_decoder<
-                 // Codec Header API
-                 systematic_decoder<
-                 symbol_id_decoder<
-                 // Symbol ID API
-                 plain_symbol_id_reader<
-                 // Codec API
+    class full_rlnc_callback_decoder : public
+        // Payload API
+        payload_decoder<
+        // Codec Header API
+        systematic_decoder<
+        symbol_id_decoder<
+        // Symbol ID API
+        plain_symbol_id_reader<
+        // Codec API
 
-                 // rank_callback layer is inserted in "Codec API" which it
-                 // designed for. It has to be inserted into the stack above
-                 // layers that can change the rank during decoding
-                 rank_callback_decoder<
+        // rank_callback layer is inserted in "Codec API" which it
+        // designed for. It has to be inserted into the stack above
+        // layers that can change the rank during decoding
+        rank_callback_decoder<
 
-                 aligned_coefficients_decoder<
-                 forward_linear_block_decoder<
-                 symbol_decoding_status_counter<
-                 symbol_decoding_status_tracker<
-                 // Coefficient Storage API
-                 coefficient_value_access<
-                 coefficient_storage<
-                 coefficient_info<
-                 // Storage API
-                 deep_symbol_storage<
-                 storage_bytes_used<
-                 storage_block_info<
-                 // Finite Field API
-                 finite_field_math<typename fifi::default_field<Field>::type,
-                 finite_field_info<Field,
-                 // Factory API
-                 final_coder_factory_pool<
-                 // Final type
-                 full_rlnc_callback_decoder<Field>
-                     > > > > > > > > > > > > > > > > > >
-    {};
+        aligned_coefficients_decoder<
+        forward_linear_block_decoder<
+        symbol_decoding_status_counter<
+        symbol_decoding_status_tracker<
+        // Coefficient Storage API
+        coefficient_value_access<
+        coefficient_storage<
+        coefficient_info<
+        // Storage API
+        deep_symbol_storage<
+        storage_bytes_used<
+        storage_block_info<
+        // Finite Field API
+        finite_field_math<typename fifi::default_field<Field>::type,
+        finite_field_info<Field,
+        // Final Layer
+        final_layer
+        > > > > > > > > > > > > > > > > >
+    {
+    public:
+        using factory = basic_factory<full_rlnc_callback_decoder>;
+    };
 }
 
 // Typdefs for the encoder/decoder type we wish to use

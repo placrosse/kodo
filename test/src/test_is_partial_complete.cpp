@@ -1,4 +1,4 @@
-// Copyright Steinwurf ApS 2011-2013.
+// Copyright Steinwurf ApS 2011.
 // Distributed under the "STEINWURF RESEARCH LICENSE 1.0".
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
@@ -124,7 +124,7 @@ TEST(TestIsPartialComplete, check_true)
                 auto symbol_storage =
                     sak::storage(decoder->symbol(i), decoder->symbol_size());
 
-                EXPECT_TRUE(sak::equal(symbol_storage, symbol_sequence[i]));
+                EXPECT_TRUE(sak::is_equal(symbol_storage, symbol_sequence[i]));
             }
 
             EXPECT_EQ(symbols_uncoded, decoder->symbols_uncoded());
@@ -216,7 +216,7 @@ TEST(TestIsPartialComplete, check_two_encoders)
                 auto symbol_storage =
                     sak::storage(decoder->symbol(i), decoder->symbol_size());
 
-                EXPECT_TRUE(sak::equal(symbol_storage, symbol_sequence[i]));
+                EXPECT_TRUE(sak::is_equal(symbol_storage, symbol_sequence[i]));
             }
 
             EXPECT_EQ(symbols_uncoded, decoder->symbols_uncoded());

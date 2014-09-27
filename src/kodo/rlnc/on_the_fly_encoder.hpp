@@ -1,4 +1,4 @@
-// Copyright Steinwurf ApS 2011-2013.
+// Copyright Steinwurf ApS 2011.
 // Distributed under the "STEINWURF RESEARCH LICENSE 1.0".
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
@@ -6,7 +6,7 @@
 #pragma once
 
 #include "on_the_fly_generator.hpp"
-#include "../final_coder_factory_pool.hpp"
+#include "../final_layer.hpp"
 #include "../rank_info.hpp"
 #include "../payload_encoder.hpp"
 #include "../payload_rank_encoder.hpp"
@@ -64,10 +64,11 @@ namespace kodo
         deep_storage_layers<TraceTag,
         // Finite Field API
         finite_field_layers<Field,
-        // Factory API
-        final_coder_factory_pool<
-        // Final type
-        on_the_fly_encoder<Field, TraceTag>
-        > > > > > > > > > > > > > > > >
-    { };
+        // Final Layer
+        final_layer
+        > > > > > > > > > > > > > > >
+    {
+    public:
+        using factory = pool_factory<on_the_fly_encoder>;
+    };
 }

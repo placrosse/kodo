@@ -1,4 +1,4 @@
-// Copyright Steinwurf ApS 2011-2012.
+// Copyright Steinwurf ApS 2011.
 // Distributed under the "STEINWURF RESEARCH LICENSE 1.0".
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
@@ -71,7 +71,7 @@ inline void run_test_on_the_fly(uint32_t symbols, uint32_t symbol_size)
                 auto symbol_storage =
                     sak::storage(decoder->symbol(i), decoder->symbol_size());
 
-                EXPECT_TRUE(sak::equal(symbol_storage, symbol_sequence[i]));
+                EXPECT_TRUE(sak::is_equal(symbol_storage, symbol_sequence[i]));
             }
 
             EXPECT_EQ(symbols_uncoded, decoder->symbols_uncoded());
@@ -204,7 +204,7 @@ inline void run_test_on_the_fly_systematic(uint32_t symbols, uint32_t symbol_siz
                 auto symbol_storage =
                     sak::storage(decoder->symbol(i), decoder->symbol_size());
 
-                EXPECT_TRUE(sak::equal(symbol_storage, symbol_sequence[i]));
+                EXPECT_TRUE(sak::is_equal(symbol_storage, symbol_sequence[i]));
             }
 
             EXPECT_EQ(symbols_uncoded, decoder->symbols_uncoded());
@@ -323,7 +323,7 @@ inline void run_test_on_the_fly_systematic_no_errors(uint32_t symbols,
                 auto symbol_storage =
                     sak::storage(decoder->symbol(i), decoder->symbol_size());
 
-                EXPECT_TRUE(sak::equal(symbol_storage, symbol_sequence[i]));
+                EXPECT_TRUE(sak::is_equal(symbol_storage, symbol_sequence[i]));
             }
 
             EXPECT_EQ(symbols_uncoded, decoder->symbols_uncoded());

@@ -1,4 +1,4 @@
-// Copyright Steinwurf ApS 2011-2013.
+// Copyright Steinwurf ApS 2011.
 // Distributed under the "STEINWURF RESEARCH LICENSE 1.0".
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
@@ -14,7 +14,6 @@
 
 namespace kodo
 {
-
     /// @brief Special layer used to create parallel stacks with
     ///       some shared layers.
     ///
@@ -54,24 +53,24 @@ namespace kodo
         typedef MainStack main_stack_type;
 
         /// The type of the main stack
-        typedef typename main_stack_type::factory main_factory_type;
+        typedef typename main_stack_type::factory_base main_factory_type;
 
     public:
 
-        /// @ingroup factory_layers
+        /// @ingroup factory_base_layers
         ///
-        /// Forwarding factory for the parallel proxy stack
-        class factory
+        /// Forwarding factory_base for the parallel proxy stack
+        class factory_base
         {
         public:
 
-            /// The factory type
-            typedef typename FinalType::factory factory_type;
+            /// The factory_base type
+            typedef typename FinalType::factory_base factory_type;
 
         public:
 
-            /// @copydoc layer::factory::factory(uint32_t,uint32_t)
-            factory(uint32_t max_symbols, uint32_t max_symbol_size)
+            /// @copydoc layer::factory_base::factory_base(uint32_t,uint32_t)
+            factory_base(uint32_t max_symbols, uint32_t max_symbol_size)
                 : m_main_factory(0),
                   m_main_stack(0)
             {
@@ -132,7 +131,7 @@ namespace kodo
                 return m_main_stack;
             }
 
-            /// @copydoc layer::factory::build()
+            /// @copydoc factory::build()
             pointer build()
             {
                 assert(m_main_factory != 0);
@@ -149,63 +148,63 @@ namespace kodo
                 return coder;
             }
 
-            /// @copydoc layer::factory::max_symbols() const
+            /// @copydoc layer::factory_base::max_symbols() const
             uint32_t max_symbols() const
             {
                 assert(m_main_factory);
                 return m_main_factory->max_symbols();
             }
 
-            /// @copydoc layer::factory::max_symbol_size() const
+            /// @copydoc layer::factory_base::max_symbol_size() const
             uint32_t max_symbol_size() const
             {
                 assert(m_main_factory);
                 return m_main_factory->max_symbol_size();
             }
 
-            /// @copydoc layer::factory::max_block_size() const
+            /// @copydoc layer::factory_base::max_block_size() const
             uint32_t max_block_size() const
             {
                 assert(m_main_factory);
                 return m_main_factory->max_block_size();
             }
 
-            /// @copydoc layer::factory::max_header_size() const
+            /// @copydoc layer::factory_base::max_header_size() const
             uint32_t max_header_size() const
             {
                 assert(m_main_factory);
                 return m_main_factory->max_header_size();
             }
 
-            /// @copydoc layer::factory::max_id_size() const
+            /// @copydoc layer::factory_base::max_id_size() const
             uint32_t max_id_size() const
             {
                 assert(m_main_factory);
                 return m_main_factory->max_id_size();
             }
 
-            /// @copydoc layer::factory::max_payload_size() const
+            /// @copydoc layer::factory_base::max_payload_size() const
             uint32_t max_payload_size() const
             {
                 assert(m_main_factory);
                 return m_main_factory->max_payload_size();
             }
 
-            /// @copydoc layer::factory::max_coefficient_vector_size() const
+            /// @copydoc layer::factory_base::max_coefficient_vector_size() const
             uint32_t max_coefficient_vector_size() const
             {
                 assert(m_main_factory);
                 return m_main_factory->max_coefficient_vector_size();
             }
 
-            /// @copydoc layer::factory::symbols() const;
+            /// @copydoc layer::factory_base::symbols() const;
             uint32_t symbols() const
             {
                 assert(m_main_factory);
                 return m_main_factory->symbols();
             }
 
-            /// @copydoc layer::factory::symbol_size() const;
+            /// @copydoc layer::factory_base::symbol_size() const;
             uint32_t symbol_size() const
             {
                 assert(m_main_factory);
@@ -215,7 +214,7 @@ namespace kodo
         private:
 
             /// Pointer to the main stack's factory
-            typename main_stack_type::factory* m_main_factory;
+            main_factory_type* m_main_factory;
 
             /// Pointer to the main stack used during building a stack
             main_stack_type* m_main_stack;
@@ -556,5 +555,3 @@ namespace kodo
     };
 
 }
-
-

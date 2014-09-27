@@ -5,5 +5,5 @@ bld.program(
     features='cxx test',
     source=['kodo_tests.cpp'] + bld.path.ant_glob('src/*.cpp'),
     target='kodo_tests',
-    use=['kodo_includes', 'fifi_includes', 'sak_includes', 'gtest',
-         'boost_includes', 'boost_system', 'boost_filesystem'])
+    use=['kodo_includes', 'fifi_includes', 'sak_includes', 'stub_includes',
+         'gtest', 'boost_includes', 'boost_system', 'boost_filesystem'])
