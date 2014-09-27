@@ -268,6 +268,19 @@ namespace kodo
             return m_width_ratio;
         }
 
+        /// Set the number of non-zero coefficients after the pivot.
+        /// Width ratio is recalculated from this value
+        /// @param width the width
+        void set_width(uint32_t width)
+        {
+            assert(width < SuperCoder::symbols());
+            assert(width > 0);
+
+            // Save the width and recalculate the width ratio
+            m_width = width;
+            m_width_ratio = (double)(m_width_ratio / SuperCoder::symbols());
+        }
+
         /// Get the width
         /// @return the width used by the generator
         uint32_t width() const
