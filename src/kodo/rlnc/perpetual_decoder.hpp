@@ -9,7 +9,7 @@
 
 #include "../coefficient_storage_layers.hpp"
 #include "../deep_storage_layers.hpp"
-#include "../final_coder_factory_pool.hpp"
+#include "../final_layer.hpp"
 #include "../finite_field_layers.hpp"
 #include "../nested_payload_recoder.hpp"
 #include "../payload_decoder.hpp"
@@ -49,9 +49,12 @@ namespace kodo
         // Finite Field API
         finite_field_layers<Field,
         // Factory API
-        final_coder_factory_pool<
+        final_layer<
         // Final type
         perpetual_decoder<Field, TraceTag>
         > > > > > > > > > >
-    { };
+    {
+    public:
+        using factory = pool_factory<perpetual_decoder>;
+};
 }

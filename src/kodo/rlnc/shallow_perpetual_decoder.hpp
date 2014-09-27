@@ -8,9 +8,9 @@
 #include <cstdint>
 
 #include "../coefficient_storage_layers.hpp"
-#include "../final_coder_factory_pool.hpp"
+#include "../final_layer.hpp"
 #include "../finite_field_layers.hpp"
-#include "../mutable_shallow_storage_layers.hpp"
+#include "../partial_mutable_shallow_storage_layers.hpp"
 #include "../nested_payload_recoder.hpp"
 #include "../payload_decoder.hpp"
 #include "../perpetual_decoder_layers.hpp"
@@ -43,13 +43,17 @@ namespace kodo
         // Coefficient Storage API
         coefficient_storage_layers<
         // Storage API
-        mutable_shallow_storage_layers<TraceTag,
+        partial_mutable_shallow_storage_layers<TraceTag,
         // Finite Field API
         finite_field_layers<Field,
         // Factory API
-        final_coder_factory_pool<
+        final_layer<
         // Final type
         shallow_perpetual_decoder<Field, TraceTag>
         > > > > > > > > > >
-    { };
+    {
+    public:
+        using factory = pool_factory<shallow_perpetual_decoder>;
+
+};
 }

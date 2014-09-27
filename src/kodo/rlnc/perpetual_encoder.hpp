@@ -12,7 +12,7 @@
 #include "../coefficient_value_access.hpp"
 #include "../deep_storage_layers.hpp"
 #include "../encode_symbol_tracker.hpp"
-#include "../final_coder_factory_pool.hpp"
+#include "../final_layer.hpp"
 #include "../finite_field_layers.hpp"
 #include "../linear_block_encoder.hpp"
 #include "../payload_encoder.hpp"
@@ -58,9 +58,12 @@ namespace kodo
         // Finite Field API
         finite_field_layers<Field,
         // Factory API
-        final_coder_factory_pool<
+        final_layer<
         // Final type
         perpetual_encoder<Field, TraceTag>
         > > > > > > > > > > > > >
-    { };
+    {
+    public:
+        using factory = pool_factory<perpetual_encoder>;
+};
 }

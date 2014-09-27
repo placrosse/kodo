@@ -11,10 +11,10 @@
 #include "../coefficient_storage.hpp"
 #include "../coefficient_value_access.hpp"
 #include "../encode_symbol_tracker.hpp"
-#include "../final_coder_factory_pool.hpp"
+#include "../final_layer.hpp"
 #include "../finite_field_layers.hpp"
 #include "../linear_block_encoder.hpp"
-#include "../partial_shallow_storage_layers.hpp"
+#include "../partial_const_shallow_storage_layers.hpp"
 #include "../payload_encoder.hpp"
 #include "../perpetual_generator.hpp"
 #include "../plain_symbol_id_writer.hpp"
@@ -48,7 +48,7 @@ namespace kodo
         coefficient_value_access<
         coefficient_info<
         // Symbol Storage API
-        partial_shallow_storage_layers<TraceTag,
+        partial_const_shallow_storage_layers<TraceTag,
         // Finite Field API
         finite_field_layers<Field,
         // Factory API
@@ -56,5 +56,8 @@ namespace kodo
         // Final type
         shallow_perpetual_encoder<Field, TraceTag>
         > > > > > > > > > > > > >
-    { };
+    {
+    public:
+        using factory = pool_factory<shallow_perpetual_encoder>;
+};
 }
