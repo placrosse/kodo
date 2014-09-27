@@ -3,10 +3,12 @@
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
 
-/// @file test_sparse_uniform_generator.hpp Unit tests for the sparse uniform
+/// @file test_perpetual_generator.hpp Unit tests for the perpetual
 ///       coefficient generators
 
 #include <fifi/is_binary.hpp>
+#include <kodo/basic_factory.hpp>
+#include <kodo/pool_factory.hpp>
 
 #include <kodo/perpetual_generator.hpp>
 
@@ -28,10 +30,12 @@ namespace kodo
                    fake_symbol_storage<
                    storage_block_info<
                    finite_field_info<Field,
-                   final_coder_factory<
-                   perpetual_generator_stack<Field>
-                   > > > > > > >
-        { };
+                   final_layer
+                   > > > > > >
+        {
+        public:
+            using factory = basic_factory<perpetual_generator_stack>;
+        };
 
         template<class Field>
         class perpetual_generator_stack_pool :
@@ -41,10 +45,12 @@ namespace kodo
                    fake_symbol_storage<
                    storage_block_info<
                    finite_field_info<Field,
-                   final_coder_factory_pool<
-                   perpetual_generator_stack_pool<Field>
-                   > > > > > > >
-        { };
+                   final_layer
+                   > > > > > >
+        {
+        public:
+            using factory = pool_factory<perpetual_generator_stack_pool>;
+        };
     }
 }
 

@@ -52,10 +52,9 @@ namespace kodo
         // Finite Field API
         finite_field_layers<Field,
         // Factory API
-        final_coder_factory_pool<
+        final_layer
         // Final type
-        shallow_perpetual_encoder<Field, TraceTag>
-        > > > > > > > > > > > > >
+        > > > > > > > > > > > >
     {
     public:
         using factory = pool_factory<shallow_perpetual_encoder>;
