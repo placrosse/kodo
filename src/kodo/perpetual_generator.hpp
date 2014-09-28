@@ -278,7 +278,7 @@ namespace kodo
 
             // Save the width and recalculate the width ratio
             m_width = width;
-            m_width_ratio = (double)(m_width_ratio / SuperCoder::symbols());
+            m_width_ratio = (double)m_width / SuperCoder::symbols();
         }
 
         /// Get the width
