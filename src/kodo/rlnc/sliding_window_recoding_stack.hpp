@@ -67,8 +67,7 @@ namespace kodo
         coefficient_value_access<
         // Proxy
         proxy_remote_rank<
-        proxy_layer<
-        sliding_window_recoding_stack<MainStack>,
-        MainStack> > > > > > > > > > > > > > > > > > >
+        proxy_layer<MainStack,
+        final_layer> > > > > > > > > > > > > > > > > > >
     { };
 }

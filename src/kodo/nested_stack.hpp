@@ -5,6 +5,7 @@
 
 #pragma once
 
+#include "basic_factory.hpp"
 #include "set_symbols.hpp"
 #include "set_symbol_size.hpp"
 
@@ -35,13 +36,13 @@ namespace kodo
     public:
 
         /// Typedef of the nested stack
-        typedef NestedStack nested_stack_type;
+        using nested_stack_type = NestedStack;
 
         /// The nested code factory_base
-        typedef typename nested_stack_type::factory_base nested_factory_type;
+        using nested_factory_type = basic_factory<nested_stack_type>;
 
         /// The nested code pointer
-        typedef typename nested_stack_type::pointer nested_pointer;
+        using nested_pointer = typename nested_factory_type::pointer;
 
     public:
 

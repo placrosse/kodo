@@ -35,8 +35,8 @@ namespace kodo
     /// not implement in the stack containing the proxy_layer the
     /// proxy_layer will make sure that the function call is forwarded
     /// to the main stack.
-    template<class FinalType, class MainStack>
-    class proxy_layer
+    template<class MainStack, class SuperCoder>
+    class proxy_layer : public SuperCoder
     {
     public:
 
@@ -45,9 +45,6 @@ namespace kodo
 
         /// @copydoc layer::value_type
         typedef typename MainStack::value_type value_type;
-
-        /// Pointer type to the constructed coder
-        typedef std::shared_ptr<FinalType> pointer;
 
         /// The type of the main stack
         typedef MainStack main_stack_type;
@@ -60,23 +57,16 @@ namespace kodo
         /// @ingroup factory_base_layers
         ///
         /// Forwarding factory_base for the parallel proxy stack
-        class factory_base
+        class factory_base : public SuperCoder::factory_base
         {
-        public:
-
-            /// The factory_base type
-            typedef typename FinalType::factory_base factory_type;
-
         public:
 
             /// @copydoc layer::factory_base::factory_base(uint32_t,uint32_t)
             factory_base(uint32_t max_symbols, uint32_t max_symbol_size)
-                : m_main_factory(0),
+                : SuperCoder::factory_base(max_symbols, max_symbol_size),
+                  m_main_factory(0),
                   m_main_stack(0)
-            {
-                (void) max_symbols;
-                (void) max_symbol_size;
-            }
+            { }
 
             /// Sets the pointer to the main stack factory
             ///
@@ -129,23 +119,6 @@ namespace kodo
             {
                 assert(m_main_stack);
                 return m_main_stack;
-            }
-
-            /// @copydoc factory::build()
-            pointer build()
-            {
-                assert(m_main_factory != 0);
-                assert(m_main_stack != 0);
-
-                pointer coder = std::make_shared<FinalType>();
-
-                factory_type *this_factory =
-                    static_cast<factory_type*>(this);
-
-                coder->construct(*this_factory);
-                coder->initialize(*this_factory);
-
-                return coder;
             }
 
             /// @copydoc layer::factory_base::max_symbols() const
@@ -223,22 +196,11 @@ namespace kodo
 
     public:
 
-        /// Constructor
-        proxy_layer()
-            : m_main_stack(0)
-        { }
-
-        /// @copydoc layer::construct(Factory&)
-        template<class Factory>
-        void construct(Factory &the_factory)
-        {
-            (void) the_factory;
-        }
-
         /// @copydoc layer::initialize(Factory&)
         template<class Factory>
         void initialize(Factory &the_factory)
         {
+            SuperCoder::initialize(the_factory);
             m_main_stack = the_factory.main_stack();
             assert(m_main_stack);
         }

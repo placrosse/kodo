@@ -10,6 +10,7 @@
 #include <kodo/proxy_stack.hpp>
 #include <kodo/proxy_layer.hpp>
 #include <kodo/basic_factory.hpp>
+#include <kodo/final_layer.hpp>
 
 #include "kodo_unit_test/helper_test_nested_stack.hpp"
 
@@ -37,7 +38,7 @@ namespace kodo
         /// embedded with the main stack.
         template<class MainStack>
         class dummy_proxy_stack : public
-              proxy_layer<dummy_proxy_stack<MainStack>, MainStack>
+            proxy_layer<MainStack,final_layer>
         {
         public:
             using factory = basic_factory<dummy_proxy_stack>;
