@@ -30,7 +30,6 @@
 template<class Encoder, class Decoder>
 struct throughput_benchmark : public gauge::time_benchmark
 {
-
     typedef typename Encoder::factory encoder_factory;
     typedef typename Encoder::factory::pointer encoder_ptr;
 
@@ -56,7 +55,7 @@ struct throughput_benchmark : public gauge::time_benchmark
         gauge::time_benchmark::stop();
     }
 
-    double measurement(bool goodput = false)
+    double calculate_throughput(bool goodput = false)
     {
         // Get the time spent per iteration
         double time = gauge::time_benchmark::measurement();
@@ -99,8 +98,8 @@ struct throughput_benchmark : public gauge::time_benchmark
         if (!results.has_column("goodput"))
             results.add_column("goodput");
 
-        results.set_value("throughput", measurement(false));
-        results.set_value("goodput", measurement(true));
+        results.set_value("throughput", calculate_throughput(false));
+        results.set_value("goodput", calculate_throughput(true));
     }
 
     bool accept_measurement()
