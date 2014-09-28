@@ -14,10 +14,10 @@ template<class Encoder, class Decoder>
 inline void run_test_systematic(uint32_t symbols, uint32_t symbol_size)
 {
     // Common setting
-    typename Encoder::factory encoder_factory(symbols, symbol_size);
+    kodo::basic_factory<Encoder> encoder_factory(symbols, symbol_size);
     auto encoder = encoder_factory.build();
 
-    typename Decoder::factory decoder_factory(symbols, symbol_size);
+    kodo::basic_factory<Decoder> decoder_factory(symbols, symbol_size);
     auto decoder = decoder_factory.build();
 
     // Encode/decode operations

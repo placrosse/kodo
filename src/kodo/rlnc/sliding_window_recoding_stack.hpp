@@ -40,7 +40,7 @@ namespace kodo
     /// proxy_layer which forwards any calls not implemented in the
     /// recoding stack to the MainStack.
     template<class MainStack>
-    class sliding_window_recoding_stack : public
+    using sliding_window_recoding_stack =
         // Feedback API
         feedback_pivot_status_reader<
         feedback_pivot_status<
@@ -68,6 +68,5 @@ namespace kodo
         // Proxy
         proxy_remote_rank<
         proxy_layer<MainStack,
-        final_layer> > > > > > > > > > > > > > > > > > >
-    { };
+        final_layer> > > > > > > > > > > > > > > > > > >;
 }
