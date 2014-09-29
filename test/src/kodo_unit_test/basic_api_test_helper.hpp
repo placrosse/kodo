@@ -1,4 +1,4 @@
-// Copyright Steinwurf ApS 2011-2014.
+// Copyright Steinwurf ApS 2011.
 // Distributed under the "STEINWURF RESEARCH LICENSE 1.0".
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
@@ -97,5 +97,3 @@ inline void run_test(uint32_t symbols, uint32_t symbol_size)
         test.run();
     }
 }
-
-

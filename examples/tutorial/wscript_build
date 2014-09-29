@@ -13,11 +13,12 @@ bld.program(features = 'cxx',
             use      = ['kodo_includes', 'boost_includes',
                         'fifi_includes', 'sak_includes'])
 
-bld.program(features = 'cxx',
-            source   = ['copy_out_data.cpp'],
-            target   = 'copy_out_data',
-            use      = ['kodo_includes', 'boost_includes',
-                        'fifi_includes', 'sak_includes'])
+# Include again once file is added
+# bld.program(features = 'cxx',
+#             source   = ['copy_out_data.cpp'],
+#             target   = 'copy_out_data',
+#             use      = ['kodo_includes', 'boost_includes',
+#                         'fifi_includes', 'sak_includes'])
 
 bld.program(features = 'cxx',
             source   = ['add_loss.cpp'],

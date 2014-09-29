@@ -1,7 +1,10 @@
-// Copyright Steinwurf ApS 2011-2013.
+// Copyright Steinwurf ApS 2011.
 // Distributed under the "STEINWURF RESEARCH LICENSE 1.0".
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
+
+#include <iostream>
+#include <ctime>
 
 #include <kodo/rlnc/full_rlnc_codes.hpp>
 #include <kodo/set_systematic_on.hpp>
@@ -21,6 +24,9 @@
 
 int main()
 {
+    // Seed random number generator to produce different results every time
+    srand(static_cast<uint32_t>(time(0)));
+
     // Set the number of symbols (i.e. the generation size in RLNC
     // terminology) and the size of a symbol in bytes
     uint32_t symbols = 16;

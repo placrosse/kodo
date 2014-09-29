@@ -1,4 +1,4 @@
-// Copyright Steinwurf ApS 2011-2012.
+// Copyright Steinwurf ApS 2011.
 // Distributed under the "STEINWURF RESEARCH LICENSE 1.0".
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
@@ -45,7 +45,7 @@ int main()
     // Just for fun - fill the data with random data
     std::generate(data_in.begin(), data_in.end(), rand);
 
-    // Lets split the data into symbols and feed the encoder one symbol
+    // Let's split the data into symbols and feed the encoder one symbol
     // at a time
     auto symbol_storage =
         sak::split_storage(sak::storage(data_in), symbol_size);

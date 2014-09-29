@@ -1,4 +1,4 @@
-// Copyright Steinwurf ApS 2011-2012.
+// Copyright Steinwurf ApS 2011.
 // Distributed under the "STEINWURF RESEARCH LICENSE 1.0".
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
@@ -18,7 +18,7 @@
 
 int main()
 {
-    // Seed rand
+    // Seed random number generator to produce different results every time
     srand(static_cast<uint32_t>(time(0)));
 
     // Set the number of symbols (i.e. the generation size in RLNC
@@ -91,16 +91,12 @@ int main()
                 return filters.count(zone);
             };
 
-            std::cout << "Trace decoder:" << std::endl;
-
-
             // Try to run without a filter to see the full amount of
             // output produced by the trace function. You can then
             // modify the filter to only view the information you are
             // interested in.
-
+            std::cout << "Trace decoder:" << std::endl;
             kodo::trace(decoder, std::cout, filter);
-            //kodo::trace(decoder, std::cout);
         }
     }
 
