@@ -10,7 +10,7 @@ It consists of the following subsections, each describing different examples:
 * :ref:`the_basics`: An example showing the basic functionality of
   Kodo.
 * :ref:`simulating_losses`: An example with loss,
-* An example without systematic coding,
+* :ref:`turn_off_systematic_coding`: An example without systematic coding,
 * An example using recoding,
 * An example using seed codes, and finally
 * An example show how to extend a Kodo stack with additional layers.
