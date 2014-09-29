@@ -125,8 +125,8 @@ encoder and decoder.
 
 .. literalinclude:: ../../examples/tutorial/basic.cpp
     :language: c++
-    :start-after: //! [2]
-    :end-before: //! [3]
+    :start-after: //! [1]
+    :end-before: //! [2]
     :linenos:
 
 As shown above this is done by passing a type defining the finite field, as the
@@ -143,8 +143,8 @@ a decoder to perform the actual coding.
 
 .. literalinclude:: ../../examples/tutorial/basic.cpp
     :language: c++
-    :start-after: //! [4]
-    :end-before: //! [5]
+    :start-after: //! [2]
+    :end-before: //! [3]
     :linenos:
 
 The encoder and decoder types define a nested type called the ``factory``. Using
@@ -163,8 +163,8 @@ Before the encoding and decoding of data can begin, two buffers are needed.
 
 .. literalinclude:: ../../examples/tutorial/basic.cpp
     :language: c++
-    :start-after: //! [6]
-    :end-before: //! [7]
+    :start-after: //! [3]
+    :end-before: //! [4]
     :linenos:
 
 The first buffer is the ``payload`` buffer. Once we start coding this buffer
@@ -186,8 +186,8 @@ the encoder to specify which buffer it should encode.
 
 .. literalinclude:: ../../examples/tutorial/basic.cpp
     :language: c++
-    :start-after: //! [8]
-    :end-before: //! [9]
+    :start-after: //! [4]
+    :end-before: //! [5]
     :linenos:
 
 Finally we have everything ready to start the coding. This is done in a loop
@@ -195,8 +195,8 @@ until the decoding has successfully completed.
 
 .. literalinclude:: ../../examples/tutorial/basic.cpp
     :language: c++
-    :start-after: //! [10]
-    :end-before: //! [11]
+    :start-after: //! [5]
+    :end-before: //! [6]
     :linenos:
 
 We use a variable ``encoded_count`` to keep track of the number of symbols
@@ -210,6 +210,18 @@ used during the encoding, and hence the number of bytes we in theory have to
 transmit over the network.
 The payload is passed to the decoder which decodes the encoded data and thereby
 increases its rank.
+
+When the decoding process is completed, the data can be extracted from the
+decoder.
+
+.. literalinclude:: ../../examples/tutorial/basic.cpp
+    :language: c++
+    :start-after: //! [6]
+    :end-before: //! [7]
+    :linenos:
+
+To do so, a buffer is created and the decoded data is copied to it using the
+``copy_symbols`` function.
 
 A Lossy Example
 ---------------

@@ -13,14 +13,14 @@ int main()
     // terminology) and the size of a symbol in bytes
     uint32_t max_symbols = 16;
     uint32_t max_symbol_size = 1400;
+
     //! [1]
 
-    //! [2]
     using rlnc_encoder = kodo::full_rlnc_encoder<fifi::binary8>;
     using rlnc_decoder = kodo::full_rlnc_decoder<fifi::binary8>;
-    //! [3]
 
-    //! [4]
+    //! [2]
+
     // In the following we will make an encoder/decoder factory.
     // The factories are used to build actual encoders/decoders
     rlnc_encoder::factory encoder_factory(max_symbols, max_symbol_size);
@@ -28,23 +28,23 @@ int main()
 
     rlnc_decoder::factory decoder_factory(max_symbols, max_symbol_size);
     auto decoder = decoder_factory.build();
-    //! [5]
 
-    //! [6]
+    //! [3]
+
     std::vector<uint8_t> payload(encoder->payload_size());
     std::vector<uint8_t> block_in(encoder->block_size());
 
     // Just for fun - fill the data with random data
     std::generate(block_in.begin(), block_in.end(), rand);
-    //! [7]
 
-    //! [8]
+    //! [4]
+
     // Assign the data buffer to the encoder so that we may start
     // to produce encoded symbols from it
     encoder->set_symbols(sak::storage(block_in));
-    //! [9]
 
-    //! [10]
+    //! [5]
+
     uint32_t encoded_count = 0;
 
     while (!decoder->is_complete())
@@ -60,6 +60,17 @@ int main()
     }
 
     std::cout << "Encoded count = " << encoded_count << std::endl;
-    //! [11]
+
+    //! [6]
+
+    // Create a buffer which will contain the decoded data
+    // For the point of example we use sak::storage on a raw pointer
+    uint8_t* block_out = new uint8_t[decoder->block_size()];
+    decoder->copy_symbols(sak::storage(block_out, decoder->block_size()));
+
+    delete [] block_out;
+
+    //! [7]
+
     return 0;
 }
