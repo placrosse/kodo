@@ -117,7 +117,6 @@ int main()
     // For the point of example we use sak::storage on a raw pointer
     uint8_t* block_out = new uint8_t[decoder2->block_size()];
     decoder2->copy_symbols(sak::storage(block_out, decoder2->block_size()));
-
     delete [] block_out;
 
     return 0;

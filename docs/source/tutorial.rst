@@ -5,9 +5,20 @@ Tutorial
 
 This tutorial will demonstrate different features of Kodo and
 show how it can be used to encode and decode data.
+It consists of the following subsections, each describing different examples:
 
-Basic Example
--------------
+* An example showing the basic functionality of Kodo,
+* An example with loss,
+* An example without systematic coding,
+* An example using recoding,
+* An example using seed codes, and finally
+* An example show how to extend a Kodo stack with additional layers.
+
+
+The Basics
+----------
+.. _the_basics:
+
 In the following, we will walk through the process of creating an
 encoder and a decoder for a single buffer of data. We will start from an
 empty file and slowly expand it. Once we have a working example, we
@@ -30,10 +41,10 @@ this example, we have chosen to use a particular version of a RLNC
     :end-before: //! [1]
     :linenos:
 
-The Full RLNC is one of the most common RLNC variants, and
-provides several of the advantages that RLNCs have over traditional erasure
-correcting codes. However, for the time being we will just use it as a standard
-erasure correcting code, namely to encode and decode some data.
+The Full RLNC is one of the most common RLNC variants, and provides several of
+the advantages that RLNCs have over traditional erasure correcting codes.
+However, for the time being we will just use it as a standard erasure correcting
+code, namely to encode and decode some data.
 
 In the following, we will go through three of the key-parameters to choose when
 configuring an erasure correcting code:
@@ -43,9 +54,9 @@ configuring an erasure correcting code:
 * The finite field, or more specifically the field size used.
 
 In general if a block of data is to be encoded, it's split into a number of
-symbols of a specific size. If you multiply the number of symbols with the
-symbol size, you get the total amount of data in bytes that will be either
-encoded or decoded per generation.
+:ref:`symbols <symboĺ>` of a specific size. If you multiply the number of
+symbols with the symbol size, you get the total amount of data in bytes that
+will be either encoded or decoded per :ref:`generation <generation>`.
 
 .. note:: Sizes in Kodo are always measured in bytes. So if you see a variable
           or function name that includes the word "size", bytes is the unit
@@ -63,8 +74,8 @@ will have the following effects:
 
 * The computational complexity will increase, and can therefore slow down the
   encoding/decoding.
-* For some variants of RLNC, the per-packet overhead will increase due to added
-  coding coefficients.
+* For some variants of RLNC, the per-:ref:`packet<coded_packet>` overhead will
+  increase due to added coding coefficients.
 * The per-symbol decoding delay will become larger. The reason for this is that
   when we increase the number of symbols that are encoded the decoder has to
   receive more symbols before decoding.
@@ -96,7 +107,7 @@ megabytes.
 Field Size
 ..........
 The field size determines the core mathematics. Most erasure correcting codes
-are based on finite fields.
+are based on :ref:`finite fields<finite_field>`.
 
 * Increasing the field size will increase the probability of successful
   decoding.
@@ -223,8 +234,10 @@ decoder.
 To do so, a buffer is created and the decoded data is copied to it using the
 ``copy_symbols`` function.
 
-A Lossy Example
----------------
+Simulating Losses
+-----------------
+.. _simulating_losses:
+
 In this example we will expand the previous basic example by adding some loss.
 This can be done simply by not "transmitting" encoded symbol to the decoder.
 The complete example is shown below.
@@ -249,8 +262,13 @@ The encoder can, in theory, create an infinite number of packages. This is a
 feature called rate-less which is unique to network coding. This means that as
 long as the loss is below 100% the decoder will be able to finish the decoding.
 
-Running the example will result in the following output (
-the output will always be the same as the random function is never seeded):
+A graphical representation of the setup is seen in the figure below.
+
+.. image:: ../images/tutorial_add_loss.png
+   :align: center
+
+Running the example will result in the following output (the output will always
+be the same as the random function is never seeded):
 
 .. code-block:: none
 
@@ -290,8 +308,10 @@ of symbols in the generation). This is because the encoder exits the systematic
 phase where it sends the symbols uncoded. This technique will be explained in
 following example.
 
-A Systematic Example
---------------------
+Turn Off Systematic Coding
+--------------------------
+.. _turn_off_systematic_coding:
+
 A simple, yet clever technique called systematic encoding can be used to improve
 the performance of network coding. The way it works is to initially send
 everything uncoded, and then start the encoding.
@@ -363,8 +383,42 @@ avoided if
 * The setup has multiple sources. If this is the case, the sources should not
   send the same data, as this can be redundant for the receivers.
 
-Seed Example
-------------
+Recoding Data
+-------------
+.. _recoding_data:
+
+One of the key features of RLNC is the ability to recode. What this means is
+if the data is to be transmitted through a chain of nodes, the data can be
+reencoded at each node.
+A examples of such networks include:
+
+* Relay networks
+* P2P networks, and
+* multi-path networks
+
+The complete example code for this is as follows.
+
+.. literalinclude:: ../../examples/tutorial/recoding.cpp
+    :language: c++
+    :linenos:
+
+Again only a few lines has changed from the basic example. We've changed the
+setup a bit so that we now have two instead of one decoder.
+In the example the ``encoder`` encodes and sends data to ``decoder1``.
+This data is then decoded and further recoded by ``decoder1`` and then finally
+sent to ``decoder2`` where it's decoded.
+
+.. literalinclude:: ../../examples/tutorial/recoding.cpp
+    :language: c++
+    :start-after: //! [0]
+    :end-before: //! [1]
+    :linenos:
+
+The advantage of this is that if a loss
+
+Using Seed Codes
+----------------
+.. _using_seed_codes:
 
 .. literalinclude:: ../../examples/tutorial/seed_codes.cpp
     :language: c++
@@ -379,24 +433,10 @@ Disadvantage
 * Does not support recoding
 * Does not on-the-fly or sliding-window
 
-Recoding Example
-----------------
 
-.. literalinclude:: ../../examples/tutorial/recoding.cpp
-    :language: c++
-    :linenos:
-
-One of the key features of RLNC
-
-Use-cases
-
-* Relay network
-* P2P
-* multi-path
-* mesh
-
-Customization Example
----------------------
+Adding a New Layer
+------------------
+.. _adding_a_new_layer:
 
 Kodo is a set of building blocks rather than one specific code. It is meant to
 be modified.
@@ -569,12 +609,5 @@ Adding a Layer
     :linenos:
 
 link hacking kodo
-
-Copy Data Out Example
----------------------
-
-.. literalinclude:: ../../examples/tutorial/copy_out_data.cpp
-    :language: c++
-    :linenos:
 
 .. source: http://sphinx-doc.org/markup/code.html#includes

@@ -33,7 +33,6 @@ int main()
     // Assign the data buffer to the encoder so that we may start
     // to produce encoded symbols from it
     encoder->set_symbols(sak::storage(block_in));
-
     //! [0]
     uint32_t encoded_count = 0;
     uint32_t dropped_count = 0;
@@ -58,13 +57,12 @@ int main()
 
     std::cout << "Encoded count = " << encoded_count << std::endl;
     std::cout << "Dropped count = " << dropped_count << std::endl;
-
+    //! [1]
     // Create a buffer which will contain the decoded data
     // For the point of example we use sak::storage on a raw pointer
     uint8_t* block_out = new uint8_t[decoder->block_size()];
     decoder->copy_symbols(sak::storage(block_out, decoder->block_size()));
-
     delete [] block_out;
-    //! [1]
+
     return 0;
 }

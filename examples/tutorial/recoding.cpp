@@ -59,7 +59,7 @@ int main()
             ++dropped_count;
             continue;
         }
-
+        //! [0]
         // Pass that packet to the decoder1
         decoder1->decode(payload.data());
 
@@ -68,6 +68,7 @@ int main()
 
         // Pass the recoded packet to decoder two
         decoder2->decode(payload.data());
+        //! [1]
     }
 
     std::cout << "Encoded count = " << encoded_count << std::endl;
