@@ -16,6 +16,7 @@ It consists of the following subsections, each describing different examples:
 * An example show how to extend a Kodo stack with additional layers.
 
 .. _the_basics:
+
 The Basics
 ----------
 
