@@ -16,6 +16,7 @@ It consists of the following subsections, each describing different examples:
 * An example show how to extend a Kodo stack with additional layers.
 
 .. _the_basics:
+
 The Basics
 ----------
 
@@ -321,9 +322,10 @@ number as the number of symbols in the generation). This is because
 the encoder exits the systematic phase where it sends the symbols
 uncoded. This technique will be explained in following example.
 
+.. _turn_off_systematic_coding:
+
 Turn Off Systematic Coding
 --------------------------
-.. _turn_off_systematic_coding:
 
 A simple, yet clever technique called systematic encoding can be used
 to improve the performance of network coding. The way it works is to
