@@ -11,9 +11,10 @@ It consists of the following subsections, each describing different examples:
   Kodo.
 * :ref:`simulating_losses`: An example with loss,
 * :ref:`turn_off_systematic_coding`: An example without systematic coding,
-* An example using recoding,
-* An example using seed codes, and finally
-* An example show how to extend a Kodo stack with additional layers.
+* :ref:`recoding_data`: An example using recoding,
+* :ref:`using_seed_codes`: An example using seed codes, and finally
+* :ref:`adding_a_new_layer`: An example show how to extend a Kodo
+  stack with additional layers.
 
 .. _the_basics:
 
@@ -24,7 +25,7 @@ In the following, we will walk through the process of creating an
 encoder and a decoder for a single buffer of data. We will start from
 an empty file and slowly expand it. Once we have a working example, we
 will modify it in a number of steps to show different properties and
-features of the erasure correcting codes and the library.
+features of the erasure correcting codes and the Kodo library.
 
 Our starting point will be the following:
 
@@ -399,9 +400,10 @@ beneficial. However it should be avoided if
   should not send the same data, as this can be redundant for the
   receivers.
 
+.. _recoding_data:
+
 Recoding Data
 -------------
-.. _recoding_data:
 
 One of the key features of RLNC is the ability to recode. What this
 means is if the data is to be transmitted through a chain of nodes,
@@ -432,9 +434,10 @@ decoder.  In the example the ``encoder`` encodes and sends data to
 
 The advantage of this is that if a loss
 
+.. _using_seed_codes:
+
 Using Seed Codes
 ----------------
-.. _using_seed_codes:
 
 .. literalinclude:: ../../examples/tutorial/seed_codes.cpp
     :language: c++
@@ -449,10 +452,10 @@ Disadvantage
 * Does not support recoding
 * Does not on-the-fly or sliding-window
 
+.. _adding_a_new_layer:
 
 Adding a New Layer
 ------------------
-.. _adding_a_new_layer:
 
 Kodo is a set of building blocks rather than one specific code. It is
 meant to be modified.
