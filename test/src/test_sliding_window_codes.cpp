@@ -95,11 +95,8 @@ TEST(TestSlidingWindowCodes, test_systematic_recoding)
     uint32_t symbols = 16;
     uint32_t symbol_size = 1600;
 
-    kodo::basic_factory<encoder<fifi::binary8>>
-        encoder_factory(symbols, symbol_size);
-
-    kodo::basic_factory<decoder<fifi::binary8>>
-        decoder_factory(symbols, symbol_size);
+    encoder<fifi::binary8>::factory encoder_factory(symbols, symbol_size);
+    decoder<fifi::binary8>::factory decoder_factory(symbols, symbol_size);
 
     auto encoder = encoder_factory.build();
     auto recoder = decoder_factory.build();

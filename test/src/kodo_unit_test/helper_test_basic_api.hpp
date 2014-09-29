@@ -38,10 +38,10 @@ template<class Encoder, class Decoder>
 inline void run_test_basic_api(uint32_t symbols, uint32_t symbol_size)
 {
     // Common setting
-    kodo::basic_factory<Encoder> encoder_factory(symbols, symbol_size);
+    typename Encoder::factory encoder_factory(symbols, symbol_size);
     auto encoder = encoder_factory.build();
 
-    kodo::basic_factory<Decoder> decoder_factory(symbols, symbol_size);
+     typename Decoder::factory decoder_factory(symbols, symbol_size);
     auto decoder = decoder_factory.build();
 
     EXPECT_TRUE(symbols == encoder_factory.max_symbols());

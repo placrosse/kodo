@@ -41,7 +41,7 @@ namespace kodo
 template<class Decoder>
 inline std::string test_output()
 {
-    kodo::basic_factory<Decoder> factory(10, 100);
+    typename Decoder::factory factory(10, 100);
     auto decoder = factory.build();
 
     std::stringstream ss;

@@ -98,15 +98,15 @@ template<class Encoder, class Decoder>
 inline void run_test_reuse(uint32_t symbols, uint32_t symbol_size)
 {
     // Common setting
-    kodo::basic_factory<Encoder> encoder_factory(symbols, symbol_size);
-    kodo::basic_factory<Decoder> decoder_factory(symbols, symbol_size);
+    typename Encoder::factory encoder_factory(symbols, symbol_size);
+    typename Decoder::factory decoder_factory(symbols, symbol_size);
 
     for (uint32_t i = 0; i < 3; ++i)
     {
         uint32_t coders = rand_nonzero(5);
 
-        std::vector<typename kodo::basic_factory<Encoder>::pointer> encoders;
-        std::vector<typename kodo::basic_factory<Decoder>::pointer> decoders;
+        std::vector<typename Encoder::factory::pointer> encoders;
+        std::vector<typename Decoder::factory::pointer> decoders;
 
         for (uint32_t j = 0; j < coders; ++j)
         {
@@ -127,8 +127,8 @@ inline void run_test_reuse(uint32_t symbols, uint32_t symbol_size)
     {
         uint32_t coders = rand_nonzero(3);
 
-        std::vector<typename kodo::basic_factory<Encoder>::pointer> encoders;
-        std::vector<typename kodo::basic_factory<Decoder>::pointer> decoders;
+        std::vector<typename Encoder::factory::pointer> encoders;
+        std::vector<typename Decoder::factory::pointer> decoders;
 
         for (uint32_t j = 0; j < coders; ++j)
         {
@@ -207,8 +207,8 @@ inline void run_test_reuse_incomplete(uint32_t symbols, uint32_t symbol_size)
 
     bool do_complete;
 
-    kodo::basic_factory<Encoder> encoder_factory(symbols, symbol_size);
-    kodo::basic_factory<Decoder> decoder_factory(symbols, symbol_size);
+    typename Encoder::factory encoder_factory(symbols, symbol_size);
+    typename Decoder::factory decoder_factory(symbols, symbol_size);
 
     // Use factory a lot of times
     for (uint32_t i = 0; i < 20; ++i)

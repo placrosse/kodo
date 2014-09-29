@@ -39,7 +39,7 @@ namespace kodo
     /// kodo/examples/sliding_window which demonstrates the use fo the
     /// feedback API.
     template<class Field, class TraceTag = kodo::disable_trace>
-    using sliding_window_encoder =
+    class sliding_window_encoder : public
         // Feedback API
         feedback_pivot_status_reader<
         feedback_pivot_status<
@@ -71,5 +71,9 @@ namespace kodo
         finite_field_layers<Field,
         // Final Layer
         final_layer
-        > > > > > > > > > > > > > > > > > > > >;
+        > > > > > > > > > > > > > > > > > > > >
+    {
+    public:
+        using factory = pool_factory<sliding_window_encoder>;
+    };
 }

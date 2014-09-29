@@ -58,10 +58,9 @@ TEST(TestFeedbackSize, invoke)
     {
         // Check that the code compiles with a normal stack
         using decoder_type = kodo::sliding_window_decoder<fifi::binary8>;
-        kodo::basic_factory<decoder_type> factory(10,10);
 
+        decoder_type::factory factory(10,10);
         auto decoder = factory.build();
-
 
         EXPECT_TRUE(kodo::feedback_size(decoder) > 0U);
     }

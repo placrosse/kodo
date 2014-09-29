@@ -61,7 +61,7 @@ template<class Encoder, class Decoder>
 inline void invoke_recoding(recoding_parameters param)
 {
     // Common setting
-    kodo::basic_factory<Encoder> encoder_factory(
+    typename Encoder::factory encoder_factory(
         param.m_max_symbols, param.m_max_symbol_size);
 
     encoder_factory.set_symbols(param.m_symbols);
@@ -69,7 +69,7 @@ inline void invoke_recoding(recoding_parameters param)
 
     auto encoder = encoder_factory.build();
 
-    kodo::basic_factory<Decoder> decoder_factory(
+    typename Decoder::factory decoder_factory(
         param.m_max_symbols, param.m_max_symbol_size);
 
     decoder_factory.set_symbols(param.m_symbols);
@@ -278,7 +278,7 @@ template<class Encoder, class Decoder>
 inline void run_test_recoding_relay(recoding_parameters param)
 {
     // Common setting
-    kodo::basic_factory<Encoder> encoder_factory(
+    typename Encoder::factory encoder_factory(
         param.m_max_symbols, param.m_max_symbol_size);
 
     encoder_factory.set_symbols(param.m_symbols);
@@ -286,7 +286,7 @@ inline void run_test_recoding_relay(recoding_parameters param)
 
     auto encoder = encoder_factory.build();
 
-    kodo::basic_factory<Decoder> decoder_factory(
+    typename Decoder::factory decoder_factory(
         param.m_max_symbols, param.m_max_symbol_size);
 
     decoder_factory.set_symbols(param.m_symbols);
