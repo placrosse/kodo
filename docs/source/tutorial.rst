@@ -66,7 +66,7 @@ will be either encoded or decoded per :ref:`generation <generation>`.
           bytes is the unit used.
 
 .. note:: In network applications, a single symbol typically
-          corresponds to a single packet (for example, a UDP
+          corresponds to a single packet (for example, an UDP
           datagram).
 
 Let us briefly outline the impact of changing the three parameters.
@@ -175,7 +175,7 @@ smart-pointer to a new encoder or decoder. In C++ a smart-pointer is
 one which behaves just like a normal pointer, but which will delete
 the object when there are no more references to it. Typically the
 factory type used is a *pooled* factory which means that when an
-encoder or decoder is about to be delete instead they will be returned
+encoder or decoder is about to be deleted instead they will be returned
 to a memory pool for reuse. The next call to build will then return
 one of the reused encoders/decoders. This type of memory management
 increases performance by reducing the number of memory allocations.
@@ -251,9 +251,10 @@ using the ``copy_symbols`` function.
 Simulating Losses
 -----------------
 
-In this example we will expand the previous basic example by adding
-some loss.  This can be done simply by not "transmitting" encoded
-symbol to the decoder.  The complete example is shown below.
+In this example we will expand the previous basic example by
+simulating some loss of the encoded data.  This can be done simply by
+not "transmitting" encoded symbol to the decoder.  The complete
+example is shown below.
 
 .. literalinclude:: ../../examples/tutorial/add_loss.cpp
     :language: c++
