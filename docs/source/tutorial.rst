@@ -7,6 +7,8 @@ This tutorial will demonstrate different features of Kodo and
 show how it can be used to encode and decode data.
 It consists of the following subsections, each describing different examples:
 
+ :ref:`namespaces_and_directories2`
+
 Whoot (:ref:`_the_basics`)
 
 * Ok :ref:`_the_basics`
@@ -18,7 +20,7 @@ Whoot (:ref:`_the_basics`)
 * An example using seed codes, and finally
 * An example show how to extend a Kodo stack with additional layers.
 
-.. _the_basics:
+.. _namespaces_and_directories2:
 
 The Basics
 ----------
