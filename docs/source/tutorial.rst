@@ -7,19 +7,15 @@ This tutorial will demonstrate different features of Kodo and
 show how it can be used to encode and decode data.
 It consists of the following subsections, each describing different examples:
 
-Whoot (:ref:`the_basics`)
-
-* Ok :ref:`the_basics`
-* :ref:`the_basics` An example showing the basic functionality of
+* :ref:`the_basics`: An example showing the basic functionality of
   Kodo.
-* An example with loss,
+* :ref:`simulating_losses`: An example with loss,
 * An example without systematic coding,
 * An example using recoding,
 * An example using seed codes, and finally
 * An example show how to extend a Kodo stack with additional layers.
 
 .. _the_basics:
-
 The Basics
 ----------
 
@@ -248,9 +244,10 @@ the decoder.
 To do so, a buffer is created and the decoded data is copied to it
 using the ``copy_symbols`` function.
 
+.. _simulating_losses:
+
 Simulating Losses
 -----------------
-.. _simulating_losses:
 
 In this example we will expand the previous basic example by adding
 some loss.  This can be done simply by not "transmitting" encoded
