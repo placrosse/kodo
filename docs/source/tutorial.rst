@@ -7,7 +7,8 @@ This tutorial will demonstrate different features of Kodo and
 show how it can be used to encode and decode data.
 It consists of the following subsections, each describing different examples:
 
-* An example showing the basic functionality of Kodo,
+* :ref:`_the_basics` An example showing the basic functionality of
+  Kodo.
 * An example with loss,
 * An example without systematic coding,
 * An example using recoding,
