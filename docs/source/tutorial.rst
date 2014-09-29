@@ -15,10 +15,9 @@ It consists of the following subsections, each describing different examples:
 * An example using seed codes, and finally
 * An example show how to extend a Kodo stack with additional layers.
 
-
+.. _the_basics:
 The Basics
 ----------
-.. _the_basics:
 
 In the following, we will walk through the process of creating an
 encoder and a decoder for a single buffer of data. We will start from
