@@ -45,6 +45,7 @@ Documentation
    faq
    including_kodo_in_your_application
    hacking_kodo
+   tutorial
    unittest
    howto
    misc

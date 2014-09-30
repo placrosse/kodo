@@ -14,10 +14,12 @@
 /// layer provided that they are added at the correct position in the
 /// stack.
 
-#include <functional>
 
 #include <kodo/rlnc/full_rlnc_codes.hpp>
 #include <kodo/rank_callback_decoder.hpp>
+
+#include <functional>
+#include <vector>
 
 namespace kodo
 {
@@ -63,8 +65,8 @@ namespace kodo
 }
 
 // Typdefs for the encoder/decoder type we wish to use
-typedef kodo::full_rlnc_encoder<fifi::binary8> rlnc_encoder;
-typedef kodo::full_rlnc_callback_decoder<fifi::binary8> rlnc_decoder;
+using rlnc_encoder = kodo::full_rlnc_encoder<fifi::binary8>;
+using rlnc_decoder = kodo::full_rlnc_callback_decoder<fifi::binary8>;
 
 // Global function as callback handler
 void rank_changed_event(uint32_t rank)
@@ -77,7 +79,7 @@ void rank_changed_event(uint32_t rank)
 void rank_changed_event2(boost::weak_ptr<rlnc_decoder> w_decoder, uint32_t rank)
 {
     /// Lock decoder pointer so that it cannot be freed until we are done
-    if ( boost::shared_ptr<rlnc_decoder> decoder = w_decoder.lock() )
+    if (boost::shared_ptr<rlnc_decoder> decoder = w_decoder.lock())
     {
         std::cout << "Rank changed to " << rank << "/" <<
             decoder->symbols() << std::endl;
@@ -87,13 +89,12 @@ void rank_changed_event2(boost::weak_ptr<rlnc_decoder> w_decoder, uint32_t rank)
 // Some class
 class callback_handler
 {
-    public:
-
-        // Member function as callback handler
-        void rank_changed_event3(uint32_t rank)
-        {
-            std::cout << "Rank changed to " << rank << std::endl;
-        }
+public:
+    // Member function as callback handler
+    void rank_changed_event3(uint32_t rank)
+    {
+        std::cout << "Rank changed to " << rank << std::endl;
+    }
 };
 
 int main()
@@ -134,10 +135,8 @@ int main()
     boost::weak_ptr<rlnc_decoder> w_ptr(decoder);
 
     // Set callback handler
-    decoder->set_rank_changed_callback (
-        std::bind( &rank_changed_event2, w_ptr, std::placeholders::_1 )
-    );
-
+    decoder->set_rank_changed_callback(
+        std::bind(&rank_changed_event2, w_ptr, std::placeholders::_1));
 
 
     //  // Callback option 3:
@@ -169,13 +168,13 @@ int main()
     // to produce encoded symbols from it
     encoder->set_symbols(sak::storage(data_in));
 
-    while( !decoder->is_complete() )
+    while (!decoder->is_complete())
     {
         // Encode a packet into the payload buffer
-        encoder->encode( &payload[0] );
+        encoder->encode(payload.data());
 
         // Pass that packet to the decoder
-        decoder->decode( &payload[0] );
+        decoder->decode(payload.data());
     }
 
     // The decoder is complete, now copy the symbols from the decoder
@@ -192,5 +191,4 @@ int main()
         std::cout << "Unexpected failure to decode "
                   << "please file a bug report :)" << std::endl;
     }
-
 }

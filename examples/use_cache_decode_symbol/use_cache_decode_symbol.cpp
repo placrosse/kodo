@@ -7,6 +7,8 @@
 #include <kodo/cache_decode_symbol.hpp>
 #include <kodo/basic_factory.hpp>
 
+#include <vector>
+
 namespace kodo
 {
 
@@ -24,26 +26,24 @@ namespace kodo
     ///        layers in the two stacks are compatible (i.e. at least "Payload
     ///        API" to "Codec API" are the same).
     template<class Field>
-    class symbol_info_decoder
-        : public // Payload API
-                 payload_decoder<
-                 // Codec Header API
-                 systematic_decoder<
-                 symbol_id_decoder<
-                 // Symbol ID API
-                 plain_symbol_id_reader<
-                 // Decoder API
-                 cache_decode_symbol<  // <-- Cached symbol decoder
-                 // Coefficient Storage API
-                 coefficient_info<
-                 // Storage API
-                 storage_bytes_used<
-                 storage_block_info<
-                 // Finite Field API
-                 finite_field_info<Field,
-                 // Final Layer
-                 final_layer
-                     > > > > > > > > >
+    class symbol_info_decoder : public // Payload API
+        payload_decoder<
+        // Codec Header API
+        systematic_decoder<
+        symbol_id_decoder<
+        // Symbol ID API
+        plain_symbol_id_reader<
+        // Decoder API
+        cache_decode_symbol<  // <-- Cached symbol decoder
+        // Coefficient Storage API
+        coefficient_info<
+        // Storage API
+        storage_bytes_used<
+        storage_block_info<
+        // Finite Field API
+        finite_field_info<Field,
+        // Final Layer
+        final_layer> > > > > > > > >
     {
     public:
         using factory = basic_factory<symbol_info_decoder>;
@@ -66,7 +66,7 @@ int main()
     // The finite field we will use in the example. You can try
     // with other fields by specifying e.g. fifi::binary8 for the
     // extension field 2^8
-    typedef fifi::binary finite_field;
+    using finite_field = fifi::binary;
 
     // Set the number of symbols (i.e. the generation size in RLNC
     // terminology) and the size of a symbol in bytes
@@ -74,10 +74,10 @@ int main()
     uint32_t symbol_size = 160;
 
     // Typdefs for the encoder/decoder type we wish to use
-    typedef kodo::full_rlnc_encoder<finite_field> rlnc_encoder;
-    typedef kodo::full_rlnc_decoder<finite_field> rlnc_decoder;
+    using rlnc_encoder = kodo::full_rlnc_encoder<finite_field>;
+    using rlnc_decoder = kodo::full_rlnc_decoder<finite_field>;
 
-    typedef kodo::symbol_info_decoder<finite_field> rlnc_info_decoder;
+    using rlnc_info_decoder = kodo::symbol_info_decoder<finite_field>;
 
     // In the following we will make an encoder/decoder factory.
     // The factories are used to build actual encoders/decoders.
@@ -110,7 +110,7 @@ int main()
     while (!decoder->is_complete())
     {
         // Encode a packet into the payload buffer
-        encoder->encode( payload.data() );
+        encoder->encode(payload.data());
 
         // Here we "simulate" a packet loss of approximately 50% by
         // dropping half of the encoded packets.  When running this
@@ -119,13 +119,13 @@ int main()
         // symbols once uncoded, the encoder will switch to full
         // coding, in which case you will see the full encoding
         // vectors being sent and received.
-        if((rand() % 2) == 0)
+        if (rand() % 2)
             continue;
 
         // Pass the encoded packet to the info decoder. After this
         // information about the coded symbol can be fetched using the
         // cache_decode_symbol API
-        info_decoder->decode( payload.data() );
+        info_decoder->decode(payload.data());
 
         // The cache should contain data now
         assert(info_decoder->is_cache_valid());
@@ -142,9 +142,8 @@ int main()
             // decoder. This is done using the "Codec API" directly,
             // and not through the "Payload API" as we would typically
             // do.
-            decoder->decode_symbol( info_decoder->cached_symbol_data(),
-                                    info_decoder->cached_symbol_index());
-
+            decoder->decode_symbol(info_decoder->cached_symbol_data(),
+                                   info_decoder->cached_symbol_index());
         }
         else
         {
@@ -158,7 +157,7 @@ int main()
 
             // We loop through the coefficient buffer and print the
             // coefficients
-            for(uint32_t i = 0; i < info_decoder->symbols(); ++i)
+            for (uint32_t i = 0; i < info_decoder->symbols(); ++i)
             {
                 std::cout << (uint32_t) fifi::get_value<finite_field>(c, i)
                           << " ";
@@ -170,7 +169,6 @@ int main()
             // symbols above we pass it directly to the "Codec API"
             decoder->decode_symbol(info_decoder->cached_symbol_data(),
                                    info_decoder->cached_symbol_coefficients());
-
         }
     }
 

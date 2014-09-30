@@ -9,6 +9,8 @@
 #include <kodo/rlnc/full_rlnc_codes.hpp>
 #include <kodo/partial_shallow_symbol_storage.hpp>
 
+#include <vector>
+
 /// @example encode_decode_storage.cpp
 ///
 /// Often we want to encode / decode data that exceed a single
@@ -28,29 +30,25 @@ int main()
     uint32_t max_symbol_size = 64;
     uint32_t object_size = 23456;
 
-    typedef kodo::storage_encoder<
-        kodo::shallow_full_rlnc_encoder<fifi::binary> >
-           storage_encoder;
+    using storage_encoder = kodo::storage_encoder<
+        kodo::shallow_full_rlnc_encoder<fifi::binary>>;
 
-    typedef kodo::shallow_storage_decoder<
-        kodo::shallow_full_rlnc_decoder<fifi::binary> >
-           storage_decoder;
+    using storage_decoder = kodo::shallow_storage_decoder<
+        kodo::shallow_full_rlnc_decoder<fifi::binary>>;
 
     storage_encoder::factory encoder_factory(max_symbols, max_symbol_size);
     storage_decoder::factory decoder_factory(max_symbols, max_symbol_size);
 
     // The storage needed for all decoders
-    uint32_t total_block_size =
-        decoder_factory.total_block_size(object_size);
+    uint32_t total_block_size = decoder_factory.total_block_size(object_size);
 
     std::vector<uint8_t> data_out(total_block_size, '\0');
     std::vector<uint8_t> data_in(object_size, 'x');
 
-    storage_encoder encoder(
-        encoder_factory, sak::storage(data_in));
+    storage_encoder encoder(encoder_factory, sak::storage(data_in));
 
-    storage_decoder decoder(
-        decoder_factory, object_size, sak::storage(data_out));
+    storage_decoder decoder(decoder_factory, object_size,
+        sak::storage(data_out));
 
     for (uint32_t i = 0; i < encoder.encoders(); ++i)
     {
@@ -61,17 +59,16 @@ int main()
 
         while (!d->is_complete())
         {
-            e->encode( &payload[0] );
+            e->encode(payload.data());
 
             // Here we would send and receive the payload over a
             // network. Lets throw away some packet to simulate.
-            if ((rand() % 2) == 0)
+            if (rand() % 2)
             {
                 continue;
             }
 
-            d->decode( &payload[0] );
-
+            d->decode(payload.data());
         }
     }
 

@@ -130,6 +130,7 @@ def build(bld):
         bld.recurse('examples/sample_makefile')
         bld.recurse('examples/sliding_window')
         bld.recurse('examples/switch_systematic_on_off')
+        bld.recurse('examples/tutorial')
         bld.recurse('examples/use_cache_decode_symbol')
         bld.recurse('examples/use_trace_layers')
 

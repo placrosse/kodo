@@ -3,12 +3,13 @@
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
 
-#include <iostream>
-#include <ctime>
-#include <set>
-
 #include <kodo/rlnc/full_rlnc_codes.hpp>
 #include <kodo/trace.hpp>
+
+#include <ctime>
+#include <set>
+#include <string>
+#include <vector>
 
 /// @example use_trace_layers.cpp
 ///
@@ -26,11 +27,11 @@ int main()
     uint32_t symbol_size = 33;
 
     // Typdefs for the encoder/decoder type we wish to use
-    typedef kodo::full_rlnc_encoder<fifi::binary8, kodo::disable_trace>
-        rlnc_encoder;
+    using  rlnc_encoder =
+        kodo::full_rlnc_encoder<fifi::binary8, kodo::disable_trace>;
 
-    typedef kodo::full_rlnc_decoder<fifi::binary8, kodo::enable_trace>
-        rlnc_decoder;
+    using rlnc_decoder =
+        kodo::full_rlnc_decoder<fifi::binary8, kodo::enable_trace>;
 
     // In the following we will make an encoder/decoder factory.
     // The factories are used to build actual encoders/decoders
@@ -50,7 +51,7 @@ int main()
     std::vector<uint8_t> data_in(encoder->block_size());
 
     // Just for fun - fill the data with random data
-    std::generate_n(begin(data_in), data_in.size(), rand);
+    std::generate(data_in.begin(), data_in.end(), rand);
 
     // Assign the data buffer to the encoder so that we may start
     // to produce encoded symbols from it
@@ -74,7 +75,7 @@ int main()
         // sending all symbols once uncoded, the encoder will switch
         // to full coding, in which case you will see the full encoding
         // vectors being sent and received.
-        if ((rand() % 2) == 0)
+        if (rand() % 2)
             continue;
 
         // Pass that packet to the decoder

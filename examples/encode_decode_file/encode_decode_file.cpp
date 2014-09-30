@@ -8,6 +8,9 @@
 #include <kodo/rlnc/full_rlnc_codes.hpp>
 #include <kodo/set_systematic_off.hpp>
 
+#include <string>
+#include <vector>
+
 /// @example encode_decode_file.cpp
 ///
 /// Often we want to encode / decode data that exceed a single
@@ -21,7 +24,6 @@
 
 int main()
 {
-
     // Set the number of symbols (i.e. the generation size in RLNC
     // terminology) and the size of a symbol in bytes
     uint32_t max_symbols = 42;
@@ -31,36 +33,30 @@ int main()
 
     // Create a test file for encoding.
     std::ofstream encode_file;
-    encode_file.open (encode_filename, std::ios::binary);
+    encode_file.open(encode_filename, std::ios::binary);
 
     uint32_t file_size = 50000;
     std::vector<char> encode_data(file_size);
     std::vector<char> decode_data;
 
     // Just write some bytes to the file
-    for(uint32_t i = 0; i < file_size; ++i)
-    {
-        encode_data[i] = rand() % 255;
-    }
-    encode_file.write(&encode_data[0], file_size);
+    std::generate(encode_data.begin(), encode_data.end(), rand);
+
+    encode_file.write(encode_data.data(), file_size);
     encode_file.close();
 
     // Select the encoding and decoding algorithms
-    typedef kodo::full_rlnc_encoder<fifi::binary>
-        encoder_t;
+    using encoder_t = kodo::full_rlnc_encoder<fifi::binary>;
 
-    typedef kodo::full_rlnc_decoder<fifi::binary>
-        decoder_t;
+    using decoder_t =kodo::full_rlnc_decoder<fifi::binary>;
 
     // Now for the encoder we use a file_encoder with the chosen
     // encoding algorithm
-    typedef kodo::file_encoder<encoder_t>
-        file_encoder_t;
+    using file_encoder_t = kodo::file_encoder<encoder_t>;
 
     // For decoding we use an object_decoder with the chosen
     // decoding algorithm
-    typedef kodo::object_decoder<decoder_t>
-        object_decoder_t;
+    using object_decoder_t = kodo::object_decoder<decoder_t>;
 
     // Create the encoder factory - builds the individual encoders used
     file_encoder_t::factory encoder_factory(max_symbols, max_symbol_size);
@@ -83,27 +79,27 @@ int main()
     // over a network, we would have to pass also the encoder and decoder
     // index between the source and sink to allow the correct data would
     // passed from encoder to corresponding decoder.
-    for(uint32_t i = 0; i < file_encoder.encoders(); ++i)
+    for (uint32_t i = 0; i < file_encoder.encoders(); ++i)
     {
         auto encoder = file_encoder.build(i);
         auto decoder = object_decoder.build(i);
 
         // Set the encoder non-systematic
-        if(kodo::has_systematic_encoder<encoder_t>::value)
+        if (kodo::has_systematic_encoder<encoder_t>::value)
             kodo::set_systematic_off(encoder);
 
         std::vector<uint8_t> payload(encoder->payload_size());
 
-        while( !decoder->is_complete() )
+        while (!decoder->is_complete())
         {
             // Encode a packet into the payload buffer
-            encoder->encode( &payload[0] );
+            encoder->encode(payload.data());
 
             // In practice send the payload over a network, save it to
             // a file etc. Then when needed build and pass it to the decoder
 
             // Pass that packet to the decoder
-            decoder->decode( &payload[0] );
+            decoder->decode(payload.data());
         }
 
         std::vector<uint8_t> data_out(decoder->block_size());

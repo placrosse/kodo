@@ -12,6 +12,8 @@
 #include <kodo/rlnc/sliding_window_decoder.hpp>
 #include <kodo/trace.hpp>
 
+#include <vector>
+
 /// @example sliding_window.cpp
 ///
 /// This example shows how to use sliding window encoder and decoder
@@ -32,9 +34,8 @@ int main()
     uint32_t symbol_size = 160;
 
     // Typdefs for the encoder/decoder type we wish to use
-    typedef kodo::sliding_window_encoder<fifi::binary8> rlnc_encoder;
-    typedef kodo::sliding_window_decoder<fifi::binary8, kodo::enable_trace>
-        rlnc_decoder;
+    using rlnc_encoder = kodo::sliding_window_encoder<fifi::binary8>;
+    using rlnc_decoder = kodo::sliding_window_decoder<fifi::binary8>;
 
     // In the following we will make an encoder/decoder factory.
     // The factories are used to build actual encoders/decoders
@@ -68,7 +69,10 @@ int main()
 
     while (!decoder->is_complete())
     {
-        std::cout << std::endl;
+        if (kodo::has_trace<rlnc_decoder>::value)
+        {
+            kodo::trace(decoder, std::cout);
+        }
 
         // Randomly choose to insert a symbol
         if ((rand() % 2) && (encoder->rank() < symbols))

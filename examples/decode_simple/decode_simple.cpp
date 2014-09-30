@@ -19,18 +19,17 @@
 /// the "Codec API" has been kept as they provide functionalities that are
 /// required.
 
-#include <cstdint>
-#include <iostream>
-#include <vector>
-
-#include <kodo/rlnc/full_rlnc_codes.hpp>
 #include <kodo/cache_decode_symbol.hpp>
+#include <kodo/rlnc/full_rlnc_codes.hpp>
 #include <kodo/trace_decode_symbol.hpp>
 #include <kodo/trace_linear_block_decoder.hpp>
-
 #include <kodo/trace_symbol_storage.hpp>
 
 #include <fifi/fifi_utils.hpp>
+
+#include <cstdint>
+#include <iostream>
+#include <vector>
 
 /// @todo review this example
 
@@ -69,7 +68,7 @@ namespace kodo
 
 int main()
 {
-    typedef fifi::binary field_type;
+    using field_type = fifi::binary;
 
     // Set the number of symbols (i.e. the generation size in RLNC
     // terminology) and the number of elements in a symbol
@@ -83,7 +82,7 @@ int main()
         fifi::elements_to_size<field_type>(symbols);
 
     // Typdefs for the decoder type we wish to use
-    typedef kodo::rlnc_decoder<field_type> rlnc_decoder;
+    using rlnc_decoder = kodo::rlnc_decoder<field_type>;
 
     // In the following we will make an decoder factory.
     // The factory is used to build actual decoders
@@ -200,5 +199,4 @@ int main()
         std::cout << "Error: Decoded data differs from original data";
     }
     std::cout << std::endl << std::endl;
-
 }
