@@ -9,7 +9,7 @@
 #include "object_filename.hpp"
 #include "is_complete_decoder.hpp"
 #include "stack_factory.hpp"
-#include "rfc5052_partitioning.hpp"
+#include "partitioning.hpp"
 #include "object_storage.hpp"
 
 #include "../rebind_factory.hpp"
@@ -17,6 +17,7 @@
 #include "../wrap_restore_partial_symbol_decoder.hpp"
 #include "../wrap_is_complete_callback_decoder.hpp"
 #include "../has_mutable_shallow_symbol_storage.hpp"
+#include "../rfc5052_partitioning_scheme.hpp"
 
 namespace kodo
 {
@@ -34,7 +35,11 @@ namespace object
     /// For an example of how it works see the encode_decode_file
     /// example in the /kodo/examples folder.
     ///
-    template<class Stack>
+    template
+    <
+        class Stack,
+        class PartitioningScheme = rfc5052_partitioning_scheme
+    >
     class file_decoder : public
         mapped_file_sink<
         object_filename<
@@ -43,7 +48,7 @@ namespace object
         stack_factory<
             wrap_is_complete_callback_decoder<
             wrap_restore_partial_symbol_decoder<Stack>>,
-        rfc5052_partitioning<
+        partitioning<PartitioningScheme,
         final_layer>>>>>>
     {
     public:

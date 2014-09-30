@@ -6,11 +6,12 @@
 #pragma once
 
 #include "stack_factory.hpp"
-#include "rfc5052_partitioning.hpp"
+#include "partitioning.hpp"
 #include "object_storage.hpp"
 
 #include "../rebind_factory.hpp"
 #include "../final_layer.hpp"
+#include "../rfc5052_partitioning_scheme.hpp"
 
 namespace kodo
 {
@@ -36,11 +37,15 @@ namespace object
     /// For an example of how it works see the encode_decode_storage
     /// example in the /kodo/examples folder.
     ///
-    template<class Stack>
+    template
+    <
+        class Stack,
+        class PartitioningScheme = rfc5052_partitioning_scheme
+    >
     class storage_encoder : public
         object_storage<
         stack_factory<Stack,
-        rfc5052_partitioning<
+        partitioning<PartitioningScheme,
         final_layer> > >
     {
     public:

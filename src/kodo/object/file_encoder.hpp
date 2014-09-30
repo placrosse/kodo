@@ -8,11 +8,12 @@
 #include "mapped_file_source.hpp"
 #include "object_filename.hpp"
 #include "stack_factory.hpp"
-#include "rfc5052_partitioning.hpp"
+#include "partitioning.hpp"
 #include "object_storage.hpp"
 
 #include "../rebind_factory.hpp"
 #include "../final_layer.hpp"
+#include "../rfc5052_partitioning_scheme.hpp"
 
 namespace kodo
 {
@@ -30,14 +31,18 @@ namespace object
     /// For an example of how it works see the encode_decode_file
     /// example in the /kodo/examples folder.
     ///
-    template<class Stack>
+    template
+    <
+        class Stack,
+        class PartitioningScheme = rfc5052_partitioning_scheme
+    >
     class file_encoder : public
         mapped_file_source<
         object_filename<
         object_storage<
         stack_factory<Stack,
-        rfc5052_partitioning<
-        final_layer> > > > >
+        partitioning<PartitioningScheme,
+        final_layer>>>>>
     {
     public:
 
