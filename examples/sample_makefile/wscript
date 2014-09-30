@@ -21,16 +21,12 @@ def configure(conf):
 
 def build(bld):
 
-    # Build the example with waf to test if the source compiles
-    bld.program(features='cxx',
-                source='main.cpp',
-                target='example_waf',
-                use=['kodo_includes', 'boost_includes', 'fifi_includes',
-                     'sak_includes'])
+    # We assume that the "encode_decode_simple" example is built with waf
+    # and we have a corresponding build task
 
     # Add a manual dependency to rebuild the example if the makefile changes
     bld.add_manual_dependency(
-        bld.path.find_node('main.cpp'),
+        bld.path.find_node('../encode_decode_simple/encode_decode_simple.cpp'),
         bld.path.find_node('makefile'))
 
     # Call make with special arguments
@@ -68,10 +64,10 @@ def build(bld):
 
         return ret
 
-    # Run the make task if the waf task was executed
+    # Run the make task if the example's build task was executed
     # Waf will detect changes in the included headers, but make cannot do that
     def runnable_status(self):
-        tg = bld.get_tgen_by_name('example_waf')
+        tg = bld.get_tgen_by_name('encode_decode_simple')
         waf_task = tg.link_task
         if not waf_task.hasrun:
             return Task.ASK_LATER
@@ -85,8 +81,8 @@ def build(bld):
         tgen = bld(rule=invoke_make,
                    name='sample_makefile',
                    #always=True,
-                   source='main.cpp',
-                   target='example_make')
+                   source='../encode_decode_simple/encode_decode_simple.cpp',
+                   target='encode_decode_simple_make')
         # Make sure that the tasks are generated
         tgen.post()
         # Get the first task
