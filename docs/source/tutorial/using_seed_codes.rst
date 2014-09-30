@@ -1,4 +1,3 @@
-
 .. _using_seed_codes:
 
 Using Seed Codes
