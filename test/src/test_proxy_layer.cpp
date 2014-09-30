@@ -12,6 +12,7 @@
 #include <kodo/rlnc/full_rlnc_codes.hpp>
 #include <kodo/proxy_layer.hpp>
 #include <kodo/basic_factory.hpp>
+#include <kodo/final_layer.hpp>
 
 #include "kodo_unit_test/basic_api_test_helper.hpp"
 
@@ -36,10 +37,10 @@ namespace
 
         /// Dummy class needed to terminate proxy stack
         template<class Coder>
-        class proxy_test :
-            public dummy_layer<
-                   kodo::proxy_layer<
-                   proxy_test<Coder>, Coder > >
+        class proxy_test : public
+            dummy_layer<
+            kodo::proxy_layer<Coder,
+            kodo::final_layer> >
         {
         public:
             using factory = kodo::basic_factory<proxy_test>;

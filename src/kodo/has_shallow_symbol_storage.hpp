@@ -9,8 +9,8 @@
 
 namespace kodo
 {
-
     /// @ingroup type_traits
+    ///
     /// Type trait helper allows compile time detection of whether an
     /// encoder / decoder contains the shallow_symbol_storage layer
     ///
@@ -33,30 +33,4 @@ namespace kodo
 
         static const bool value = sizeof(test(static_cast<T*>(0))) == 1;
     };
-
-    /// Type trait helper for detection the const_shallow_symbol_storage
-    template<class T>
-    struct has_const_shallow_symbol_storage
-    {
-        template<class U>
-        static uint8_t test(const kodo::shallow_symbol_storage<true,U> *);
-
-        static uint32_t test(...);
-
-        static const bool value = sizeof(test(static_cast<T*>(0))) == 1;
-    };
-
-    /// Type trait helper for detection the mutable_shallow_symbol_storage
-    template<class T>
-    struct has_mutable_shallow_symbol_storage
-    {
-        template<class U>
-        static uint8_t test(const kodo::shallow_symbol_storage<false,U> *);
-
-        static uint32_t test(...);
-
-        static const bool value = sizeof(test(static_cast<T*>(0))) == 1;
-    };
-
-
 }

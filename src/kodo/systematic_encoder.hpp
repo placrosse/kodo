@@ -40,6 +40,7 @@ namespace kodo
     public:
 
         /// @ingroup factory_layers
+        ///
         /// The factory_base layer associated with this coder.
         /// In this case only needed to provide the max_payload_size()
         /// function.

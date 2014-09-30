@@ -16,7 +16,8 @@
 #include <kodo/finite_field_info.hpp>
 #include <kodo/coefficient_storage.hpp>
 #include <kodo/coefficient_info.hpp>
-#include <kodo/storage_block_info.hpp>
+#include <kodo/storage_block_length.hpp>
+#include <kodo/storage_block_size.hpp>
 #include <kodo/basic_factory.hpp>
 
 #include "kodo_unit_test/basic_api_test_helper.hpp"
@@ -41,10 +42,11 @@ namespace kodo
         class coefficient_storage_stack : public
             coefficient_storage<
             coefficient_info<
-            storage_block_info<
+            storage_block_length<
+            storage_block_size<
             finite_field_info<Field,
             final_layer
-            > > > >
+            > > > > >
         {
         public:
             /// @todo using different factory, on the other hand it
@@ -58,10 +60,11 @@ namespace kodo
         class coefficient_storage_stack_pool : public
             coefficient_storage<
             coefficient_info<
-            storage_block_info<
+            storage_block_length<
+            storage_block_size<
             finite_field_info<Field,
             final_layer
-            > > > >
+            > > > > >
         {
         public:
             using factory = pool_factory<coefficient_storage_stack_pool>;

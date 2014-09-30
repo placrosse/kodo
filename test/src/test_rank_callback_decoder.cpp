@@ -27,7 +27,8 @@
 #include <kodo/finite_field_info.hpp>
 #include <kodo/deep_symbol_storage.hpp>
 #include <kodo/storage_bytes_used.hpp>
-#include <kodo/storage_block_info.hpp>
+#include <kodo/storage_block_size.hpp>
+#include <kodo/storage_block_length.hpp>
 #include <kodo/final_layer.hpp>
 #include <kodo/coefficient_value_access.hpp>
 #include <kodo/symbol_decoding_status_tracker.hpp>
@@ -60,13 +61,14 @@ namespace kodo
             // Storage api
             deep_symbol_storage<
             storage_bytes_used<
-            storage_block_info<
+            storage_block_length<
+            storage_block_size<
             // Finite Field Math API
             finite_field_math<typename fifi::default_field<Field>::type,
             finite_field_info<Field,
             // Final Layer
             final_layer
-            > > > > > > > > > > > >
+            > > > > > > > > > > > > >
          {
          public:
              using factory = basic_factory<rank_callback_decoder_stack>;

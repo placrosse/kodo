@@ -17,14 +17,8 @@ namespace kodo
     /// @brief This layer writes the pivot status information using
     ///        the feedback convenience API
     template<class SuperCoder>
-    class feedback_pivot_status_writer :
-        public feedback_pivot_status<SuperCoder>
+    class feedback_pivot_status_writer : public SuperCoder
     {
-    public:
-
-        /// The actual super type
-        typedef feedback_pivot_status<SuperCoder> Super;
-
     public:
 
         /// @copydoc layer::write_feedback(uint8_t*) const
@@ -32,10 +26,10 @@ namespace kodo
         {
             assert(feedback);
 
-            Super::write_pivot_status(feedback);
-            uint32_t written = Super::pivot_status_size();
+            SuperCoder::write_pivot_status(feedback);
+            uint32_t written = SuperCoder::pivot_status_size();
 
-            return Super::write_feedback(feedback + written) + written;
+            return SuperCoder::write_feedback(feedback + written) + written;
         }
 
     };

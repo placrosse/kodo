@@ -35,14 +35,15 @@ namespace kodo
         partial_shallow_symbol_storage<
         const_shallow_symbol_storage<
         storage_bytes_used<
-        storage_block_info<
+        storage_block_length<
+        storage_block_size<
         // Finite Field API
         finite_field_counter<
         finite_field_math<typename fifi::default_field<Field>::type,
         finite_field_info<Field,
         // Final Layer
         final_layer
-        > > > > > > > > > > > > > > > > > >
+        > > > > > > > > > > > > > > > > > > >
     {
     public:
         using factory = pool_factory<full_rlnc_encoder_count>;
@@ -69,14 +70,15 @@ namespace kodo
         // Storage API
         deep_symbol_storage<
         storage_bytes_used<
-        storage_block_info<
+        storage_block_length<
+        storage_block_size<
         // Finite Field API
         finite_field_counter<
         finite_field_math<typename fifi::default_field<Field>::type,
         finite_field_info<Field,
         // Final Layer
         final_layer
-        > > > > > > > > > > > > > > > > >
+        > > > > > > > > > > > > > > > > > >
     {
     public:
         using factory = pool_factory<full_rlnc_decoder_count>;
@@ -104,14 +106,15 @@ namespace kodo
         // Storage API
         deep_symbol_storage<
         storage_bytes_used<
-        storage_block_info<
+        storage_block_length<
+        storage_block_size<
         // Finite Field API
         finite_field_counter<
         finite_field_math<typename fifi::default_field<Field>::type,
         finite_field_info<Field,
         // Final Layer
         final_layer
-        > > > > > > > > > > > > > > > > > >
+        > > > > > > > > > > > > > > > > > > >
     {
     public:
         using factory = pool_factory<full_delayed_rlnc_decoder_count>;

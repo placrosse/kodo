@@ -45,7 +45,7 @@ namespace kodo
             /// @return A generator matrix for the number of symbols
             /// specified in the factory. We use a cache to store the
             /// generator matrix for different number of symbols.
-            boost::shared_ptr<generator_matrix> build_matrix()
+            std::shared_ptr<generator_matrix> build_matrix()
             {
                 uint32_t symbols = SuperCoder::factory_base::symbols();
 
@@ -68,7 +68,7 @@ namespace kodo
         private:
 
             /// map for blocks
-            std::map<uint32_t, boost::shared_ptr<generator_matrix> > m_cache;
+            std::map<uint32_t, std::shared_ptr<generator_matrix> > m_cache;
         };
 
     public:
@@ -95,7 +95,7 @@ namespace kodo
     protected:
 
         /// The generator matrix
-        boost::shared_ptr<generator_matrix> m_matrix;
+        std::shared_ptr<generator_matrix> m_matrix;
 
     };
 

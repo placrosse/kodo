@@ -26,10 +26,11 @@ namespace kodo
             fake_codec_layer<
             coefficient_info<
             fake_symbol_storage<
-            storage_block_info<
+            storage_block_length<
+            storage_block_size<
             finite_field_info<Field,
             final_layer
-            > > > > > >
+            > > > > > > >
         {
         public:
             using factory = basic_factory<sparse_uniform_generator_stack>;
@@ -41,10 +42,11 @@ namespace kodo
             fake_codec_layer<
             coefficient_info<
             fake_symbol_storage<
-            storage_block_info<
+            storage_block_length<
+            storage_block_size<
             finite_field_info<Field,
             final_layer
-            > > > > > >
+            > > > > > > >
         {
         public:
             using factory = pool_factory<sparse_uniform_generator_stack_pool>;

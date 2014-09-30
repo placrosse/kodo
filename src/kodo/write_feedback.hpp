@@ -56,7 +56,7 @@ namespace kodo
     /// @copydoc write_feedback(const T&, uint8_t*)
     template<class T>
     inline uint32_t
-    write_feedback(const boost::shared_ptr<T>& t, uint8_t* buffer)
+    write_feedback(const std::shared_ptr<T>& t, uint8_t* buffer)
     {
         return write_feedback(*t, buffer);
     }

@@ -51,7 +51,7 @@ namespace kodo
     /// @ingroup generic_api
     /// @copydoc feedback_size(const T&, uint8_t*)
     template<class T>
-    inline uint32_t feedback_size(const boost::shared_ptr<T>& t)
+    inline uint32_t feedback_size(const std::shared_ptr<T>& t)
     {
         return feedback_size(*t);
     }

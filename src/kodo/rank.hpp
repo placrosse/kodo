@@ -51,7 +51,7 @@ namespace kodo
     /// @ingroup generic_api
     /// @copydoc rank(const T&)
     template<class T>
-    inline auto rank(boost::shared_ptr<T>& t) -> decltype(rank(*t))
+    inline auto rank(std::shared_ptr<T>& t) -> decltype(rank(*t))
     {
         return rank(*t);
     }

@@ -10,7 +10,8 @@
 #include <gtest/gtest.h>
 
 #include <kodo/storage_bytes_used.hpp>
-#include <kodo/storage_block_info.hpp>
+#include <kodo/storage_block_size.hpp>
+#include <kodo/storage_block_length.hpp>
 #include <kodo/final_layer.hpp>
 #include <kodo/final_layer.hpp>
 #include <kodo/finite_field_info.hpp>
@@ -45,10 +46,11 @@ namespace kodo
         class deep_storage_stack : public
             deep_symbol_storage<
             storage_bytes_used<
-            storage_block_info<
+            storage_block_length<
+            storage_block_size<
             finite_field_info<Field,
             final_layer
-            > > > >
+            > > > > >
         {
         public:
             using factory = basic_factory<deep_storage_stack>;
@@ -58,10 +60,11 @@ namespace kodo
         class deep_storage_stack_pool : public
             deep_symbol_storage<
             storage_bytes_used<
-            storage_block_info<
+            storage_block_length<
+            storage_block_size<
             finite_field_info<Field,
             final_layer
-            > > > >
+            > > > > >
         {
         public:
             using factory = basic_factory<deep_storage_stack_pool>;
@@ -72,10 +75,11 @@ namespace kodo
         class mutable_shallow_stack : public
             mutable_shallow_symbol_storage<
             storage_bytes_used<
-            storage_block_info<
+            storage_block_length<
+            storage_block_size<
             finite_field_info<Field,
             final_layer
-            > > > >
+            > > > > >
         {
         public:
             using factory = basic_factory<mutable_shallow_stack>;
@@ -85,10 +89,11 @@ namespace kodo
         class mutable_shallow_stack_pool : public
             mutable_shallow_symbol_storage<
             storage_bytes_used<
-            storage_block_info<
+            storage_block_length<
+            storage_block_size<
             finite_field_info<Field,
             final_layer
-            > > > >
+            > > > > >
         {
         public:
             using factory = basic_factory<mutable_shallow_stack_pool>;
@@ -99,10 +104,11 @@ namespace kodo
         class const_shallow_stack : public
             const_shallow_symbol_storage<
             storage_bytes_used<
-            storage_block_info<
+            storage_block_length<
+            storage_block_size<
             finite_field_info<Field,
             final_layer
-            > > > >
+            > > > > >
         {
         public:
             using factory = basic_factory<const_shallow_stack>;
@@ -112,15 +118,15 @@ namespace kodo
         class const_shallow_stack_pool : public
             const_shallow_symbol_storage<
             storage_bytes_used<
-            storage_block_info<
+            storage_block_length<
+            storage_block_size<
             finite_field_info<Field,
             final_layer
-            > > > >
+            > > > > >
         {
         public:
             using factory = basic_factory<const_shallow_stack_pool>;
         };
-
     }
 }
 
@@ -1700,108 +1706,4 @@ TEST(TestSymbolStorage, test_mutable_shallow_stack)
 {
     run_mutable_shallow_stack_tests<kodo::mutable_shallow_stack>();
     run_mutable_shallow_stack_tests<kodo::mutable_shallow_stack_pool>();
-}
-
-/// Tests the has_shallow_symbol_storage template
-TEST(TestSymbolStorage, test_has_shallow_symbol_storage)
-{
-
-    EXPECT_TRUE(kodo::has_shallow_symbol_storage<
-                    kodo::const_shallow_stack<fifi::binary> >::value);
-
-    EXPECT_TRUE(kodo::has_shallow_symbol_storage<
-                    kodo::const_shallow_stack<fifi::binary8> >::value);
-
-    EXPECT_TRUE(kodo::has_shallow_symbol_storage<
-                    kodo::const_shallow_stack<fifi::binary16> >::value);
-
-    EXPECT_TRUE(kodo::has_shallow_symbol_storage<
-                    kodo::mutable_shallow_stack<fifi::binary> >::value);
-
-    EXPECT_TRUE(kodo::has_shallow_symbol_storage<
-                    kodo::mutable_shallow_stack<fifi::binary8> >::value);
-
-    EXPECT_TRUE(kodo::has_shallow_symbol_storage<
-                    kodo::mutable_shallow_stack<fifi::binary16> >::value);
-
-    EXPECT_FALSE(kodo::has_shallow_symbol_storage<
-                     kodo::deep_storage_stack<fifi::binary> >::value);
-
-    EXPECT_FALSE(kodo::has_shallow_symbol_storage<
-                     kodo::deep_storage_stack<fifi::binary8> >::value);
-
-    EXPECT_FALSE(kodo::has_shallow_symbol_storage<
-                     kodo::deep_storage_stack<fifi::binary16> >::value);
-
-    EXPECT_FALSE(kodo::has_shallow_symbol_storage<int>::value);
-
-    EXPECT_FALSE(kodo::has_shallow_symbol_storage<fifi::binary8>::value);
-
-    /// has_mutable_shallow_symbol_storage
-
-    EXPECT_FALSE(kodo::has_mutable_shallow_symbol_storage<
-                     kodo::const_shallow_stack<fifi::binary> >::value);
-
-    EXPECT_FALSE(kodo::has_mutable_shallow_symbol_storage<
-                     kodo::const_shallow_stack<fifi::binary8> >::value);
-
-    EXPECT_FALSE(kodo::has_mutable_shallow_symbol_storage<
-                     kodo::const_shallow_stack<fifi::binary16> >::value);
-
-    EXPECT_TRUE(kodo::has_mutable_shallow_symbol_storage<
-                    kodo::mutable_shallow_stack<fifi::binary> >::value);
-
-    EXPECT_TRUE(kodo::has_mutable_shallow_symbol_storage<
-                    kodo::mutable_shallow_stack<fifi::binary8> >::value);
-
-    EXPECT_TRUE(kodo::has_mutable_shallow_symbol_storage<
-                    kodo::mutable_shallow_stack<fifi::binary16> >::value);
-
-    // has_const_shallow_symbol_storage
-
-    EXPECT_FALSE(kodo::has_const_shallow_symbol_storage<
-                     kodo::mutable_shallow_stack<fifi::binary> >::value);
-
-    EXPECT_FALSE(kodo::has_const_shallow_symbol_storage<
-                     kodo::mutable_shallow_stack<fifi::binary8> >::value);
-
-    EXPECT_FALSE(kodo::has_const_shallow_symbol_storage<
-                     kodo::mutable_shallow_stack<fifi::binary16> >::value);
-
-    EXPECT_TRUE(kodo::has_const_shallow_symbol_storage<
-                    kodo::const_shallow_stack<fifi::binary> >::value);
-
-    EXPECT_TRUE(kodo::has_const_shallow_symbol_storage<
-                    kodo::const_shallow_stack<fifi::binary8> >::value);
-
-    EXPECT_TRUE(kodo::has_const_shallow_symbol_storage<
-                    kodo::const_shallow_stack<fifi::binary16> >::value);
-
-}
-
-/// Tests the has_deep_symbol_storage template
-TEST(TestSymbolStorage, test_has_deep_symbol_storage)
-{
-
-    EXPECT_FALSE(kodo::has_deep_symbol_storage<
-                     kodo::const_shallow_stack<fifi::binary> >::value);
-
-    EXPECT_FALSE(kodo::has_deep_symbol_storage<
-                     kodo::const_shallow_stack<fifi::binary8> >::value);
-
-    EXPECT_FALSE(kodo::has_deep_symbol_storage<
-                     kodo::const_shallow_stack<fifi::binary16> >::value);
-
-    EXPECT_TRUE(kodo::has_deep_symbol_storage<
-                    kodo::deep_storage_stack<fifi::binary> >::value);
-
-    EXPECT_TRUE(kodo::has_deep_symbol_storage<
-                    kodo::deep_storage_stack<fifi::binary8> >::value);
-
-    EXPECT_TRUE(kodo::has_deep_symbol_storage<
-                    kodo::deep_storage_stack<fifi::binary16> >::value);
-
-    EXPECT_FALSE(kodo::has_deep_symbol_storage<int>::value);
-
-    EXPECT_FALSE(kodo::has_deep_symbol_storage<fifi::binary8>::value);
 }

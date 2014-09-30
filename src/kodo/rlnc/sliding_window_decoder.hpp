@@ -12,6 +12,7 @@
 
 #include "../pivot_status_writer.hpp"
 #include "../feedback_pivot_status_writer.hpp"
+#include "../feedback_pivot_status.hpp"
 #include "../final_feedback_writer.hpp"
 #include "../proxy_stack.hpp"
 #include "../nested_payload_recoder.hpp"
@@ -39,7 +40,9 @@ namespace kodo
         // Feedback API
         nested_feedback_reader<
         feedback_pivot_status_writer<
+        feedback_pivot_status<
         final_feedback_writer<
+        final_feedback_size<
         // Payload API
         partial_decoding_tracker<
         rank_symbol_decoding_status_updater<
@@ -63,7 +66,7 @@ namespace kodo
         finite_field_layers<Field,
         // Final Layer
         final_layer
-        > > > > > > > > > > > > > > > > >
+        > > > > > > > > > > > > > > > > > > >
     {
     public:
         using factory = pool_factory<sliding_window_decoder>;

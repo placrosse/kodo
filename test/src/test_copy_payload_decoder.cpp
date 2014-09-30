@@ -105,7 +105,7 @@ TEST(TestCopyPayloadDecoder, api)
     f.m_max_payload_size.set_return(10);
 
     auto c = f.build();
-    EXPECT_TRUE(f.m_max_payload_size.called_once_with());
+    EXPECT_TRUE((bool)f.m_max_payload_size.expect_calls().with());
 
     c->m_payload_size.set_return(5);
 
@@ -118,5 +118,6 @@ TEST(TestCopyPayloadDecoder, api)
     EXPECT_TRUE(data == data_copy);
 
     // The internal buffer was used
-    EXPECT_TRUE(c->m_decode.called_once_with(c->payload_copy().data()));
+    EXPECT_TRUE((bool)c->m_decode.expect_calls()
+                    .with(c->payload_copy().data()));
 }

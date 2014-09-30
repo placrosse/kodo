@@ -22,6 +22,7 @@
 
 #include "../pivot_status_reader.hpp"
 #include "../feedback_pivot_status_reader.hpp"
+#include "../feedback_pivot_status.hpp"
 #include "../final_feedback_reader.hpp"
 
 namespace kodo
@@ -41,7 +42,9 @@ namespace kodo
     class sliding_window_encoder : public
         // Feedback API
         feedback_pivot_status_reader<
+        feedback_pivot_status<
         final_feedback_reader<
+        final_feedback_size<
         // Payload Codec API
         payload_rank_encoder<
         payload_encoder<
@@ -68,7 +71,7 @@ namespace kodo
         finite_field_layers<Field,
         // Final Layer
         final_layer
-        > > > > > > > > > > > > > > > > > >
+        > > > > > > > > > > > > > > > > > > > >
     {
     public:
         using factory = pool_factory<sliding_window_encoder>;

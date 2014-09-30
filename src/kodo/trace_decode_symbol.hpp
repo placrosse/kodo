@@ -19,7 +19,8 @@
 #include "cache_decode_symbol.hpp"
 #include "final_layer.hpp"
 #include "coefficient_info.hpp"
-#include "storage_block_info.hpp"
+#include "storage_block_size.hpp"
+#include "storage_block_length.hpp"
 #include "finite_field_info.hpp"
 #include "disable_trace.hpp"
 #include "enable_trace.hpp"
@@ -78,9 +79,10 @@ namespace kodo
             cache_decode_symbol<
             coefficient_value_access<
             coefficient_info<
-            storage_block_info<
+            storage_block_length<
+            storage_block_size<
             finite_field_info<field_type,
-            final_layer> > > > >
+            final_layer> > > > > >
         {
         public:
             using factory = basic_factory<cache>;

@@ -12,7 +12,7 @@
 #include <fifi/binary.hpp>
 #include <fifi/binary8.hpp>
 #include <kodo/offset_coefficient_value_access.hpp>
-#include <kodo/storage_block_info.hpp>
+#include <kodo/storage_block_size.hpp>
 
 namespace kodo
 {

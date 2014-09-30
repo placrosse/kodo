@@ -51,7 +51,7 @@ namespace kodo
             /// is non-systematic (see RFC 5510).
             /// @param symbols The number of source symbols to encode
             /// @return The Vandermonde matrix
-            boost::shared_ptr<generator_matrix> construct_matrix(
+            std::shared_ptr<generator_matrix> construct_matrix(
                 uint32_t symbols);
 
         };
@@ -74,7 +74,7 @@ namespace kodo
     inline auto
     vandermonde_matrix_base<SuperCoder>::factory_base::construct_matrix(
         uint32_t symbols)
-        -> boost::shared_ptr<generator_matrix>
+        -> std::shared_ptr<generator_matrix>
     {
         assert(symbols > 0);
         assert(m_field);
@@ -96,7 +96,7 @@ namespace kodo
         //                   :
         //                   :
         // [a^(0), a^(n-1), a^(2*(n-1)), ... , a^((n-1)*(k-1))]
-        auto m = boost::make_shared<generator_matrix>(symbols, max_symbols);
+        auto m = std::make_shared<generator_matrix>(symbols, max_symbols);
 
         // Follows the progress of alpha along the rows
         value_type a_row = 1U;

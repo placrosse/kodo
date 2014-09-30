@@ -17,7 +17,8 @@
 #include "coefficient_storage.hpp"
 #include "deep_symbol_storage.hpp"
 #include "storage_bytes_used.hpp"
-#include "storage_block_info.hpp"
+#include "storage_block_size.hpp"
+#include "storage_block_length.hpp"
 #include "final_layer.hpp"
 #include "finite_field_math.hpp"
 #include "finite_field_info.hpp"
@@ -54,13 +55,14 @@ namespace kodo
         // Storage API
         deep_symbol_storage<
         storage_bytes_used<
-        storage_block_info<
+        storage_block_length<
+        storage_block_size<
         // Finite Field API
         finite_field_math<typename fifi::default_field<Field>::type,
         finite_field_info<Field,
         // Final Layer
         final_layer
-        > > > > > > > > > > > > > >
+        > > > > > > > > > > > > > > >
     {
     public:
         using factory = pool_factory<elimination_decoder>;

@@ -17,7 +17,7 @@ namespace kodo
     /// @brief This layer terminates a series of
     ///        layer::write_feedback(uint8_t*) const function calls.
     template<class SuperCoder>
-    class final_feedback_writer : public final_feedback_size<SuperCoder>
+    class final_feedback_writer : public SuperCoder
     {
     public:
 

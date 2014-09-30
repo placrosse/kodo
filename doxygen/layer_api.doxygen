@@ -57,12 +57,23 @@ public:
         /// @return the maximum symbol size in bytes
         uint32_t max_symbol_size() const;
 
+        /// @ingroup factory_base_api
+        ///
+        /// @return the maximum symbol length in value type elements
+        ///         defined by the finite field
+        uint32_t max_symbol_length() const;
+
         /// @ingroup storage_api
         /// @return The maximum amount of data encoded / decoded in bytes.
         ///         This is calculated by multiplying the maximum number
         ///         of symbols encoded / decoded by the maximum size of
         ///         a symbol.
         uint32_t max_block_size() const;
+
+        /// @ingroup storage_api @return The maximum amount of data
+        /// encoded / decoded in value_type elements, defined by the
+        /// finite field used.
+        uint32_t max_block_length() const;
 
         /// @ingroup codec_header_api
         /// @brief Can be reimplemented by a symbol header API layer to
@@ -143,6 +154,19 @@ public:
 
     /// @ingroup construction_api
     /// @brief Initializes the coder
+    /// @param the_factory The factory used to build the codec layer. Provides
+    ///        access to cached data and factory functions.
+    template<class Factory>
+    void initialize(Factory &the_factory);
+
+    /// @ingroup construction_api
+    ///
+    /// @brief De-initializes the coder. This function is called to
+    ///        allow stacks to release temporary handles they may have
+    ///        opened during initialize. This is important when using
+    ///        resource pools to recycle stacks. When the stack gets
+    ///        "recycled" in the pool deinitialize should be called.
+    ///
     /// @param the_factory The factory used to build the codec layer. Provides
     ///        access to cached data and factory functions.
     template<class Factory>
@@ -414,42 +438,54 @@ public:
     /// @ingroup coefficient_storage_api
     ///
     /// @note If you implement this function you most likely also have
-    ///       to implement the layer::factory_base::max_coefficient_vector_size()
+    ///       to implement the
+    ///       layer::factory_base::max_coefficient_vector_size()
     ///       function.
     ///
-    /// @return The number of bytes needed to store the symbol coefficients.
+    /// @return The number of bytes needed to store the symbol
+    /// coefficients.
     uint32_t coefficient_vector_size() const;
 
     /// @ingroup coefficient_storage_api
-    /// @return The number of layer::value_type elements needed to store
-    ///         the symbol coefficients.
+    ///
+    /// @return The number of layer::value_type elements needed to
+    ///         store the symbol coefficients.
     uint32_t coefficient_vector_length() const;
 
     /// @ingroup coefficient_storage_api
-    /// @return The number of coefficients stored in a coefficient vector. The
-    ///         count will say how many finite field elements will be stored
-    ///         within a coefficient vector, whereas the size and length refers
-    ///         to the space (in terms of memory) occupied by those
-    ///         coefficients.
+    ///
+    /// @return The number of coefficients stored in a coefficient
+    ///         vector. The count will say how many finite field
+    ///         elements will be stored within a coefficient vector,
+    ///         whereas the size and length refers to the space (in
+    ///         terms of memory) occupied by those coefficients.
     uint32_t coefficient_vector_elements() const;
 
     /// @ingroup coefficient_storage_api
+    ///
     /// @param index the index in the vector
+    ///
     /// @return the specified vector
     value_type* coefficient_vector_values(uint32_t index);
 
     /// @ingroup coefficient_storage_api
+    ///
     /// @param index the index in the vector
+    ///
     /// @return the specified vector
     const value_type* coefficient_vector_values(uint32_t index) const;
 
     /// @ingroup coefficient_storage_api
+    ///
     /// @param index the index in the vector
+    ///
     /// @return the specified vector
     uint8_t* coefficient_vector_data(uint32_t index);
 
     /// @ingroup coefficient_storage_api
+    ///
     /// @param index the index in the vector
+    ///
     /// @return the specified vector
     const uint8_t* coefficient_vector_data(uint32_t index) const;
 
@@ -670,12 +706,19 @@ public:
     uint32_t symbol_length() const;
 
     /// @ingroup storage_api
-    /// @return the block size i.e. the total size in bytes
-    ///         that this coder operates on. Users may
-    ///         use the bytes_used() function provided in the
-    ///         symbol storage layers to see how many of those
-    ///         bytes are then used.
+    ///
+    /// @return the block size i.e. the total size in bytes that this
+    ///         coder operates on. Users may use the bytes_used()
+    ///         function provided in the symbol storage layers to see
+    ///         how many of those bytes are then used.
     uint32_t block_size() const;
+
+    /// @ingroup storage_api
+    ///
+    /// @return the block length is the number of value_type elements
+    ///         needed for a block where value_type is the underlying
+    ///         data type used by the finite field
+    uint32_t block_length() const;
 
     /// @ingroup storage_api
     /// Sets the number of bytes used

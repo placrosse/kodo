@@ -5,4 +5,4 @@ bld.program(features='cxx',
             source='encode_decode_file.cpp',
             target='encode_decode_file',
             use=['kodo_includes', 'boost_includes', 'fifi_includes',
-                 'sak_includes'])
+                 'sak_includes', 'boost_iostreams'])

@@ -50,7 +50,7 @@ namespace kodo
     /// @ingroup generic_api
     /// @copydoc read_feedback(const T&, const uint8_t*)
     template<class T>
-    inline void read_feedback(boost::shared_ptr<T>& t, const uint8_t* buffer)
+    inline void read_feedback(std::shared_ptr<T>& t, const uint8_t* buffer)
     {
         read_feedback(*t, buffer);
     }

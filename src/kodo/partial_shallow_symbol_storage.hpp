@@ -14,19 +14,40 @@ namespace kodo
 {
     /// @ingroup storage_layers
     ///
-    /// @brief Same as a shallow storage but supports storage object
-    ///        with a total size less than the coding block size.
+    /// @brief "Add-on" to a shallow storage layer which supports
+    ///        storage object with a total size less than the coding
+    ///        block size.
     ///
-    /// Essentially the same as the shallow storage however the
-    /// shallow storage only allows buffers which are exactly the
-    /// size of symbols * symbol_size. The partial buffer allows
-    /// blocks of data smaller. I.e. of a block is 10000 bytes and
-    /// the data you want to encode is in a 9995 byte buffer you can
-    /// use it with the partial symbol storage without having to move
-    /// it to a 10000 byte temp. buffer.
+    /// The shallow storage layers only allow buffers which are
+    /// exactly the symbols * symbol_size in size. Adding this layers
+    /// we can allow blocks of data smaller. For example if a block is
+    /// 10000 bytes and the data you want to encode is in a 9995 byte
+    /// buffer you can use it with the partial symbol storage without
+    /// having to move it to a 10000 byte temp. buffer.
+    ///
+    /// To illustrate how it works lets say we have chosen a symbol
+    /// size of 1000 bytes and we want to encode/decode 10 such
+    /// symbols. This means that our coding block is 10*1000 bytes.
+    ///
+    /// The encoding/decoding algorithms will expect that the user
+    /// provides 10 symbols of exactly 1000 bytes. If not they will
+    /// start to access memory out-of-bounds. So if we wanted to
+    /// encode/decode into a buffer of only 9995 bytes this layer
+    /// would compensate by detecting this and using its own internal
+    /// symbol buffer for the last symbol.
+    ///
+    /// If this is used with a decoder data will be decoded into the
+    /// internal buffer to make sure this is copied to the user's
+    /// buffer once decoding is complete you can use the
+    /// restore_partial_symbol function.
     template<class SuperCoder>
     class partial_shallow_symbol_storage : public SuperCoder
     {
+    public:
+
+        /// Get the storage type used
+        using storage_type = typename SuperCoder::storage_type;
+
     public:
 
         /// @copydoc layer::construct(Factory&)
@@ -36,7 +57,7 @@ namespace kodo
             SuperCoder::construct(the_factory);
 
             assert(the_factory.max_symbol_size() > 0);
-            m_partial_symbol.reserve(the_factory.max_symbol_size());
+            m_internal_symbol.reserve(the_factory.max_symbol_size());
         }
 
         /// @copydoc layer::initialize(Factory&)
@@ -45,17 +66,12 @@ namespace kodo
         {
             SuperCoder::initialize(the_factory);
 
-            m_partial_symbol.resize(the_factory.symbol_size());
-            m_partial_symbol_size = 0;
+            m_internal_symbol.resize(the_factory.symbol_size());
             m_has_partial_symbol = false;
         }
 
-        /// Initializes the symbol storage layer so that the pointers to the
-        /// symbol data are valid. Calling this function will work even
-        /// without providing data enough to initialize all symbol pointers.
-        /// @copydoc layer::set_symbols(const sak::const_storage &)
-        template<class StorageType>
-        void set_symbols(const StorageType &symbol_storage)
+        /// @copydoc layer::set_symbols(const storage_type &)
+        void set_symbols(const storage_type &symbol_storage)
         {
             uint32_t symbol_size = SuperCoder::symbol_size();
 
@@ -82,14 +98,18 @@ namespace kodo
 
             if(last_symbol.m_size < symbol_size)
             {
-                const auto& partial_symbol = sak::storage(m_partial_symbol);
+                const auto& internal_symbol = sak::storage(m_internal_symbol);
 
-                sak::copy_storage(partial_symbol, last_symbol);
-                SuperCoder::set_symbol(last_index, partial_symbol);
+                /// @todo This copy step is not needed on decoders and
+                ///       could potentially be removed if we has a
+                ///       reliable way of detecting that we were in a
+                ///       decoder stack.
+                sak::copy_storage(internal_symbol, last_symbol);
+                SuperCoder::set_symbol(last_index, internal_symbol);
 
                 // Update our state since we now have a partial symbol
                 m_has_partial_symbol = true;
-                m_partial_symbol_size = last_symbol.m_size;
+                m_partial_symbol = last_symbol;
             }
             else
             {
@@ -103,29 +123,32 @@ namespace kodo
             return m_has_partial_symbol;
         }
 
-        /// @returns the size of the valid bytes in the partial symbol buffer
-        uint32_t partial_symbol_size() const
+        /// This function will copy the content of the internal buffer
+        /// to the user provided partial symbol. When using this layer
+        /// in decoders this function makes sure that the user will
+        /// get all the decoded data. To invoke the restore
+        /// functionality automatically you can use the
+        /// restore_partial_symbol_decoder layers.
+        void restore_partial_symbol() const
         {
-            assert(m_has_partial_symbol);
-            return m_partial_symbol_size;
-        }
+            auto internal_symbol = sak::storage(m_internal_symbol);
 
-        /// @return a pointer to the data of the partial symbol
-        const uint8_t* partial_symbol() const
-        {
-            assert(m_has_partial_symbol);
-            return m_partial_symbol.data();
+            // Adjust the size of the internal symbol so that we only
+            // copy the amount needed by the partial symbol
+            internal_symbol.m_size = m_partial_symbol.m_size;
+
+            sak::copy_storage(m_partial_symbol, internal_symbol);
         }
 
     protected:
 
-        /// The partial symbol
-        std::vector<uint8_t> m_partial_symbol;
+        /// The internal symbol buffer
+        std::vector<uint8_t> m_internal_symbol;
 
         /// Keeps track of whether the "partial symbol" buffer is in use
         bool m_has_partial_symbol;
 
-        /// Keeps track of how much of the "partial symbol" buffer is used
-        uint32_t m_partial_symbol_size;
+        /// The partial symbol
+        storage_type m_partial_symbol;
     };
 }

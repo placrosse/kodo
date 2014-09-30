@@ -30,7 +30,7 @@ namespace kodo
         typedef FieldImpl field_impl;
 
         /// Pointer to the finite field implementation
-        typedef boost::shared_ptr<field_impl> field_pointer;
+        typedef std::shared_ptr<field_impl> field_pointer;
 
     private:
 
@@ -54,7 +54,7 @@ namespace kodo
             factory_base(uint32_t max_symbols, uint32_t max_symbol_size) :
                 SuperCoder::factory_base(max_symbols, max_symbol_size)
             {
-                m_field = boost::make_shared<field_impl>();
+                m_field = std::make_shared<field_impl>();
             }
 
         private:

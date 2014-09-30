@@ -46,7 +46,7 @@ TEST(TestConstruct, invoke)
         kodo::dummy_factory f;
         kodo::dummy_one d;
         kodo::construct(d, f);
-        EXPECT_TRUE(d.m_construct.called_once_with());
+        EXPECT_TRUE((bool) d.m_construct.expect_calls().with());
     }
 
     {

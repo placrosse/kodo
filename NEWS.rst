@@ -6,6 +6,15 @@ detailed list of every change, see the Git log.
 
 Latest
 ------
+* Major: Overhaul of the file/storage encoders/decoders. These are
+  used to encode/decode objects larger than a single generation. You
+  can find updated examples in examples/encode_decode_file and
+  examples/encode_decode_storage. Notice also that these classes are
+  now located in the kodo::object namespace.
+* Major: Place type traits for detection of the storage layers in
+  their own headers according to our one class per file
+  guideline. This affects the has_const_shallow_symbol_storage and
+  has_mutable_shallow_symbol_storage traits.
 * Minor: Added generic helpers for invoking the initialize(...) and
   construct(...) functions. We now use this in our factories which
   allows them to work even when codecs do not specify one or both of
@@ -18,8 +27,8 @@ Latest
 * Major: Renamed the partial_shallow_storage_layers to
   const_partial_shallow_storage_layers and added
   mutable_partial_shallow_storage_layers
-* Major: Updated to sak version 11.x.y
-* Major: Updated to fifi version 12.x.y
+* Major: Updated to sak version 12.x.y
+* Major: Updated to fifi version 13.x.y
 * Minor: Update to waf 1.8.0-pre1
 * Minor: Made python files comply with pep8
 * Major: Removed unused file ``test/src/kodo_unit_test/test_reuse.hpp``.

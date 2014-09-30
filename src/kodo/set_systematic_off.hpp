@@ -50,7 +50,7 @@ namespace kodo
     /// @ingroup generic_api
     /// @copydoc set_systematic_off(const T&)
     template<class T>
-    inline void set_systematic_off(boost::shared_ptr<T>& t)
+    inline void set_systematic_off(std::shared_ptr<T>& t)
     {
         set_systematic_off(*t);
     }

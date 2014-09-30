@@ -53,8 +53,7 @@ namespace kodo
         // Coefficient Storage API
         coefficient_value_access<
         // Proxy
-        proxy_layer<
-        full_rlnc_recoding_stack<MainStack>, MainStack>
-        > > > > > > > > > > >
+        proxy_layer<MainStack,
+        final_layer> > > > > > > > > > > >
     { };
 }

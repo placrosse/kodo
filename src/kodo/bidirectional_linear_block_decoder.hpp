@@ -76,23 +76,6 @@ namespace kodo
                 direction_policy::min(0, the_factory.symbols() - 1);
         }
 
-        /// @copydoc layer::decode_symbol(value_type*,value_type*)
-        template
-        <
-            typename V = value_type,
-            typename std::enable_if<
-                !std::is_same<V,uint8_t>::value, uint8_t>::type = 0
-        >
-        void decode_symbol(value_type* symbol_data,
-                           value_type* symbol_coefficients)
-        {
-            assert(symbol_data != 0);
-            assert(symbol_coefficients != 0);
-
-            decode_coefficients(symbol_data, symbol_coefficients);
-            update_symbol_status();
-        }
-
         /// @copydoc layer::decode_symbol(uint8_t*,uint8_t*)
         void decode_symbol(uint8_t *symbol_data,
                            uint8_t *symbol_coefficients)

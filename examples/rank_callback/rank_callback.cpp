@@ -51,13 +51,14 @@ namespace kodo
         // Storage API
         deep_symbol_storage<
         storage_bytes_used<
-        storage_block_info<
+        storage_block_length<
+        storage_block_size<
         // Finite Field API
         finite_field_math<typename fifi::default_field<Field>::type,
         finite_field_info<Field,
         // Final Layer
         final_layer
-        > > > > > > > > > > > > > > > > >
+        > > > > > > > > > > > > > > > > > >
     {
     public:
         using factory = basic_factory<full_rlnc_callback_decoder>;
@@ -74,29 +75,6 @@ void rank_changed_event(uint32_t rank)
     std::cout << "Rank changed to " << rank << std::endl;
 }
 
-// Global function as callback handler with pointer to the calling decoder
-// as parameter
-void rank_changed_event2(boost::weak_ptr<rlnc_decoder> w_decoder, uint32_t rank)
-{
-    /// Lock decoder pointer so that it cannot be freed until we are done
-    if (boost::shared_ptr<rlnc_decoder> decoder = w_decoder.lock())
-    {
-        std::cout << "Rank changed to " << rank << "/" <<
-            decoder->symbols() << std::endl;
-    }
-}
-
-// Some class
-class callback_handler
-{
-public:
-    // Member function as callback handler
-    void rank_changed_event3(uint32_t rank)
-    {
-        std::cout << "Rank changed to " << rank << std::endl;
-    }
-};
-
 int main()
 {
     // Set the number of symbols (i.e. the generation size in RLNC
@@ -112,47 +90,9 @@ int main()
     rlnc_decoder::factory decoder_factory(symbols, symbol_size);
     auto decoder = decoder_factory.build();
 
-
-    // The following three code blocks illustrates three common ways that
-    // a callback function may be set and used.
-    // You may comment in the code block that you want to test.
-
-
-    //  // Callback option 1:
-    //  // Set callback for decoder to be a global function
-    //
-    //  // Set callback handler
-    //  decoder->set_rank_changed_callback( rank_changed_event );
-
-
-
-    // Callback option 2:
-    // Set callback for decoder to be a global function that takes a
-    // pointer to the calling decoder as an additional argument
-
-    // Gets a weak pointer to decoder to ensure that our callback
-    // doesn't prevent kodo from freeing memory
-    boost::weak_ptr<rlnc_decoder> w_ptr(decoder);
-
     // Set callback handler
     decoder->set_rank_changed_callback(
-        std::bind(&rank_changed_event2, w_ptr, std::placeholders::_1));
-
-
-    //  // Callback option 3:
-    //  // Set callback for decoder to be a member function of some class
-    //  // This method is using lambda expressions which is not yet available in
-    //  // all compilers.
-    //
-    //  // Declare a class to handle callback
-    //  callback_handler handler;
-    //
-    //  // Set callback handler
-    //  decoder->set_rank_changed_callback (
-    //      [&] (uint32_t rank) { handler.rank_changed_event3( rank ); }
-    //  );
-
-
+        std::bind(rank_changed_event, std::placeholders::_1));
 
     // Allocate some storage for a "payload" the payload is what we would
     // eventually send over a network

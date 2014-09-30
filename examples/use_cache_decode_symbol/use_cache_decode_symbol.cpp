@@ -26,7 +26,8 @@ namespace kodo
     ///        layers in the two stacks are compatible (i.e. at least "Payload
     ///        API" to "Codec API" are the same).
     template<class Field>
-    class symbol_info_decoder : public // Payload API
+    class symbol_info_decoder : public
+        // Payload API
         payload_decoder<
         // Codec Header API
         systematic_decoder<
@@ -39,11 +40,13 @@ namespace kodo
         coefficient_info<
         // Storage API
         storage_bytes_used<
-        storage_block_info<
+        storage_block_length<
+        storage_block_size<
         // Finite Field API
         finite_field_info<Field,
         // Final Layer
-        final_layer> > > > > > > > >
+        final_layer
+        > > > > > > > > > >
     {
     public:
         using factory = basic_factory<symbol_info_decoder>;

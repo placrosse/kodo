@@ -25,6 +25,10 @@ namespace kodo
         {
         public:
 
+            using storage_type = sak::mutable_storage;
+
+        public:
+
             template<class Factory>
             void construct(Factory& the_factory)
             {
@@ -49,8 +53,7 @@ namespace kodo
                 return m_symbols();
             }
 
-            void set_symbol(uint32_t index,
-                            const sak::const_storage &symbol_storage)
+            void set_symbol(uint32_t index, const storage_type &symbol_storage)
             {
                 return m_set_symbol(index, symbol_storage);
             }
@@ -60,7 +63,7 @@ namespace kodo
 
             stub::call<uint32_t()> m_symbol_size;
             stub::call<uint32_t()> m_symbols;
-            stub::call<void(uint32_t, sak::const_storage)> m_set_symbol;
+            stub::call<void(uint32_t, storage_type)> m_set_symbol;
         };
 
         // Helper stack
@@ -99,6 +102,7 @@ TEST(TestPartialShallowSymbolStorage, no_partial)
     factory.m_symbol_size.set_return(5U);
 
     kodo::dummy_stack stack;
+    using storage_type = kodo::dummy_stack::storage_type;
 
     stack.construct(factory);
     stack.initialize(factory);
@@ -108,8 +112,8 @@ TEST(TestPartialShallowSymbolStorage, no_partial)
 
     // Check state is correct and that initialize and construct calls
     // were correctly forwarded
-    EXPECT_TRUE(stack.m_construct.called_once_with());
-    EXPECT_TRUE(stack.m_initialize.called_once_with());
+    EXPECT_TRUE((bool) stack.m_construct.expect_calls().with());
+    EXPECT_TRUE((bool) stack.m_initialize.expect_calls().with());
     EXPECT_FALSE(stack.has_partial_symbol());
 
     // Set the remaining needed state in the stack
@@ -127,7 +131,7 @@ TEST(TestPartialShallowSymbolStorage, no_partial)
     // is_same function to compare the sak::const_storage
     // objects. is_same compares that the pointers point to the same
     // memory as opposed to just checking whether the content is equal
-    using parameter = std::tuple<uint32_t, sak::const_storage>;
+    using parameter = std::tuple<uint32_t, storage_type>;
 
     auto p = [](const parameter& a, const parameter& b) -> bool
         {
@@ -140,18 +144,13 @@ TEST(TestPartialShallowSymbolStorage, no_partial)
             return false;
         };
 
+    EXPECT_TRUE((bool) stack.m_set_symbol.expect_calls(p)
+              .with(0, storage_type(data.data() + 0, 5U))
+              .with(1, storage_type(data.data() + 5, 5U))
+              .with(2, storage_type(data.data() + 10, 5U))
+              .with(3, storage_type(data.data() + 15, 5U))
+              .with(4, storage_type(data.data() + 20, 5U)));
 
-    // The actual calls that were made
-    std::vector<parameter> real_calls =
-        {
-            std::make_tuple(0, sak::const_storage(data.data() + 0, 5U)),
-            std::make_tuple(1, sak::const_storage(data.data() + 5, 5U)),
-            std::make_tuple(2, sak::const_storage(data.data() + 10, 5U)),
-            std::make_tuple(3, sak::const_storage(data.data() + 15, 5U)),
-            std::make_tuple(4, sak::const_storage(data.data() + 20, 5U))
-        };
-
-    EXPECT_TRUE(stack.m_set_symbol.has_calls(real_calls, p));
 }
 
 // Test that the stack functions properly when the partial symbol is
@@ -164,6 +163,7 @@ TEST(TestPartialShallowSymbolStorage, partial)
     factory.m_symbol_size.set_return(5U);
 
     kodo::dummy_stack stack;
+    using storage_type = kodo::dummy_stack::storage_type;
 
     stack.construct(factory);
     stack.initialize(factory);
@@ -173,8 +173,8 @@ TEST(TestPartialShallowSymbolStorage, partial)
 
     // Check state is correct and that initialize and construct calls
     // were correctly forwarded
-    EXPECT_TRUE(stack.m_construct.called_once_with());
-    EXPECT_TRUE(stack.m_initialize.called_once_with());
+    EXPECT_TRUE((bool) stack.m_construct.expect_calls().with());
+    EXPECT_TRUE((bool) stack.m_initialize.expect_calls().with());
     EXPECT_FALSE(stack.has_partial_symbol());
 
     // Set the remaining needed state in the stack
@@ -182,14 +182,10 @@ TEST(TestPartialShallowSymbolStorage, partial)
 
     // Make a buffer that is 23 bytes. That means we will have 4
     // symbols of 5 bytes and one symbol which only be 3 bytes.
-    std::vector<uint8_t> data(23U);
+    std::vector<uint8_t> data(23U, 'a');
 
     stack.set_symbols(sak::storage(data));
     EXPECT_TRUE(stack.has_partial_symbol());
-    EXPECT_EQ(stack.partial_symbol_size(), 3U);
-
-    const uint8_t *partial_data = stack.partial_symbol();
-    EXPECT_TRUE(partial_data != 0);
 
     // To check that that the calls made to the set_symbol functions
     // are what we expect we need a custom predicate function to
@@ -197,9 +193,9 @@ TEST(TestPartialShallowSymbolStorage, partial)
     // is_same function to compare the sak::const_storage
     // objects. is_same compares that the pointers point to the same
     // memory as opposed to just checking whether the content is equal
-    using parameter = std::tuple<uint32_t, sak::const_storage>;
+    using parameter = std::tuple<uint32_t, storage_type>;
 
-    auto p = [](const parameter& a, const parameter& b) -> bool
+    auto compare = [](const parameter& a, const parameter& b) -> bool
         {
             if(std::get<0>(a) != std::get<0>(b))
                 return false;
@@ -210,16 +206,30 @@ TEST(TestPartialShallowSymbolStorage, partial)
             return false;
         };
 
+    EXPECT_EQ(stack.m_set_symbol.calls(), 5U);
 
     // The actual calls that were made
-    std::vector<parameter> real_calls =
-        {
-            std::make_tuple(0, sak::const_storage(data.data() + 0, 5U)),
-            std::make_tuple(1, sak::const_storage(data.data() + 5, 5U)),
-            std::make_tuple(2, sak::const_storage(data.data() + 10, 5U)),
-            std::make_tuple(3, sak::const_storage(data.data() + 15, 5U)),
-            std::make_tuple(4, sak::const_storage(partial_data, 5U))
-        };
+    auto zero = std::make_tuple(0, storage_type(data.data() + 0, 5U));
+    auto one = std::make_tuple(1, storage_type(data.data() + 5, 5U));
+    auto two = std::make_tuple(2, storage_type(data.data() + 10, 5U));
+    auto three = std::make_tuple(3, storage_type(data.data() + 15, 5U));
+    auto four = std::make_tuple(4, storage_type(data.data() + 20, 5U));
 
-    EXPECT_TRUE(stack.m_set_symbol.has_calls(real_calls, p));
+    EXPECT_TRUE(compare(stack.m_set_symbol.call_arguments(0), zero));
+    EXPECT_TRUE(compare(stack.m_set_symbol.call_arguments(1), one));
+    EXPECT_TRUE(compare(stack.m_set_symbol.call_arguments(2), two));
+    EXPECT_TRUE(compare(stack.m_set_symbol.call_arguments(3), three));
+    EXPECT_FALSE(compare(stack.m_set_symbol.call_arguments(4), four));
+
+    // Test the restore (should bring back the a's)
+    data[20] = 'b';
+    data[21] = 'c';
+    data[22] = 'd';
+
+    stack.restore_partial_symbol();
+
+    EXPECT_TRUE(data[20] == 'a');
+    EXPECT_TRUE(data[21] == 'a');
+    EXPECT_TRUE(data[22] == 'a');
+
 }

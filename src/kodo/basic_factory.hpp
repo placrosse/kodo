@@ -97,7 +97,7 @@ namespace kodo
     public:
 
         /// Pointer type to the constructed coder
-        typedef boost::shared_ptr<Codec> pointer;
+        typedef std::shared_ptr<Codec> pointer;
 
     public:
 
@@ -109,7 +109,7 @@ namespace kodo
         /// @copydoc factory::build()
         pointer build()
         {
-            auto codec = boost::make_shared<Codec>();
+            auto codec = std::make_shared<Codec>();
 
             if (kodo::has_construct<Codec>::value)
             {

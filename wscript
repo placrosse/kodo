@@ -4,7 +4,6 @@
 APPNAME = 'kodo'
 VERSION = '17.0.0'
 
-
 def recurse_helper(ctx, name):
     if not ctx.has_dependency_path(name):
         ctx.fatal('Load a tool to find %s as system dependency' % name)
@@ -31,7 +30,7 @@ def options(opt):
     bundle.add_dependency(opt, resolve.ResolveGitMajorVersion(
         name='fifi',
         git_repository='github.com/steinwurf/fifi.git',
-        major_version=12))
+        major_version=13))
 
     bundle.add_dependency(opt, resolve.ResolveGitMajorVersion(
         name='gauge',
@@ -51,12 +50,12 @@ def options(opt):
     bundle.add_dependency(opt, resolve.ResolveGitMajorVersion(
         name='sak',
         git_repository='github.com/steinwurf/sak.git',
-        major_version=11))
+        major_version=12))
 
     bundle.add_dependency(opt, resolve.ResolveGitMajorVersion(
         name='stub',
         git_repository='github.com/steinwurf/stub.git',
-        major_version=1))
+        major_version=2))
 
     bundle.add_dependency(opt, resolve.ResolveGitMajorVersion(
         name='tables',

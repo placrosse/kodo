@@ -54,8 +54,7 @@ namespace kodo
         coefficient_value_access<
         // Proxy
         proxy_remote_rank<
-        proxy_layer<
-        on_the_fly_recoding_stack<MainStack>,
-        MainStack> > > > > > > > > > > > > > >
+        proxy_layer<MainStack,
+        final_layer> > > > > > > > > > > > > > >
     { };
 }
