@@ -8,6 +8,8 @@ http://www.steinwurf.com/licensing
 Plot the number of extra symbols needed to decode
 """
 
+import plot_helper
+
 import scipy
 import pylab
 
@@ -15,8 +17,6 @@ import sys
 import os
 sys.path.insert(0, os.path.join(
     os.path.dirname(os.path.realpath(__file__)), ".."))
-
-import plot_helper
 
 
 def plot(args):
