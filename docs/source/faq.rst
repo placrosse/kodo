@@ -37,7 +37,7 @@ re-transmit that data to other devices(s), typically the relay is not
 itself interested in receiving the data.
 
 What do we mean by the original data?
-....................................
+.....................................
 
 The original data is a file or an object store in memory before it is
 passed through to the erasure correcting code. We sometimes also refer
@@ -189,7 +189,7 @@ makes the encoding process significantly faster. The density of a
 coding vector is the ratio of non-zero elements in the coding vector.
 
 :math:`d(\boldsymbol{v}) = \frac{\sum_{i=1}^g \boldsymbol{v}_i \neq
-      0}{g}` , where: :math:`\boldsymbol{v}_i` is the coding vector
+0}{g}`, where: :math:`\boldsymbol{v}_i` is the coding vector
 
 The density is sometimes also referred to as the degree.
 

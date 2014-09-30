@@ -408,7 +408,7 @@ Recoding Data
 
 One of the key features of RLNC is the ability to recode. What this
 means is if the data is to be transmitted through a chain of nodes,
-the data can be reencoded at each node.  A examples of such networks
+the data can be re-encoded at each node.  A examples of such networks
 include:
 
 * Relay networks
