@@ -16,6 +16,10 @@ assert pymongo.version_tuple[:2] >= (2, 5),\
     'You need a newer version of pymongo'
 from pymongo import MongoClient
 
+import matplotlib
+# Force matplotlib to not use the Xwindows backend.
+matplotlib.use('Agg')
+
 from matplotlib import pyplot as pl
 from matplotlib.backends.backend_pdf import PdfPages as pp
 
