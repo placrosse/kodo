@@ -4,7 +4,6 @@
 APPNAME = 'kodo'
 VERSION = '17.0.0'
 
-
 def recurse_helper(ctx, name):
     if not ctx.has_dependency_path(name):
         ctx.fatal('Load a tool to find %s as system dependency' % name)
