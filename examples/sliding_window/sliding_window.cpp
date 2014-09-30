@@ -133,12 +133,12 @@ int main()
         if (rand() % 2)
         {
             std::cout << "Lost feedback from decoder" << std::endl;
-            continue;
         }
-
-        std::cout << "Received feedback from decoder" << std::endl;
-
-        encoder->read_feedback(feedback.data());
+        else
+        {
+            std::cout << "Received feedback from decoder" << std::endl;
+            encoder->read_feedback(feedback.data());
+        }
     }
 
     // The decoder is complete, now copy the symbols from the decoder
