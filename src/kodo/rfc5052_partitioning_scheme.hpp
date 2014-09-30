@@ -10,8 +10,8 @@
 
 namespace kodo
 {
-
     /// @ingroup block_partitioning_implementation
+    ///
     /// @brief RFC5052 block partitioning scheme.
     ///
     /// Takes as input the number of symbols the symbol size

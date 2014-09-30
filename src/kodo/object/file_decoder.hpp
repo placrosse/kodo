@@ -61,7 +61,6 @@ namespace object
             has_mutable_shallow_symbol_storage<Stack>::value,
             "The file decoder only works with decoders using"
             "shallow storage");
-
     };
 }
 }
