@@ -1,5 +1,3 @@
-
-
 .. _turn_off_systematic_coding:
 
 Turn Off Systematic Coding

@@ -25,11 +25,11 @@ versioning is a very simple scheme built around the x.y.z concept
 .. _Semantic versioning: http://semver.org/
 
 The basic rules we use are the following:
- * Major version: Increment x when you break backwards-compatibility or add major features
+ * Major version: Increment x when you break backwards-compatibility
  * Minor version: Increment y when you add a new feature (without breaking
    backward-compatibility)
- * Bug fix: Increment z when you fix something e.g. a bug (without breaking
-   backward-compatibility)
+ * Patch: Increment z when you improve something or fix a bug (without
+   breaking-compatibility)
 
 .. _contact_us:
 

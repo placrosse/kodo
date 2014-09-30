@@ -1,4 +1,3 @@
-
 .. _simulating_losses:
 
 Simulating Losses
