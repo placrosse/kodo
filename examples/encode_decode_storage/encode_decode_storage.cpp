@@ -11,6 +11,8 @@
 
 #include <kodo/rlnc/full_rlnc_codes.hpp>
 
+#include <vector>
+
 /// @example encode_decode_storage.cpp
 ///
 /// Often we want to encode / decode data that exceed a single
@@ -62,7 +64,7 @@ int main()
 
         while (!d->is_complete())
         {
-            e->encode( payload.data() );
+            e->encode(payload.data());
 
             // Here we would send and receive the payload over a
             // network. Lets throw away some packet to simulate.
@@ -71,7 +73,7 @@ int main()
                 continue;
             }
 
-            d->decode( payload.data() );
+            d->decode(payload.data());
         }
     }
 

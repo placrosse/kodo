@@ -23,6 +23,10 @@ APIs are provided.
 .. image:: http://buildbot.steinwurf.dk/svgstatus?project=kodo
     :target: http://buildbot.steinwurf.dk/stats?projects=kodo
 
+.. image:: https://readthedocs.org/projects/kodo/badge/?version=latest
+    :target: https://readthedocs.org/projects/kodo/?badge=latest
+    :alt: Documentation Status
+
 Documentation
 -------------
 To get started, see the manual here:

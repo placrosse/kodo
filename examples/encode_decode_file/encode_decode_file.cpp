@@ -9,6 +9,9 @@
 #include <kodo/object/file_decoder.hpp>
 #include <kodo/rlnc/full_rlnc_codes.hpp>
 
+#include <string>
+#include <vector>
+
 /// @example encode_decode_file.cpp
 ///
 /// Often we want to encode / decode data that exceed a single
@@ -34,6 +37,7 @@ int main()
 
     // Create a test file for encoding.
     std::ofstream encode_file;
+
     encode_file.open (encode_filename, std::ios::binary);
     std::vector<char> data_in(file_size, 'x');
 
