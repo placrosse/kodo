@@ -32,7 +32,7 @@ decoder will be able to finish the decoding.
 
 A graphical representation of the setup is seen in the figure below.
 
-.. image:: ../../images/tutorial_add_loss.png
+.. image:: ../../images/tutorial_add_loss.svg
    :align: center
 
 Running the example will result in the following output (the output
