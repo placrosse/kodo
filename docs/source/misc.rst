@@ -29,7 +29,7 @@ The basic rules we use are the following:
  * Minor version: Increment y when you add a new feature (without breaking
    backward-compatibility)
  * Patch: Increment z when you improve something or fix a bug (without
-   breaking-compatibility)
+   breaking-compatibility or adding new functionality)
 
 .. _contact_us:
 
