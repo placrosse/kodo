@@ -75,6 +75,35 @@ namespace kodo
             m_total_blocks = m_total_symbols / m_symbols_per_block;
             assert(m_total_blocks > 0);
 
+            // uint32_t block_size_ = m_max_symbols * m_max_symbol_size;
+            // uint32_t blocks_ = ((m_object_size - 1) / block_size_) + 1;
+
+            // std::cout << "Object size = " << m_object_size << std::endl;
+            // std::cout << "Max symbols = " << m_max_symbols << std::endl;
+            // std::cout << "Max symbol size = " << m_max_symbol_size << std::endl;
+
+            // std::cout << "blocks = " << blocks_ << std::endl;
+            // std::cout << "block size = " << block_size_ << std::endl;
+
+            // uint32_t excess_size_per_block = ((blocks_ * block_size_) - object_size)/blocks_;
+
+            // std::cout << "excess size per block " << excess_size_per_block
+            //           << std::endl;
+
+            // uint32_t excess_size_per_symbol = excess_size_per_block / m_max_symbols;
+            // std::cout << "excess size per symbol" << excess_size_per_symbol << std::endl;
+
+
+            // uint32_t block_symbol_size = (m_max_symbol_size - excess_size_per_symbol);
+            // std::cout << "block symbol size "
+            //           <<  block_symbol_size << std::endl;
+
+            // std::cout << "adjusted block size = " << (block_symbol_size * m_max_symbols ) << std::endl;
+
+            // uint32_t total_memory = block_symbol_size * m_max_symbols * blocks_;
+            // std::cout << "Total memory = " << total_memory << std::endl;
+
+
         }
 
         /// @copydoc block_partitioning::symbols(uint32_t) const
