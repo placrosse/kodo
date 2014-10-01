@@ -34,14 +34,14 @@ namespace object
     template
     <
         class Stack,
-        class PartitioningScheme = rfc5052_partitioning_scheme
+        class BlockPartitioning = rfc5052_partitioning_scheme
     >
     class file_encoder : public
         mapped_file_source<
         object_filename<
         object_storage<
         stack_factory<Stack,
-        partitioning<PartitioningScheme,
+        partitioning<BlockPartitioning,
         final_layer>>>>>
     {
     public:

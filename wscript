@@ -132,6 +132,7 @@ def build(bld):
         bld.recurse('examples/tutorial')
         bld.recurse('examples/use_cache_decode_symbol')
         bld.recurse('examples/use_trace_layers')
+        bld.recurse('examples/customize_partitioning_scheme')
 
         bld.recurse('benchmark/count_operations')
         bld.recurse('benchmark/decoding_probability')
