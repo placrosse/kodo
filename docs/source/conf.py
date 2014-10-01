@@ -181,7 +181,9 @@ try:
     html_theme = 'sphinx_rtd_theme'
     html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
 except ImportError:
-    print("Unable to use sphinx_rtd_theme falling back to default.")
+    print("Unable to use sphinx_rtd_theme falling back to default.\n"
+          "If you dare, you can install it using the following pip command:\n"
+          "\tsudo pip install sphinx_rtd_theme")
     pass
 
 # -- Options for LaTeX output -------------------------------------------------
