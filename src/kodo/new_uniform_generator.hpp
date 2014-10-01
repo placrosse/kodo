@@ -72,7 +72,7 @@ namespace kodo
         {
             SuperCoder::initialize(the_factory);
             size = the_factory.max_coefficient_vector_size();
-
+            printf("testting!!\n");
             if(SuperCoder::coefficient_vector_size() >= sizeof(ValueType))
             {
                 vector_size_less_value_type_size = false;
@@ -108,7 +108,7 @@ namespace kodo
 
                 next_pos_value_type = (next_pos_value_type + 1) % array_lenght;
 
-                if(uint8s.size())
+                if((size % sizeof(ValueType)))
                 {
                     // uint32_t k =
                         // upper_bound * sizeof(ValueType) + uint8s.size();
@@ -129,6 +129,8 @@ namespace kodo
             {
                 for(uint32_t i = 0; i < size; ++i)
                 {
+                    printf("i is %u \nnext_pos is %u \narray is %u",
+                           i, next_pos_uint8, array_lenght);
                     coefficients[i] =
                         uint8s[(next_pos_uint8 + i) % array_lenght];
 
@@ -183,15 +185,15 @@ namespace kodo
         //that will be used as coefficents.
         void generate_first_random_numbers()
         {
-
+            printf("Enters generate_first_random_numbers()\n");
             // The size of the vectors containing random numbers is defined.
             vector_size =
-                ((size - uint8s.size()) / sizeof(ValueType)) * 2;
+                ((size - (size % sizeof(ValueType))) / sizeof(ValueType)) * 2;
             value_types.resize(vector_size);
 
             array_lenght =  vector_size;
 
-            upper_bound = (size - uint8s.size()) / sizeof(ValueType);
+            upper_bound = (size - (size % sizeof(ValueType))) / sizeof(ValueType);
 
 
 
@@ -202,7 +204,7 @@ namespace kodo
                     m_value_distribution(m_random_generator);
             }
 
-            if(uint8s.size())
+            if((size % sizeof(ValueType)))
             {
 
                 for(uint32_t i = 0; i < uint8s.size(); ++i)
@@ -214,6 +216,7 @@ namespace kodo
             else if(vector_size_less_value_type_size)
             {
                 // assert(0);
+                printf("uint8 is resized.\n");
                 uint8s.resize(SuperCoder::coefficient_vector_size() * 2);
                 array_lenght = uint8s.size();
 
