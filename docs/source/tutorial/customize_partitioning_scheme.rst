@@ -41,15 +41,60 @@ Defining a custom scheme
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 In this case we will implement a partitioning scheme which keeps the
-symbol size fixed but creates blocks with exactly the same number of
+symbol size fixed and creates blocks with exactly the same number of
 symbols in each.
 
 .. note:: We do not recommend using the partitioning scheme presented
           here in practice. Since for certain input we will only have
-          one symbol per block.
+          one symbol per block. Furthermore it has not been tested to
+          work will all input values.
 
-          An alterntive apporach would be to adjust the symbol size
+Lets see the implementation of the example partitioning scheme.
 
 .. literalinclude:: ../../../examples/customize_partitioning_scheme/customize_partitioning_scheme.cpp
     :language: c++
+    :start-after: //! [0]
+    :end-before: //! [1]
     :linenos:
+
+In the following we used the :ref:`encode_decode_storage` example as a
+starting point but changed the types of the ``storage_encoder`` and
+``storage_decoder`` as follows:
+
+.. literalinclude:: ../../../examples/customize_partitioning_scheme/customize_partitioning_scheme.cpp
+    :language: c++
+    :start-after: //! [4]
+    :end-before: //! [5]
+    :linenos:
+
+It is possible to query the partitioning scheme about the way the
+object was split. The object encoder/decoder uses the
+``kodo::object::partitioning`` layer (defined in
+``SEC/kodo/object/partitioning.hop``). We can query that layer to get
+information about the how partitioning was done.
+
+.. literalinclude:: ../../../examples/customize_partitioning_scheme/customize_partitioning_scheme.cpp
+    :language: c++
+    :start-after: //! [6]
+    :end-before: //! [7]
+    :linenos:
+
+For the given input values:
+
+.. literalinclude:: ../../../examples/customize_partitioning_scheme/customize_partitioning_scheme.cpp
+    :language: c++
+    :start-after: //! [2]
+    :end-before: //! [3]
+    :linenos:
+
+We would see the following partitioning:
+
+.. code-block:: none
+
+   Block = 0 symbols = 20 symbol size = 64
+   Block = 1 symbols = 20 symbol size = 64
+   Block = 2 symbols = 20 symbol size = 64
+   Block = 3 symbols = 20 symbol size = 64
+   Block = 4 symbols = 20 symbol size = 64
+
+As we expect all blocks have the same number of symbols.

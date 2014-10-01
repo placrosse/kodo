@@ -23,6 +23,7 @@
 
 namespace kodo
 {
+    //! [0]
     /// In this case we will implement a partitioning scheme which
     /// creates blocks with exactly the same number of symbols in
     /// each.
@@ -74,36 +75,6 @@ namespace kodo
 
             m_total_blocks = m_total_symbols / m_symbols_per_block;
             assert(m_total_blocks > 0);
-
-            // uint32_t block_size_ = m_max_symbols * m_max_symbol_size;
-            // uint32_t blocks_ = ((m_object_size - 1) / block_size_) + 1;
-
-            // std::cout << "Object size = " << m_object_size << std::endl;
-            // std::cout << "Max symbols = " << m_max_symbols << std::endl;
-            // std::cout << "Max symbol size = " << m_max_symbol_size << std::endl;
-
-            // std::cout << "blocks = " << blocks_ << std::endl;
-            // std::cout << "block size = " << block_size_ << std::endl;
-
-            // uint32_t excess_size_per_block = ((blocks_ * block_size_) - object_size)/blocks_;
-
-            // std::cout << "excess size per block " << excess_size_per_block
-            //           << std::endl;
-
-            // uint32_t excess_size_per_symbol = excess_size_per_block / m_max_symbols;
-            // std::cout << "excess size per symbol" << excess_size_per_symbol << std::endl;
-
-
-            // uint32_t block_symbol_size = (m_max_symbol_size - excess_size_per_symbol);
-            // std::cout << "block symbol size "
-            //           <<  block_symbol_size << std::endl;
-
-            // std::cout << "adjusted block size = " << (block_symbol_size * m_max_symbols ) << std::endl;
-
-            // uint32_t total_memory = block_symbol_size * m_max_symbols * blocks_;
-            // std::cout << "Total memory = " << total_memory << std::endl;
-
-
         }
 
         /// @copydoc block_partitioning::symbols(uint32_t) const
@@ -223,17 +194,21 @@ namespace kodo
         uint32_t m_total_blocks;
 
     };
+    //! [1]
 }
 
 int main()
 {
+    //! [2]
     // Set the number of symbols (i.e. the generation size in RLNC
     // terminology) and the size of a symbol in bytes
     uint32_t max_symbols = 40;
     uint32_t max_symbol_size = 64;
 
     uint32_t object_size = 6400;
+    //! [3]
 
+    //! [4]
     using storage_encoder = kodo::object::storage_encoder<
         kodo::shallow_full_rlnc_encoder<fifi::binary>,
         kodo::fixed_partitioning_scheme>;
@@ -241,6 +216,7 @@ int main()
     using storage_decoder = kodo::object::storage_decoder<
         kodo::shallow_full_rlnc_decoder<fifi::binary>,
         kodo::fixed_partitioning_scheme>;
+    //! [5]
 
     storage_encoder::factory encoder_factory(max_symbols, max_symbol_size);
     storage_decoder::factory decoder_factory(max_symbols, max_symbol_size);
@@ -258,17 +234,14 @@ int main()
     std::cout << "Encoder blocks = " << object_encoder->blocks() << std::endl;
     std::cout << "Decoder blocks = " << object_decoder->blocks() << std::endl;
 
-    // It is possible to query the partitioning scheme about the way
-    // the object was split. The object encoder/decoder uses the
-    // kodo::object::partitioning layer (in
-    // src/kodo/object/partitioning.hpp). We can query that layer to
-    // get information about the partitioning.
+    //! [6]
     for (uint32_t i = 0; i < object_encoder->blocks(); ++i)
     {
         std::cout << "Block = " << i << " symbols = "
                   << object_encoder->symbols(i) << " symbol size = "
                   << object_encoder->symbol_size(i) << std::endl;
     }
+    //! [7]
 
     for (uint32_t i = 0; i < object_encoder->blocks(); ++i)
     {
