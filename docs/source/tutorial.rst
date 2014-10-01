@@ -15,6 +15,7 @@ It consists of the following subsections, each describing different examples:
     An example without systematic coding<tutorial/turn_off_systematic_coding>
     Creating a custom block partitioning scheme<tutorial/customize_partitioning_scheme>
     Encoding and decoding large objects<tutorial/encode_decode_storage>
+    Encoding and decoding files<tutorial/encode_decode_file>
 ..    An example using recoding<tutorial/recoding_data>
 ..    An example using seed codes<tutorial/using_seed_codes>
 ..    An example of how to extend Kodo using layers<tutorial/adding_a_new_layer>

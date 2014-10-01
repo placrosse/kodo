@@ -5,7 +5,7 @@ Encoding and decoding files
 
 In this example we show how to encode/decode files with Kodo. In Kodo
 this is example is nearly identical to the example
-:ref:`encoding_decoding_large_objects`. For this reason we will mostly
+:ref:`encoding_and_decoding_large_objects`. For this reason we will mainly
 highlight the differences.
 
 .. contents:: Table of Contents
@@ -36,7 +36,7 @@ Specifying the coding parameters
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 For the file encoder/decoder case three options are new. The first is
-the filename of the file we want to encode, the seconds is the file
+the file name of the file we want to encode, the seconds is the file
 name of the file we want to decode data into and finally the size of
 file.
 
@@ -46,58 +46,34 @@ file.
 .. note:: The file size is only needed by the file decoder. The file
           encoder knows the file size after opening the file.
 
-As with the :ref:`encoding_decoding_large_objects` we pass t
+As with the :ref:`encoding_and_decoding_large_objects` we pass type of
+the actual encoding and decoding algorithm as a template argument.
 
-As in most other examples we have to specify the number of symbols and
-the size of each symbol which we would like to use for the individual
-encoders and decoders. One thing to notice here is that these values
-are maximum values (i.e. we will never exceed these). However,
-depending on the block partitioning scheme used we might not use
-exactly those values.
-
-.. note:: When encoding/decoding large objects we have to assign
-          different parts of the data to different encoders/decoders,
-          the strategy for how this is done is called the block
-          partitioning scheme.
-
-For more information about the block partitioning scheme see the
-:ref:`customize_partitioning_scheme` example.
-
-In addition we will also specify the size of the object we want to code.
-
-.. literalinclude:: ../../../examples/encode_decode_storage/encode_decode_storage.cpp
+.. literalinclude:: ../../../examples/encode_decode_file/encode_decode_file.cpp
     :language: c++
     :start-after: //! [2]
     :end-before: //! [3]
     :linenos:
 
-The ``kodo::object::storage_encoder`` and
-``kodo::object::storage_decoder`` classes take one template argument
-which is the actual type of the erasure correcting code to use. In
-this case we are using the ``kodo::shallow_full_rlnc_encoder`` for
-encoding and ``kodo::shallow_full_rlnc_decoder`` for decoding. These
-are standard RLNC (Random Linear Network Coding) codes.
 
-.. note:: We use the shallow variant of the RLNC codes. This simply
-          means that Kodo will not copy the data into the
-          encoder/decoder, but operate directly on the user provided
-          buffer (this is currently the only supported mode).
+Creating a test file
+~~~~~~~~~~~~~~~~~~~~
 
-.. literalinclude:: ../../../examples/encode_decode_storage/encode_decode_storage.cpp
+Here we create a test file to use for the encoder. This is just for
+the sake of the example.
+
+.. literalinclude:: ../../../examples/encode_decode_file/encode_decode_file.cpp
     :language: c++
     :start-after: //! [4]
     :end-before: //! [5]
     :linenos:
 
 
-Creating a test file
-~~~~~~~~~~~~~~~~~~~
-
-Using the object encoder and decoder
+Using the file encoder and decoder
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-As with :ref:`the_basics` example we can now create the input and
-output data buffers and use it to initialize the object encoder/decoder.
+As with the storage encoders we now build the file encoder and
+decoder.
 
 .. literalinclude:: ../../../examples/encode_decode_storage/encode_decode_storage.cpp
     :language: c++
@@ -105,10 +81,10 @@ output data buffers and use it to initialize the object encoder/decoder.
     :end-before: //! [7]
     :linenos:
 
-The encoding/decoding loop has changed a bit since we now have several
-encoders and decoders that need to finish before the entire object has
-been encoded and decoded. However, the general structure is very
-similar to using just a single encoder and decoder.
+Also the encoding/decoding loop is similar to the
+:ref:`encoding_and_decoding_large_objects` example since we
+potentially need more than one encoder/decoder pair to code the entire
+file.
 
 .. literalinclude:: ../../../examples/encode_decode_storage/encode_decode_storage.cpp
     :language: c++
