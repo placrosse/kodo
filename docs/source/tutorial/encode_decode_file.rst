@@ -1,21 +1,12 @@
-.. _encoding_and_decoding_large_objects:
+.. _encoding_and_decoding_files:
 
-Encoding and decoding large objects
------------------------------------
+Encoding and decoding files
+---------------------------
 
-In practice we often have to encode/decode data which does not fit
-into a single encoder or decoder. To support this use-case Kodo
-provides the ``kodo::object::storage_encoder`` and
-``kodo::object::storage_decoder`` classes.
-
-It is recommend that you first familiarize yourself with how to use a
-single encoder/decoder pair (:ref:`the_basics`). You will notice that extending
-to several encoders and decoders requires only a few changes to the
-code. We will not explain all parameters in detail in this example
-only those relevant to using the ``kodo::object::storage_encoder`` and
-``kodo::object::storage_decoder`` classes. If you find some
-information missing please check the :ref:`the_basics` example it is likely
-you find it there.
+In this example we show how to encode/decode files with Kodo. In Kodo
+this is example is nearly identical to the example
+:ref:`encoding_decoding_large_objects`. For this reason we will mostly
+highlight the differences.
 
 .. contents:: Table of Contents
    :local:
@@ -23,7 +14,7 @@ you find it there.
 The complete example
 ~~~~~~~~~~~~~~~~~~~~
 
-.. literalinclude:: ../../../examples/encode_decode_storage/encode_decode_storage.cpp
+.. literalinclude:: ../../../examples/encode_decode_file/encode_decode_file.cpp
     :language: c++
     :linenos:
 
@@ -31,10 +22,10 @@ Adding the includes
 ~~~~~~~~~~~~~~~~~~~
 
 First we have to provide the appropriate includes which defines the
-codec that we want to use and the ``kodo::object::storage_encoder``
-and ``kodo::object::storage_decoder`` classes.
+codec that we want to use and the ``kodo::object::file_encoder``
+and ``kodo::object::file_decoder`` classes.
 
-.. literalinclude:: ../../../examples/encode_decode_storage/encode_decode_storage.cpp
+.. literalinclude:: ../../../examples/encode_decode_file/encode_decode_file.cpp
     :language: c++
     :start-after: //! [0]
     :end-before: //! [1]
@@ -43,6 +34,19 @@ and ``kodo::object::storage_decoder`` classes.
 
 Specifying the coding parameters
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+For the file encoder/decoder case three options are new. The first is
+the filename of the file we want to encode, the seconds is the file
+name of the file we want to decode data into and finally the size of
+file.
+
+.. note:: In a real application we would most likely not use different
+          file names for the encoder and decoder.
+
+.. note:: The file size is only needed by the file decoder. The file
+          encoder knows the file size after opening the file.
+
+As with the :ref:`encoding_decoding_large_objects` we pass t
 
 As in most other examples we have to specify the number of symbols and
 the size of each symbol which we would like to use for the individual
@@ -67,9 +71,6 @@ In addition we will also specify the size of the object we want to code.
     :end-before: //! [3]
     :linenos:
 
-Specifying the encoder and decoder types
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
 The ``kodo::object::storage_encoder`` and
 ``kodo::object::storage_decoder`` classes take one template argument
 which is the actual type of the erasure correcting code to use. In
@@ -88,6 +89,9 @@ are standard RLNC (Random Linear Network Coding) codes.
     :end-before: //! [5]
     :linenos:
 
+
+Creating a test file
+~~~~~~~~~~~~~~~~~~~
 
 Using the object encoder and decoder
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

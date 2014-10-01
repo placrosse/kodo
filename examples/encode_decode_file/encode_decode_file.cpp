@@ -5,9 +5,13 @@
 
 #include <iostream>
 #include <fstream>
+
+//! [0]
 #include <kodo/object/file_encoder.hpp>
 #include <kodo/object/file_decoder.hpp>
+
 #include <kodo/rlnc/full_rlnc_codes.hpp>
+//! [1]
 
 #include <string>
 #include <vector>
@@ -25,6 +29,7 @@
 
 int main()
 {
+    //! [0]
     // Set the number of symbols (i.e. the generation size in RLNC
     // terminology) and the size of a symbol in bytes
     uint32_t max_symbols = 42;
@@ -35,6 +40,15 @@ int main()
     std::string encode_filename = "encode-file.bin";
     std::string decode_filename = "decode-file.bin";
 
+    using file_encoder_factory = kodo::object::file_encoder<
+        kodo::shallow_full_rlnc_encoder<fifi::binary>>::factory;
+
+    using file_decoder_factory = kodo::object::file_decoder<
+        kodo::shallow_full_rlnc_decoder<fifi::binary>>::factory;
+
+    //! [0]
+
+    //! [0]
     // Create a test file for encoding.
     std::ofstream encode_file;
 
@@ -43,14 +57,10 @@ int main()
 
     encode_file.write(data_in.data(), data_in.size());
     encode_file.close();
+    //! [0]
 
     // Actual encoding/decoding of the file
 
-    using file_encoder_factory = kodo::object::file_encoder<
-        kodo::shallow_full_rlnc_encoder<fifi::binary>>::factory;
-
-    using file_decoder_factory = kodo::object::file_decoder<
-        kodo::shallow_full_rlnc_decoder<fifi::binary>>::factory;
 
     file_encoder_factory encoder_factory(max_symbols, max_symbol_size);
     file_decoder_factory decoder_factory(max_symbols, max_symbol_size);

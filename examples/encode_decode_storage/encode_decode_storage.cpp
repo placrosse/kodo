@@ -61,7 +61,9 @@ int main()
     std::cout << "object_size = " << object_size << std::endl;
     std::cout << "encoder blocks = " << object_encoder->blocks() << std::endl;
     std::cout << "decoder blocks = " << object_decoder->blocks() << std::endl;
+    //! [7]
 
+    //! [8]
     for (uint32_t i = 0; i < object_encoder->blocks(); ++i)
     {
         auto e = object_encoder->build(i);
@@ -94,5 +96,5 @@ int main()
         std::cout << "Unexpected failure to decode "
                   << "please file a bug report :)" << std::endl;
     }
-    //! [7]
+    //! [9]
 }
