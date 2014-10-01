@@ -25,7 +25,7 @@ into smaller ones the block partitioning scheme.
 
 In the following we will show how to define new partitioning schemes
 and thereby customize the behavior of our storage/file encoders and
-decoders (:ref:`encode_decode_storage` and :ref:`encode_decode_file`).
+decoders (:ref:`encoding_and_decoding_large_objects` and :ref:`encode_decode_file`).
 
 Block partitioning API
 ~~~~~~~~~~~~~~~~~~~~~~
@@ -57,8 +57,9 @@ Lets see the implementation of the example partitioning scheme.
     :end-before: //! [1]
     :linenos:
 
-In the following we used the :ref:`encode_decode_storage` example as a
-starting point but changed the types of the ``storage_encoder`` and
+In the following we used the
+:ref:`encoding_and_decoding_large_objects` example as a starting point
+but changed the types of the ``storage_encoder`` and
 ``storage_decoder`` as follows:
 
 .. literalinclude:: ../../../examples/customize_partitioning_scheme/customize_partitioning_scheme.cpp
