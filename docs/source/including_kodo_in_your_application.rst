@@ -11,17 +11,18 @@ build system.
 
 Including Kodo and Its Dependencies
 ------------------------------------
-Kodo is a header only library. This means that both Kodo and its dependencies
-needs to be included in the application which is to use Kodo.
+Kodo is a header-only library with some dependencies that are compiled as
+static libraries. This means that both Kodo and its dependencies
+should be included in the application that uses Kodo.
 
-The easiest way to do so is by using our build system. You can find more
+The easiest way to achieve that is to use our build system. You can find more
 information about how to do so in :ref:`this tutorial<hello_kodo>`.
 
-If for some reason this approach is not feasible for you. The following will
+If this approach is not feasible for you for some reason, the following will
 guide you through one of the many other ways you can include Kodo in your
 application.
 
-.. note:: If you have issues please double check you have all the requirements
+.. note:: If you have issues, please double check you have all the requirements
           specified in the :ref:`getting_started` section. And if so write the
           `mailing list <http://groups.google.com/group/steinwurf-dev>`_, and
           we'll be happy to help.
@@ -40,57 +41,75 @@ application.
    automatically downloading its dependencies. This is further elaborated in
    `Kodo Dependency Management`_::
 
-     python waf configure
+    python waf configure
 
 #. Assuming everything went as planned, you should now have a folder called
-   ``bundle_dependencies`` in your kodo repository. You are now ready to build
-   Kodo and it's dependencies::
+   ``bundle_dependencies`` in your kodo folder. You are now ready to build
+   Kodo and its dependencies::
 
-      python waf build install --options=install_path=kodo_bin
+    python waf build
 
-#. And just for good measure, run the unit tests::
+#. You can run the unit tests to verify that Kodo works fine on your system::
 
-      python waf --options=run_tests,run_always
+    python waf --options=run_tests,run_always
 
-#. You should now have what's needed to include Kodo in your application. Lets
-   use one of the examples from Kodo in place of your application.
-   Change the directory to the decode_encode_simple example::
+#. The following command will copy the static libraries to the ``kodo_build``
+   folder (the static libraries should be added to your application)::
 
-      cd examples/decode_encode_simple
+    python waf install --options=install_path=kodo_build
+
+#. At this point, you should be ready to include Kodo in your application.
+   Here we demonstrate the procedure with one of the Kodo examples (you can
+   use your own application instead). Change the directory to the
+   decode_encode_simple example::
+
+    cd examples/encode_decode_simple
 
 #. Compile the example using the following (rather long) command::
 
-      g++ \
-      -std=c++0x \
-      -I../../src \
-      -I../../bundle_dependencies/boost-91e411/1.5.0 \
-      -I../../bundle_dependencies/cpuid-a4173a/3.1.0/src \
-      -I../../bundle_dependencies/fifi-f85dcd/13.0.0/src \
-      -I../../bundle_dependencies/platform-e774c1/1.0.0/src \
-      -I../../bundle_dependencies/sak-2baed8/12.0.0/src \
-      -L../../kodo_build \
-      -lfifi \
-      -lcpuid \
-      -lsak \
-      decode_simple.cpp \
-      -o decode_simple
+    g++ \
+    -O2 \
+    -ftree-vectorize \
+    -std=c++0x \
+    -I../../src \
+    -I../../bundle_dependencies/boost-91e411/1.5.0 \
+    -I../../bundle_dependencies/cpuid-a4173a/3.1.0/src \
+    -I../../bundle_dependencies/fifi-f85dcd/13.0.0/src \
+    -I../../bundle_dependencies/platform-e774c1/1.0.0/src \
+    -I../../bundle_dependencies/sak-2baed8/12.0.0/src \
+    -L../../kodo_build \
+    -lfifi \
+    -lcpuid \
+    -lsak \
+    encode_decode_simple.cpp \
+    -o encode_decode_simple
 
-.. warning:: This is obviously a rather clumsy way of building software, but the
-             intention is that you should be able to use the command for setting
-             up your own build system or IDE to use Kodo.
-             Also this command is missing all of the optimization flags that
-             is included by our build system, so if you want maximum performance
-             you'll need to add these as well.
+   This command is only provided to facilitate the integration with your build
+   system or IDE. It is not recommended to build your software with a
+   command like this.
+
+.. warning:: This command only contains the basic optimization flags, and you
+             might need to add more flags to get maximum performance.
+
+.. warning:: The include paths presented here are going to change when a new
+             version of a dependency is released and you run
+             ``python waf configure`` to reconfigure your project. You can
+             update the include paths based on the output of the configure
+             command.
+
+#. Run the compiled example application::
+
+    ./encode_decode_simple
 
 Using a Makefile
 ----------------
 
-If you would like to see an example of how to build an application with
+If you would like to see an example to build an application with
 Kodo using a makefile. We provide a small makefile
 which shows how to invoke the ``g++`` compiler. The example can be found
 in the ``examples/sample_makefile`` folder in the `Kodo repository`_.
 
-.. _`Kodo repository`: https://github.com/steinwurf/kodo
+.. _`Kodo repository`: https://github.com/steinwurf/kodo/blob/master/examples/sample_makefile/makefile
 
 By default, the example makefile assumes that the required libraries are
 downloaded side-by-side with Kodo itself.
@@ -103,14 +122,14 @@ To achieve this, you can clone the projects in the same directory::
     git clone https://github.com/steinwurf/sak.git
     git clone https://github.com/steinwurf/kodo.git
 
-You can now build the example like so::
+You can now build the example with make::
 
     cd kodo/examples/sample_makefile
     make
 
-And finally execute the ``example`` binary like so::
+And execute the ``encode_decode_simple`` binary::
 
-    ./example
+    ./encode_decode_simple
 
 
 .. _kodo-dependencies:
@@ -160,8 +179,8 @@ The libraries are:
 
 Selecting the Correct Versions
 ..............................
-If you use the Kodo build script to build Kodo. The latest compatible version of
-its dependencies will automatically be downloaded. If you download
+If you use the Kodo build script to build Kodo, the latest compatible versions
+of its dependencies will automatically be downloaded. If you download
 the dependencies manually, you will have to select a compatible version
 yourself. This information is stored in the ``wscript`` file found in Kodo's
 root folder.
