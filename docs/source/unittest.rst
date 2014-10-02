@@ -69,7 +69,7 @@ this can be done by passing the following options to the waf build scripts.
 Adding a new test
 -----------------
 
-When adding a new feature to Kodo is is usually also a good idea to
+When adding a new feature to Kodo is usually also a good idea to
 also add a corresponding unit test. The source code for the different
 unit tests are placed in the ``test/src`` folder in the Kodo project.
 

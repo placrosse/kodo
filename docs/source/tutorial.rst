@@ -10,12 +10,12 @@ describing different examples:
 .. toctree::
     :maxdepth: 1
 
-    An example showing how to get started<tutorial/hello_kodo>
-    An example showing the basic functionality of Kodo<tutorial/the_basics>
-    An example with loss<tutorial/simulating_losses>
-    An example without systematic coding<tutorial/turn_off_systematic_coding>
+    How to get started<tutorial/hello_kodo>
+    The basic functionality of Kodo<tutorial/the_basics>
+    Adding losses<tutorial/simulating_losses>
+    Turning off systematic coding<tutorial/turn_off_systematic_coding>
+    Using recoding<tutorial/recoding_data>
     Creating a custom block partitioning scheme<tutorial/customize_partitioning_scheme>
     Encoding and decoding large objects<tutorial/encode_decode_storage>
-..    An example using recoding<tutorial/recoding_data>
-..    An example using seed codes<tutorial/using_seed_codes>
-..    An example of how to extend Kodo using layers<tutorial/adding_a_new_layer>
+..  Using seed codes<tutorial/using_seed_codes>
+..  Extend Kodo using layers<tutorial/adding_a_new_layer>
