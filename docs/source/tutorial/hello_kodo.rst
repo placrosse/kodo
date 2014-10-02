@@ -4,9 +4,9 @@ Hello Kodo
 ----------
 The purpose of this example is to provide an easy starting point for people who
 want to try out Kodo.
-The example shows how to use our build system to build a simple executable which
-depends on Kodo. The example consists of 3 files; ``main.cpp``, ``wscript``, and
-``waf``.
+The example shows how to use our build system to create a simple C++ application
+which depends on Kodo. The example consists of 3 files; ``main.cpp``,
+``wscript``, and ``waf``.
 
 ``main.cpp`` contains of a very limited amount of code:
 
@@ -40,10 +40,15 @@ selected folder as your working directory).
 
     python waf configure
     python waf build
-    ./build/{platform}/hello_kodo
+    ./build/linux/hello_kodo
 
 You can use this as a starting point for the coming examples, or even your own
 Kodo application.
+
+.. note:: The location and file extension of the generated executable depends on
+          the platform. The example here is from a machine running Linux, so
+          if you are building from a different platform, it might look a little
+          different.
 
 For more information regarding how to use the waf build systems, go
 :ref:`here<waf_build_system>`.
