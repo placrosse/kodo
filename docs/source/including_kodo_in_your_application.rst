@@ -46,7 +46,7 @@ application.
    ``bundle_dependencies`` in your kodo repository. You are now ready to build
    Kodo and it's dependencies::
 
-      python waf build
+      python waf build install --options=install_path=kodo_bin
 
 #. And just for good measure, run the unit tests::
 
@@ -68,16 +68,19 @@ application.
       -I../../bundle_dependencies/fifi-f85dcd/13.0.0/src \
       -I../../bundle_dependencies/platform-e774c1/1.0.0/src \
       -I../../bundle_dependencies/sak-2baed8/12.0.0/src \
-      -L../../build/linux/bundle_dependencies/fifi-f85dcd/13.0.0/src/fifi \
-      -L../../build/linux/bundle_dependencies/cpuid-a4173a/3.1.0/src/cpuid \
-      -L../../build/linux/bundle_dependencies/sak-2baed8/12.0.0/src/sak \
-      -Wl,-Bstatic \
+      -L../../kodo_build \
       -lfifi \
       -lcpuid \
       -lsak \
-      -Wl,-Bdynamic \
       decode_simple.cpp \
       -o decode_simple
+
+.. warning:: This is obviously a rather clumsy way of building software, but the
+             intention is that you should be able to use the command for setting
+             up your own build system or IDE to use Kodo.
+             Also this command is missing all of the optimization flags that
+             is included by our build system, so if you want maximum performance
+             you'll need to add these as well.
 
 Using a Makefile
 ----------------
