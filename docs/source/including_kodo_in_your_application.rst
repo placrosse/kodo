@@ -77,12 +77,14 @@ application.
     -I../../bundle_dependencies/fifi-8960fd/13.0.0/src \
     -I../../bundle_dependencies/platform-bccd32/1.0.0/src \
     -I../../bundle_dependencies/sak-1bdcea/12.0.0/src \
+    encode_decode_simple.cpp \
+    -o encode_decode_simple \
+    -Wl,-Bstatic \
     -L../../kodo_build \
     -lfifi \
     -lcpuid \
     -lsak \
-    encode_decode_simple.cpp \
-    -o encode_decode_simple
+    -Wl,-Bdynamic
 
    This command is only provided to facilitate the integration with your build
    system or IDE. It is not recommended to build your software manually with a
