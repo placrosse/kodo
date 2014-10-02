@@ -55,6 +55,7 @@ for any of the nodes, i.e., 50% in this example.
 The output when running this example looks like so:
 
 .. code-block:: none
+
     Encoded count = 28
     Dropped count = 19
 
