@@ -61,47 +61,23 @@ application.
 #. Compile the example using the following (rather long) commandline::
 
       g++ \
-      -O2 \
-      -ftree-vectorize \
-      -Wextra \
-      -Wall \
       -std=c++0x \
-      -pedantic \
-      -finline-functions \
-      -Wno-inline \
-      -Wno-long-long \
       -I../../src \
-      -I../../build/linux/bundle_dependencies/boost-91e411/1.5.0 \
-      -I../../build/linux/bundle_dependencies/cpuid-a4173a/3.1.0/src \
-      -I../../build/linux/bundle_dependencies/fifi-f85dcd/13.0.0/src \
-      -I../../build/linux/bundle_dependencies/platform-e774c1/1.0.0/src \
-      -I../../build/linux/bundle_dependencies/sak-2baed8/12.0.0/src \
       -I../../bundle_dependencies/boost-91e411/1.5.0 \
       -I../../bundle_dependencies/cpuid-a4173a/3.1.0/src \
       -I../../bundle_dependencies/fifi-f85dcd/13.0.0/src \
       -I../../bundle_dependencies/platform-e774c1/1.0.0/src \
       -I../../bundle_dependencies/sak-2baed8/12.0.0/src \
-      -DBOOST_ALL_NO_LIB=1 \
-      -DBOOST_DETAIL_NO_CONTAINER_FWD \
-      -DBOOST_NO_CXX11_NOEXCEPT \
-      decode_simple.cpp \
-      -c \
-      -o decode_simple.cpp.1.o
-
-#. And finally link the example using the following command::
-
-      g++ \
-      -s decode_simple.cpp.1.o \
-      -o decode_simple \
-      -Wl,-Bstatic \
       -L../../build/linux/bundle_dependencies/fifi-f85dcd/13.0.0/src/fifi \
       -L../../build/linux/bundle_dependencies/cpuid-a4173a/3.1.0/src/cpuid \
       -L../../build/linux/bundle_dependencies/sak-2baed8/12.0.0/src/sak \
+      -Wl,-Bstatic \
       -lfifi \
       -lcpuid \
       -lsak \
-      -Wl,-Bdynamic
-
+      -Wl,-Bdynamic \
+      decode_simple.cpp \
+      -o decode_simple
 
 Using a Makefile
 ----------------
