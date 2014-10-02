@@ -31,7 +31,7 @@ application.
 #. Start by cloning the Kodo repository to a folder of your choice::
 
     cd folder/of/your/choice
-    git clone https:://github.com/steinwurf/kodo
+    git clone https://github.com/steinwurf/kodo.git
 
 #. Now change directory to the kodo repository::
 
