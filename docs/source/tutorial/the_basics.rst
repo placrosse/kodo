@@ -4,26 +4,11 @@ The Basics
 ----------
 
 In the following, we will walk through the process of creating an
-encoder and a decoder for a single buffer of data. We will start from
-an empty file and slowly expand it. Once we have a working example, we
-will modify it in a number of steps to show different properties and
-features of the erasure correcting codes and the Kodo library.
-
-Our starting point will be the following:
-
-.. literalinclude:: ../../../examples/tutorial/empty.cpp
-    :language: c++
-    :linenos:
+encoder and a decoder for a single buffer of data.
 
 Kodo implements a number of different erasure correcting codes. In
 this example, we have chosen to use a particular version of a RLNC
-(Random Linear Network Code) located in the following header file:
-
-.. literalinclude:: ../../../examples/tutorial/empty.cpp
-    :language: c++
-    :start-after: //! [0]
-    :end-before: //! [1]
-    :linenos:
+(Random Linear Network Code).
 
 The Full RLNC is one of the most common RLNC variants, and provides
 several of the advantages that RLNCs have over traditional erasure

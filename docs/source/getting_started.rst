@@ -158,6 +158,7 @@ extract it to a desired location.
 
 * https://github.com/steinwurf/kodo/tags
 
+.. _waf_build_system:
 
 Waf (Build System)
 ------------------
