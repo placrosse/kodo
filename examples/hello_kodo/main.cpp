@@ -6,8 +6,10 @@
 //! [0]
 #include <kodo/rlnc/full_rlnc_codes.hpp>
 //! [1]
+#include <iostream>
 
 int main()
 {
+    std::cout << "Hello Kodo!" << std::endl;
     return 0;
 }

@@ -3,13 +3,14 @@
 Tutorial
 ========
 
-This tutorial will demonstrate different features of Kodo and
-show how it can be used to encode and decode data.
-It consists of the following subsections, each describing different examples:
+This tutorial will demonstrate different features of Kodo and show how it can be
+used to encode and decode data. It consists of the following subsections, each
+describing different examples:
 
 .. toctree::
     :maxdepth: 1
 
+    An example showing how to get started<tutorial/hello_kodo>
     An example showing the basic functionality of Kodo<tutorial/the_basics>
     An example with loss<tutorial/simulating_losses>
     An example without systematic coding<tutorial/turn_off_systematic_coding>
