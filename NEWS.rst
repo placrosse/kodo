@@ -222,7 +222,7 @@ Latest
 11.0.0
 ------
 * Minor: Added decoding probability benchmark. The benchmark measures
-  the the number of symbols needed to decode from which the decoding
+  the number of symbols needed to decode from which the decoding
   probability can be derived.
 * Major: Refactored the factory layers so that the layer::construct()
   and layer::initialize() functions are now template functions. The

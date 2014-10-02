@@ -125,7 +125,7 @@ TEST(TestPartialShallowSymbolStorage, no_partial)
     stack.set_symbols(sak::storage(data));
     EXPECT_FALSE(stack.has_partial_symbol());
 
-    // To check that that the calls made to the set_symbol functions
+    // To check that the calls made to the set_symbol functions
     // are what we expect we need a custom predicate function to
     // compare the arguments. The reason is that we need to use the
     // is_same function to compare the sak::const_storage
@@ -187,7 +187,7 @@ TEST(TestPartialShallowSymbolStorage, partial)
     stack.set_symbols(sak::storage(data));
     EXPECT_TRUE(stack.has_partial_symbol());
 
-    // To check that that the calls made to the set_symbol functions
+    // To check that the calls made to the set_symbol functions
     // are what we expect we need a custom predicate function to
     // compare the arguments. The reason is that we need to use the
     // is_same function to compare the sak::const_storage

@@ -15,7 +15,7 @@ namespace kodo
     /// @ingroup trace
     ///
     /// This function calls the layer::trace(std::ostream&) function
-    /// used to produce a trace trace for the chosen codec.
+    /// used to produce a trace for the chosen codec.
     template
     <
         class T,
