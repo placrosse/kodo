@@ -8,13 +8,13 @@ into a single encoder or decoder. To support this use-case Kodo
 provides the ``kodo::object::storage_encoder`` and
 ``kodo::object::storage_decoder`` classes.
 
-It is recommend that you first familiarize yourself with how to use a
-single encoder/decoder pair (:ref:``). You will notice that extending
+It is recommended that you first familiarize yourself with using a
+single encoder/decoder pair. You will notice that extending
 to several encoders and decoders requires only a few changes to the
 code. We will not explain all parameters in detail in this example
 only those relevant to using the ``kodo::object::storage_encoder`` and
 ``kodo::object::storage_decoder`` classes. If you find some
-information missing please check the :ref:`the_basics` example it is likely
+information missing, please check the :ref:`the_basics` example as it is likely
 you find it there.
 
 .. contents:: Table of Contents
