@@ -40,12 +40,12 @@ namespace object
     template
     <
         class Stack,
-        class PartitioningScheme = rfc5052_partitioning_scheme
+        class BlockPartitioning = rfc5052_partitioning_scheme
     >
     class storage_encoder : public
         object_storage<
         stack_factory<Stack,
-        partitioning<PartitioningScheme,
+        partitioning<BlockPartitioning,
         final_layer> > >
     {
     public:

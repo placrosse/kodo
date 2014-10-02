@@ -6,10 +6,12 @@
 #include <cstring>
 #include <utility>
 
+//! [0]
 #include <kodo/object/storage_decoder.hpp>
 #include <kodo/object/storage_encoder.hpp>
 
 #include <kodo/rlnc/full_rlnc_codes.hpp>
+//! [1]
 
 #include <vector>
 
@@ -26,19 +28,24 @@
 
 int main()
 {
+    //! [2]
     // Set the number of symbols (i.e. the generation size in RLNC
     // terminology) and the size of a symbol in bytes
     uint32_t max_symbols = 42;
     uint32_t max_symbol_size = 64;
 
     uint32_t object_size = 23456;
+    //! [3]
 
+    //! [4]
     using storage_encoder = kodo::object::storage_encoder<
         kodo::shallow_full_rlnc_encoder<fifi::binary> >;
 
     using storage_decoder = kodo::object::storage_decoder<
         kodo::shallow_full_rlnc_decoder<fifi::binary> >;
+    //! [5]
 
+    //! [6]
     storage_encoder::factory encoder_factory(max_symbols, max_symbol_size);
     storage_decoder::factory decoder_factory(max_symbols, max_symbol_size);
 
@@ -87,4 +94,5 @@ int main()
         std::cout << "Unexpected failure to decode "
                   << "please file a bug report :)" << std::endl;
     }
+    //! [7]
 }

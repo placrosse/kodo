@@ -42,6 +42,10 @@ Latest
   and all its layers.
 * Patch: Fixed proxy_stack ambiguous definition warnings with clang++
 * Patch: Added a tutorial which is to be expanded further in the future.
+* Patch: Added example showing how to customize the block partitioning
+  scheme used to segment large object into a number of smaller blocks
+  suitable for encoding/decoding. Example can be found in
+  examples/customize_partitioning_scheme.
 
 17.0.0
 ------

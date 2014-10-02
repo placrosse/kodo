@@ -16,13 +16,13 @@ namespace object
     /// @brief The partitioning layer exposes the partitioning scheme
     ///        into the object stack. The partitioning scheme defines
     ///        how we segment a large object into blocks and symbols.
-    template<class PartitioningScheme, class SuperCoder>
+    template<class BlockPartitioning, class SuperCoder>
     class partitioning : public SuperCoder
     {
     public:
 
         /// The partitioning scheme used
-        using partitioning_scheme_type = PartitioningScheme;
+        using partitioning_scheme_type = BlockPartitioning;
 
     public:
 
