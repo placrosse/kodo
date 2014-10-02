@@ -13,24 +13,24 @@ Including Kodo and Its Dependencies
 ------------------------------------
 Kodo is a header-only library with some dependencies that are compiled as
 static libraries. This means that both Kodo and its dependencies
-should be included in the application that uses Kodo.
+should be included in an application that uses Kodo.
 
 The easiest way to achieve that is to use our build system. You can find more
 information about how to do so in :ref:`this tutorial<hello_kodo>`.
 
 If this approach is not feasible for you for some reason, the following will
-guide you through one of the many other ways you can include Kodo in your
+guide you through one of the many other ways to include Kodo in your
 application.
 
-.. note:: If you have issues, please double check you have all the requirements
-          specified in the :ref:`getting_started` section. And if so write the
+.. note:: If you have issues, please double check that you have all the
+          requirements specified in the :ref:`getting_started` section.
+          If you do, please write on our developer
           `mailing list <http://groups.google.com/group/steinwurf-dev>`_, and
           we'll be happy to help.
 
-#. If you haven't already, start by cloning the Kodo repository to a folder of
-   your choice::
+#. Start by cloning the Kodo repository to a folder of your choice::
 
-    cd folder/of/our/choice
+    cd folder/of/your/choice
     git clone https:://github.com/steinwurf/kodo
 
 #. Now change directory to the kodo repository::
@@ -43,8 +43,8 @@ application.
 
     python waf configure
 
-#. Assuming everything went as planned, you should now have a folder called
-   ``bundle_dependencies`` in your kodo folder. You are now ready to build
+#. Assuming everything went as planned, you should have a folder called
+   ``bundle_dependencies`` in your kodo folder. You can now build
    Kodo and its dependencies::
 
     python waf build
@@ -54,7 +54,7 @@ application.
     python waf --options=run_tests,run_always
 
 #. The following command will copy the static libraries to the ``kodo_build``
-   folder (the static libraries should be added to your application)::
+   folder (these static libraries should be added to your application)::
 
     python waf install --options=install_path=kodo_build
 
@@ -85,7 +85,7 @@ application.
     -o encode_decode_simple
 
    This command is only provided to facilitate the integration with your build
-   system or IDE. It is not recommended to build your software with a
+   system or IDE. It is not recommended to build your software manually with a
    command like this.
 
 .. warning:: This command only contains the basic optimization flags, and you
