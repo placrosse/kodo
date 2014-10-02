@@ -72,11 +72,11 @@ application.
     -ftree-vectorize \
     -std=c++0x \
     -I../../src \
-    -I../../bundle_dependencies/boost-91e411/1.5.0 \
-    -I../../bundle_dependencies/cpuid-a4173a/3.1.0/src \
-    -I../../bundle_dependencies/fifi-f85dcd/13.0.0/src \
-    -I../../bundle_dependencies/platform-e774c1/1.0.0/src \
-    -I../../bundle_dependencies/sak-2baed8/12.0.0/src \
+    -I../../bundle_dependencies/boost-11f274/1.5.0 \
+    -I../../bundle_dependencies/cpuid-4d8071/3.1.0/src \
+    -I../../bundle_dependencies/fifi-8960fd/13.0.0/src \
+    -I../../bundle_dependencies/platform-bccd32/1.0.0/src \
+    -I../../bundle_dependencies/sak-1bdcea/12.0.0/src \
     -L../../kodo_build \
     -lfifi \
     -lcpuid \
@@ -95,7 +95,8 @@ application.
              version of a dependency is released and you run
              ``python waf configure`` to reconfigure your project. You can
              update the include paths based on the output of the configure
-             command.
+             command. Note that the include paths will be different if you
+             use the Git-over-SSH protocol to clone Kodo from Github.
 
 #. Run the compiled example application::
 
