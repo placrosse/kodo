@@ -58,7 +58,7 @@ application.
 
       cd examples/decode_encode_simple
 
-#. Compile the example using the following (rather long) commandline::
+#. Compile the example using the following (rather long) command::
 
       g++ \
       -std=c++0x \
@@ -85,8 +85,8 @@ application.
 Using a Makefile
 ----------------
 
-If you would like to see an example of building an application with
-Kodo without using our build system, we provide a small makefile
+If you would like to see an example of how to build an application with
+Kodo using a makefile. We provide a small makefile
 which shows how to invoke the ``g++`` compiler. The example can be found
 in the ``examples/sample_makefile`` folder in the `Kodo repository`_.
 
@@ -103,12 +103,12 @@ To achieve this, you can clone the projects in the same directory::
     git clone https://github.com/steinwurf/sak.git
     git clone https://github.com/steinwurf/kodo.git
 
-Then you can build this example::
+You can now build the example like so::
 
     cd kodo/examples/sample_makefile
     make
 
-And execute the ``example`` binary::
+And finally execute the ``example`` binary like so::
 
     ./example
 
@@ -118,14 +118,15 @@ And execute the ``example`` binary::
 Kodo Dependency Management
 --------------------------
 Kodo relies on a number of external libraries, these must be available
-in order to successfully compile an application including Kodo.
+in order to compile an application including Kodo.
 
 The easiest way to get these is by using the Kodo build scripts. It will
-automatically download at setup the dependencies and build the Kodo library.
+automatically download and setup the dependencies and build the Kodo library.
 
 The libraries are:
 
-#. **Cpuid**: this library contains functionality to detect CPU features.
+#. **Cpuid**: this library contains functionality to detect certain CPU
+   features.
 
    https://github.com/steinwurf/cpuid
 
@@ -135,18 +136,18 @@ The libraries are:
 
    https://github.com/steinwurf/boost
 
-#. **Fifi**: this library contains
-   finite field arithmetics used in ECC (Error Correcting Code) algorithms.
+#. **Fifi**: this library contains finite field arithmetics used in ECC
+   (Error Correcting Code) algorithms.
 
    https://github.com/steinwurf/fifi
 
-#. **Platform**: this library contains functionality to detect the build
-   platform.
+#. **Platform**: this library contains functionality to detect the compiler and
+   target platform architecture.
 
    https://github.com/steinwurf/platform
 
-#. **Sak**: this library contains a few
-   utility functions used in Kodo such as endian conversion.
+#. **Sak**: this library contains a few utility functions used in Kodo such as
+   endian conversion.
 
    https://github.com/steinwurf/sak
 
@@ -169,6 +170,7 @@ Within that file, in the ``options`` function, you will find all Kodo's
 dependencies specified in the following way:
 
 .. code-block:: python
+    :emphasize-lines: 4
 
     bundle.add_dependency(opt, resolve.ResolveGitMajorVersion(
             name='fifi',
