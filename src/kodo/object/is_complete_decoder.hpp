@@ -44,7 +44,7 @@ namespace object
         ///        decoder stack for
         ///
         /// @return the newly built encoder or decoder initialized
-        ///         with storage through the the set_symbols function
+        ///         with storage through the set_symbols function
         auto build(uint32_t index) ->
             decltype(std::declval<SuperCoder>().build(0))
         {

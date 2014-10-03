@@ -2,12 +2,6 @@
 # encoding: utf-8
 
 bld.program(features='cxx',
-            source=['empty.cpp'],
-            target='empty',
-            use=['kodo_includes', 'boost_includes',
-                 'fifi_includes', 'sak_includes'])
-
-bld.program(features='cxx',
             source=['basic.cpp'],
             target='basic',
             use=['kodo_includes', 'boost_includes',

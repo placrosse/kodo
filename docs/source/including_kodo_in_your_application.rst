@@ -2,160 +2,264 @@
 
 Including Kodo in Your Application
 ==================================
-Following  sections describe what you need to do to include Kodo in your
-application / project.
+Following sections describe what you need to do to include Kodo in your
+application / project, and how to handle the Kodo dependencies using our
+build system.
+
+.. contents:: Table of Contents
+   :local:
+
+Including Kodo and Its Dependencies
+------------------------------------
+Kodo is a header-only library with some dependencies that are compiled as
+static libraries. This means that both Kodo and its dependencies
+should be included in an application that uses Kodo.
+
+The easiest way to achieve that is to use our build system. You can find more
+information about how to do so in :ref:`this tutorial<hello_kodo>`.
+
+If this approach is not feasible for you for some reason, the following will
+guide you through one of the many other ways to include Kodo in your
+application.
+
+.. note:: If you have issues, please double check that you have all the
+          requirements specified in the :ref:`getting_started` section.
+          If you do, please write on our developer
+          `mailing list <http://groups.google.com/group/steinwurf-dev>`_, and
+          we'll be happy to help.
+
+#. Start by cloning the Kodo repository to a folder of your choice::
+
+    cd folder/of/your/choice
+    git clone https://github.com/steinwurf/kodo.git
+
+#. Now change directory to the kodo repository::
+
+    cd kodo
+
+#. Configure kodo using our build system. The Kodo build system is capable of
+   automatically downloading its dependencies. This is further elaborated in
+   `Kodo Dependency Management`_::
+
+    python waf configure
+
+#. Assuming everything went as planned, you should have a folder called
+   ``bundle_dependencies`` in your kodo folder. You can now build
+   Kodo and its dependencies::
+
+    python waf build
+
+#. You can run the unit tests to verify that Kodo works fine on your system::
+
+    python waf --options=run_tests,run_always
+
+#. The following command will copy the static libraries to the ``kodo_build``
+   folder (these static libraries should be added to your application)::
+
+    python waf install --options=install_path=kodo_build
+
+#. At this point, you should be ready to include Kodo in your application.
+   Here we demonstrate the procedure with one of the Kodo examples (you can
+   use your own application instead). Change the directory to the
+   decode_encode_simple example::
+
+    cd examples/encode_decode_simple
+
+#. Compile the example using the following (rather long) command::
+
+    g++ \
+    -O2 \
+    -ftree-vectorize \
+    -std=c++0x \
+    -I../../src \
+    -I../../bundle_dependencies/boost-11f274/1.5.0 \
+    -I../../bundle_dependencies/cpuid-4d8071/3.1.0/src \
+    -I../../bundle_dependencies/fifi-8960fd/13.0.0/src \
+    -I../../bundle_dependencies/platform-bccd32/1.0.0/src \
+    -I../../bundle_dependencies/sak-1bdcea/12.0.0/src \
+    encode_decode_simple.cpp \
+    -o encode_decode_simple \
+    -Wl,-Bstatic \
+    -L../../kodo_build \
+    -lfifi \
+    -lcpuid \
+    -lsak \
+    -Wl,-Bdynamic
+
+   This command is only provided to facilitate the integration with your build
+   system or IDE. It is not recommended to build your software manually with a
+   command like this.
+
+.. warning:: This command only contains the basic optimization flags, and you
+             might need to add more flags to get maximum performance.
+
+.. warning:: The include paths presented here are going to change when a new
+             version of a dependency is released and you run
+             ``python waf configure`` to reconfigure your project. You can
+             update the include paths based on the output of the configure
+             command. Note that the include paths will be different if you
+             use the Git-over-SSH protocol to clone Kodo from Github.
+
+#. Run the compiled example application::
+
+    ./encode_decode_simple
+
+Using a Makefile
+----------------
+
+If you would like to see an example to build an application with
+Kodo using a makefile. We provide a small makefile
+which shows how to invoke the ``g++`` compiler. The example can be found
+in the ``examples/sample_makefile`` folder in the `Kodo repository`_.
+
+.. _`Kodo repository`: https://github.com/steinwurf/kodo/blob/master/examples/sample_makefile/makefile
+
+By default, the example makefile assumes that the required libraries are
+downloaded side-by-side with Kodo itself.
+To achieve this, you can clone the projects in the same directory::
+
+    git clone https://github.com/steinwurf/cpuid.git
+    git clone https://github.com/steinwurf/boost.git
+    git clone https://github.com/steinwurf/fifi.git
+    git clone https://github.com/steinwurf/platform.git
+    git clone https://github.com/steinwurf/sak.git
+    git clone https://github.com/steinwurf/kodo.git
+
+You can now build the example with make::
+
+    cd kodo/examples/sample_makefile
+    make
+
+And execute the ``encode_decode_simple`` binary::
+
+    ./encode_decode_simple
+
 
 .. _kodo-dependencies:
 
-Kodo Dependencies
------------------
+Kodo Dependency Management
+--------------------------
 Kodo relies on a number of external libraries, these must be available
-in order to successfully compile an application including Kodo.
+in order to compile an application including Kodo.
 
-The functionality used from these libraries is **header-only** which
-means that you only have to specify the correct include paths to use
-them. The libraries are:
+The easiest way to get these is by using the Kodo build scripts. It will
+automatically download and setup the dependencies and build the Kodo library.
 
-1. **Fifi**: this library contains
-   finite field arithmetics used in ECC (Error Correcting Code) algorithms.
+The libraries are:
 
-   https://github.com/steinwurf/fifi
+#. **Cpuid**: this library contains functionality to detect certain CPU
+   features.
 
-2. **Sak**: this library contains a few
-   utility functions used in Kodo such as endian conversion.
+   https://github.com/steinwurf/cpuid
 
-   https://github.com/steinwurf/sak
-
-3. **Boost** C++ libraries: this library contains a wide range
+#. **Boost** C++ libraries: this library contains a wide range
    of C++ utilities. We use only a subset of this functionality, such as
    smart pointers.
 
-   https://github.com/steinwurf/external-boost-light
+   https://github.com/steinwurf/boost
 
-If you try to use the Kodo build scripts, you will notice that these will
-download some additional libraries. These libraries are
-only needed when/if you want to compile the Kodo unit tests, examples or
-benchmarks.
+#. **Fifi**: this library contains finite field arithmetics used in ECC
+   (Error Correcting Code) algorithms.
 
-4. **Waf-tools**: This repository contains additional tools used by
-   our build system. These tools add functionality to waf which are
-   used e.g. by our continuous integration build system.
+   https://github.com/steinwurf/fifi
 
-   https://github.com/steinwurf/external-waf-tools
+#. **Platform**: this library contains functionality to detect the compiler and
+   target platform architecture.
 
-5. **Gtest**: The Google C++ Unit Testing Framework is used by all the
-   Kodo unit tests to ensure that the library functions correctly.
+   https://github.com/steinwurf/platform
 
-   https://github.com/steinwurf/external-gtest
+#. **Sak**: this library contains a few utility functions used in Kodo such as
+   endian conversion.
 
-6. **Gauge**: Gauge is a C++ benchmarking tool which we use in Kodo to
-   profile the implemented algorithms.
+   https://github.com/steinwurf/sak
 
-   https://github.com/steinwurf/cxx-gauge
+.. note:: Additional libraries, besides the ones listed above, will be
+   downloaded if you use the Kodo build script. These libraries are only needed
+   when/if you want to compile the Kodo unit tests or benchmarks.
+   So you don't have to link with these when using Kodo in your application.
 
 .. _selecting-the-correct-versions:
 
 Selecting the Correct Versions
-------------------------------
-If you use the automatic approach, then the build scripts will download the
-latest compatible version of dependencies. If you download
-the dependencies manually, you will have to select a compatible version. This
-information is stored in the ``wscript`` file found in Kodo's root folder.
+..............................
+If you use the Kodo build script to build Kodo, the latest compatible versions
+of its dependencies will automatically be downloaded. If you download
+the dependencies manually, you will have to select a compatible version
+yourself. This information is stored in the ``wscript`` file found in Kodo's
+root folder.
 
-Within that file you will find all Kodo's dependencies specified in the
-following way::
+Within that file, in the ``options`` function, you will find all Kodo's
+dependencies specified in the following way:
 
-  bundle.add_dependency(opt,
-        resolve.ResolveGitMajorVersion(
-            name = 'fifi',
-            git_repository = 'github.com/steinwurf/fifi.git',
-            major_version = 9))
+.. code-block:: python
+    :emphasize-lines: 4
+
+    bundle.add_dependency(opt, resolve.ResolveGitMajorVersion(
+            name='fifi',
+            git_repository='github.com/steinwurf/fifi.git',
+            major_version=13))
 
 The above command sets up a dependency for the Fifi library. The version
-required is specified in the ``major_version = 9`` line. This means that Kodo
-requires version ``9.x.y`` of the Fifi library, where ``x.y`` should be
-selected to pick the newest available version. Visiting the download page
-at github.com for the Fifi library:
+required is specified in the ``major_version = 13`` line. This means that Kodo
+requires version ``13.x.y`` of the Fifi library, where ``x.y`` should be
+selected to pick the newest available version. You can get a list of available
+versions by visiting the download page at GitHub for the Fifi library:
 
 * https://github.com/steinwurf/fifi/releases
 
-We get a list of available versions. At the time of writing, this would be
-version ``9.1.0``. These version numbers are available as ``git tags`` if you
-choose to manually checkout the git repositories.
+At the time of writing, the appropriate version for Fifi, when using Kodo
+(master branch), would be version ``13.0.0``. Note these version numbers are
+available as ``git tags`` if you choose to manually checkout the git
+repositories.
 
 .. _download-kodo-dependencies:
 
 Download Kodo Dependencies
---------------------------
-
-All dependencies required by Kodo are hosted on github.com and may be found
-at http://github.com/steinwurf.
+..........................
 
 There are several ways in which you may get the Kodo library and its
-dependencies. Which approach you prefer might depend on your intended
-use-case for Kodo.
+dependencies.
 
-1. As shown in :ref:`getting_started` the Kodo build scripts supports
-   downloading the dependency repositories automatically. The build
+#. As shown in the :ref:`getting_started` section, the Kodo build scripts
+   supports downloading the dependency repositories automatically. The build
    script with do a ``git clone`` and checkout the latest compatible tagged
    version of the dependency.
 
-2. You may wish to manually download Kodo's dependencies as separate git
-   repositories. In the following we describe this option.
+#. You may wish to manually download Kodo's dependencies as separate git
+   repositories, see `Download Using Git`_.
 
-3. You can also download the Kodo dependencies as zip or tar.gz archives
-   from the dependencies corresponding github.com page.
+#. You can also download the Kodo dependencies as zip or tar.gz archives
+   from the dependencies corresponding GitHub page, see
+   `Download as zip/tar.gz archives`_.
 
-Before moving on, it is important to stress that downloading all
-dependencies is only necessary if you wish to build the Kodo unit tests
-and benchmarks using the Kodo build system. If you simply want to use Kodo
-in your application you only need to download the Fifi, Sak and Boost
-dependencies and you do not need to build the Kodo library (since it is
-header-only).
-If that is your goal you can skip to the `Example application using
-makefile`_ section after downloading the three required libraries.
-
+.. note:: Downloading all dependencies is only necessary if you wish to build
+          the Kodo using our build system. If you simply want to use Kodo
+          in your application you only need to download the libraries listed
+          under `Kodo Dependency Management`_.
 
 Download Using Git
-..................
+^^^^^^^^^^^^^^^^^^
 
-1. Create a suitable directory for the projects (optional)::
+#. Create a suitable directory for the projects (optional)::
 
      mkdir dev
      cd dev
 
-2. Clone or download the Fifi libraries by running::
+#. Clone and download the libraries by running::
 
-     git clone git://github.com/steinwurf/fifi.git
+      git clone https://github.com/steinwurf/cpuid.git
+      git clone https://github.com/steinwurf/boost.git
+      git clone https://github.com/steinwurf/fifi.git
+      git clone https://github.com/steinwurf/platform.git
+      git clone https://github.com/steinwurf/sak.git
 
-3. Clone and download the Sak libraries by running::
+      git clone https://github.com/steinwurf/gauge.git
+      git clone https://github.com/steinwurf/gtest.git
+      git clone https://github.com/steinwurf/tables.git
+      git clone https://github.com/steinwurf/waf-tools.git
 
-     git clone git://github.com/steinwurf/sak.git
-
-4. Clone and download the Boost C++ libraries by running::
-
-     git clone git://github.com/steinwurf/external-boost.git
-
-  .. note:: Boost can be installed in many different ways.
-            For example many Linux distributions support installing Boost
-            via the package manager. Alternatively Boost also provides
-            its own version control repositories, if you
-            wish, you may also download Boost using those repositories.
-
-5. Clone and download the extra Waf-tools::
-
-     git clone git://github.com/steinwurf/external-waf-tools.git
-
-6. Clone and download the Gtest library::
-
-     git clone git://github.com/steinwurf/external-gtest.git
-
-7. Clone and download the Gauge library::
-
-     git clone git://github.com/steinwurf/cxx-gauge.git
-
-Now we have to visit the downloaded repositories and select the correct
-versions e.g. for Fifi, first list the available tags::
+Now we have to select the correct versions for all the downloaded dependencies
+e.g. for Fifi, first list the available tags::
 
     cd fifi
     git tag -l
@@ -163,119 +267,73 @@ versions e.g. for Fifi, first list the available tags::
 Using the information from the ``wscript`` (described in
 `Selecting the correct versions`_) we can checkout a tagged version::
 
-    git checkout 9.1.0
+    git checkout 13.0.0
 
 We now do this for all the downloaded repositories.
 
 Download as zip/tar.gz archives
-...............................
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Here we have to visit the download pages of the different dependencies
 and download the correct versions (described in `Selecting the correct
 versions`_):
 
-1. Fifi:
-   https://github.com/steinwurf/fifi/releases
-2. Sak:
-   https://github.com/steinwurf/sak/releases
-3. Boost:
-   https://github.com/steinwurf/external-boost-light/releases
-4. Waf-tools:
-   https://github.com/steinwurf/external-waf-tools/releases
-5. Gtest:
-   https://github.com/steinwurf/external-gtest/releases
-6. Gauge:
-   https://github.com/steinwurf/cxx-gauge/releases
+#. Cpuid: https://github.com/steinwurf/cpuid/releases
+#. Boost: https://github.com/steinwurf/boost/releases
+#. Fifi: https://github.com/steinwurf/fifi/releases
+#. Platform: https://github.com/steinwurf/platform/releases
+#. Sak: https://github.com/steinwurf/sak/releases
+
+#. Gauge: https://github.com/steinwurf/gauge/releases
+#. Gtest: https://github.com/steinwurf/gtest/releases
+#. Tables: https://github.com/steinwurf/tables/releases
+#. Waf-tools: https://github.com/steinwurf/waf-tools/releases
 
 
 Configuring Kodo With Manually Downloaded Dependencies
-------------------------------------------------------
+......................................................
 
 After downloading all the dependencies manually, we have to inform the
-Kodo build scripts to use those instead of trying to automatically
-downloading them. This is done using the following command::
+Kodo build scripts to use those instead of trying to automatically downloading
+them. Assuming you've located the kodo repository along side the downloaded
+dependencies, this can be done using the following command::
 
-  python waf configure --bundle=NONE --fifi-path=insert-path-to/fifi --sak-path=insert-path-to/sak/ --boost-path=insert-path-to/external-boost-light/ --waf-tools-path=insert-path-to/external-waf-tools/ --gtest-path=insert-path-to/external-gtest/ --gauge-path=insert-path-to/cxx-gauge/
+  python waf configure --bundle=NONE \
+  --cpuid-path=../cpuid \
+  --boost-path=../boost \
+  --fifi-path=../fifi \
+  --platform-path=../platform \
+  --sak-path=../sak \
+  --gauge-path=../gauge \
+  --gtest-path=../gtest \
+  --tables-path=../tables \
+  --waf-tools-path=../waf-tools
 
 The bundle options supports a number of different use cases. The following
 will bundle all dependencies but the Fifi library which we have to
 manually specify a path for::
 
-  python waf configure --bundle=ALL,-fifi --fifi-path=insert-path-to/fifi
+  python waf configure --bundle=ALL,-fifi --fifi-path=../fifi
 
 Or we may bundle only Fifi::
 
-  python waf configure --bundle=NONE,fifi --sak-path=insert-path-to/sak/ --boost-path=insert-path-to/external-boost-light/ --waf-tools-path=insert-path-to/external-waf-tools/ --gtest-path=insert-path-to/external-gtest/ --gauge-path=insert-path-to/cxx-gauge/
+  python waf configure --bundle=NONE,fifi \
+  --cpuid-path=../cpuid \
+  --boost-path=../boost \
+  --platform-path=../platform \
+  --sak-path=../sak \
+  --gauge-path=../gauge \
+  --gtest-path=../gtest \
+  --tables-path=../tables \
+  --waf-tools-path=../waf-tools
 
 More libraries may be added to the ``--bundle=`` option using commas e.g.
 bundle all, but Fifi and Sak::
 
-  python waf configure --bundle=ALL,-fifi,-sak --fifi-path=insert-path-to/fifi --sak-path=insert-path-to/sak
+  python waf configure --bundle=ALL,-fifi,-sak \
+  --fifi-path=../fifi \
+  --sak-path=../sak
 
 The bundle options can be seen by running::
 
   python waf --help
-
-
-Example Application Using Makefile
--------------------------------------
-
-If you would like to see an example of building an application with
-Kodo without using any fancy build system, we provide a small makefile
-which shows how to invoke the ``g++`` compiler. The example can be found
-in the ``examples/sample_makefile`` folder in the `Kodo repository`_.
-
-.. _`Kodo repository`: https://github.com/steinwurf/kodo
-
-In this case, you only need to have Fifi, Sak and Boost downloaded.
-By default, the example makefile assumes that the required libraries are
-downloaded side-by-side with Kodo itself.
-To achieve this, you can clone the projects in the same directory::
-
-    git clone https://github.com/steinwurf/sak.git
-    git clone https://github.com/steinwurf/fifi.git
-    git clone https://github.com/steinwurf/external-boost-light.git
-    git clone https://github.com/steinwurf/kodo.git
-
-Then you can build this example::
-
-    cd kodo/examples/sample_makefile
-    make
-
-And execute the ``example`` binary::
-
-    ./example
-
-
-..
-   Example Using Waf (extended)
-   ----------------------------
-
-   .. warning:: This example still need to be added to the sources
-
-   If you wish to use Waf to build your application you may utilize its
-   functionality to setup dependencies for Kodo. The ``waf`` build-script
-   found in the Kodo source package has been extended with a number of
-   tools to make managing dependencies easier. The tools added to the
-   ``waf`` executable may be found here: https://github.com/steinwurf/external-waf
-
-   If you wish to use the same approach you can find an example building
-   an application using Kodo and the modified ``waf`` executable here:
-
-   If are already using a unmodified version of Waf or would like to
-   use a plain Waf build-script see next section.
-
-
-   Example Using Waf (unmodified)
-   ------------------------------
-
-   .. warning:: This example still need to be added to the sources
-
-   If you wish to use a plain Waf version downloaded from
-   http://code.google.com/p/waf/ the following example shows one
-   possible way of using it to build an application with Kodo.
-
-
-
-
-

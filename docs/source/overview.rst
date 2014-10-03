@@ -102,7 +102,7 @@ Sparse RLNC with uniform density
     Some symbols are excluded with a given probability during encoding.
     The remaining symbols are combined as in the standard RLNC case.
     This is typically useful when the block size is very high. The density
-    can be reduced significantly without any negative effect and the
+    can be reduced significantly without any negative effect and
     the decoding throughput can be increased substantially at the same time.
 
 Sparse RLNC with fixed density
