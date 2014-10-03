@@ -95,6 +95,12 @@ Using the object encoder and decoder
 As with :ref:`the_basics` example we can now create the input and
 output data buffers and use it to initialize the object encoder/decoder.
 
+.. literalinclude:: ../../../examples/encode_decode_storage/encode_decode_storage.cpp
+    :language: c++
+    :start-after: //! [6]
+    :end-before: //! [7]
+    :linenos:
+
 The encoding/decoding loop has changed a bit since we now have several
 encoders and decoders that need to finish before the entire object has
 been encoded and decoded. However, the general structure is very
@@ -102,6 +108,6 @@ similar to using just a single encoder and decoder.
 
 .. literalinclude:: ../../../examples/encode_decode_storage/encode_decode_storage.cpp
     :language: c++
-    :start-after: //! [6]
-    :end-before: //! [7]
+    :start-after: //! [8]
+    :end-before: //! [9]
     :linenos:

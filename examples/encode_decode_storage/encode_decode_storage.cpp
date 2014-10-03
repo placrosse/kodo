@@ -39,10 +39,10 @@ int main()
 
     //! [4]
     using storage_encoder = kodo::object::storage_encoder<
-        kodo::shallow_full_rlnc_encoder<fifi::binary> >;
+        kodo::shallow_full_rlnc_encoder<fifi::binary>>;
 
     using storage_decoder = kodo::object::storage_decoder<
-        kodo::shallow_full_rlnc_decoder<fifi::binary> >;
+        kodo::shallow_full_rlnc_decoder<fifi::binary>>;
     //! [5]
 
     //! [6]
@@ -55,17 +55,19 @@ int main()
     encoder_factory.set_storage(sak::storage(data_in));
     decoder_factory.set_storage(sak::storage(data_out));
 
-    auto object_encoder = encoder_factory.build();
-    auto object_decoder = decoder_factory.build();
+    auto encoder = encoder_factory.build();
+    auto decoder = decoder_factory.build();
 
     std::cout << "object_size = " << object_size << std::endl;
-    std::cout << "encoder blocks = " << object_encoder->blocks() << std::endl;
-    std::cout << "decoder blocks = " << object_decoder->blocks() << std::endl;
+    std::cout << "encoder blocks = " << encoder->blocks() << std::endl;
+    std::cout << "decoder blocks = " << decoder->blocks() << std::endl;
+    //! [7]
 
-    for (uint32_t i = 0; i < object_encoder->blocks(); ++i)
+    //! [8]
+    for (uint32_t i = 0; i < encoder->blocks(); ++i)
     {
-        auto e = object_encoder->build(i);
-        auto d = object_decoder->build(i);
+        auto e = encoder->build(i);
+        auto d = decoder->build(i);
 
         std::vector<uint8_t> payload(e->payload_size());
 
@@ -94,5 +96,5 @@ int main()
         std::cout << "Unexpected failure to decode "
                   << "please file a bug report :)" << std::endl;
     }
-    //! [7]
+    //! [9]
 }

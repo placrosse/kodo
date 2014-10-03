@@ -5,9 +5,13 @@
 
 #include <iostream>
 #include <fstream>
+
+//! [0]
 #include <kodo/object/file_encoder.hpp>
 #include <kodo/object/file_decoder.hpp>
+
 #include <kodo/rlnc/full_rlnc_codes.hpp>
+//! [1]
 
 #include <string>
 #include <vector>
@@ -25,6 +29,7 @@
 
 int main()
 {
+    //! [2]
     // Set the number of symbols (i.e. the generation size in RLNC
     // terminology) and the size of a symbol in bytes
     uint32_t max_symbols = 42;
@@ -35,6 +40,14 @@ int main()
     std::string encode_filename = "encode-file.bin";
     std::string decode_filename = "decode-file.bin";
 
+    using file_encoder = kodo::object::file_encoder<
+        kodo::shallow_full_rlnc_encoder<fifi::binary>>;
+
+    using file_decoder = kodo::object::file_decoder<
+        kodo::shallow_full_rlnc_decoder<fifi::binary>>;
+    //! [3]
+
+    //! [4]
     // Create a test file for encoding.
     std::ofstream encode_file;
 
@@ -43,33 +56,30 @@ int main()
 
     encode_file.write(data_in.data(), data_in.size());
     encode_file.close();
+    //! [5]
 
+    //! [6]
     // Actual encoding/decoding of the file
-
-    using file_encoder_factory = kodo::object::file_encoder<
-        kodo::shallow_full_rlnc_encoder<fifi::binary>>::factory;
-
-    using file_decoder_factory = kodo::object::file_decoder<
-        kodo::shallow_full_rlnc_decoder<fifi::binary>>::factory;
-
-    file_encoder_factory encoder_factory(max_symbols, max_symbol_size);
-    file_decoder_factory decoder_factory(max_symbols, max_symbol_size);
+    file_encoder::factory encoder_factory(max_symbols, max_symbol_size);
+    file_decoder::factory decoder_factory(max_symbols, max_symbol_size);
 
     encoder_factory.set_filename(encode_filename);
 
     decoder_factory.set_filename(decode_filename);
     decoder_factory.set_file_size(file_size);
 
-    auto file_encoder = encoder_factory.build();
-    auto file_decoder = decoder_factory.build();
+    auto encoder = encoder_factory.build();
+    auto decoder = decoder_factory.build();
 
-    std::cout << "encoder blocks = " << file_encoder->blocks() << std::endl;
-    std::cout << "decoder blocks = " << file_decoder->blocks() << std::endl;
+    std::cout << "encoder blocks = " << encoder->blocks() << std::endl;
+    std::cout << "decoder blocks = " << decoder->blocks() << std::endl;
+    //! [7]
 
-    for (uint32_t i = 0; i < file_encoder->blocks(); ++i)
+    //! [8]
+    for (uint32_t i = 0; i < encoder->blocks(); ++i)
     {
-        auto e = file_encoder->build(i);
-        auto d = file_decoder->build(i);
+        auto e = encoder->build(i);
+        auto d = decoder->build(i);
 
         std::vector<uint8_t> payload(e->payload_size());
 
@@ -87,4 +97,5 @@ int main()
             d->decode( payload.data() );
         }
     }
+    //! [9]
 }
