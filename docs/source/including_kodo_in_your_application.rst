@@ -100,7 +100,7 @@ application.
              command. Note that the include paths will be different if you
              use the Git-over-SSH protocol to clone Kodo from Github.
 
-#. Run the compiled example application::
+9. Run the compiled example application::
 
     ./encode_decode_simple
 
