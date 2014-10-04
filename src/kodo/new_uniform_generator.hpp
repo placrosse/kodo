@@ -30,13 +30,6 @@ namespace kodo
 
     public:
 
-     // using factory =
-         // basic_factory<new_uniform_generator<RandomNumberGenerator,
-                          // ValueType,
-                          // SuperCoder>>;
-
-    public:
-
         /// @copydoc layer::value_type
         typedef typename SuperCoder::field_type field_type;
 
@@ -50,10 +43,10 @@ namespace kodo
          typedef typename generator_type::result_type seed_type;
 
     private:
-        uint32_t next_pos_value_type = 0;
-        uint32_t next_pos_uint8 = 0;
         void* temp_ptr;
         ValueType* castet_coefficient_ptr;
+        uint32_t next_pos_value_type = 0;
+        uint32_t next_pos_uint8 = 0;
 
     public:
 
@@ -72,14 +65,10 @@ namespace kodo
         {
             SuperCoder::initialize(the_factory);
             size = the_factory.max_coefficient_vector_size();
-            printf("testting!!\n");
+
             if(SuperCoder::coefficient_vector_size() >= sizeof(ValueType))
             {
                 vector_size_less_value_type_size = false;
-                if(size % sizeof(ValueType))
-                {
-                    uint8s.resize((size % sizeof(ValueType)) * 2);
-                }
             }
 
             generate_first_random_numbers();
@@ -93,35 +82,34 @@ namespace kodo
 
             if(!vector_size_less_value_type_size)
             {
-
                 temp_ptr = static_cast<void*>(coefficients);
                 castet_coefficient_ptr = static_cast<ValueType*>(temp_ptr);
+
+                uint32_t upper_bound = vector_size / 2;
 
                 for(uint32_t i = 0; i < upper_bound; ++i)
                 {
                     castet_coefficient_ptr[i] =
-                        value_types[(next_pos_value_type + i) % array_lenght];
+                        value_types[(next_pos_value_type + i) % vector_size];
                 }
 
                 value_types[next_pos_value_type] =
                     m_value_distribution(m_random_generator);
 
-                next_pos_value_type = (next_pos_value_type + 1) % array_lenght;
+                next_pos_value_type = (next_pos_value_type + 1) % vector_size;
 
-                if((size % sizeof(ValueType)))
+                if(uint8s_size)
                 {
-                    // uint32_t k =
-                        // upper_bound * sizeof(ValueType) + uint8s.size();
                     uint32_t starting_point = upper_bound * sizeof(ValueType);
 
                     for(uint32_t i = starting_point; i < size; ++i)
                     {
                         coefficients[i] =
-                            uint8s[(next_pos_uint8 + i) % uint8s.size()];
+                            uint8s[(next_pos_uint8 + i) % uint8s_size];
 
                         uint8s[next_pos_uint8] =
                             m_distribution(m_random_generator);
-                        next_pos_uint8 = (next_pos_uint8 + 1) % uint8s.size();
+                        next_pos_uint8 = (next_pos_uint8 + 1) % uint8s_size;
                     }
                 }
             }
@@ -129,16 +117,14 @@ namespace kodo
             {
                 for(uint32_t i = 0; i < size; ++i)
                 {
-                    printf("i is %u \nnext_pos is %u \narray is %u",
-                           i, next_pos_uint8, array_lenght);
                     coefficients[i] =
-                        uint8s[(next_pos_uint8 + i) % array_lenght];
-
+                        uint8s[(next_pos_uint8 + i) % uint8s.size()];
                 }
+
                 uint8s[next_pos_uint8] =
                     m_distribution(m_random_generator);
 
-                next_pos_uint8 = (next_pos_uint8 + 1) % array_lenght;
+                next_pos_uint8 = (next_pos_uint8 + 1) % uint8s.size();
             }
         }
 
@@ -147,8 +133,6 @@ namespace kodo
         {
             assert(coefficients != 0);
 
-            // Since we will not set all coefficients we should ensure
-            // that the non specified ones are zero
             std::fill_n(coefficients, SuperCoder::coefficient_vector_size(), 0);
 
             value_type *c = reinterpret_cast<value_type*>(coefficients);
@@ -176,51 +160,41 @@ namespace kodo
         }
 
     private:
-        //Shall call max_symbols, but SuperCoder::max_symbols does not work.
-        //For the test is is set to 16.
         std::vector<ValueType> value_types;
         std::vector<uint8_t> uint8s;
 
-        //Generates 2 * MAX_SYMBOL_SIZE of random numbers. These are the numbers
-        //that will be used as coefficents.
+    private:
+        //Generates the random numbers random numbers for the coefficient vector.
+        // These numbers are of size uint8_t and/or ValueType.
         void generate_first_random_numbers()
         {
-            printf("Enters generate_first_random_numbers()\n");
-            // The size of the vectors containing random numbers is defined.
-            vector_size =
-                ((size - (size % sizeof(ValueType))) / sizeof(ValueType)) * 2;
-            value_types.resize(vector_size);
 
-            array_lenght =  vector_size;
-
-            upper_bound = (size - (size % sizeof(ValueType))) / sizeof(ValueType);
-
-
-
-            // The two vectors are filled with random numbers
-            for(uint32_t i = 0; i < array_lenght; ++i)
+            if(vector_size_less_value_type_size)
             {
-                value_types[i] =
-                    m_value_distribution(m_random_generator);
-            }
+                uint8s.resize(SuperCoder::coefficient_vector_size() * 2);
+                uint8s_size = uint8s.size();
 
-            if((size % sizeof(ValueType)))
-            {
-
-                for(uint32_t i = 0; i < uint8s.size(); ++i)
+                for(uint32_t i = 0; i < uint8s_size; ++i)
                 {
                     uint8s[i] =
                         m_distribution(m_random_generator);
                 }
             }
-            else if(vector_size_less_value_type_size)
+            else
             {
-                // assert(0);
-                printf("uint8 is resized.\n");
-                uint8s.resize(SuperCoder::coefficient_vector_size() * 2);
-                array_lenght = uint8s.size();
+                vector_size = (size / sizeof(ValueType))* 2;
+                value_types.resize(vector_size);
 
-                for(uint32_t i = 0; i < array_lenght; ++i)
+                uint8s.resize((size % sizeof(ValueType)) * 2);
+                uint8s_size = uint8s.size();
+
+                for(uint32_t i = 0; i < vector_size; ++i)
+                {
+                    value_types[i] =
+                        m_value_distribution(m_random_generator);
+                }
+
+                for(uint32_t i = 0; i < uint8s_size; ++i)
                 {
                     uint8s[i] =
                         m_distribution(m_random_generator);
@@ -230,16 +204,14 @@ namespace kodo
 
     private:
 
-        // Boolean set after the coefficient vector size
+        // Boolean set acording the coefficient vector size
         bool vector_size_less_value_type_size = true;
 
-        uint32_t array_lenght;
-        uint32_t upper_bound;
-        // uint32_t surplus_coef_spaces = 0;
-        // uint32_t vector_spaces_left_empty = 0;
-        uint32_t size;
+        // The size of the value_type vector, the uint8 vector and the
+        // coefficient vector respectively.
         uint32_t vector_size;
-
+        uint32_t uint8s_size;
+        uint32_t size;
 
     private:
         /// The type of the uint8_t distribution
