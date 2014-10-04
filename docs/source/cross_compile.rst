@@ -10,29 +10,29 @@ of your builds.
 Generic tool options
 --------------------
 
-- cxx_debug
-By default, our build system will remove all debugging info from the generated
-binaries. You can enable the debugging symbols with the ``cxx_debug`` option::
+cxx_debug
+    By default, our build system will remove all debugging info from the generated
+    binaries. You can enable the debugging symbols with the ``cxx_debug`` option::
+    
+        python waf configure --options=cxx_debug
 
-    python waf configure --options=cxx_debug
+run_tests
+    You can use this option to run the unit tests after your build is completed::
+    
+        python waf build --options=run_tests
 
-- run_tests
-You can use this option to run the unit tests after your build is completed::
+run_benchmark
+    You can use this option to run a specific benchmark after your build is
+    completed::
+    
+        python waf build --options=run_benchmark=my_benchmark
 
-    python waf build --options=run_tests
-
-- run_benchmark
-You can use this option to run a specific benchmark after your build is
-completed::
-
-    python waf build --options=run_benchmark=my_benchmark
-
-- run_always
-This option is used in conjunction with run_tests and run_benchmark to
-always run the given targets, even if waf already performed this task after
-a successful build::
-
-    python waf build --options=run_tests,run_always
+run_always
+    This option is used in conjunction with run_tests and run_benchmark to
+    always run the given targets, even if waf already performed this task after
+    a successful build::
+    
+        python waf build --options=run_tests,run_always
 
 
 Cross-compilation
