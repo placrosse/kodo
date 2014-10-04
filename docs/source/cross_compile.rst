@@ -11,27 +11,23 @@ Generic tool options
 --------------------
 
 cxx_debug
-.........
 By default, our build system will remove all debugging info from the generated
 binaries. You can enable the debugging symbols with the ``cxx_debug`` option::
 
     python waf configure --options=cxx_debug
 
 run_tests
-.........
 You can use this option to run the unit tests after your build is completed::
 
     python waf build --options=run_tests
 
 run_benchmark
-.............
 You can use this option to run a specific benchmark after your build is
 completed::
 
     python waf build --options=run_benchmark=my_benchmark
 
 run_always
-..........
 This option is used in conjunction with run_tests and run_benchmark to
 always run the given targets, even if waf already performed this task after
 a successful build::
@@ -84,7 +80,7 @@ commands::
 
 Once you have everything in your PATH, use the following mkspec when you
 configure Kodo (you may also select another Android mkspec if available
-in the list provided by ``config.py``):
+in the list provided by ``config.py``)::
 
     python waf configure --options=cxx_mkspec=cxx_android_gxx48_arm
 
