@@ -10,24 +10,24 @@ of your builds.
 Generic tool options
 --------------------
 
-cxx_debug
+- cxx_debug
 By default, our build system will remove all debugging info from the generated
 binaries. You can enable the debugging symbols with the ``cxx_debug`` option::
 
     python waf configure --options=cxx_debug
 
-run_tests
+- run_tests
 You can use this option to run the unit tests after your build is completed::
 
     python waf build --options=run_tests
 
-run_benchmark
+- run_benchmark
 You can use this option to run a specific benchmark after your build is
 completed::
 
     python waf build --options=run_benchmark=my_benchmark
 
-run_always
+- run_always
 This option is used in conjunction with run_tests and run_benchmark to
 always run the given targets, even if waf already performed this task after
 a successful build::
@@ -65,7 +65,7 @@ http://bongo.steinwurf.dk/files/toolchains
 You also need to have the Android SDK, because we need to find the ``adb`` tool
 during the configure step. The easiest solution is to add the path to ``adb``
 and the ``bin`` folder of the standalone toolchain to your PATH. For example,
-you can add the following lines to your ~/.profile (please adjust the
+you can add the following lines to your ``~/.profile`` (please adjust the
 paths to match your folder names and locations)::
 
     PATH="$PATH:$HOME/toolchains/android-sdk-linux-r22.6/platform-tools"
@@ -136,7 +136,7 @@ http://buildbot.steinwurf.dk:12344/toolchains/linux/
 
 Extract ``raspberry-gxx47-arm.zip`` to a folder of your liking. You also need
 to add the `bin`` folder of the Raspberry toolchain to your PATH. For example,
-you can add the following lines to your ~/.profile (please adjust the
+you can add the following lines to your ``~/.profile`` (please adjust the
 paths to match your folder names and locations)::
 
     PATH="$PATH:$HOME/toolchains/raspberry-gxx47-arm/bin"
