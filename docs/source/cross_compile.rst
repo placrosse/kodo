@@ -11,32 +11,34 @@ Generic tool options
 --------------------
 
 cxx_debug
-    By default, our build system will remove all debugging info from the generated
-    binaries. You can enable the debugging symbols with the ``cxx_debug`` option::
-    
+    By default, our build system will remove all debugging info from the
+    generated binaries. You can enable the debugging symbols with the
+    ``cxx_debug`` option::
+
         python waf configure --options=cxx_debug
 
 run_tests
-    You can use this option to run the unit tests after your build is completed::
-    
+    You can use this option to run the unit tests after your build is
+    completed::
+
         python waf build --options=run_tests
 
 run_benchmark
     You can use this option to run a specific benchmark after your build is
     completed::
-    
+
         python waf build --options=run_benchmark=my_benchmark
 
 run_always
     This option is used in conjunction with run_tests and run_benchmark to
     always run the given targets, even if waf already performed this task after
     a successful build::
-    
+
         python waf build --options=run_tests,run_always
 
 
-Cross-compilation
------------------
+Cross-compilation options
+-------------------------
 
 The tool options are also useful to specify makespecs for given toolchains
 that can compile binaries for different platforms. The makespecs are also
@@ -146,7 +148,7 @@ You can check that the required binaries are in your PATH with this command::
 
     raspberry-gxx47-arm-g++ --version
 
-configure Kodo with the following mkspec::
+Go to your Kodo folder, configure Kodo with the following mkspec::
 
     python waf configure --options=cxx_mkspec=cxx_raspberry_gxx47_arm
 
@@ -163,7 +165,81 @@ to your Raspberry Pi with any tool you like (e.g. SCP).
 OpenWRT
 .......
 You should build a compatible OpenWRT toolchain for your target device.
-Instructions to do that...
+Here we explain how to do that for a device with an ARM CPU.
+
+First, you should install the required packages to build the toolchain (this
+list works for Ubuntu and Debian)::
+
+    sudo apt-get install gcc g++ subversion git-core build-essential gawk libncurses5-dev zlib1g-dev unzip
+
+Then clone the standard OpenWRT toolchain (you change the target path if
+you prefer)::
+
+    cd ~/toolchains
+    git clone git://git.openwrt.org/openwrt.git
+    cd openwrt
+
+This guide was written using BARRIER BREAKER (revision 39585).
+You can check your current revision::
+
+    git show --summary
+
+It is recommended to check out revision 39585 (since that version was tested)::
+
+    git log --grep=39585
+    git checkout 64cee0
+
+This make command will pop up a menuconfig window::
+
+    make package/symlinks
+
+Here you should select a Target System and a Target Profile that are
+compatible with your OpenWRT device.
+
+Save this preliminary menuconfig, and then open the full menuconfig::
+
+    make menuconfig
+
+Here we need to change the GCC version to 4.7.x::
+
+    [*] Advanced configuration options (for developers)  --->
+     Toolchain Options  --->
+      GCC compiler Version (gcc 4.7.x with Linaro enhancements)  --->
+       (X) gcc 4.7.x with Linaro enhancements
+
+Save the configuration and build the OpenWRT toolchain (``-j4`` uses 4 cores to
+speed up the process)::
+
+    make -j4
+
+After the toolchain is built, you need to add the `bin`` folder of the
+generated toolchain to your PATH (the toolchain is created in the
+``staging_dir`` folder). You should also set the ``STAGING_DIR`` variable
+to point to the ``staging_dir`` folder. For example, you can add the following
+lines to your ``~/.profile`` (please adjust the paths to match your folder
+names and locations if necessary)::
+
+    PATH="$PATH:$HOME/toolchains/openwrt/staging_dir/toolchain-arm_v6k_gcc-4.7-linaro_uClibc-0.9.33.2_eabi/bin"
+    STAGING_DIR="$HOME/toolchains/openwrt/trunk/staging_dir/"
+    export STAGING_DIR
+
+You need to log in again or open a new terminal to get the updated PATH.
+You can check that the required binaries are in your PATH with this command::
+
+    arm-openwrt-linux-g++ --version
+
+Go to your Kodo folder, and configure Kodo with the following mkspec::
+
+    python waf configure --options=cxx_mkspec=cxx_crosslinux_gxx47_arm
+
+The configure command should find your toolchain binaries,
+and you can build the codebase as usual after this::
+
+    python waf build
+
+You can find the generated binaries in the
+``build/cxx_crosslinux_gxx47_arm`` folder. You can transfer these binaries
+to your OpenWRT device with any tool you like (e.g. SCP).
 
 
 Other toolchains
