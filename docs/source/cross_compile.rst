@@ -20,6 +20,10 @@ cxx_debug
 
         python waf configure --options=cxx_debug
 
+    ..note:: Using this option will add a ``_debug`` postfix to the waf build
+             output path. For example, your binaries will be built in
+             ``build\linux_debug`` or ``build\win32_debug``.
+
 run_tests
     You can use this option to run the unit tests after your build is
     completed::
@@ -43,13 +47,20 @@ run_always
 Cross-compilation options
 -------------------------
 
-The tool options are also useful to specify makespecs for given toolchains
-that can compile binaries for different platforms. The makespecs are also
-handy when you want to select a specific compiler version or CPU architecture.
+We use "mkspecs" (short for "make specifications") to instruct waf to select a
+specific compiler based on its version number (e.g. ``4.8``) and binary name
+(e.g. ``g++-4.8`` or ``arm-linux-androideabi-g++``). Some mkspecs also
+include compiler and linker flags to select a CPU architecture or
+change some other characteristics of the build process. You can select an
+mkspec with the ``cxx_mkspec`` tool option, see various examples below.
 
-Different makespecs are available on different operating systems. You can
-get the list of the currently supported makespecs with the config helper script
-located in the kodo root folder::
+By using an mkspec, we can easily select a toolchain that can compile binaries
+for different platforms. First, you have to install the appropriate toolchain,
+then you can configure Kodo with the corresponding mkspec.
+
+Different mkspecs are available on different operating systems. You can
+get the list of the currently supported mkspecs with the ``config.py`` helper
+script located in the Kodo root folder::
 
     python config.py
 
@@ -57,12 +68,15 @@ This helper script automatically updates itself when you run it. You can use
 this script to go through the common configuration options without typing
 too much.
 
+The full list of currently tested mkspecs can be seen at the bottom of the
+Steinwurf Buildbot page (mkspecs in red are temporarily offline):
+http://buildbot.steinwurf.dk:12344
 
 Android
 .......
 You need a standalone Android toolchain to compile for Android. You can follow
 the instructions in our `Android guide`_ to quickly create a toolchain using
-the Android NDK.
+the latest Android NDK.
 
 You can also download a toolchain for your platform from this page:
 http://bongo.steinwurf.dk/files/toolchains
@@ -116,6 +130,11 @@ that you also have the Apple command-line tools in your PATH by executing
 the following command on OSX Mavericks::
 
     xcode-select --install
+
+Open a Terminal, and use this command to check if you have the Apple LLVM
+compiler in your PATH::
+
+    clang++ --version
 
 XCode installs the iOS SDK to a standard location, so you only need to specify
 the iOS mkspec when you configure (please note that the version numbers in
@@ -215,7 +234,7 @@ speed up the process)::
 
     make -j4
 
-After the toolchain is built, you need to add the `bin`` folder of the
+After the toolchain is built, you need to add the ``bin`` folder of the
 generated toolchain to your PATH (the toolchain is created in the
 ``staging_dir`` folder). You should also set the ``STAGING_DIR`` variable
 to point to the ``staging_dir`` folder. For example, you can add the following
@@ -243,6 +262,22 @@ and you can build the codebase as usual after this::
 You can find the generated binaries in the
 ``build/cxx_crosslinux_gxx47_arm`` folder. You can transfer these binaries
 to your OpenWRT device with any tool you like (e.g. SCP).
+
+Note that the following packages are required on your OpenWRT device to
+run the generated binaries, you can run these commands on your device if it
+has Internet connectivity::
+
+    opkg install libpthread
+    opkg install librt
+    opkg install libstdcpp
+
+Alternatively, you can activate these packages in ``menuconfig`` and deploy
+them manually on the device::
+
+    Base system  ->
+        <*> libpthread
+        <*> librt
+        <*> libstdcpp
 
 
 Other toolchains

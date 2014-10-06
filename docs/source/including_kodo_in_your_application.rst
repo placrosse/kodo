@@ -90,17 +90,17 @@ application.
    system or IDE. It is not recommended to build your software manually with a
    command like this.
 
-.. warning:: This command only contains the basic optimization flags, and you
-             might need to add more flags to get maximum performance.
+   .. warning:: This command only contains the basic optimization flags, and
+                you might need to add more flags to get maximum performance.
 
-.. warning:: The include paths presented here are going to change when a new
-             version of a dependency is released and you run
-             ``python waf configure`` to reconfigure your project. You can
-             update the include paths based on the output of the configure
-             command. Note that the include paths will be different if you
-             use the Git-over-SSH protocol to clone Kodo from Github.
+   .. warning:: The include paths presented here are going to change when a new
+                version of a dependency is released and you run
+                ``python waf configure`` to reconfigure your project. You can
+                update the include paths based on the output of the configure
+                command. Note that the include paths will be different if you
+                use the Git-over-SSH protocol to clone Kodo from Github.
 
-9. Run the compiled example application::
+#. Run the compiled example application::
 
     ./encode_decode_simple
 
