@@ -7,6 +7,9 @@ This section describes the waf configuration options that are used to
 cross-compile Kodo for different platforms and to change some properties
 of your builds.
 
+.. contents:: Table of Contents
+   :local:
+
 Generic tool options
 --------------------
 
