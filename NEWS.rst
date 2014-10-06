@@ -4,7 +4,7 @@ News for Kodo
 This file lists the major changes between versions. For a more
 detailed list of every change, see the Git log.
 
-Latest
+18.0.0
 ------
 * Patch: Fix compilation failure when using kodo::trace one a mutable
   shallow stack.
