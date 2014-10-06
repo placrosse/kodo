@@ -32,6 +32,9 @@ namespace kodo
         /// Access to the symbol pointers
         using Super::m_data;
 
+        /// Do not hide the uint8_t* symbol(uint32_t) const function
+        using Super::symbol;
+
     public:
 
         /// @copydoc layer::symbol(uint32_t)
