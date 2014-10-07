@@ -20,9 +20,9 @@ cxx_debug
 
         python waf configure --options=cxx_debug
 
-    ..note:: Using this option will add a ``_debug`` postfix to the waf build
-             output path. For example, your binaries will be built in
-             ``build\linux_debug`` or ``build\win32_debug``.
+    .. note:: Using this option will add a ``_debug`` postfix to the waf build
+              output path. For example, your binaries will be built in
+              ``build\linux_debug`` or ``build\win32_debug``.
 
 run_tests
     You can use this option to run the unit tests after your build is
@@ -47,8 +47,8 @@ run_always
 Cross-compilation options
 -------------------------
 
-We use "mkspecs" (short for "make specifications") to instruct waf to select a
-specific compiler based on its version number (e.g. ``4.8``) and binary name
+We use "mkspecs" (short for "make specifications") to instruct ``waf`` to select
+a specific compiler based on its version number (e.g. ``4.8``) and binary name
 (e.g. ``g++-4.8`` or ``arm-linux-androideabi-g++``). Some mkspecs also
 include compiler and linker flags to select a CPU architecture or
 change some other characteristics of the build process. You can select an
