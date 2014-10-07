@@ -27,8 +27,9 @@ namespace kodo
         public:
 
             /// @copydoc layer::factory_base::factory_base(uint32_t,uint32_t)
-            factory_base(uint32_t max_symbols, uint32_t max_symbol_size)
-                : SuperCoder::factory_base(max_symbols, max_symbol_size)
+            factory_base(uint32_t max_symbols, uint32_t max_symbol_size) :
+                SuperCoder::factory_base(max_symbols, max_symbol_size),
+                m_seed(0)
             { }
 
 
