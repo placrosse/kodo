@@ -7,7 +7,7 @@
 
 namespace kodo
 {
-    /// @ingroup NOT SURE?
+    /// @ingroup coefficient_generator_layers
     ///
     /// @brief Allows the factory to seed the encoders upon creation.
 
@@ -16,8 +16,9 @@ namespace kodo
     {
     public:
 
-        /// The seed type from the generator used
 
+        /// The seed type from the used generator
+        using seed_type = typename SuperCoder::seed_type;
 
         class factory_base : public SuperCoder::factory_base
         {
@@ -28,7 +29,6 @@ namespace kodo
                 : SuperCoder::factory_base(max_symbols, max_symbol_size)
             { }
 
-            typedef typename SuperCoder::seed_type seed_type;
 
             /// Sets a seed to be used for all encoders created with this
             /// factory
@@ -45,6 +45,8 @@ namespace kodo
             }
 
         private:
+
+            /// The seed used for all encoders created by this factory.
             seed_type m_seed;
         };
 
@@ -53,6 +55,10 @@ namespace kodo
         void initialize(Factory& the_factory)
         {
             SuperCoder::initialize(the_factory);
+            // The reason why this is done here, and not in the construct
+            // function, is that after seeding the factory, the caller is likely
+            // to expect that the encoders behave in the same way, regardless of
+            // whether they have been reconstructed one or not.
             SuperCoder::seed(the_factory.seed());
         }
     };

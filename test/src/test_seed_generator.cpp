@@ -8,9 +8,9 @@
 #include <stub/call.hpp>
 
 
-namespace
+namespace kodo
 {
-    class final
+    class dummy_layer
     {
     public:
         typedef uint32_t seed_type;
@@ -18,13 +18,17 @@ namespace
         class factory_base
         {
         public:
-            factory_base(uint32_t, uint32_t)
-            { }
+            factory_base(uint32_t max_symbols, uint32_t max_symbol_size)
+            {
+                (void)max_symbols;
+                (void)max_symbol_size;
+            }
         };
 
         template<class Factory>
-        void initialize(Factory&)
+        void initialize(Factory& factory)
         {
+            (void)factory;
         }
 
         void seed(seed_type seed)
@@ -35,10 +39,10 @@ namespace
         stub::call<void(seed_type)> m_seed_function;
     };
 
-    class dummy : public kodo::seed_generator<final>
+    class dummy_stack : public seed_generator<dummy_layer>
     {
     public:
-        using factory = dummy::factory_base;
+        using factory = dummy_stack::factory_base;
     };
 }
 
@@ -46,15 +50,14 @@ TEST(TestSeedGenerator, test_seed_generator)
 {
     uint32_t seed = 42;
 
-    dummy::factory factory(0, 0);
+    kodo::dummy_stack::factory factory(0, 0);
     factory.set_seed(seed);
     EXPECT_EQ(seed, factory.seed());
-    dummy stack;
+    kodo::dummy_stack stack;
 
     stack.initialize(factory);
     stack.initialize(factory);
 
-    EXPECT_EQ(2, stack.m_seed_function.calls());
     EXPECT_TRUE((bool)stack.m_seed_function.expect_calls()
                            .with(seed)
                            .with(seed));
