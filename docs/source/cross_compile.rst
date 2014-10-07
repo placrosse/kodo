@@ -184,9 +184,9 @@ You can find the generated binaries in the
 to your Raspberry Pi with any tool you like (e.g. SCP).
 
 
-OpenWRT
+OpenWrt
 .......
-You should build a compatible OpenWRT toolchain for your target device.
+You should build a compatible OpenWrt toolchain for your target device.
 Here we explain how to do that for a device with an ARM CPU.
 
 First, you should install the required packages to build the toolchain (this
@@ -194,14 +194,14 @@ list works for Ubuntu and Debian)::
 
     sudo apt-get install gcc g++ subversion git-core build-essential gawk libncurses5-dev zlib1g-dev unzip
 
-Then clone the standard OpenWRT toolchain (you change the target path if
+Then clone the standard OpenWrt toolchain (you change the target path if
 you prefer)::
 
     cd ~/toolchains
     git clone git://git.openwrt.org/openwrt.git
     cd openwrt
 
-This guide was written using BARRIER BREAKER (revision 39585).
+This guide was written using OpenWrt Barrier Breaker (revision 39585).
 You can check your current revision::
 
     git show --summary
@@ -216,7 +216,7 @@ This make command will pop up a menuconfig window::
     make package/symlinks
 
 Here you should select a Target System and a Target Profile that are
-compatible with your OpenWRT device.
+compatible with your OpenWrt device.
 
 Save this preliminary menuconfig, and then open the full menuconfig::
 
@@ -229,7 +229,7 @@ Here we need to change the GCC version to 4.7.x::
       GCC compiler Version (gcc 4.7.x with Linaro enhancements)  --->
        (X) gcc 4.7.x with Linaro enhancements
 
-Save the configuration and build the OpenWRT toolchain (``-j4`` uses 4 cores to
+Save the configuration and build the OpenWrt toolchain (``-j4`` uses 4 cores to
 speed up the process)::
 
     make -j4
@@ -261,23 +261,25 @@ and you can build the codebase as usual after this::
 
 You can find the generated binaries in the
 ``build/cxx_crosslinux_gxx47_arm`` folder. You can transfer these binaries
-to your OpenWRT device with any tool you like (e.g. SCP).
+to your OpenWrt device with any tool you like (e.g. SCP). The binaries
+can be a bit large, because the mkspec embeds the C++ standard library (with
+the ``-static-libstdc++`` linker flag). The ``libstdcpp`` package is usually
+not installed on OpenWrt devices, or it might be incompatible with the
+GCC 4.7.x compiler.
 
-Note that the following packages are required on your OpenWRT device to
+Note that the following packages are required on your OpenWrt device to
 run the generated binaries, you can run these commands on your device if it
 has Internet connectivity::
 
     opkg install libpthread
     opkg install librt
-    opkg install libstdcpp
 
 Alternatively, you can activate these packages in ``menuconfig`` and deploy
-them manually on the device::
+the generated ``*.ipk`` files manually on the device (with SCP and opkg)::
 
     Base system  ->
         <*> libpthread
         <*> librt
-        <*> libstdcpp
 
 
 Other toolchains
