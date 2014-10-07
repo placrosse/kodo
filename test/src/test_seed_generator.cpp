@@ -7,6 +7,7 @@
 #include <kodo/seed_generator.hpp>
 #include <stub/call.hpp>
 
+#include <cstdint>
 
 namespace kodo
 {

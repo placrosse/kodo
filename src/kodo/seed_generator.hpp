@@ -5,6 +5,8 @@
 
 #pragma once
 
+#include <cstdint>
+
 namespace kodo
 {
     /// @ingroup coefficient_generator_layers
