@@ -6,6 +6,12 @@ detailed list of every change, see the Git log.
 
 Latest
 ------
+* Major: Upgrade to tables 5
+
+18.0.0
+------
+* Patch: Fix compilation failure when using kodo::trace one a mutable
+  shallow stack.
 * Major: Overhaul of the file/storage encoders/decoders. These are
   used to encode/decode objects larger than a single generation. You
   can find updated examples in examples/encode_decode_file and
