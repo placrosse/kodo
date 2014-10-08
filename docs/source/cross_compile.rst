@@ -70,7 +70,7 @@ too much.
 
 The full list of currently tested mkspecs can be seen at the bottom of the
 Steinwurf Buildbot page (mkspecs in red are temporarily offline):
-http://buildbot.steinwurf.dk:12344
+http://buildbot.steinwurf.dk
 
 Android
 .......
@@ -156,7 +156,7 @@ command-line binaries, so you will need a terminal application to run them.
 Raspberry Pi
 ............
 You can download our pre-built Raspberry Pi toolchain for 64-bit Linux here:
-http://buildbot.steinwurf.dk:12344/toolchains/linux/
+http://buildbot.steinwurf.dk/toolchains/linux/
 
 Extract ``raspberry-gxx47-arm.zip`` to a folder of your liking. You also need
 to add the `bin`` folder of the Raspberry toolchain to your PATH. For example,
