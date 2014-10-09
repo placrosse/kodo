@@ -3,7 +3,7 @@
 Unit Testing
 ============
 
-This section describes how the Kodo unit tests works, how to run them
+This section describes how the Kodo unit tests work, how to run them
 and how to extend them.
 
 Overview
@@ -11,8 +11,8 @@ Overview
 
 The purpose of the Kodo unit tests is to assert that the various Kodo
 features work across a number of different platforms and
-compilers. Having an extensive unit test suite furthermore makes it
-easier for developers to ensure that their changes works as expected
+compilers. Having an extensive unit test suite makes it
+easier for developers to ensure that their changes work as expected
 and do not cause regressions in unexpected areas of the library.
 
 The goal is that all features in Kodo should have a corresponding test
@@ -36,30 +36,40 @@ The test binary is built using the waf build scripts shipped as part
 of the Kodo source code. You can read more about how you can get the
 source code and how to build it in the :ref:`getting_started` section.
 
-Once the code is built the test binary will be located in the
-``build`` folder depending on the platform.
+Once the code is built, the test binary will be located in a subfolder of the
+``build`` folder that depends on your platform:
 
 Linux
     ``build/linux/test/kodo_tests``
 
-MacOS
+Mac OSX
     ``build/darwin/test/kodo_tests``
+
 Windows
     ``build/win32/test/kodo_tests.exe``
 
-If you are cross-compiling with a *mkspec* the resulting binary will
+If you are cross-compiling with an *mkspec* (as described in the
+:ref:`cross_compile` section), then the resulting binary will
 be located in:
 
 mkspec
-    ``build/mkspec/test/kodo_tests``
+    ``build/[mkspec]/test/kodo_tests``
+
+.. note:: Running the unit tests may take a long time on mobile and embedded
+          platforms, since we test with an extensive set of parameters. You
+          can lower the complexity and speed up the tests if you invoke the
+          test binary with the ``embedded`` profile::
+
+            ./kodo_tests --profile=embedded
+
+If the ``run_always`` option is removed the unit tests will
+          only run when the test binary changes.
 
 Run the test as part of the build
 .................................
 
 In some cases it is convenient to run the test binary as part of build
-this can be done by passing the following options to the waf build scripts.
-
-::
+this can be done by passing the following options to the waf build scripts::
 
   python waf --options=run_tests,run_always
 
@@ -135,14 +145,14 @@ encoder or decoder contains.
     :language: c++
     :linenos:
 
-As seen the layer depends on two functions being provided by the
-``SuperCoder`` namely the:
+As seen, the layer depends on two functions being provided by the
+``SuperCoder``:
 
 1. ``SuperCoder::initialize(the_factory)``
 2. ``SuperCoder::block_size()``
 
-Using our Doxygen documentation it is possible to look-up what two
-purpose of the two undefined functions are
+Using our Doxygen documentation it is possible to look up what
+purpose of the two undefined functions is
 (http://bongo.steinwurf.dk/static/files/doxygen/kodo/master/html/index.html)
 
 In this case we want to check that the state is correctly updated when
