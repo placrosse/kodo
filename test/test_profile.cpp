@@ -1,9 +1,7 @@
-// Copyright (c) 2011-2014 Steinwurf ApS
-// All Rights Reserved
-//
-// THIS IS UNPUBLISHED PROPRIETARY SOURCE CODE OF STEINWURF
-// The copyright notice above does not evidence any
-// actual or intended publication of such source code.
+// Copyright Steinwurf ApS 2011.
+// Distributed under the "STEINWURF RESEARCH LICENSE 1.0".
+// See accompanying file LICENSE.rst or
+// http://www.steinwurf.com/licensing
 
 #include <cassert>
 #include <string>
