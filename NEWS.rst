@@ -7,6 +7,8 @@ detailed list of every change, see the Git log.
 Latest
 ------
 * Major: Upgrade to tables 5
+* Minor: Added test profile option to speed up the execution of unit tests
+  on embedded devices
 
 18.0.0
 ------
