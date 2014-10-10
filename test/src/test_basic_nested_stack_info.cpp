@@ -19,11 +19,11 @@ namespace kodo
         {
         public:
 
-            class factory
+            class factory_base
             {
             public:
 
-                factory(uint32_t max_symbols, uint32_t max_symbol_size)
+                factory_base(uint32_t max_symbols, uint32_t max_symbol_size)
                 {
                     (void) max_symbols;
                     (void) max_symbol_size;
@@ -67,7 +67,7 @@ TEST(TestBasicNestedStackInfo, api)
     uint32_t symbols = 10;
     uint32_t symbol_size = 10;
 
-    kodo::dummy_stack::factory factory(symbols, symbol_size);
+    kodo::dummy_stack::factory_base factory(symbols, symbol_size);
 
     EXPECT_EQ(factory.nested_max_symbols(), 5U);
     EXPECT_EQ(factory.nested_max_symbol_size(), 3U);

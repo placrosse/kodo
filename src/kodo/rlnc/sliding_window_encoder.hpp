@@ -1,4 +1,4 @@
-// Copyright Steinwurf ApS 2011-2013.
+// Copyright Steinwurf ApS 2011.
 // Distributed under the "STEINWURF RESEARCH LICENSE 1.0".
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
@@ -22,6 +22,7 @@
 
 #include "../pivot_status_reader.hpp"
 #include "../feedback_pivot_status_reader.hpp"
+#include "../feedback_pivot_status.hpp"
 #include "../final_feedback_reader.hpp"
 
 namespace kodo
@@ -41,7 +42,9 @@ namespace kodo
     class sliding_window_encoder : public
         // Feedback API
         feedback_pivot_status_reader<
+        feedback_pivot_status<
         final_feedback_reader<
+        final_feedback_size<
         // Payload Codec API
         payload_rank_encoder<
         payload_encoder<
@@ -66,10 +69,11 @@ namespace kodo
         deep_storage_layers<TraceTag,
         // Finite Field API
         finite_field_layers<Field,
-        // Factory API
-        final_coder_factory_pool<
-        // Final type
-        sliding_window_encoder<Field, TraceTag>
-        > > > > > > > > > > > > > > > > > > >
-    { };
+        // Final Layer
+        final_layer
+        > > > > > > > > > > > > > > > > > > > >
+    {
+    public:
+        using factory = pool_factory<sliding_window_encoder>;
+    };
 }

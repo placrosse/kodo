@@ -1,13 +1,19 @@
-// Copyright Steinwurf ApS 2011-2012.
+// Copyright Steinwurf ApS 2011.
 // Distributed under the "STEINWURF RESEARCH LICENSE 1.0".
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
 
-#include <kodo/file_encoder.hpp>
-#include <kodo/shallow_storage_decoder.hpp>
-#include <kodo/storage_encoder.hpp>
+#include <cstring>
+#include <utility>
+
+//! [0]
+#include <kodo/object/storage_decoder.hpp>
+#include <kodo/object/storage_encoder.hpp>
+
 #include <kodo/rlnc/full_rlnc_codes.hpp>
-#include <kodo/partial_shallow_symbol_storage.hpp>
+//! [1]
+
+#include <vector>
 
 /// @example encode_decode_storage.cpp
 ///
@@ -22,61 +28,63 @@
 
 int main()
 {
+    //! [2]
     // Set the number of symbols (i.e. the generation size in RLNC
     // terminology) and the size of a symbol in bytes
     uint32_t max_symbols = 42;
     uint32_t max_symbol_size = 64;
+
     uint32_t object_size = 23456;
+    //! [3]
 
-    typedef kodo::storage_encoder<
-        kodo::shallow_full_rlnc_encoder<fifi::binary> >
-           storage_encoder;
+    //! [4]
+    using storage_encoder = kodo::object::storage_encoder<
+        kodo::shallow_full_rlnc_encoder<fifi::binary>>;
 
-    typedef kodo::shallow_storage_decoder<
-        kodo::shallow_full_rlnc_decoder<fifi::binary> >
-           storage_decoder;
+    using storage_decoder = kodo::object::storage_decoder<
+        kodo::shallow_full_rlnc_decoder<fifi::binary>>;
+    //! [5]
 
+    //! [6]
     storage_encoder::factory encoder_factory(max_symbols, max_symbol_size);
     storage_decoder::factory decoder_factory(max_symbols, max_symbol_size);
 
-    // The storage needed for all decoders
-    uint32_t total_block_size =
-        decoder_factory.total_block_size(object_size);
-
-    std::vector<uint8_t> data_out(total_block_size, '\0');
+    std::vector<uint8_t> data_out(object_size, '\0');
     std::vector<uint8_t> data_in(object_size, 'x');
 
-    storage_encoder encoder(
-        encoder_factory, sak::storage(data_in));
+    encoder_factory.set_storage(sak::storage(data_in));
+    decoder_factory.set_storage(sak::storage(data_out));
 
-    storage_decoder decoder(
-        decoder_factory, object_size, sak::storage(data_out));
+    auto encoder = encoder_factory.build();
+    auto decoder = decoder_factory.build();
 
-    for (uint32_t i = 0; i < encoder.encoders(); ++i)
+    std::cout << "object_size = " << object_size << std::endl;
+    std::cout << "encoder blocks = " << encoder->blocks() << std::endl;
+    std::cout << "decoder blocks = " << decoder->blocks() << std::endl;
+    //! [7]
+
+    //! [8]
+    for (uint32_t i = 0; i < encoder->blocks(); ++i)
     {
-        auto e = encoder.build(i);
-        auto d = decoder.build(i);
+        auto e = encoder->build(i);
+        auto d = decoder->build(i);
 
         std::vector<uint8_t> payload(e->payload_size());
 
         while (!d->is_complete())
         {
-            e->encode( &payload[0] );
+            e->encode(payload.data());
 
             // Here we would send and receive the payload over a
             // network. Lets throw away some packet to simulate.
-            if ((rand() % 2) == 0)
+            if (rand() % 2)
             {
                 continue;
             }
 
-            d->decode( &payload[0] );
-
+            d->decode(payload.data());
         }
     }
-
-    // Resize the output buffer to contain only the object data
-    data_out.resize(object_size);
 
     // Check we properly decoded the data
     if (data_in == data_out)
@@ -88,4 +96,5 @@ int main()
         std::cout << "Unexpected failure to decode "
                   << "please file a bug report :)" << std::endl;
     }
+    //! [9]
 }

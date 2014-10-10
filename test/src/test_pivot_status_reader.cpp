@@ -1,4 +1,4 @@
-// Copyright Steinwurf ApS 2011-2013.
+// Copyright Steinwurf ApS 2011.
 // Distributed under the "STEINWURF RESEARCH LICENSE 1.0".
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
@@ -11,6 +11,7 @@
 #include <fifi/fifi_utils.hpp>
 
 #include <kodo/pivot_status_reader.hpp>
+#include <kodo/basic_factory.hpp>
 
 namespace kodo
 {
@@ -31,10 +32,10 @@ namespace kodo
 
         public:
 
-            struct factory
+            struct factory_base
             {
 
-                factory(uint32_t max_symbols, uint32_t max_symbol_size)
+                factory_base(uint32_t max_symbols, uint32_t max_symbol_size)
                     : m_max_symbols(max_symbols),
                       m_max_symbol_size(max_symbol_size)
                 { }
@@ -74,7 +75,10 @@ namespace kodo
         class dummy_stack
             : public pivot_status_reader<
                      dummy_layer>
-          { };
+        {
+        public:
+            using factory = basic_factory<dummy_stack>;
+        };
     }
 }
 
@@ -146,5 +150,3 @@ TEST(TestPivotStatusReader, api)
     EXPECT_EQ(stack.remote_is_symbol_pivot(8), 0U);
 
 }
-
-

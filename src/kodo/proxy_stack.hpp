@@ -1,4 +1,4 @@
-// Copyright Steinwurf ApS 2011-2013.
+// Copyright Steinwurf ApS 2011.
 // Distributed under the "STEINWURF RESEARCH LICENSE 1.0".
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
@@ -103,7 +103,7 @@ namespace kodo
         template <class...> class NestedStack,
         class SuperCoder
     >
-    struct proxy_stack;
+    class proxy_stack;
 
     /// Specialization of the proxy_stack allowing the use of the
     /// proxy_args helper to specify additional template arguments in
@@ -125,17 +125,17 @@ namespace kodo
 
     public:
 
-        /// @ingroup factory_layers
-        /// The factory layer associated with this coder.
-        class factory : public Super::factory
+        /// @ingroup factory_base_layers
+        /// The factory_base layer associated with this coder.
+        class factory_base : public Super::factory_base
         {
         public:
 
-            /// @copydoc layer::factory::factory(uint32_t,uint32_t)
-            factory(uint32_t max_symbols, uint32_t max_symbol_size) :
-                Super::factory(max_symbols, max_symbol_size)
+            /// @copydoc layer::factory_base::factory_base(uint32_t,uint32_t)
+            factory_base(uint32_t max_symbols, uint32_t max_symbol_size) :
+                Super::factory_base(max_symbols, max_symbol_size)
             {
-                Super::factory::nested().set_main_factory(this);
+                Super::factory_base::nested().set_main_factory(this);
             }
         };
 

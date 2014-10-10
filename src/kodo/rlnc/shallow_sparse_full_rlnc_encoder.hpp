@@ -1,4 +1,4 @@
-// Copyright Steinwurf ApS 2011-2014.
+// Copyright Steinwurf ApS 2011.
 // Distributed under the "STEINWURF RESEARCH LICENSE 1.0".
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
@@ -6,7 +6,7 @@
 #pragma once
 
 #include "../default_on_systematic_encoder.hpp"
-#include "../partial_shallow_storage_layers.hpp"
+#include "../partial_const_shallow_storage_layers.hpp"
 #include "../sparse_uniform_generator.hpp"
 #include "../finite_field_layers.hpp"
 
@@ -42,13 +42,14 @@ namespace kodo
         coefficient_value_access<
         coefficient_info<
         // Symbol Storage API
-        partial_shallow_storage_layers<TraceTag,
+        partial_const_shallow_storage_layers<TraceTag,
         // Finite Field API
         finite_field_layers<Field,
-        // Factory API
-        final_coder_factory_pool<
-        // Final type
-        shallow_sparse_full_rlnc_encoder<Field, TraceTag>
-        > > > > > > > > > > > > > >
-    { };
+        // Final Layer
+        final_layer
+        > > > > > > > > > > > > >
+    {
+    public:
+        using factory = pool_factory<shallow_sparse_full_rlnc_encoder>;
+    };
 }

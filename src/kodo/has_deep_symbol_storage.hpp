@@ -1,4 +1,4 @@
-// Copyright Steinwurf ApS 2011-2012.
+// Copyright Steinwurf ApS 2011.
 // Distributed under the "STEINWURF RESEARCH LICENSE 1.0".
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
@@ -9,8 +9,8 @@
 
 namespace kodo
 {
-
     /// @ingroup type_traits
+    ///
     /// Type trait helper allows compile time detection of whether an
     /// encoder / decoder contains the deep_symbol_storage layer
     ///
@@ -33,7 +33,4 @@ namespace kodo
 
         static const bool value = sizeof(test(static_cast<T*>(0))) == 1;
     };
-
 }
-
-

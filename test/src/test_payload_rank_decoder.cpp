@@ -1,4 +1,4 @@
-// Copyright Steinwurf ApS 2011-2013.
+// Copyright Steinwurf ApS 2011.
 // Distributed under the "STEINWURF RESEARCH LICENSE 1.0".
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
@@ -10,6 +10,7 @@
 #include <gtest/gtest.h>
 
 #include <kodo/payload_rank_decoder.hpp>
+#include <kodo/basic_factory.hpp>
 
 namespace kodo
 {
@@ -26,10 +27,9 @@ namespace kodo
         {
             typedef uint32_t rank_type;
 
-            struct factory
+            struct factory_base
             {
-                /// @copydoc layer::factory::factory(uint32_t,uint32_t)
-                factory(uint32_t max_symbols, uint32_t max_symbol_size)
+                factory_base(uint32_t max_symbols, uint32_t max_symbol_size)
                     : m_max_payload_size(0)
                 {
                     (void) max_symbols;
@@ -86,10 +86,13 @@ namespace kodo
               // Coefficient Storage API
               // Storage API
               // Finite Field API
-              // Factory API
+              // Final Layer
               // Final type
               dummy_final>
-          { };
+        {
+        public:
+            using factory = basic_factory<rank_decoder_stack>;
+        };
     }
 }
 
@@ -150,5 +153,3 @@ TEST(TestPayloadRankDecoder, test_payload_rank_decoder)
     EXPECT_EQ(stack.remote_rank(), 0U);
 
 }
-
-

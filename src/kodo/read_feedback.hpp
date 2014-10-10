@@ -1,4 +1,4 @@
-// Copyright Steinwurf ApS 2011-2013.
+// Copyright Steinwurf ApS 2011.
 // Distributed under the "STEINWURF RESEARCH LICENSE 1.0".
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
@@ -50,11 +50,9 @@ namespace kodo
     /// @ingroup generic_api
     /// @copydoc read_feedback(const T&, const uint8_t*)
     template<class T>
-    inline void read_feedback(boost::shared_ptr<T>& t, const uint8_t* buffer)
+    inline void read_feedback(std::shared_ptr<T>& t, const uint8_t* buffer)
     {
         read_feedback(*t, buffer);
     }
 
 }
-
-

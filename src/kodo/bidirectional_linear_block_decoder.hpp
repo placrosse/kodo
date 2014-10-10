@@ -1,4 +1,4 @@
-// Copyright Steinwurf ApS 2011-2012.
+// Copyright Steinwurf ApS 2011.
 // Distributed under the "STEINWURF RESEARCH LICENSE 1.0".
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
@@ -44,7 +44,7 @@ namespace kodo
         typedef typename field_type::value_type value_type;
 
         /// @copydoc layer::factory
-        typedef typename SuperCoder::factory factory;
+        typedef typename SuperCoder::factory_base factory;
 
         /// The direction policy determining the direction we iterate through
         /// the coding coefficients
@@ -74,25 +74,6 @@ namespace kodo
             // from symbols to 0.
             m_maximum_pivot =
                 direction_policy::min(0, the_factory.symbols() - 1);
-        }
-
-        /// @todo delete this function
-        ///
-        /// @copydoc layer::decode_symbol(value_type*,value_type*)
-        template
-        <
-            typename V = value_type,
-            typename std::enable_if<
-                !std::is_same<V,uint8_t>::value, uint8_t>::type = 0
-        >
-        void decode_symbol(value_type* symbol_data,
-                           value_type* symbol_coefficients)
-        {
-            assert(symbol_data != 0);
-            assert(symbol_coefficients != 0);
-
-            decode_coefficients(symbol_data, symbol_coefficients);
-            update_symbol_status();
         }
 
         /// @copydoc layer::decode_symbol(uint8_t*,uint8_t*)

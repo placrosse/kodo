@@ -1,4 +1,4 @@
-// Copyright Steinwurf ApS 2011-2013.
+// Copyright Steinwurf ApS 2011.
 // Distributed under the "STEINWURF RESEARCH LICENSE 1.0".
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
@@ -56,11 +56,9 @@ namespace kodo
     /// @copydoc write_feedback(const T&, uint8_t*)
     template<class T>
     inline uint32_t
-    write_feedback(const boost::shared_ptr<T>& t, uint8_t* buffer)
+    write_feedback(const std::shared_ptr<T>& t, uint8_t* buffer)
     {
         return write_feedback(*t, buffer);
     }
 
 }
-
-

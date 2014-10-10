@@ -1,13 +1,15 @@
-// Copyright Steinwurf ApS 2011-2012.
+// Copyright Steinwurf ApS 2011.
 // Distributed under the "STEINWURF RESEARCH LICENSE 1.0".
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
 
-#include <ctime>
-#include <set>
-
 #include <kodo/rlnc/full_rlnc_codes.hpp>
 #include <kodo/trace.hpp>
+
+#include <ctime>
+#include <set>
+#include <string>
+#include <vector>
 
 /// @example use_trace_layers.cpp
 ///
@@ -16,7 +18,7 @@
 
 int main()
 {
-    // Seed rand
+    // Seed random number generator to produce different results every time
     srand(static_cast<uint32_t>(time(0)));
 
     // Set the number of symbols (i.e. the generation size in RLNC
@@ -25,11 +27,11 @@ int main()
     uint32_t symbol_size = 33;
 
     // Typdefs for the encoder/decoder type we wish to use
-    typedef kodo::full_rlnc_encoder<fifi::binary8, kodo::disable_trace>
-        rlnc_encoder;
+    using  rlnc_encoder =
+        kodo::full_rlnc_encoder<fifi::binary8, kodo::disable_trace>;
 
-    typedef kodo::full_rlnc_decoder<fifi::binary8, kodo::enable_trace>
-        rlnc_decoder;
+    using rlnc_decoder =
+        kodo::full_rlnc_decoder<fifi::binary8, kodo::enable_trace>;
 
     // In the following we will make an encoder/decoder factory.
     // The factories are used to build actual encoders/decoders
@@ -49,16 +51,16 @@ int main()
     std::vector<uint8_t> data_in(encoder->block_size());
 
     // Just for fun - fill the data with random data
-    std::generate_n(begin(data_in), data_in.size(), rand);
+    std::generate(data_in.begin(), data_in.end(), rand);
 
     // Assign the data buffer to the encoder so that we may start
     // to produce encoded symbols from it
     encoder->set_symbols(sak::storage(data_in));
 
-    while ( !decoder->is_complete() )
+    while (!decoder->is_complete())
     {
         // Encode a packet into the payload buffer
-        encoder->encode( payload.data() );
+        encoder->encode(payload.data());
 
         if (kodo::has_trace<rlnc_encoder>::value)
         {
@@ -73,11 +75,11 @@ int main()
         // sending all symbols once uncoded, the encoder will switch
         // to full coding, in which case you will see the full encoding
         // vectors being sent and received.
-        if ((rand() % 2) == 0)
+        if (rand() % 2)
             continue;
 
         // Pass that packet to the decoder
-        decoder->decode( payload.data() );
+        decoder->decode(payload.data());
 
         if (kodo::has_trace<rlnc_decoder>::value)
         {
@@ -89,16 +91,12 @@ int main()
                 return filters.count(zone);
             };
 
-            std::cout << "Trace decoder:" << std::endl;
-
-
             // Try to run without a filter to see the full amount of
             // output produced by the trace function. You can then
             // modify the filter to only view the information you are
             // interested in.
-
+            std::cout << "Trace decoder:" << std::endl;
             kodo::trace(decoder, std::cout, filter);
-            //kodo::trace(decoder, std::cout);
         }
     }
 

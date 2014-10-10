@@ -25,14 +25,17 @@ versioning is a very simple scheme built around the x.y.z concept
 .. _Semantic versioning: http://semver.org/
 
 The basic rules we use are the following:
- * Major version: Increment x when you break backwards-compatibility or add major features
+ * Major version: Increment x when you break backwards-compatibility
  * Minor version: Increment y when you add a new feature (without breaking
    backward-compatibility)
- * Bug fix: Increment z when you fix something e.g. a bug (without breaking
-   backward-compatibility)
+ * Patch: Increment z when you improve something or fix a bug (without
+   breaking-compatibility or adding new functionality)
+
+.. _contact_us:
 
 Contact Us
 ----------
+
 There are several ways in which you may contact us:
  * Questions about libraries or the technology used may be redirected to our
    mailing list (the mailing list is hosted on Google Groups) you may view the
@@ -43,5 +46,3 @@ There are several ways in which you may contact us:
 
 .. _github issue tracker: https://github.com/steinwurf/kodo/issues
 .. _mailing list here: http://groups.google.com/group/steinwurf-dev
-
-

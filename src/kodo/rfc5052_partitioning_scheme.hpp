@@ -1,17 +1,17 @@
-// Copyright Steinwurf ApS 2011-2012.
+// Copyright Steinwurf ApS 2011.
 // Distributed under the "STEINWURF RESEARCH LICENSE 1.0".
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
 
-#ifndef KODO_RFC5052_PARTITIONING_SCHEME_HPP
-#define KODO_RFC5052_PARTITIONING_SCHEME_HPP
+#pragma once
 
 #include <cstdint>
+#include <algorithm>
 
 namespace kodo
 {
-
     /// @ingroup block_partitioning_implementation
+    ///
     /// @brief RFC5052 block partitioning scheme.
     ///
     /// Takes as input the number of symbols the symbol size
@@ -211,6 +211,3 @@ namespace kodo
     }
 
 }
-
-#endif
-

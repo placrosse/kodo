@@ -1,4 +1,4 @@
-// Copyright Steinwurf ApS 2011-2013.
+// Copyright Steinwurf ApS 2011.
 // Distributed under the "STEINWURF RESEARCH LICENSE 1.0".
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
@@ -28,33 +28,35 @@ namespace kodo
     {
 
         template<class Field>
-        class test_partial_stack
-            : public // Payload API
-                     // Codec Header API
-                     // Symbol ID API
-                     // Codec API
-                     largest_nonzero_index_decoder<
-                     forward_linear_block_decoder<
-                     rank_info<
-                     symbol_decoding_status_counter<
-                     symbol_decoding_status_tracker<
-                     // Coefficient Storage API
-                     coefficient_value_access<
-                     coefficient_storage<
-                     coefficient_info<
-                     // Storage API
-                     deep_symbol_storage<
-                     storage_bytes_used<
-                     storage_block_info<
-                     // Finite Field API
-                     finite_field_math<typename fifi::default_field<Field>::type,
-                     finite_field_info<Field,
-                     // Factory API
-                     final_coder_factory_pool<
-                     // Final type
-                     test_partial_stack<Field>
-                         > > > > > > > > > > > > > >
-        { };
+        class test_partial_stack :
+            public // Payload API
+            // Codec Header API
+            // Symbol ID API
+            // Codec API
+            largest_nonzero_index_decoder<
+            forward_linear_block_decoder<
+            rank_info<
+            symbol_decoding_status_counter<
+            symbol_decoding_status_tracker<
+            // Coefficient Storage API
+            coefficient_value_access<
+            coefficient_storage<
+            coefficient_info<
+            // Storage API
+            deep_symbol_storage<
+            storage_bytes_used<
+            storage_block_length<
+            storage_block_size<
+            // Finite Field API
+            finite_field_math<typename fifi::default_field<Field>::type,
+            finite_field_info<Field,
+            // Final Layer
+            final_layer
+            > > > > > > > > > > > > > >
+        {
+        public:
+            using factory = basic_factory<test_partial_stack>;
+        };
 
     }
 }

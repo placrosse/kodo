@@ -1,4 +1,4 @@
-// Copyright Steinwurf ApS 2011-2013.
+// Copyright Steinwurf ApS 2011.
 // Distributed under the "STEINWURF RESEARCH LICENSE 1.0".
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
@@ -10,6 +10,7 @@
 #include <gtest/gtest.h>
 
 #include <kodo/payload_rank_recoder.hpp>
+#include <kodo/basic_factory.hpp>
 
 namespace kodo
 {
@@ -29,11 +30,11 @@ namespace kodo
         public:
 
             // The dummy factory object
-            class factory
+            class factory_base
             {
             public:
 
-                factory(uint32_t max_symbols, uint32_t max_symbol_size)
+                factory_base(uint32_t max_symbols, uint32_t max_symbol_size)
                 {
                     (void) max_symbols;
                     (void) max_symbol_size;
@@ -82,7 +83,10 @@ namespace kodo
         };
 
         class test_stack : public payload_rank_recoder<dummy_layer>
-        { };
+        {
+        public:
+            using factory = basic_factory<test_stack>;
+        };
     }
 }
 
@@ -137,5 +141,3 @@ TEST(TestPayloadRankRecoder, stack)
     rank = sak::big_endian::get<rank_type>(&payload[0]);
     EXPECT_EQ(rank, stack.m_remote_rank);
 }
-
-

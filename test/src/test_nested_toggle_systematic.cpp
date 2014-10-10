@@ -127,8 +127,11 @@ TEST(TestNestedToggleSystematic, api)
         stack.set_systematic_on();
         stack.set_systematic_off();
 
-        EXPECT_TRUE(stack.m_nested.m_set_systematic_on.called_once_with());
-        EXPECT_TRUE(stack.m_nested.m_set_systematic_off.called_once_with());
+        EXPECT_TRUE((bool) stack.m_nested.m_set_systematic_on.expect_calls()
+                        .with());
+
+        EXPECT_TRUE((bool) stack.m_nested.m_set_systematic_off.expect_calls()
+                        .with());
     }
 
     {
@@ -136,9 +139,14 @@ TEST(TestNestedToggleSystematic, api)
         stack.set_systematic_on();
         stack.set_systematic_off();
 
-        EXPECT_TRUE(stack.m_nested.m_set_systematic_on.called_once_with());
-        EXPECT_TRUE(stack.m_nested.m_set_systematic_off.called_once_with());
-        EXPECT_TRUE(stack.m_set_systematic_on.called_once_with());
+        EXPECT_TRUE((bool) stack.m_nested.m_set_systematic_on.expect_calls()
+                        .with());
+
+        EXPECT_TRUE((bool) stack.m_nested.m_set_systematic_off.expect_calls()
+                        .with());
+
+        EXPECT_TRUE((bool) stack.m_set_systematic_on.expect_calls()
+                        .with());
     }
 
     {
@@ -146,9 +154,14 @@ TEST(TestNestedToggleSystematic, api)
         stack.set_systematic_on();
         stack.set_systematic_off();
 
-        EXPECT_TRUE(stack.m_nested.m_set_systematic_on.called_once_with());
-        EXPECT_TRUE(stack.m_nested.m_set_systematic_off.called_once_with());
-        EXPECT_TRUE(stack.m_set_systematic_off.called_once_with());
+        EXPECT_TRUE((bool) stack.m_nested.m_set_systematic_on.expect_calls()
+                        .with());
+
+        EXPECT_TRUE((bool) stack.m_nested.m_set_systematic_off.expect_calls()
+                         .with());
+
+        EXPECT_TRUE((bool) stack.m_set_systematic_off.expect_calls()
+                        .with());
     }
 
     {
@@ -156,9 +169,16 @@ TEST(TestNestedToggleSystematic, api)
         stack.set_systematic_on();
         stack.set_systematic_off();
 
-        EXPECT_TRUE(stack.m_nested.m_set_systematic_on.called_once_with());
-        EXPECT_TRUE(stack.m_nested.m_set_systematic_off.called_once_with());
-        EXPECT_TRUE(stack.m_set_systematic_on.called_once_with());
-        EXPECT_TRUE(stack.m_set_systematic_off.called_once_with());
+        EXPECT_TRUE((bool) stack.m_nested.m_set_systematic_on.expect_calls()
+                        .with());
+
+        EXPECT_TRUE((bool) stack.m_nested.m_set_systematic_off.expect_calls()
+                        .with());
+
+        EXPECT_TRUE((bool) stack.m_set_systematic_on.expect_calls()
+                        .with());
+
+        EXPECT_TRUE((bool) stack.m_set_systematic_off.expect_calls()
+                        .with());
     }
 }

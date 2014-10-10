@@ -1,4 +1,4 @@
-// Copyright Steinwurf ApS 2011-2012.
+// Copyright Steinwurf ApS 2011.
 // Distributed under the "STEINWURF RESEARCH LICENSE 1.0".
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
@@ -57,7 +57,7 @@ namespace
 
 /// Tests the basic API functionality this mean basic encoding
 /// and decoding
-TEST(TestRlncFullVectorCodes, test_basic_api)
+TEST(TestFullRlncCodes, test_basic_api)
 {
     test_basic_api<shallow_encoder, decoder>();
     test_basic_api<encoder, decoder>();
@@ -70,7 +70,7 @@ TEST(TestRlncFullVectorCodes, test_basic_api)
 /// Test that the encoders and decoders initialize() function can be used
 /// to reset the state of an encoder and decoder and that they therefore
 /// can be safely reused.
-TEST(TestRlncFullVectorCodes, test_initialize)
+TEST(TestFullRlncCodes, test_initialize)
 {
     test_initialize<shallow_encoder, decoder>();
     test_initialize<encoder, decoder>();
@@ -82,7 +82,7 @@ TEST(TestRlncFullVectorCodes, test_initialize)
 
 /// Tests that an encoder producing systematic packets is handled
 /// correctly in the decoder.
-TEST(TestRlncFullVectorCodes, test_systematic)
+TEST(TestFullRlncCodes, test_systematic)
 {
     test_systematic<shallow_encoder,decoder>();
     test_systematic<encoder, decoder>();
@@ -94,7 +94,7 @@ TEST(TestRlncFullVectorCodes, test_systematic)
 
 /// Tests whether mixed un-coded and coded packets are correctly handled
 /// in the encoder and decoder.
-TEST(TestRlncFullVectorCodes, mix_uncoded)
+TEST(TestFullRlncCodes, mix_uncoded)
 {
     test_mix_uncoded<shallow_encoder,decoder>();
     test_mix_uncoded<encoder,decoder>();
@@ -105,7 +105,7 @@ TEST(TestRlncFullVectorCodes, mix_uncoded)
 }
 
 /// The recoding
-TEST(TestRlncFullVectorCodes, test_recoders_api)
+TEST(TestFullRlncCodes, test_recoders_api)
 {
     test_recoders<shallow_encoder,decoder>();
     test_recoders<encoder,decoder>();
@@ -116,7 +116,7 @@ TEST(TestRlncFullVectorCodes, test_recoders_api)
 }
 
 /// The recoding
-TEST(TestRlncFullVectorCodes, test_recoding_relay)
+TEST(TestFullRlncCodes, test_recoding_relay)
 {
     test_recoding_relay<shallow_encoder,decoder>();
     test_recoding_relay<encoder,decoder>();
@@ -128,7 +128,7 @@ TEST(TestRlncFullVectorCodes, test_recoding_relay)
 
 /// Tests the basic API functionality this mean basic encoding
 /// and decoding
-TEST(TestRlncFullVectorCodes, test_reuse_api)
+TEST(TestFullRlncCodes, test_reuse_api)
 {
     test_reuse<shallow_encoder,decoder>();
     test_reuse<encoder,decoder>();
@@ -140,7 +140,7 @@ TEST(TestRlncFullVectorCodes, test_reuse_api)
 
 /// Tests the basic API functionality this mean basic encoding
 /// and decoding
-TEST(TestRlncFullVectorCodes, test_reuse_incomplete_api)
+TEST(TestFullRlncCodes, test_reuse_incomplete_api)
 {
     test_reuse_incomplete<shallow_encoder, decoder>();
     test_reuse_incomplete<encoder, decoder>();

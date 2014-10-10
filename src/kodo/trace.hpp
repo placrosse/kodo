@@ -1,4 +1,4 @@
-// Copyright Steinwurf ApS 2011-2014.
+// Copyright Steinwurf ApS 2011.
 // Distributed under the "STEINWURF RESEARCH LICENSE 1.0".
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
@@ -15,7 +15,7 @@ namespace kodo
     /// @ingroup trace
     ///
     /// This function calls the layer::trace(std::ostream&) function
-    /// used to produce a trace trace for the chosen codec.
+    /// used to produce a trace for the chosen codec.
     template
     <
         class T,
@@ -71,7 +71,7 @@ namespace kodo
         class T,
         class Filter
     >
-    inline void trace(boost::shared_ptr<T>& t, std::ostream& out,
+    inline void trace(std::shared_ptr<T>& t, std::ostream& out,
                       const Filter& filter)
     {
         kodo::trace(*t, out, filter);
@@ -84,7 +84,7 @@ namespace kodo
     <
         class T
     >
-    inline void trace(boost::shared_ptr<T>& t, std::ostream& out)
+    inline void trace(std::shared_ptr<T>& t, std::ostream& out)
     {
         // The default filter returns true for any zone
         auto filter = [] (const std::string&){ return true; };

@@ -1,4 +1,4 @@
-// Copyright Steinwurf ApS 2011-2014.
+// Copyright Steinwurf ApS 2011.
 // Distributed under the "STEINWURF RESEARCH LICENSE 1.0".
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
@@ -7,7 +7,8 @@
 
 #include "mutable_shallow_symbol_storage.hpp"
 #include "storage_bytes_used.hpp"
-#include "storage_block_info.hpp"
+#include "storage_block_size.hpp"
+#include "storage_block_length.hpp"
 #include "trace_symbol_storage.hpp"
 
 namespace kodo
@@ -21,5 +22,6 @@ namespace kodo
         trace_symbol_storage<TraceTag,
         mutable_shallow_symbol_storage<
         storage_bytes_used<
-        storage_block_info<SuperCoder> > > >;
+        storage_block_length<
+        storage_block_size<SuperCoder> > > > >;
 }

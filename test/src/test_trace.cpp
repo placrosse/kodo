@@ -1,4 +1,4 @@
-// Copyright Steinwurf ApS 2011-2014.
+// Copyright Steinwurf ApS 2011.
 // Distributed under the "STEINWURF RESEARCH LICENSE 1.0".
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
@@ -87,4 +87,42 @@ TEST(TestTrace, invoke)
 
     // We expect the trace on to produce some trace output
     EXPECT_FALSE(test_output<decoder_trace_on>() == "");
+}
+
+/// Check that the trace functionality compiles with different stacks
+template<class Stack>
+void check_stack()
+{
+    if (kodo::has_trace<Stack>::value)
+    {
+        std::stringstream ss;
+
+        typename Stack::factory factory(10,10);
+        auto s = factory.build();
+
+        kodo::trace(s, ss);
+    }
+}
+
+namespace
+{
+    using rlnc_decoder8 =
+        kodo::full_rlnc_decoder<fifi::binary8, kodo::enable_trace>;
+
+    using rlnc_encoder8 =
+        kodo::full_rlnc_encoder<fifi::binary8, kodo::enable_trace>;
+
+    using shallow_rlnc_decoder8 =
+        kodo::shallow_full_rlnc_decoder<fifi::binary8, kodo::enable_trace>;
+
+    using shallow_rlnc_encoder8 =
+        kodo::shallow_full_rlnc_encoder<fifi::binary8, kodo::enable_trace>;
+}
+
+TEST(TestTrace, stacks)
+{
+    check_stack<rlnc_decoder8>();
+    check_stack<rlnc_encoder8>();
+    check_stack<shallow_rlnc_decoder8>();
+    check_stack<shallow_rlnc_encoder8>();
 }

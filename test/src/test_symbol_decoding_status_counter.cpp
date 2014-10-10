@@ -1,4 +1,4 @@
-// Copyright Steinwurf ApS 2011-2013.
+// Copyright Steinwurf ApS 2011.
 // Distributed under the "STEINWURF RESEARCH LICENSE 1.0".
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
@@ -75,7 +75,7 @@ namespace kodo
                      // Coefficient Storage API
                      // Storage API
                      // Finite Field API
-                     // Factory API
+                     // Final Layer
                      // Final type
                     dummy_layer> >
             { };
@@ -176,5 +176,3 @@ TEST(TestSymbolDecodingStatusCounter, api)
     EXPECT_EQ(stack.symbols_uncoded(), 0U);
 
 }
-
-

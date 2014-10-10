@@ -1,4 +1,4 @@
-// Copyright Steinwurf ApS 2011-2013.
+// Copyright Steinwurf ApS 2011.
 // Distributed under the "STEINWURF RESEARCH LICENSE 1.0".
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
@@ -7,10 +7,10 @@
 
 #include <cstdint>
 #include <vector>
+#include <algorithm>
 
 namespace kodo
 {
-
     /// @ingroup payload_codec_layers
     ///
     /// @brief Make decoder work on a copy of the payload
@@ -25,35 +25,33 @@ namespace kodo
     {
     public:
 
-        /// @copydoc layer::initialize(Factory&)
+        /// @copydoc layer::construct(Factory&)
         template<class Factory>
-        void initialize(Factory& the_factory)
+        void construct(Factory& the_factory)
         {
-            SuperCoder::initialize(the_factory);
+            SuperCoder::construct(the_factory);
 
-            m_payload_copy.resize(SuperCoder::payload_size(), 0);
+            m_payload_copy.resize(the_factory.max_payload_size(), 0);
         }
 
         /// Copy the payload data to ensure that the payload isn't
         /// overwritten during decoding
+        ///
         /// @copydoc layer::decode(uint8_t*)
-        void decode(const uint8_t *payload)
+        void decode(uint8_t *payload)
         {
             assert(payload != 0);
 
             /// Copy payload to m_payload_copy
             std::copy_n(payload, SuperCoder::payload_size(),
-                        &m_payload_copy[0]);
+                        m_payload_copy.data());
 
-            SuperCoder::decode(&m_payload_copy[0]);
+            SuperCoder::decode(m_payload_copy.data());
         }
 
-    private:
+    protected:
 
         /// Copy of payload
         std::vector<uint8_t> m_payload_copy;
-
     };
 }
-
-

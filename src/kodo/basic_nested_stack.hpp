@@ -10,6 +10,7 @@
 
 namespace kodo
 {
+    /// @todo run regex for copyright year
     /// @todo docs + test
     template
     <

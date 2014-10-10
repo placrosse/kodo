@@ -1,4 +1,4 @@
-// Copyright Steinwurf ApS 2011-2013.
+// Copyright Steinwurf ApS 2011.
 // Distributed under the "STEINWURF RESEARCH LICENSE 1.0".
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
@@ -30,8 +30,11 @@ inline void run_test_initialize(uint32_t symbols, uint32_t symbol_size)
         std::vector<uint8_t> payload(encoder->payload_size());
 
         // Ensure that the we may re-use the encoder also with partial
-        // data.
-        uint32_t block_size = rand_nonzero(encoder->block_size());
+        // data. We allow one partial symbol so by subtracting at
+        // maximum the size of one symbol we will get at most one
+        // partial symbol :)
+        uint32_t block_size = encoder->block_size() -
+            (rand() % encoder->symbol_size());
 
         std::vector<uint8_t> data_in = random_vector(block_size);
         std::vector<uint8_t> data_out(decoder->block_size(), '\0');
@@ -81,7 +84,7 @@ template
 <
     template <class> class Encoder,
     template <class> class Decoder
-    >
+>
 inline void test_initialize(uint32_t symbols, uint32_t symbol_size)
 {
     SCOPED_TRACE(testing::Message() << "symbols = " << symbols);

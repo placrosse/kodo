@@ -1,12 +1,17 @@
-// Copyright Steinwurf ApS 2011-2013.
+// Copyright Steinwurf ApS 2011.
 // Distributed under the "STEINWURF RESEARCH LICENSE 1.0".
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
+
+#include <iostream>
+#include <ctime>
 
 #include <kodo/rlnc/full_rlnc_codes.hpp>
 #include <kodo/set_systematic_on.hpp>
 #include <kodo/set_systematic_off.hpp>
 #include <kodo/is_systematic_on.hpp>
+
+#include <vector>
 
 /// @example switch_systematic_on_off.cpp
 ///
@@ -19,14 +24,17 @@
 
 int main()
 {
+    // Seed random number generator to produce different results every time
+    srand(static_cast<uint32_t>(time(0)));
+
     // Set the number of symbols (i.e. the generation size in RLNC
     // terminology) and the size of a symbol in bytes
     uint32_t symbols = 16;
     uint32_t symbol_size = 160;
 
     // Typdefs for the encoder/decoder type we wish to use
-    typedef kodo::full_rlnc_encoder<fifi::binary8> rlnc_encoder;
-    typedef kodo::full_rlnc_decoder<fifi::binary8> rlnc_decoder;
+    using rlnc_encoder = kodo::full_rlnc_encoder<fifi::binary8>;
+    using rlnc_decoder = kodo::full_rlnc_decoder<fifi::binary8>;
 
     // In the following we will make an encoder/decoder factory.
     // The factories are used to build actual encoders/decoders
@@ -46,8 +54,7 @@ int main()
     std::vector<uint8_t> data_in(encoder->block_size());
 
     // Just for fun - fill the data with random data
-    for(auto &e: data_in)
-        e = rand() % 256;
+    std::generate(data_in.begin(), data_in.end(), rand);
 
     // Assign the data buffer to the encoder so that we may start
     // to produce encoded symbols from it
@@ -55,15 +62,15 @@ int main()
 
     std::cout << "Starting encoding / decoding" << std::endl;
 
-    while( !decoder->is_complete() )
+    while (!decoder->is_complete())
     {
         // If the chosen codec stack supports systematic coding
-        if(kodo::has_systematic_encoder<rlnc_encoder>::value)
+        if (kodo::has_systematic_encoder<rlnc_encoder>::value)
         {
             // With 50% probability toggle systematic
-            if((rand() % 2) == 0)
+            if (rand() % 2)
             {
-                if(kodo::is_systematic_on(encoder))
+                if (kodo::is_systematic_on(encoder))
                 {
                     std::cout << "Turning systematic OFF" << std::endl;
                     kodo::set_systematic_off(encoder);
@@ -77,16 +84,16 @@ int main()
         }
 
         // Encode a packet into the payload buffer
-        encoder->encode( &payload[0] );
+        encoder->encode(payload.data());
 
-        if((rand() % 2) == 0)
+        if (rand() % 2)
         {
             std::cout << "Drop packet" << std::endl;
             continue;
         }
 
         // Pass that packet to the decoder
-        decoder->decode( &payload[0] );
+        decoder->decode(payload.data());
 
         std::cout << "Rank of decoder " << decoder->rank() << std::endl;
 

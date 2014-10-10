@@ -1,4 +1,4 @@
-// Copyright Steinwurf ApS 2011-2012.
+// Copyright Steinwurf ApS 2011.
 // Distributed under the "STEINWURF RESEARCH LICENSE 1.0".
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
@@ -26,8 +26,11 @@ namespace
     {
     public:
 
-        // Pointer to the dummy encoder
-        typedef boost::shared_ptr<dummy_encoder> pointer;
+        class factory
+        {
+        public:
+            using pointer = std::shared_ptr<dummy_encoder>;
+        };
 
     public:
 
@@ -68,7 +71,7 @@ TEST(TestStorageReader, test_storage_reader)
 
     EXPECT_EQ(reader.size(), data_size);
 
-    auto encoder = boost::make_shared<dummy_encoder>();
+    auto encoder = std::make_shared<dummy_encoder>();
 
     reader.read(encoder, 10U, 10U);
 

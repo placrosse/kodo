@@ -1,10 +1,11 @@
-// Copyright Steinwurf ApS 2011-2014.
+// Copyright Steinwurf ApS 2011.
 // Distributed under the "STEINWURF RESEARCH LICENSE 1.0".
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
 
 #pragma once
 
+#include "basic_factory.hpp"
 #include "set_symbols.hpp"
 #include "set_symbol_size.hpp"
 
@@ -19,7 +20,7 @@ namespace kodo
     ///
     /// Essentially this layer will build and store another stack as a
     /// member. Other layers may access the nested stack through the
-    /// nested() functions available in the factory and the layer.
+    /// nested() functions available in the factory_base and the layer.
     ///
     /// This is useful in cases where we want to redirect some calls
     /// to e.g. a different encoder or decoder depending on some
@@ -38,27 +39,28 @@ namespace kodo
     public:
 
         /// Typedef of the nested stack
-        typedef NestedStack nested_stack_type;
+        using nested_stack_type = NestedStack;
 
-        /// The nested code factory
-        typedef typename nested_stack_type::factory nested_factory_type;
+        /// The nested code factory_base
+        using nested_factory_type = basic_factory<nested_stack_type>;
 
         /// The nested code pointer
-        typedef typename nested_stack_type::pointer nested_pointer;
+        using nested_pointer = typename nested_factory_type::pointer;
 
     public:
 
-        /// @ingroup factory_layers
-        /// The factory layer associated with this coder.
-        class factory : public SuperCoder::factory
+        /// @ingroup factory_base_layers
+        /// The factory_base layer associated with this coder.
+        class factory_base : public SuperCoder::factory_base
         {
         public:
 
-            /// @copydoc layer::factory::factory(uint32_t,uint32_t)
-            factory(uint32_t max_symbols, uint32_t max_symbol_size) :
-                SuperCoder::factory(max_symbols, max_symbol_size),
-                m_nested_factory(SuperCoder::factory::nested_max_symbols(),
-                                 SuperCoder::factory::nested_max_symbol_size())
+            /// @copydoc layer::factory_base::factory_base(uint32_t,uint32_t)
+            factory_base(uint32_t max_symbols, uint32_t max_symbol_size) :
+                SuperCoder::factory_base(max_symbols, max_symbol_size),
+                m_nested_factory(
+                    SuperCoder::factory_base::nested_max_symbols(),
+                    SuperCoder::factory_base::nested_max_symbol_size())
             { }
 
         public:

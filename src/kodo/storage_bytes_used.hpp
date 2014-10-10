@@ -1,4 +1,4 @@
-// Copyright Steinwurf ApS 2011-2013.
+// Copyright Steinwurf ApS 2011.
 // Distributed under the "STEINWURF RESEARCH LICENSE 1.0".
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
@@ -9,11 +9,10 @@
 
 namespace kodo
 {
-
     /// @ingroup storage_info_layers
     ///
-    /// @brief Provides access to the number of useful bytes used out of the
-    ///        total size of the encoders or decoders storage.
+    /// @brief Provides access to the number of useful bytes used out
+    ///        of the total size of the encoders or decoders storage.
     template<class SuperCoder>
     class storage_bytes_used : public SuperCoder
     {
@@ -47,13 +46,9 @@ namespace kodo
             return m_bytes_used;
         }
 
-    private:
+    protected:
 
         /// The number of bytes used
         uint32_t m_bytes_used;
-
     };
-
 }
-
-

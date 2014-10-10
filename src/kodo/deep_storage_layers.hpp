@@ -1,4 +1,4 @@
-// Copyright Steinwurf ApS 2011-2014.
+// Copyright Steinwurf ApS 2011.
 // Distributed under the "STEINWURF RESEARCH LICENSE 1.0".
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
@@ -21,5 +21,5 @@ namespace kodo
         trace_symbol_storage<TraceTag,
         deep_symbol_storage<
         storage_bytes_used<
-        storage_block_info<SuperCoder> > > >;
+        storage_block_info<SuperCoder>>>>;
 }

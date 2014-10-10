@@ -23,7 +23,7 @@ namespace kodo
             typedef fifi::binary8 field_type;
             typedef field_type::value_type value_type;
 
-            class factory
+            class factory_base
             {
             public:
             };
@@ -52,8 +52,8 @@ namespace kodo
 TEST(TestFulcrumPayloadDecoder, api)
 {
 
-    typedef kodo::fulcrum_payload_decoder<kodo::dummy_main_stack> test_stack;
-    typedef kodo::dummy_main_stack main_stack;
+    using test_stack = kodo::fulcrum_payload_decoder<kodo::dummy_main_stack>;
+    using main_stack = kodo::dummy_main_stack;
 
     uint32_t symbols = 10;
     uint32_t symbol_size = 10;
@@ -63,7 +63,7 @@ TEST(TestFulcrumPayloadDecoder, api)
     main.m_systematic = false;
     main.m_non_systematic = false;
 
-    main_stack::factory main_factory;
+    main_stack::factory_base main_factory;
 
     test_stack::factory factory(symbols, symbol_size);
     factory.set_main_factory(&main_factory);
@@ -104,5 +104,3 @@ TEST(TestFulcrumPayloadDecoder, api)
     EXPECT_EQ(main.m_systematic, true);
     EXPECT_EQ(main.m_non_systematic, false);
 }
-
-

@@ -1,4 +1,4 @@
-// Copyright Steinwurf ApS 2011-2013.
+// Copyright Steinwurf ApS 2011.
 // Distributed under the "STEINWURF RESEARCH LICENSE 1.0".
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
@@ -55,7 +55,7 @@ inline void run_test()
     // Create a dummy symbol
     std::vector<value_type> symbol(d->symbol_size(), 'x');
 
-    d->decode_symbol(symbol.data(), coefficients.data());
+    d->decode_symbol((uint8_t*) symbol.data(), (uint8_t*) coefficients.data());
 
     // Decoding matrix status:
     // Row 1: 01 1001
@@ -76,7 +76,7 @@ inline void run_test()
     fifi::set_value<field_type>(coefficients.data(), 0, 1U);
     fifi::set_value<field_type>(coefficients.data(), 1, 1U);
 
-    d->decode_symbol(symbol.data(), coefficients.data());
+    d->decode_symbol((uint8_t*) symbol.data(), (uint8_t*) coefficients.data());
 
     // Rank should not have increased since we only had non-zero in the
     // offset - in fact the buffers should also be untouched
@@ -99,7 +99,7 @@ inline void run_test()
     fifi::set_value<field_type>(coefficients.data(), 2, 1U);
     fifi::set_value<field_type>(coefficients.data(), 3, 1U);
 
-    d->decode_symbol(symbol.data(), coefficients.data());
+    d->decode_symbol((uint8_t*) symbol.data(), (uint8_t*) coefficients.data());
 
     // Decoding matrix status:
     // Row 1: 01 1001
@@ -118,7 +118,7 @@ inline void run_test()
     fifi::set_value<field_type>(coefficients.data(), 3, 1U);
     fifi::set_value<field_type>(coefficients.data(), 5, 1U);
 
-    d->decode_symbol(symbol.data(), coefficients.data());
+    d->decode_symbol((uint8_t*) symbol.data(), (uint8_t*) coefficients.data());
 
     // Decoding matrix status:
     // Row 1: 00 1000 -> 10 0100
@@ -142,7 +142,7 @@ inline void run_test()
     fifi::set_value<field_type>(coefficients.data(), 3, 1U);
     fifi::set_value<field_type>(coefficients.data(), 5, 1U);
 
-    d->decode_symbol(symbol.data(), coefficients.data());
+    d->decode_symbol((uint8_t*) symbol.data(), (uint8_t*) coefficients.data());
 
     // Decoding matrix status:
     // Row 1: 00 1000 -> 00 0101
@@ -165,7 +165,7 @@ inline void run_test()
     fifi::set_value<field_type>(coefficients.data(), 4, 1U);
     fifi::set_value<field_type>(coefficients.data(), 5, 1U);
 
-    d->decode_symbol(symbol.data(), coefficients.data());
+    d->decode_symbol((uint8_t*) symbol.data(), (uint8_t*) coefficients.data());
 
     // Decoding matrix status:
     // Row 1: 00 1000
@@ -185,7 +185,7 @@ inline void run_test()
     fifi::set_value<field_type>(coefficients.data(), 4, 1U);
     fifi::set_value<field_type>(coefficients.data(), 5, 1U);
 
-    d->decode_symbol(symbol.data(), coefficients.data());
+    d->decode_symbol((uint8_t*) symbol.data(), (uint8_t*) coefficients.data());
 
     // Decoding matrix status:
     // Row 1: 00 1000 -> 11 0111

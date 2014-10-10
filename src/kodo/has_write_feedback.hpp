@@ -1,4 +1,4 @@
-// Copyright Steinwurf ApS 2011-2013.
+// Copyright Steinwurf ApS 2011.
 // Distributed under the "STEINWURF RESEARCH LICENSE 1.0".
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
@@ -7,8 +7,8 @@
 
 namespace kodo
 {
-
     /// @ingroup type_traits
+    ///
     /// Type trait helper allows compile time detection of whether a
     /// codec contains a layer with the member function write_feedback()
     ///
@@ -38,7 +38,4 @@ namespace kodo
 
         enum { value = std::is_same<decltype(test<T>(0)),yes>::value };
     };
-
 }
-
-

@@ -40,27 +40,27 @@ namespace kodo
 
         /// @ingroup factory_layers
         /// The factory layer associated with this coder.
-        class factory : public SuperCoder::factory
+        class factory_base : public SuperCoder::factory_base
         {
         public:
 
-            /// @copydoc layer::factory::factory(uint32_t,uint32_t)
-            factory(uint32_t max_symbols, uint32_t max_symbol_size) :
-                SuperCoder::factory(max_symbols, max_symbol_size)
+            /// @copydoc layer::factory_base::factory_base(uint32_t,uint32_t)
+            factory_base(uint32_t max_symbols, uint32_t max_symbol_size) :
+                SuperCoder::factory_base(max_symbols, max_symbol_size)
             { }
 
             /// @return The maximum number of symbols that the nested
             ///         stack should support
             uint32_t nested_max_symbols() const
             {
-                return SuperCoder::factory::max_symbols();
+                return SuperCoder::factory_base::max_symbols();
             }
 
             /// @return The symbol size in bytes that the nested stack
             ///         should support
             uint32_t nested_max_symbol_size() const
             {
-                return SuperCoder::factory::max_symbol_size();
+                return SuperCoder::factory_base::max_symbol_size();
             }
 
         };

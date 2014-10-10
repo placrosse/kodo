@@ -1,4 +1,4 @@
-// Copyright Steinwurf ApS 2011-2013.
+// Copyright Steinwurf ApS 2011.
 // Distributed under the "STEINWURF RESEARCH LICENSE 1.0".
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
@@ -13,6 +13,7 @@ namespace kodo
 {
 
     /// @ingroup debug
+    ///
     /// This layer "intercepts" all calls to the finite_field_math
     /// layer counting the different operations
     template<class SuperCoder>
@@ -20,14 +21,8 @@ namespace kodo
     {
     public:
 
-        /// @copydoc layer::field_type
-        typedef typename SuperCoder::field_type field_type;
-
         /// @copydoc layer::value_type
         typedef typename SuperCoder::value_type value_type;
-
-        /// @copydoc layer::factory
-        typedef typename SuperCoder::factory factory;
 
     public:
 
@@ -119,4 +114,3 @@ namespace kodo
     };
 
 }
-

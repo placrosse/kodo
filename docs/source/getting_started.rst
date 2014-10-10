@@ -29,10 +29,10 @@ In order to start developing using Kodo you need the following tools installed:
    a C++ compiler that supports the new C++11 standard. You
    can see a list of compilers on our buildbot page (`Steinwurf Buildbot`_).
 
-2. **Git:** we use the git version control system for managing our libraries.
+If you wish to build Kodo using our build system, it is you'll also need to
+install the following:
 
-If you wish to build the Kodo examples and unit tests, it is recommended
-to also install the following:
+2. **Git:** we use the git version control system for managing our libraries.
 
 3. **Python:** needed by our build scripts. We use the Python based `waf`_
    build system.
@@ -54,8 +54,8 @@ Download Tools (Windows)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 1. **C++11 compliant compiler:** You need a working C++ compiler. We have
-   tested using `Visual Studio Express 2012`_ compiler which is free of
-   charge. Newer versions should also be fine.
+   tested using `Visual Studio Express 2013`_ compiler which is free of
+   charge.
 
 2. **Python:** You need a working Python installation. Find the available
    download on the `Python homepage`_. If you are in doubt which version
@@ -72,7 +72,7 @@ Download Tools (Windows)
    a GUI instead of the command-line git tools. Version 1.8.1 and later should
    work fine.
 
-.. _`Visual Studio Express 2012`:
+.. _`Visual Studio Express 2013`:
    http://www.microsoft.com/visualstudio/eng/downloads
 
 .. _`Python homepage`:
@@ -146,9 +146,7 @@ dialog will appear, copy this to the URL field::
     https://github.com/steinwurf/kodo.git
 
 You can also customize the name of the target directory if you wish.
-By default, a new folder called 'kodo' will be created when the progress bar
-reaches the end.
-
+By default, a new folder called 'kodo' will be created.
 
 Alternative: Download a Release of the Source Code as an Archive
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -156,8 +154,9 @@ Alternative: Download a Release of the Source Code as an Archive
 Download the zip or tar.gz archive from the following location and
 extract it to a desired location.
 
-* https://github.com/steinwurf/kodo/tags
+* https://github.com/steinwurf/kodo/releases
 
+.. _waf_build_system:
 
 Waf (Build System)
 ------------------

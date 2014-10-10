@@ -1,4 +1,4 @@
-// Copyright Steinwurf ApS 2011-2013.
+// Copyright Steinwurf ApS 2011.
 // Distributed under the "STEINWURF RESEARCH LICENSE 1.0".
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
@@ -12,7 +12,7 @@
 #include <fifi/binary.hpp>
 #include <fifi/binary8.hpp>
 #include <kodo/coefficient_value_access.hpp>
-#include <kodo/storage_block_info.hpp>
+#include <kodo/storage_block_size.hpp>
 
 namespace kodo
 {
@@ -96,5 +96,3 @@ TEST(TestCoefficientValueAccess, api)
     }
 
 }
-
-

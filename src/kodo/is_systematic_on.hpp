@@ -1,4 +1,4 @@
-// Copyright Steinwurf ApS 2011-2013.
+// Copyright Steinwurf ApS 2011.
 // Distributed under the "STEINWURF RESEARCH LICENSE 1.0".
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
@@ -51,11 +51,9 @@ namespace kodo
     /// @ingroup generic_api
     /// @copydoc is_systematic_on(const T&)
     template<class T>
-    inline bool is_systematic_on(const boost::shared_ptr<T>& t)
+    inline bool is_systematic_on(const std::shared_ptr<T>& t)
     {
         return is_systematic_on(*t);
     }
 
 }
-
-

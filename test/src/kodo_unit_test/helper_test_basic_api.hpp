@@ -1,4 +1,4 @@
-// Copyright Steinwurf ApS 2011-2012.
+// Copyright Steinwurf ApS 2011.
 // Distributed under the "STEINWURF RESEARCH LICENSE 1.0".
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
@@ -29,6 +29,7 @@
 #include <kodo/has_shallow_symbol_storage.hpp>
 #include <kodo/has_deep_symbol_storage.hpp>
 
+#include <kodo/basic_factory.hpp>
 #include <kodo/has_rank.hpp>
 #include <kodo/rank.hpp>
 #include <kodo/proxy_args.hpp>
@@ -76,7 +77,7 @@ inline void run_test_basic_api(uint32_t symbols, uint32_t symbol_size)
     typename Encoder::factory encoder_factory(symbols, symbol_size);
     auto encoder = encoder_factory.build();
 
-    typename Decoder::factory decoder_factory(symbols, symbol_size);
+     typename Decoder::factory decoder_factory(symbols, symbol_size);
     auto decoder = decoder_factory.build();
 
     EXPECT_TRUE(symbols == encoder_factory.max_symbols());

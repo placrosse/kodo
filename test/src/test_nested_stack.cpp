@@ -1,4 +1,4 @@
-// Copyright Steinwurf ApS 2011-2014.
+// Copyright Steinwurf ApS 2011.
 // Distributed under the "STEINWURF RESEARCH LICENSE 1.0".
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
@@ -20,11 +20,11 @@ namespace kodo
         {
         public:
 
-            class factory
+            class factory_base
             {
             public:
 
-                factory(uint32_t max_symbols, uint32_t max_symbol_size)
+                factory_base(uint32_t max_symbols, uint32_t max_symbol_size)
                     : m_max_symbols(max_symbols),
                       m_max_symbol_size(max_symbol_size)
                 { }
@@ -74,7 +74,7 @@ TEST(TestNestedStack, api)
     uint32_t symbols = 10;
     uint32_t symbol_size = 10;
 
-    kodo::dummy_stack::factory factory(symbols, symbol_size);
+    kodo::dummy_stack::factory_base factory(symbols, symbol_size);
     EXPECT_EQ(factory.m_max_symbols, symbols);
     EXPECT_EQ(factory.m_max_symbol_size, symbol_size);
     EXPECT_EQ(factory.nested().m_max_symbols, 5U);

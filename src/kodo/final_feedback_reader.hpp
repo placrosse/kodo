@@ -1,4 +1,4 @@
-// Copyright Steinwurf ApS 2011-2013.
+// Copyright Steinwurf ApS 2011.
 // Distributed under the "STEINWURF RESEARCH LICENSE 1.0".
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
@@ -17,7 +17,7 @@ namespace kodo
     /// @brief This layer terminates a series of
     ///        layer::read_feedback(const uint8_t*) function calls.
     template<class SuperCoder>
-    class final_feedback_reader : public final_feedback_size<SuperCoder>
+    class final_feedback_reader : public SuperCoder
     {
     public:
 

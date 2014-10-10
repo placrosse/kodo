@@ -1,4 +1,4 @@
-// Copyright Steinwurf ApS 2011-2013.
+// Copyright Steinwurf ApS 2011.
 // Distributed under the "STEINWURF RESEARCH LICENSE 1.0".
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
@@ -9,7 +9,7 @@
 #include <fifi/binary.hpp>
 #include <fifi/binary8.hpp>
 #include <kodo/elimination_coefficient_info.hpp>
-#include <kodo/storage_block_info.hpp>
+#include <kodo/storage_block_size.hpp>
 
 namespace kodo
 {
@@ -30,10 +30,10 @@ namespace kodo
 
         public:
 
-            class factory
+            class factory_base
             {
             public:
-                factory(uint32_t max_symbols, uint32_t max_symbol_size)
+                factory_base(uint32_t max_symbols, uint32_t max_symbol_size)
                     : m_max_symbols(max_symbols),
                       m_max_symbol_size(max_symbol_size)
                 { }
@@ -76,7 +76,8 @@ namespace kodo
         class dummy_stack :
             public elimination_coefficient_info<
                    dummy_layer<FieldType> >
-        { };
+        {
+        };
     }
 }
 
@@ -89,7 +90,7 @@ TEST(TestEliminationCoefficientInfo, api)
         uint32_t max_symbols = 18;
         uint32_t max_symbol_size = 1300;
 
-        stack_type::factory factory(max_symbols, max_symbol_size);
+        stack_type::factory_base factory(max_symbols, max_symbol_size);
         factory.m_symbols = 10;
         factory.m_elimination_offset = 6;
 
@@ -133,7 +134,7 @@ TEST(TestEliminationCoefficientInfo, api)
         uint32_t max_symbols = 18;
         uint32_t max_symbol_size = 1300;
 
-        stack_type::factory factory(max_symbols, max_symbol_size);
+        stack_type::factory_base factory(max_symbols, max_symbol_size);
         factory.m_symbols = 10;
         factory.m_elimination_offset = 6;
 
@@ -165,5 +166,3 @@ TEST(TestEliminationCoefficientInfo, api)
     }
 
 }
-
-

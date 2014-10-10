@@ -1,4 +1,4 @@
-// Copyright Steinwurf ApS 2011-2013.
+// Copyright Steinwurf ApS 2011.
 // Distributed under the "STEINWURF RESEARCH LICENSE 1.0".
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
@@ -46,6 +46,3 @@ TEST(TestHasWriteFeedback, detect)
     typedef kodo::sliding_window_decoder<fifi::binary8> decoder_type;
     EXPECT_TRUE(kodo::has_write_feedback<decoder_type>::value);
 }
-
-
-

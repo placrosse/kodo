@@ -1,4 +1,4 @@
-// Copyright Steinwurf ApS 2011-2013.
+// Copyright Steinwurf ApS 2011.
 // Distributed under the "STEINWURF RESEARCH LICENSE 1.0".
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
@@ -17,14 +17,16 @@
 
 #include "trace.hpp"
 #include "cache_decode_symbol.hpp"
-#include "final_coder_factory.hpp"
+#include "final_layer.hpp"
 #include "coefficient_info.hpp"
-#include "storage_block_info.hpp"
+#include "storage_block_size.hpp"
+#include "storage_block_length.hpp"
 #include "finite_field_info.hpp"
 #include "disable_trace.hpp"
 #include "enable_trace.hpp"
 #include "hexdump.hpp"
 #include "coefficient_value_access.hpp"
+#include "basic_factory.hpp"
 
 namespace kodo
 {
@@ -77,23 +79,27 @@ namespace kodo
             cache_decode_symbol<
             coefficient_value_access<
             coefficient_info<
-            storage_block_info<
+            storage_block_length<
+            storage_block_size<
             finite_field_info<field_type,
-            final_coder_factory<cache> > > > > >
-        { };
+            final_layer> > > > > >
+        {
+        public:
+            using factory = basic_factory<cache>;
+        };
 
     public:
 
-        /// @ingroup factory_layers
+        /// @ingroup factory_base_layers
         ///
-        /// The factory layer associated with this coder.
-        class factory : public SuperCoder::factory
+        /// The factory_base layer associated with this coder.
+        class factory_base : public SuperCoder::factory_base
         {
         public:
 
-            /// @copydoc layer::factory::factory(uint32_t, uint32_t)
-            factory(uint32_t max_symbols, uint32_t max_symbol_size)
-                : SuperCoder::factory(max_symbols, max_symbol_size),
+            /// @copydoc layer::factory_base::factory_base(uint32_t, uint32_t)
+            factory_base(uint32_t max_symbols, uint32_t max_symbol_size)
+                : SuperCoder::factory_base(max_symbols, max_symbol_size),
                   m_cache(max_symbols, max_symbol_size)
             { }
 
@@ -244,7 +250,7 @@ namespace kodo
         /// Stores the cache helper object which stores the content of
         /// the data buffers passed to the decode_symbol(...)
         /// functions.
-        typename cache::pointer m_cache;
+        typename cache::factory::pointer m_cache;
 
     };
 }

@@ -1,4 +1,4 @@
-// Copyright Steinwurf ApS 2011-2014.
+// Copyright Steinwurf ApS 2011.
 // Distributed under the "STEINWURF RESEARCH LICENSE 1.0".
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
@@ -10,6 +10,8 @@
 #include <fifi/binary.hpp>
 #include <fifi/binary8.hpp>
 #include <fifi/binary16.hpp>
+
+#include "../../test_profile.hpp"
 
 /// @param max_value The maximum value to return
 /// @return a random number between 1 and max_value
@@ -24,6 +26,11 @@ inline uint32_t rand_nonzero(uint32_t max_value = 256)
 /// @return a random number up to max_symbols to use in the tests
 inline uint32_t rand_symbols(uint32_t max_symbols = 256)
 {
+    // Use a smaller number of maximum symbols for embedded platforms
+    // where large generation sizes can incur a performance penalty
+    if (max_symbols > 64 && current_test_profile() == test_profile::embedded)
+        max_symbols = 64;
+
     return rand_nonzero(max_symbols);
 }
 
@@ -97,5 +104,3 @@ inline void run_test(uint32_t symbols, uint32_t symbol_size)
         test.run();
     }
 }
-
-

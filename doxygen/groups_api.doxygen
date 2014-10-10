@@ -27,19 +27,39 @@
 /// implemented in Kodo is ...
 
 //------------------------------------------------------------------
+// FACTORY_BASE
+//------------------------------------------------------------------
+
+/// @defgroup factory_base Factory Base
+/// @ingroup api_layer
+///
+/// @brief The factory base layers are used to extend a factory with
+///        the state and methods needed to construct and initialize
+///        encoders and decoders.
+
+/// @defgroup factory_base_api API
+/// @ingroup factory_base
+/// @brief The API used by factory base layers.
+
+/// @defgroup factory_base_layers Layers
+/// @ingroup factory_base
+/// @brief Implementations of the factory base API.
+
+//------------------------------------------------------------------
 // FACTORY
 //------------------------------------------------------------------
 
 /// @defgroup factory Factory
-/// @ingroup api_layer
-/// @brief The factories are responsible for construction and
-///        initialization of encoders and decoders.
+///
+/// @brief A factory is used to build new encoders and
+///        decoders. Different factory implmentations exist to provide
+///        memory re-use and so forth.
 
 /// @defgroup factory_api API
 /// @ingroup factory
-/// @brief The API used by factory layers.
+/// @brief The basic API provided by factory objects
 
-/// @defgroup factory_layers Layers
+/// @defgroup factory_types Factory Types
 /// @ingroup factory
 /// @brief Implementations of the factory API.
 
@@ -75,6 +95,18 @@
 /// @defgroup coefficient_generator_layers Layers
 /// @ingroup coefficient_generator
 /// @brief Implementations of the coefficient generator API.
+
+//------------------------------------------------------------------
+// CONSTRUCTION API
+//------------------------------------------------------------------
+
+/// @defgroup construction Construction
+/// @ingroup api_layer
+/// @brief Implements API using during construction of a codec.
+
+/// @defgroup construction_api API
+/// @ingroup construction
+/// @brief The construction API
 
 //------------------------------------------------------------------
 // SYMBOL ID API
@@ -378,3 +410,18 @@
 /// @defgroup trace_layers Layers
 /// @ingroup trace
 /// @brief Implementations of the trace API.
+
+//------------------------------------------------------------------
+// OBJECT
+//------------------------------------------------------------------
+
+/// @defgroup object Object
+/// @ingroup api_layer
+///
+/// @brief The object layers are used to implement stacks capable of
+///        encoding/decoding multiple blocks of data (such as large
+///        memory buffers or files).
+///
+/// @defgroup object_layers Layers
+/// @ingroup object
+/// @brief Implementations of the object API.

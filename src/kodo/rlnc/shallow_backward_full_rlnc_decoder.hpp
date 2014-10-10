@@ -1,11 +1,11 @@
-// Copyright Steinwurf ApS 2011-2014.
+// Copyright Steinwurf ApS 2011.
 // Distributed under the "STEINWURF RESEARCH LICENSE 1.0".
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
 
 #pragma once
 
-#include "../final_coder_factory_pool.hpp"
+#include "../final_layer.hpp"
 #include "../systematic_decoder.hpp"
 #include "../payload_decoder.hpp"
 #include "../symbol_id_decoder.hpp"
@@ -14,7 +14,7 @@
 #include "../nested_payload_recoder.hpp"
 #include "../common_decoder_layers.hpp"
 #include "../coefficient_storage_layers.hpp"
-#include "../mutable_shallow_storage_layers.hpp"
+#include "../partial_mutable_shallow_storage_layers.hpp"
 #include "../finite_field_layers.hpp"
 #include "../backward_linear_block_decoder.hpp"
 
@@ -50,13 +50,14 @@ namespace kodo
         // Coefficient Storage API
         coefficient_storage_layers<
         // Storage API
-        mutable_shallow_storage_layers<TraceTag,
+        partial_mutable_shallow_storage_layers<TraceTag,
         // Finite Field API
         finite_field_layers<Field,
-        // Factory API
-        final_coder_factory_pool<
-        // Final type
-        shallow_backward_full_rlnc_decoder<Field, TraceTag>
-        > > > > > > > > > > > > > >
-    { };
+        // Final Layer
+        final_layer
+        > > > > > > > > > > > > >
+    {
+    public:
+        using factory = pool_factory<shallow_backward_full_rlnc_decoder>;
+    };
 }

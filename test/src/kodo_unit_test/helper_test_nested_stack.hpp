@@ -1,4 +1,4 @@
-// Copyright Steinwurf ApS 2014
+// Copyright Steinwurf ApS 2011.
 // Distributed under the "STEINWURF RESEARCH LICENSE 1.0".
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
@@ -9,7 +9,8 @@
 
 #include <gtest/gtest.h>
 
-#include <kodo/basic_nested_stack.hpp>
+#include <kodo/nested_stack.hpp>
+#include <kodo/basic_factory.hpp>
 
 namespace kodo
 {
@@ -27,11 +28,11 @@ namespace kodo
 
             typedef std::shared_ptr<helper_nested_stack> pointer;
 
-            class factory
+            class factory_base
             {
             public:
 
-                factory(uint32_t max_symbols, uint32_t max_symbol_size)
+                factory_base(uint32_t max_symbols, uint32_t max_symbol_size)
                     : m_max_symbols(max_symbols),
                       m_max_symbol_size(max_symbol_size),
                       m_symbols(0),
@@ -81,11 +82,11 @@ namespace kodo
         {
         public:
 
-            class factory
+            class factory_base
             {
             public:
 
-                factory(uint32_t max_symbols, uint32_t max_symbol_size)
+                factory_base(uint32_t max_symbols, uint32_t max_symbol_size)
                     : m_max_symbols(max_symbols),
                       m_max_symbol_size(max_symbol_size),
                       m_symbols(max_symbols),
@@ -147,5 +148,14 @@ namespace kodo
             uint32_t m_symbols;
             uint32_t m_symbol_size;
         };
+
+        /// The stack used in unit test
+        class helper_test_nested_stack
+            : public nested_stack<helper_nested_stack, helper_nested_layer>
+        {
+        public:
+            using factory = basic_factory<helper_test_nested_stack>;
+        };
+
     }
 }

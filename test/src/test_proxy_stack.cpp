@@ -1,4 +1,4 @@
-// Copyright Steinwurf ApS 2011-2014.
+// Copyright Steinwurf ApS 2011.
 // Distributed under the "STEINWURF RESEARCH LICENSE 1.0".
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
@@ -6,6 +6,11 @@
 #include <gtest/gtest.h>
 
 #include <kodo/proxy_stack.hpp>
+#include <kodo/proxy_layer.hpp>
+#include <kodo/basic_factory.hpp>
+#include <kodo/final_layer.hpp>
+
+#include "kodo_unit_test/helper_test_nested_stack.hpp"
 
 namespace kodo
 {
@@ -94,26 +99,24 @@ namespace kodo
 
         };
 
-        // This class fakes the "nested stack" under proper usage the
-        // template parameter V would be the main stack type. Which
-        // would be used to specify the type of the "back" pointer
-        // from the nested stack to the main stack.
-        template<class V>
-        class dummy_nested
-        {};
-
-        // This dummy layer fakes the SuperCoder which would be used
-        // in the nested layer
-        class dummy_super
-        {};
+        /// This stack is the proxy stack i.e. the stack which is
+        /// embedded with the main stack.
+        template<class MainStack>
+        class dummy_proxy_stack : public
+            proxy_layer<MainStack,final_layer>
+        {
+        public:
+            using factory = basic_factory<dummy_proxy_stack>;
+        };
 
         /// The stack represents the main stack used in unit test
         class dummy_stack : public
-            proxy_stack<dummy_proxy_super,
-                        proxy_args<>,
-                        dummy_nested,
-                        dummy_super>
-        { };
+            proxy_stack<proxy_args<>, dummy_proxy_stack,
+            main_stack_types<helper_nested_layer> >
+        {
+        public:
+            using factory = basic_factory<dummy_stack>;
+        };
     }
 }
 

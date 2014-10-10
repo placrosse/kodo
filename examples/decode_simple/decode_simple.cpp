@@ -1,4 +1,4 @@
-// Copyright Steinwurf ApS 2011-2013.
+// Copyright Steinwurf ApS 2011.
 // Distributed under the "STEINWURF RESEARCH LICENSE 1.0".
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
@@ -19,18 +19,17 @@
 /// the "Codec API" has been kept as they provide functionalities that are
 /// required.
 
-#include <cstdint>
-#include <iostream>
-#include <vector>
-
-#include <kodo/rlnc/full_rlnc_codes.hpp>
 #include <kodo/cache_decode_symbol.hpp>
+#include <kodo/rlnc/full_rlnc_codes.hpp>
 #include <kodo/trace_decode_symbol.hpp>
 #include <kodo/trace_linear_block_decoder.hpp>
-
 #include <kodo/trace_symbol_storage.hpp>
 
 #include <fifi/fifi_utils.hpp>
+
+#include <cstdint>
+#include <iostream>
+#include <vector>
 
 /// @todo review this example
 
@@ -38,38 +37,39 @@ namespace kodo
 {
     // Simple RLNC decoder
     template<class Field>
-    class rlnc_decoder
-        : public // Decoder API
-                 trace_decode_symbol<enable_trace,
-                 cache_decode_symbol<
-                 trace_linear_block_decoder<enable_trace,
-                 forward_linear_block_decoder<
-                 symbol_decoding_status_counter<
-                 symbol_decoding_status_tracker<
-                 // Coefficient Storage API
-                 coefficient_value_access<
-                 coefficient_storage<
-                 coefficient_info<
-                 // Storage API
-                 trace_symbol_storage<enable_trace,
-                 deep_symbol_storage<
-                 storage_bytes_used<
-                 storage_block_info<
-                 // Finite Field API
-                 finite_field_math<typename fifi::default_field<Field>::type,
-                 finite_field_info<Field,
-                 // Factory API
-                 final_coder_factory_pool<
-                 // Final type
-                 rlnc_decoder<Field>
-                 > > > > > > > > > > > > > > > >
-    {};
+    class rlnc_decoder : public // Decoder API
+        trace_decode_symbol<enable_trace,
+        cache_decode_symbol<
+        trace_linear_block_decoder<enable_trace,
+        forward_linear_block_decoder<
+        symbol_decoding_status_counter<
+        symbol_decoding_status_tracker<
+        // Coefficient Storage API
+        coefficient_value_access<
+        coefficient_storage<
+        coefficient_info<
+        // Storage API
+        trace_symbol_storage<enable_trace,
+        deep_symbol_storage<
+        storage_bytes_used<
+        storage_block_length<
+        storage_block_size<
+        // Finite Field API
+        finite_field_math<typename fifi::default_field<Field>::type,
+        finite_field_info<Field,
+        // Final Layer
+        final_layer
+        > > > > > > > > > > > > > > > >
+    {
+    public:
+        using factory = basic_factory<rlnc_decoder>;
+    };
 }
 
 
 int main()
 {
-    typedef fifi::binary field_type;
+    using field_type = fifi::binary;
 
     // Set the number of symbols (i.e. the generation size in RLNC
     // terminology) and the number of elements in a symbol
@@ -83,12 +83,12 @@ int main()
         fifi::elements_to_size<field_type>(symbols);
 
     // Typdefs for the decoder type we wish to use
-    typedef kodo::rlnc_decoder<field_type> rlnc_decoder;
+    using rlnc_decoder = kodo::rlnc_decoder<field_type>;
 
     // In the following we will make an decoder factory.
     // The factory is used to build actual decoders
     rlnc_decoder::factory decoder_factory(symbols, symbol_size);
-    rlnc_decoder::pointer decoder = decoder_factory.build();
+    auto decoder = decoder_factory.build();
 
 
     // To illustrate decoding, random data has been filled into the
@@ -200,5 +200,4 @@ int main()
         std::cout << "Error: Decoded data differs from original data";
     }
     std::cout << std::endl << std::endl;
-
 }

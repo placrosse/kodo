@@ -23,11 +23,11 @@ namespace kodo
 
             typedef boost::shared_ptr<nested_dummy_stack> pointer;
 
-            class factory
+            class factory_base
             {
             public:
 
-                factory(uint32_t max_symbols, uint32_t max_symbol_size)
+                factory_base(uint32_t max_symbols, uint32_t max_symbol_size)
                     : m_max_symbols(max_symbols),
                       m_max_symbol_size(max_symbol_size)
                 { }
@@ -76,11 +76,11 @@ namespace kodo
         {
         public:
 
-            class factory
+            class factory_base
             {
             public:
 
-                factory(uint32_t max_symbols, uint32_t max_symbol_size)
+                factory_base(uint32_t max_symbols, uint32_t max_symbol_size)
                     : m_max_symbols(max_symbols),
                       m_max_symbol_size(max_symbol_size)
                 { }
@@ -143,9 +143,9 @@ TEST(TestFulcrumNestedStack, api)
     uint32_t max_symbols = 10;
     uint32_t max_symbol_size = 10;
 
-    typedef kodo::dummy_stack<max_expansion> test_stack;
+    using test_stack = kodo::dummy_stack<max_expansion>;
 
-    test_stack::factory factory(max_symbols, max_symbol_size);
+    test_stack::factory_base factory(max_symbols, max_symbol_size);
 
     EXPECT_EQ(factory.max_expansion(), max_expansion);
     EXPECT_EQ(factory.max_symbols(), max_symbols);

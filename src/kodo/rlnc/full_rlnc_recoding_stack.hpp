@@ -1,4 +1,4 @@
-// Copyright Steinwurf ApS 2011-2013.
+// Copyright Steinwurf ApS 2011.
 // Distributed under the "STEINWURF RESEARCH LICENSE 1.0".
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
@@ -53,8 +53,7 @@ namespace kodo
         // Coefficient Storage API
         coefficient_value_access<
         // Proxy
-        proxy_layer<
-        full_rlnc_recoding_stack<MainStack>, MainStack>
-        > > > > > > > > > > >
+        proxy_layer<MainStack,
+        final_layer> > > > > > > > > > > >
     { };
 }

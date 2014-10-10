@@ -1,4 +1,4 @@
-// Copyright Steinwurf ApS 2011-2012.
+// Copyright Steinwurf ApS 2011.
 // Distributed under the "STEINWURF RESEARCH LICENSE 1.0".
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
@@ -10,9 +10,10 @@
 #include <gtest/gtest.h>
 
 #include <kodo/storage_bytes_used.hpp>
-#include <kodo/storage_block_info.hpp>
-#include <kodo/final_coder_factory.hpp>
-#include <kodo/final_coder_factory_pool.hpp>
+#include <kodo/storage_block_size.hpp>
+#include <kodo/storage_block_length.hpp>
+#include <kodo/final_layer.hpp>
+#include <kodo/final_layer.hpp>
 #include <kodo/finite_field_info.hpp>
 #include <kodo/partial_shallow_symbol_storage.hpp>
 #include <kodo/deep_symbol_storage.hpp>
@@ -21,6 +22,7 @@
 #include <kodo/fake_symbol_storage.hpp>
 #include <kodo/mutable_shallow_symbol_storage.hpp>
 #include <kodo/const_shallow_symbol_storage.hpp>
+#include <kodo/basic_factory.hpp>
 
 #include "kodo_unit_test/basic_api_test_helper.hpp"
 
@@ -41,110 +43,104 @@ namespace kodo
 
         // Deep Symbol Storage
         template<class Field>
-        class deep_storage_stack
-            : public deep_symbol_storage<
+        class deep_storage_stack : public
+            deep_symbol_storage<
             storage_bytes_used<
-                storage_block_info<
-                    finite_field_info<Field,
-                        final_coder_factory<
-                            deep_storage_stack<Field>
-                            > > > > >
-        {};
+            storage_block_length<
+            storage_block_size<
+            finite_field_info<Field,
+            final_layer
+            > > > > >
+        {
+        public:
+            using factory = basic_factory<deep_storage_stack>;
+        };
 
         template<class Field>
-        class deep_storage_stack_pool
-            : public deep_symbol_storage<
+        class deep_storage_stack_pool : public
+            deep_symbol_storage<
             storage_bytes_used<
-                storage_block_info<
-                    finite_field_info<Field,
-                        final_coder_factory_pool<
-                            deep_storage_stack_pool<Field>
-                            > > > > >
-        {};
+            storage_block_length<
+            storage_block_size<
+            finite_field_info<Field,
+            final_layer
+            > > > > >
+        {
+        public:
+            using factory = basic_factory<deep_storage_stack_pool>;
+        };
 
         // Mutable Shallow Symbol Storage
         template<class Field>
-        class mutable_shallow_stack
-            : public mutable_shallow_symbol_storage<
+        class mutable_shallow_stack : public
+            mutable_shallow_symbol_storage<
             storage_bytes_used<
-                storage_block_info<
-                    finite_field_info<Field,
-                        final_coder_factory<
-                            mutable_shallow_stack<Field>
-                            > > > > >
-        {};
+            storage_block_length<
+            storage_block_size<
+            finite_field_info<Field,
+            final_layer
+            > > > > >
+        {
+        public:
+            using factory = basic_factory<mutable_shallow_stack>;
+        };
 
         template<class Field>
-        class mutable_shallow_stack_pool
-            : public mutable_shallow_symbol_storage<
+        class mutable_shallow_stack_pool : public
+            mutable_shallow_symbol_storage<
             storage_bytes_used<
-                storage_block_info<
-                    finite_field_info<Field,
-                        final_coder_factory_pool<
-                            mutable_shallow_stack_pool<Field>
-                            > > > > >
-        {};
+            storage_block_length<
+            storage_block_size<
+            finite_field_info<Field,
+            final_layer
+            > > > > >
+        {
+        public:
+            using factory = basic_factory<mutable_shallow_stack_pool>;
+        };
 
         // Const Shallow Symbol Storage
         template<class Field>
-        class const_shallow_stack
-            : public const_shallow_symbol_storage<
+        class const_shallow_stack : public
+            const_shallow_symbol_storage<
             storage_bytes_used<
-                storage_block_info<
-                    finite_field_info<Field,
-                        final_coder_factory<
-                            const_shallow_stack<Field>
-                            > > > > >
-        {};
+            storage_block_length<
+            storage_block_size<
+            finite_field_info<Field,
+            final_layer
+            > > > > >
+        {
+        public:
+            using factory = basic_factory<const_shallow_stack>;
+        };
 
         template<class Field>
-        class const_shallow_stack_pool
-            : public const_shallow_symbol_storage<
+        class const_shallow_stack_pool : public
+            const_shallow_symbol_storage<
             storage_bytes_used<
-                storage_block_info<
-                    finite_field_info<Field,
-                        final_coder_factory_pool<
-                            const_shallow_stack_pool<Field>
-                            > > > > >
-        {};
-
-        // Partial Shallow Symbol Storage
-        template<class Field>
-        class partial_shallow_stack
-            : public partial_shallow_symbol_storage<
-            storage_bytes_used<
-                storage_block_info<
-                    finite_field_info<Field,
-                        final_coder_factory<
-                            partial_shallow_stack<Field>
-                            > > > > >
-        {};
-
-        template<class Field>
-        class partial_shallow_stack_pool
-            : public partial_shallow_symbol_storage<
-            storage_bytes_used<
-                storage_block_info<
-                    finite_field_info<Field,
-                        final_coder_factory_pool<
-                            partial_shallow_stack_pool<Field>
-                            > > > > >
-        {};
-
+            storage_block_length<
+            storage_block_size<
+            finite_field_info<Field,
+            final_layer
+            > > > > >
+        {
+        public:
+            using factory = basic_factory<const_shallow_stack_pool>;
+        };
     }
 }
 
 namespace
 {
 
-    /// Tests: Setting partial data on a storage object. Any unfilled or partial
-    ///        symbols should be available but their memory zero'ed.
+    /// Tests: Setting partial data on a storage object. Any unfilled
+    ///        or partial symbols should be available but their memory
+    ///        zero'ed.
     template<class Coder>
     struct set_partial_data
     {
 
         typedef typename Coder::factory factory_type;
-        typedef typename Coder::pointer pointer_type;
 
         set_partial_data(uint32_t max_symbols, uint32_t max_symbol_size)
             : m_factory(max_symbols, max_symbol_size)
@@ -174,7 +170,7 @@ namespace
             m_factory.set_symbols(symbols);
             m_factory.set_symbol_size(symbol_size);
 
-            pointer_type coder = m_factory.build();
+            auto coder = m_factory.build();
 
             uint32_t vector_size = rand() % coder->block_size();
 
@@ -235,7 +231,6 @@ namespace
     struct api_copy_symbols
     {
         typedef typename Coder::factory factory_type;
-        typedef typename Coder::pointer pointer_type;
         typedef typename Coder::value_type value_type;
 
         api_copy_symbols(uint32_t max_symbols, uint32_t max_symbol_size)
@@ -245,7 +240,7 @@ namespace
         void run()
         {
             // Build with the max_symbols and max_symbol_size
-            pointer_type coder = m_factory.build();
+            auto coder = m_factory.build();
 
             auto vector_in = random_vector(coder->block_size());
             auto vector_out = random_vector(coder->block_size());
@@ -275,7 +270,6 @@ namespace
     {
 
         typedef typename Coder::factory factory_type;
-        typedef typename Coder::pointer pointer_type;
         typedef typename Coder::value_type value_type;
 
         api_copy_symbol(uint32_t max_symbols, uint32_t max_symbol_size)
@@ -285,7 +279,7 @@ namespace
         void run()
         {
             // Build with the max_symbols and max_symbol_size
-            pointer_type coder = m_factory.build();
+            auto coder = m_factory.build();
 
             auto vector_in = random_vector(coder->block_size());
 
@@ -323,7 +317,6 @@ namespace
     {
 
         typedef typename Coder::factory factory_type;
-        typedef typename Coder::pointer pointer_type;
         typedef typename Coder::value_type value_type;
 
         api_symbol_const(uint32_t max_symbols, uint32_t max_symbol_size)
@@ -333,10 +326,10 @@ namespace
         void run()
         {
             // Build with the max_symbols and max_symbol_size
-            pointer_type coder = m_factory.build();
+            auto coder = m_factory.build();
 
             // Make sure we call the const version of the function
-            const pointer_type &const_coder = coder;
+            const auto &const_coder = coder;
 
             auto vector_in = random_vector(coder->block_size());
 
@@ -372,7 +365,6 @@ namespace
     struct api_symbol
     {
         typedef typename Coder::factory factory_type;
-        typedef typename Coder::pointer pointer_type;
 
         api_symbol(uint32_t max_symbols, uint32_t max_symbol_size)
             : m_factory(max_symbols, max_symbol_size)
@@ -381,7 +373,7 @@ namespace
         void run()
         {
             // Build with the max_symbols and max_symbol_size
-            pointer_type coder = m_factory.build();
+            auto coder = m_factory.build();
 
             auto vector_in = random_vector(coder->block_size());
 
@@ -418,7 +410,6 @@ namespace
     {
 
         typedef typename Coder::factory factory_type;
-        typedef typename Coder::pointer pointer_type;
         typedef typename Coder::value_type value_type;
 
         api_symbol_value_const(uint32_t max_symbols, uint32_t max_symbol_size)
@@ -429,10 +420,10 @@ namespace
         void run()
         {
             // Build with the max_symbols and max_symbol_size
-            pointer_type coder = m_factory.build();
+            auto coder = m_factory.build();
 
             // Make sure we call the const version of the function
-            const pointer_type &const_coder = coder;
+            const auto& const_coder = coder;
 
             auto vector_in = random_vector(coder->block_size());
 
@@ -470,7 +461,6 @@ namespace
     {
 
         typedef typename Coder::factory factory_type;
-        typedef typename Coder::pointer pointer_type;
         typedef typename Coder::value_type value_type;
 
         api_symbol_value(uint32_t max_symbols, uint32_t max_symbol_size)
@@ -480,7 +470,7 @@ namespace
         void run()
         {
             // Build with the max_symbols and max_symbol_size
-            pointer_type coder = m_factory.build();
+            auto coder = m_factory.build();
 
             auto vector_in = random_vector(coder->block_size());
 
@@ -518,17 +508,17 @@ namespace
     {
 
         typedef typename Coder::factory factory_type;
-        typedef typename Coder::pointer pointer_type;
         typedef typename Coder::value_type value_type;
 
-        api_set_symbols_const_storage(uint32_t max_symbols, uint32_t max_symbol_size)
+        api_set_symbols_const_storage(uint32_t max_symbols,
+                                      uint32_t max_symbol_size)
             : m_factory(max_symbols, max_symbol_size)
         { }
 
         void run()
         {
             // Build with the max_symbols and max_symbol_size
-            pointer_type coder = m_factory.build();
+            auto coder = m_factory.build();
 
             auto vector_in = random_vector(coder->block_size());
 
@@ -567,7 +557,6 @@ namespace
     {
 
         typedef typename Coder::factory factory_type;
-        typedef typename Coder::pointer pointer_type;
         typedef typename Coder::value_type value_type;
 
         api_set_symbols_mutable_storage(uint32_t max_symbols,
@@ -578,7 +567,7 @@ namespace
         void run()
         {
             // Build with the max_symbols and max_symbol_size
-            pointer_type coder = m_factory.build();
+            auto coder = m_factory.build();
 
             auto vector_in = random_vector(coder->block_size());
             auto vector_out = random_vector(coder->block_size());
@@ -618,7 +607,6 @@ namespace
     {
 
         typedef typename Coder::factory factory_type;
-        typedef typename Coder::pointer pointer_type;
         typedef typename Coder::value_type value_type;
 
         api_set_symbol_const_storage(uint32_t max_symbols,
@@ -629,7 +617,7 @@ namespace
         void run()
         {
             // Build with the max_symbols and max_symbol_size
-            pointer_type coder = m_factory.build();
+            auto coder = m_factory.build();
 
             auto vector_in = random_vector(coder->block_size());
 
@@ -668,7 +656,6 @@ namespace
     {
 
         typedef typename Coder::factory factory_type;
-        typedef typename Coder::pointer pointer_type;
         typedef typename Coder::value_type value_type;
 
         api_set_symbol_mutable_storage(uint32_t max_symbols,
@@ -679,7 +666,7 @@ namespace
         void run()
         {
             // Build with the max_symbols and max_symbol_size
-            pointer_type coder = m_factory.build();
+            auto coder = m_factory.build();
 
             auto vector_in = random_vector(coder->block_size());
 
@@ -717,7 +704,6 @@ namespace
     struct api_swap_symbols_const_pointer
     {
         typedef typename Coder::factory factory_type;
-        typedef typename Coder::pointer pointer_type;
 
         api_swap_symbols_const_pointer(uint32_t max_symbols,
                                        uint32_t max_symbol_size)
@@ -727,7 +713,7 @@ namespace
         void run()
         {
             // Build with the max_symbols and max_symbol_size
-            pointer_type coder = m_factory.build();
+            auto coder = m_factory.build();
 
             auto vector_in = random_vector(coder->block_size());
             auto vector_out = random_vector(coder->block_size());
@@ -762,7 +748,6 @@ namespace
     {
 
         typedef typename Coder::factory factory_type;
-        typedef typename Coder::pointer pointer_type;
 
         api_swap_symbols_pointer(uint32_t max_symbols,
                                  uint32_t max_symbol_size)
@@ -772,7 +757,7 @@ namespace
         void run()
         {
             // Build with the max_symbols and max_symbol_size
-            pointer_type coder = m_factory.build();
+            auto coder = m_factory.build();
 
             auto vector_in = random_vector(coder->block_size());
             auto vector_out = random_vector(coder->block_size());
@@ -807,7 +792,6 @@ namespace
     {
 
         typedef typename Coder::factory factory_type;
-        typedef typename Coder::pointer pointer_type;
 
         api_swap_symbols_data(uint32_t max_symbols,
                               uint32_t max_symbol_size)
@@ -817,7 +801,7 @@ namespace
         void run()
         {
             // Build with the max_symbols and max_symbol_size
-            pointer_type coder = m_factory.build();
+            auto coder = m_factory.build();
 
             auto vector_in = random_vector(coder->block_size());
             auto vector_out = random_vector(coder->block_size());
@@ -931,7 +915,6 @@ namespace
     struct api_symbols
     {
         typedef typename Coder::factory factory_type;
-        typedef typename Coder::pointer pointer_type;
 
         api_symbols(uint32_t max_symbols, uint32_t max_symbol_size)
             : m_factory(max_symbols, max_symbol_size)
@@ -940,7 +923,7 @@ namespace
         void run()
         {
             // Build with the max_symbols and max_symbol_size
-            pointer_type coder = m_factory.build();
+            auto coder = m_factory.build();
 
             EXPECT_EQ(coder->symbols(), m_factory.max_symbols());
         }
@@ -959,7 +942,6 @@ namespace
     {
 
         typedef typename Coder::factory factory_type;
-        typedef typename Coder::pointer pointer_type;
 
         api_symbol_size(uint32_t max_symbols, uint32_t max_symbol_size)
             : m_factory(max_symbols, max_symbol_size)
@@ -968,7 +950,7 @@ namespace
         void run()
         {
             // Build with the max_symbols and max_symbol_size
-            pointer_type coder = m_factory.build();
+            auto coder = m_factory.build();
 
             EXPECT_EQ(coder->symbol_size(), m_factory.max_symbol_size());
         }
@@ -986,7 +968,6 @@ namespace
     struct api_symbol_length
     {
         typedef typename Coder::factory factory_type;
-        typedef typename Coder::pointer pointer_type;
         typedef typename Coder::field_type field_type;
 
         api_symbol_length(uint32_t max_symbols, uint32_t max_symbol_size)
@@ -996,7 +977,7 @@ namespace
         void run()
         {
             // Build with the max_symbols and max_symbol_size
-            pointer_type coder = m_factory.build();
+            auto coder = m_factory.build();
 
             uint32_t length =
                 fifi::size_to_length<field_type>(coder->symbol_size());
@@ -1016,7 +997,6 @@ namespace
     struct api_block_size
     {
         typedef typename Coder::factory factory_type;
-        typedef typename Coder::pointer pointer_type;
 
         api_block_size(uint32_t max_symbols, uint32_t max_symbol_size)
             : m_factory(max_symbols, max_symbol_size)
@@ -1025,7 +1005,7 @@ namespace
         void run()
         {
             // Build with the max_symbols and max_symbol_size
-            pointer_type coder = m_factory.build();
+            auto coder = m_factory.build();
 
             EXPECT_EQ(coder->block_size(),
                       m_factory.max_symbols() * m_factory.max_symbol_size());
@@ -1045,7 +1025,6 @@ namespace
     struct api_bytes_used
     {
         typedef typename Coder::factory factory_type;
-        typedef typename Coder::pointer pointer_type;
 
         api_bytes_used(uint32_t max_symbols, uint32_t max_symbol_size)
             : m_factory(max_symbols, max_symbol_size)
@@ -1054,7 +1033,7 @@ namespace
         void run()
         {
             // Build with the max_symbols and max_symbol_size
-            pointer_type coder = m_factory.build();
+            auto coder = m_factory.build();
 
             uint32_t used =
                 m_factory.max_symbols() * m_factory.max_symbol_size();
@@ -1085,9 +1064,9 @@ namespace
     struct api_deep_storage_status
     {
         typedef typename Coder::factory factory_type;
-        typedef typename Coder::pointer pointer_type;
 
-        api_deep_storage_status(uint32_t max_symbols, uint32_t max_symbol_size)
+        api_deep_storage_status(uint32_t max_symbols,
+                                uint32_t max_symbol_size)
             : m_factory(max_symbols, max_symbol_size),
               m_factory_fixed(10, 100)
         { }
@@ -1103,7 +1082,7 @@ namespace
         void set_symbol()
         {
             // Build with the max_symbols and max_symbol_size
-            pointer_type coder = m_factory_fixed.build();
+            auto coder = m_factory_fixed.build();
 
             for(uint32_t i = 0; i < coder->symbols(); ++i)
             {
@@ -1155,7 +1134,7 @@ namespace
         ///   - layer::set_symbols(const sak::mutable_storage&)
         void set_symbols()
         {
-            pointer_type coder = m_factory.build();
+            auto coder = m_factory.build();
 
             EXPECT_EQ(coder->symbols_available(), coder->symbols());
             EXPECT_EQ(coder->symbols_initialized(), 0U);
@@ -1214,7 +1193,6 @@ namespace
     struct api_shallow_storage_status
     {
         typedef typename Coder::factory factory_type;
-        typedef typename Coder::pointer pointer_type;
 
         api_shallow_storage_status(uint32_t max_symbols,
                                    uint32_t max_symbol_size)
@@ -1233,7 +1211,7 @@ namespace
         void set_symbol()
         {
             // Build with the max_symbols and max_symbol_size
-            pointer_type coder = m_factory_fixed.build();
+            auto coder = m_factory_fixed.build();
 
             for(uint32_t i = 0; i < coder->symbols(); ++i)
             {
@@ -1285,7 +1263,7 @@ namespace
         ///   - layer::set_symbols(const sak::mutable_storage&)
         void set_symbols()
         {
-            pointer_type coder = m_factory.build();
+            auto coder = m_factory.build();
 
             EXPECT_EQ(coder->symbols_available(), 0U);
             EXPECT_EQ(coder->symbols_initialized(), 0U);
@@ -1342,9 +1320,9 @@ namespace
     struct api_deep_swap_storage_status
     {
         typedef typename Coder::factory factory_type;
-        typedef typename Coder::pointer pointer_type;
 
-        api_deep_swap_storage_status(uint32_t max_symbols, uint32_t max_symbol_size)
+        api_deep_swap_storage_status(uint32_t max_symbols,
+                                     uint32_t max_symbol_size)
             : m_factory(max_symbols, max_symbol_size)
         { }
 
@@ -1357,7 +1335,7 @@ namespace
         ///   - layer::swap_symbols(std::vector<uint8_t>&)
         void swap_symbols()
         {
-            pointer_type coder = m_factory.build();
+            auto coder = m_factory.build();
 
             EXPECT_EQ(coder->symbols_available(), coder->symbols());
             EXPECT_EQ(coder->symbols_initialized(), 0U);
@@ -1414,7 +1392,6 @@ namespace
     struct api_const_shallow_swap_storage_status
     {
         typedef typename Coder::factory factory_type;
-        typedef typename Coder::pointer pointer_type;
 
         api_const_shallow_swap_storage_status(uint32_t max_symbols,
                                               uint32_t max_symbol_size)
@@ -1430,7 +1407,7 @@ namespace
         ///   - layer::swap_symbols(std::vector<const uint8_t*>&)
         void swap_symbols()
         {
-            pointer_type coder = m_factory.build();
+            auto coder = m_factory.build();
 
             EXPECT_EQ(coder->symbols_available(), 0U);
             EXPECT_EQ(coder->symbols_initialized(), 0U);
@@ -1487,7 +1464,6 @@ namespace
     struct api_mutable_shallow_swap_storage_status
     {
         typedef typename Coder::factory factory_type;
-        typedef typename Coder::pointer pointer_type;
 
         api_mutable_shallow_swap_storage_status(uint32_t max_symbols,
                                                 uint32_t max_symbol_size)
@@ -1503,7 +1479,7 @@ namespace
         ///   - layer::swap_symbols(std::vector<uint8_t*>&)
         void swap_symbols()
         {
-            pointer_type coder = m_factory.build();
+            auto coder = m_factory.build();
 
             EXPECT_EQ(coder->symbols_available(), 0U);
             EXPECT_EQ(coder->symbols_initialized(), 0U);
@@ -1675,25 +1651,6 @@ TEST(TestSymbolStorage, test_const_shallow_stack)
     run_const_shallow_stack_tests<kodo::const_shallow_stack_pool>();
 }
 
-/// Run the tests typical partial shallow stack
-TEST(TestSymbolStorage, test_partial_shallow_stack)
-{
-    // The partial shallow symbol stack is API compatible with the
-    // const shallow stack
-    run_const_shallow_stack_tests<kodo::partial_shallow_stack>();
-    run_const_shallow_stack_tests<kodo::partial_shallow_stack_pool>();
-
-    // Run the partial data tests
-    uint32_t symbols = rand_symbols();
-    uint32_t symbol_size = rand_symbol_size();
-
-    run_test<kodo::partial_shallow_stack, set_partial_data>(
-        symbols, symbol_size);
-
-    run_test<kodo::partial_shallow_stack_pool, set_partial_data>(
-        symbols, symbol_size);
-}
-
 /// Helper function for running all the API and related tests
 /// which are compatible with the shallow const stack.
 template<template <class> class Stack>
@@ -1749,124 +1706,4 @@ TEST(TestSymbolStorage, test_mutable_shallow_stack)
 {
     run_mutable_shallow_stack_tests<kodo::mutable_shallow_stack>();
     run_mutable_shallow_stack_tests<kodo::mutable_shallow_stack_pool>();
-}
-
-/// Tests the has_shallow_symbol_storage template
-TEST(TestSymbolStorage, test_has_shallow_symbol_storage)
-{
-    EXPECT_TRUE(kodo::has_shallow_symbol_storage<
-                    kodo::partial_shallow_stack<fifi::binary> >::value);
-
-    EXPECT_TRUE(kodo::has_shallow_symbol_storage<
-                    kodo::partial_shallow_stack<fifi::binary8> >::value);
-
-    EXPECT_TRUE(kodo::has_shallow_symbol_storage<
-                    kodo::partial_shallow_stack<fifi::binary16> >::value);
-
-    EXPECT_TRUE(kodo::has_shallow_symbol_storage<
-                    kodo::const_shallow_stack<fifi::binary> >::value);
-
-    EXPECT_TRUE(kodo::has_shallow_symbol_storage<
-                    kodo::const_shallow_stack<fifi::binary8> >::value);
-
-    EXPECT_TRUE(kodo::has_shallow_symbol_storage<
-                    kodo::const_shallow_stack<fifi::binary16> >::value);
-
-    EXPECT_TRUE(kodo::has_shallow_symbol_storage<
-                    kodo::mutable_shallow_stack<fifi::binary> >::value);
-
-    EXPECT_TRUE(kodo::has_shallow_symbol_storage<
-                    kodo::mutable_shallow_stack<fifi::binary8> >::value);
-
-    EXPECT_TRUE(kodo::has_shallow_symbol_storage<
-                    kodo::mutable_shallow_stack<fifi::binary16> >::value);
-
-    EXPECT_FALSE(kodo::has_shallow_symbol_storage<
-                     kodo::deep_storage_stack<fifi::binary> >::value);
-
-    EXPECT_FALSE(kodo::has_shallow_symbol_storage<
-                     kodo::deep_storage_stack<fifi::binary8> >::value);
-
-    EXPECT_FALSE(kodo::has_shallow_symbol_storage<
-                     kodo::deep_storage_stack<fifi::binary16> >::value);
-
-    EXPECT_FALSE(kodo::has_shallow_symbol_storage<int>::value);
-
-    EXPECT_FALSE(kodo::has_shallow_symbol_storage<fifi::binary8>::value);
-
-    /// has_mutable_shallow_symbol_storage
-
-    EXPECT_FALSE(kodo::has_mutable_shallow_symbol_storage<
-                     kodo::const_shallow_stack<fifi::binary> >::value);
-
-    EXPECT_FALSE(kodo::has_mutable_shallow_symbol_storage<
-                     kodo::const_shallow_stack<fifi::binary8> >::value);
-
-    EXPECT_FALSE(kodo::has_mutable_shallow_symbol_storage<
-                     kodo::const_shallow_stack<fifi::binary16> >::value);
-
-    EXPECT_TRUE(kodo::has_mutable_shallow_symbol_storage<
-                    kodo::mutable_shallow_stack<fifi::binary> >::value);
-
-    EXPECT_TRUE(kodo::has_mutable_shallow_symbol_storage<
-                    kodo::mutable_shallow_stack<fifi::binary8> >::value);
-
-    EXPECT_TRUE(kodo::has_mutable_shallow_symbol_storage<
-                    kodo::mutable_shallow_stack<fifi::binary16> >::value);
-
-    // has_const_shallow_symbol_storage
-
-    EXPECT_FALSE(kodo::has_const_shallow_symbol_storage<
-                     kodo::mutable_shallow_stack<fifi::binary> >::value);
-
-    EXPECT_FALSE(kodo::has_const_shallow_symbol_storage<
-                     kodo::mutable_shallow_stack<fifi::binary8> >::value);
-
-    EXPECT_FALSE(kodo::has_const_shallow_symbol_storage<
-                     kodo::mutable_shallow_stack<fifi::binary16> >::value);
-
-    EXPECT_TRUE(kodo::has_const_shallow_symbol_storage<
-                    kodo::const_shallow_stack<fifi::binary> >::value);
-
-    EXPECT_TRUE(kodo::has_const_shallow_symbol_storage<
-                    kodo::const_shallow_stack<fifi::binary8> >::value);
-
-    EXPECT_TRUE(kodo::has_const_shallow_symbol_storage<
-                    kodo::const_shallow_stack<fifi::binary16> >::value);
-
-}
-
-/// Tests the has_deep_symbol_storage template
-TEST(TestSymbolStorage, test_has_deep_symbol_storage)
-{
-    EXPECT_FALSE(kodo::has_deep_symbol_storage<
-                     kodo::partial_shallow_stack<fifi::binary> >::value);
-
-    EXPECT_FALSE(kodo::has_deep_symbol_storage<
-                     kodo::partial_shallow_stack<fifi::binary8> >::value);
-
-    EXPECT_FALSE(kodo::has_deep_symbol_storage<
-                     kodo::partial_shallow_stack<fifi::binary16> >::value);
-
-    EXPECT_FALSE(kodo::has_deep_symbol_storage<
-                     kodo::const_shallow_stack<fifi::binary> >::value);
-
-    EXPECT_FALSE(kodo::has_deep_symbol_storage<
-                     kodo::const_shallow_stack<fifi::binary8> >::value);
-
-    EXPECT_FALSE(kodo::has_deep_symbol_storage<
-                     kodo::const_shallow_stack<fifi::binary16> >::value);
-
-    EXPECT_TRUE(kodo::has_deep_symbol_storage<
-                    kodo::deep_storage_stack<fifi::binary> >::value);
-
-    EXPECT_TRUE(kodo::has_deep_symbol_storage<
-                    kodo::deep_storage_stack<fifi::binary8> >::value);
-
-    EXPECT_TRUE(kodo::has_deep_symbol_storage<
-                    kodo::deep_storage_stack<fifi::binary16> >::value);
-
-    EXPECT_FALSE(kodo::has_deep_symbol_storage<int>::value);
-
-    EXPECT_FALSE(kodo::has_deep_symbol_storage<fifi::binary8>::value);
 }

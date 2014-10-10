@@ -114,5 +114,6 @@ TEST(TestNestedPayloadEncoder, api)
 
     stack.m_nested.m_encode.set_return(42);
     EXPECT_EQ(stack.encode((uint8_t*)0xcc), 42);
-    EXPECT_TRUE(stack.m_nested.m_encode.called_once_with((uint8_t*)0xcc));
+    EXPECT_TRUE((bool) stack.m_nested.m_encode.expect_calls()
+                    .with((uint8_t*)0xcc));
 }

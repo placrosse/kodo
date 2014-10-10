@@ -9,6 +9,7 @@
 
 #include <kodo/basic_proxy_stack.hpp>
 #include <kodo/proxy_layer.hpp>
+#include <kodo/final_layer.hpp>
 
 #include "kodo_unit_test/helper_test_nested_stack.hpp"
 
@@ -47,8 +48,7 @@ namespace kodo
         /// embedded with the main stack.
         template<class MainStack>
         class dummy_proxy_stack : public
-              proxy_layer<
-              dummy_proxy_stack<MainStack>, MainStack>
+              proxy_layer<MainStack, final_layer>
         { };
 
         /// The stack represents the main stack used in unit test
@@ -64,7 +64,7 @@ TEST(TestBasicProxyStack, api)
     uint32_t symbols = 16;
     uint32_t symbol_size = 1400;
 
-    kodo::dummy_stack::factory factory(symbols, symbol_size);
+    kodo::dummy_stack::factory_base factory(symbols, symbol_size);
     EXPECT_EQ(factory.m_max_symbols, symbols);
     EXPECT_EQ(factory.m_max_symbol_size, symbol_size);
 

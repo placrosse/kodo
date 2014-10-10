@@ -1,4 +1,4 @@
-// Copyright Steinwurf ApS 2011-2013.
+// Copyright Steinwurf ApS 2011.
 // Distributed under the "STEINWURF RESEARCH LICENSE 1.0".
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
@@ -10,6 +10,7 @@
 #include <gtest/gtest.h>
 
 #include <kodo/rlnc/sliding_window_systematic_encoder.hpp>
+#include <kodo/basic_factory.hpp>
 
 namespace kodo
 {
@@ -26,10 +27,9 @@ namespace kodo
         {
         public:
 
-            struct factory
+            struct factory_base
             {
-                /// @copydoc layer::factory::factory(uint32_t,uint32_t)
-                factory(uint32_t max_symbols, uint32_t max_symbol_size)
+                factory_base(uint32_t max_symbols, uint32_t max_symbol_size)
                     : m_max_symbols(max_symbols),
                       m_max_symbol_size(max_symbol_size)
                 { }
@@ -160,7 +160,10 @@ namespace kodo
         // Instantiate a stack containing the sliding_window_systematic_encoder
         class dummy_stack
             : public sliding_window_systematic_encoder<dummy_layer>
-        { };
+        {
+        public:
+            using factory = basic_factory<dummy_stack>;
+        };
 
     }
 

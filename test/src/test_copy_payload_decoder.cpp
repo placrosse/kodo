@@ -1,39 +1,15 @@
-// Copyright Steinwurf ApS 2011-2013.
+// Copyright Steinwurf ApS 2011.
 // Distributed under the "STEINWURF RESEARCH LICENSE 1.0".
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
 
 /// @file test_copy_payload_decoder Unit test for copy_payload_decoder layer
 
-/// Tests:
-///   - layer::initialize(uint32_t,uint32_t)
-///   - layer::decode(const uint8_t*)
-
-#include <cstdint>
-#include <vector>
-
 #include <gtest/gtest.h>
-
-#include <fifi/default_field.hpp>
+#include <stub/call.hpp>
 
 #include <kodo/copy_payload_decoder.hpp>
-#include <kodo/payload_decoder.hpp>
-#include <kodo/systematic_decoder.hpp>
-#include <kodo/symbol_id_decoder.hpp>
-#include <kodo/plain_symbol_id_reader.hpp>
-#include <kodo/forward_linear_block_decoder.hpp>
-#include <kodo/coefficient_storage.hpp>
-#include <kodo/coefficient_info.hpp>
-#include <kodo/finite_field_math.hpp>
-#include <kodo/finite_field_info.hpp>
-#include <kodo/deep_symbol_storage.hpp>
-#include <kodo/storage_bytes_used.hpp>
-#include <kodo/storage_block_info.hpp>
-#include <kodo/final_coder_factory_pool.hpp>
-#include <kodo/coefficient_value_access.hpp>
-#include <kodo/symbol_decoding_status_tracker.hpp>
-#include <kodo/symbol_decoding_status_counter.hpp>
-
+#include <kodo/basic_factory.hpp>
 
 /// Here we define the stacks which should be tested.
 namespace kodo
@@ -44,148 +20,104 @@ namespace kodo
     // translation units
     namespace
     {
-
-        // Test layer against real api to ensure that we get an error if the layer
-        // doesn't complies with the api.
-        template<class Field>
-        class copy_payload_decoder_stack
-            : public // Payload API
-                     copy_payload_decoder<
-                     payload_decoder<
-                     // Codec Header API
-                     systematic_decoder<
-                     symbol_id_decoder<
-                     // Symbol ID API
-                     plain_symbol_id_reader<
-                     // Decoder API
-                     forward_linear_block_decoder<
-                     symbol_decoding_status_counter<
-                     symbol_decoding_status_tracker<
-                     // Coefficient Storage API
-                     coefficient_value_access<
-                     coefficient_storage<
-                     coefficient_info<
-                     // Storage API
-                     deep_symbol_storage<
-                     storage_bytes_used<
-                     storage_block_info<
-                     // Finite Field API
-                     finite_field_math<typename fifi::default_field<Field>::type,
-                     finite_field_info<Field,
-                     // Factory API
-                     final_coder_factory_pool<
-                     // Final type
-                     copy_payload_decoder_stack<Field>
-                         > > > > > > > > > > > > > > > > >
-        {};
-
-        // A dummi api to replace the real stack
-        class dummy_api
+        // Layer to make the m_payload_copy buffer available
+        template<class SuperCoder>
+        class access_payload_copy : public SuperCoder
         {
         public:
 
-            struct factory
+            std::vector<uint8_t>& payload_copy()
             {
+                return SuperCoder::m_payload_copy;
+            }
 
-                /// @copydoc layer::factory::symbol_size() const;
-                uint32_t symbol_size() const
-                {
-                    return m_symbol_size;
-                }
-
-                /// @copydoc layer::factory::set_symbol_size(uint32_t)
-                void set_symbol_size(uint32_t symbol_size)
-                {
-                    m_symbol_size = symbol_size;
-                }
-
-                uint32_t m_symbol_size;
-
-            };
-
-            /// @copydoc layer::initialize(Factory&)
-            template<class Factory>
-            void initialize(Factory& the_factory)
-                {
-                    m_symbol_size = the_factory.symbol_size();
-                }
-
-            /// @copydoc layer::decode(uint8_t*)
-            void decode(uint8_t *payload)
-                {
-                    assert(payload != 0);
-
-                    // Clear payload
-                    std::fill_n(payload, payload_size(), 0);
-                }
-
-            /// @copydoc layer::payload_size() const
-            uint32_t payload_size() const
-                {
-                    return m_symbol_size;
-                }
-
-        private:
-
-            /// Number of symbols
-            uint32_t m_symbol_size;
+            const std::vector<uint8_t>& payload_copy() const
+            {
+                return SuperCoder::m_payload_copy;
+            }
         };
 
-        // Test functionality of the individual layer
-        typedef copy_payload_decoder<dummy_api> copy_payload_coder;
+        // Dummy layer satisfying the dependencies of copy_payload_decoder
+        class dummy_layer
+        {
+        public:
+
+            class factory_base
+            {
+            public:
+
+                factory_base(uint32_t,uint32_t)
+                { }
+
+                uint32_t max_payload_size() const
+                {
+                    return m_max_payload_size();
+                }
+
+                stub::call<uint32_t()> m_max_payload_size;
+            };
+
+        public:
+
+            template<class Factory>
+            void construct(Factory& the_factory)
+            {
+                (void) the_factory;
+            }
+
+            template<class Factory>
+            void initialize(Factory& the_factory)
+            {
+                (void) the_factory;
+            }
+
+            uint32_t payload_size() const
+            {
+                return m_payload_size();
+            }
+
+            void decode(uint8_t* payload)
+            {
+                m_decode(payload);
+
+                // Clear payload
+                std::fill_n(payload, payload_size(), 0);
+            }
+
+            stub::call<uint32_t()> m_payload_size;
+            stub::call<void(uint8_t*)> m_decode;
+        };
+
+        class dummy_stack : public
+            access_payload_copy<copy_payload_decoder<dummy_layer>>
+        {
+        public:
+            using factory = basic_factory<dummy_stack>;
+        };
     }
 }
 
-// Test the layer itself - confirms that it acts as expected
-void test_layer(uint32_t /*symbols*/, uint32_t symbol_size)
+/// Run the tests
+TEST(TestCopyPayloadDecoder, api)
 {
     // Create and initialize coder
-    kodo::copy_payload_coder coder;
-    kodo::copy_payload_coder::factory the_factory;
-    the_factory.set_symbol_size(symbol_size);
-    coder.initialize(the_factory);
+    kodo::dummy_stack::factory f(0,0);
+    f.m_max_payload_size.set_return(10);
 
-    std::vector<uint8_t> payload(coder.payload_size(), 'a');
-    std::vector<uint8_t> payload_copy(payload);
+    auto c = f.build();
+    EXPECT_TRUE((bool)f.m_max_payload_size.expect_calls().with());
 
-    ASSERT_EQ(payload.size(), payload_copy.size());
+    c->m_payload_size.set_return(5);
 
-    // Ensure that payload and payload_copy are equal
-    EXPECT_TRUE(
-        std::equal(payload.begin(), payload.end(), payload_copy.begin()) );
+    std::vector<uint8_t> data(10, 'a');
+    std::vector<uint8_t> data_copy = data;
 
-    coder.decode(&payload[0]);
+    c->decode(data.data());
 
-    // Test that payload isn't changed during decoding
-    EXPECT_TRUE(
-        std::equal(payload.begin(), payload.end(), payload_copy.begin()) );
+    // The data did not change
+    EXPECT_TRUE(data == data_copy);
 
-}
-
-// Ensure that the layer complies to the API
-void test_stack(uint32_t symbols, uint32_t symbol_size)
-{
-    typedef kodo::copy_payload_decoder_stack<fifi::binary8>
-        copy_payload_coder_t;
-
-    copy_payload_coder_t::factory coder_factory(symbols, symbol_size);
-
-    coder_factory.set_symbols(symbols);
-    coder_factory.set_symbol_size(symbol_size);
-
-    auto coder = coder_factory.build();
-
-    std::vector<uint8_t> payload(coder->payload_size(), 'a');
-
-    coder->decode(&payload[0]);
-}
-
-/// Run the tests
-TEST(TestCopyPayloadDecoder, test_copy_payload_decoder_stack)
-{
-    uint32_t symbols = 8;
-    uint32_t symbol_size = 8;
-
-    test_stack(symbols, symbol_size);
-    test_layer(symbols, symbol_size);
+    // The internal buffer was used
+    EXPECT_TRUE((bool)c->m_decode.expect_calls()
+                    .with(c->payload_copy().data()));
 }

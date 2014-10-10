@@ -1,4 +1,4 @@
-// Copyright Steinwurf ApS 2011-2013.
+// Copyright Steinwurf ApS 2011.
 // Distributed under the "STEINWURF RESEARCH LICENSE 1.0".
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
@@ -12,10 +12,12 @@
 #include <fifi/binary.hpp>
 #include <fifi/binary8.hpp>
 #include <kodo/coefficient_info.hpp>
-#include <kodo/storage_block_info.hpp>
+#include <kodo/storage_block_length.hpp>
+#include <kodo/storage_block_size.hpp>
+#include <kodo/pool_factory.hpp>
+
 namespace kodo
 {
-
     // Put dummy layers and tests classes in an anonymous namespace
     // to avoid violations of ODF (one-definition-rule) in other
     // translation units
@@ -32,11 +34,11 @@ namespace kodo
 
         public:
 
-            class factory
+            class factory_base
             {
             public:
 
-                factory(uint32_t max_symbols, uint32_t max_symbol_size)
+                factory_base(uint32_t max_symbols, uint32_t max_symbol_size)
                 {
                     (void)max_symbols;
                     (void)max_symbol_size;
@@ -61,10 +63,14 @@ namespace kodo
         template<class FieldType>
         class test_coefficient_info :
             public coefficient_info<
-                   storage_block_info<
+                   storage_block_length<
+                   storage_block_size<
                    dummy_layer<
-                   FieldType > > >
-        { };
+                   FieldType > > > >
+        {
+        public:
+            using factory = kodo::pool_factory<test_coefficient_info>;
+        };
     }
 
 }
@@ -74,7 +80,7 @@ TEST(TestCoefficientInfo, api)
     uint32_t symbols = 16;
     uint32_t symbols_size = 16;
     {
-        typedef kodo::test_coefficient_info<fifi::binary> stack;
+        using stack = kodo::test_coefficient_info<fifi::binary>;
 
         stack::factory f(symbols, symbols_size);
 

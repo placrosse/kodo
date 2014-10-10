@@ -6,10 +6,54 @@ detailed list of every change, see the Git log.
 
 Latest
 ------
-* Major: Updated to sak verion 11.x.y.
+* Major: Upgrade to tables 5
+* Minor: Added test profile option to speed up the execution of unit tests
+  on embedded devices
+
+18.0.0
+------
+* Patch: Fix compilation failure when using kodo::trace one a mutable
+  shallow stack.
+* Major: Overhaul of the file/storage encoders/decoders. These are
+  used to encode/decode objects larger than a single generation. You
+  can find updated examples in examples/encode_decode_file and
+  examples/encode_decode_storage. Notice also that these classes are
+  now located in the kodo::object namespace.
+* Major: Place type traits for detection of the storage layers in
+  their own headers according to our one class per file
+  guideline. This affects the has_const_shallow_symbol_storage and
+  has_mutable_shallow_symbol_storage traits.
+* Minor: Added generic helpers for invoking the initialize(...) and
+  construct(...) functions. We now use this in our factories which
+  allows them to work even when codecs do not specify one or both of
+  these functions.
+* Major: Changed the partial_shallow_symbol_storage to become more
+  independent of the underlying storage layers. In addition the layer
+  is now more strict it as it only supports a single partial
+  symbol. This means that the user now should select the number of
+  symbols to match this requirement.
+* Major: Renamed the partial_shallow_storage_layers to
+  const_partial_shallow_storage_layers and added
+  mutable_partial_shallow_storage_layers
+* Major: Updated to sak version 12.x.y
+* Major: Updated to fifi version 13.x.y
 * Minor: Update to waf 1.8.0-pre1
 * Minor: Made python files comply with pep8
 * Major: Removed unused file ``test/src/kodo_unit_test/test_reuse.hpp``.
+* Major: Restructured the design and use of factories. The factories
+  are no longer defined as the last layer in a stack. The main
+  motivation for this change was that it allows extension of existing
+  stacks but also that it simplifies the structure of the stacks. The
+  ability to extend a stack is convenient when applications need to
+  add/embed additional state into an encoder or decoder. Using the
+  previous design this could only be done by re-defining the stack
+  and all its layers.
+* Patch: Fixed proxy_stack ambiguous definition warnings with clang++
+* Patch: Added a tutorial which is to be expanded further in the future.
+* Patch: Added example showing how to customize the block partitioning
+  scheme used to segment large object into a number of smaller blocks
+  suitable for encoding/decoding. Example can be found in
+  examples/customize_partitioning_scheme.
 
 17.0.0
 ------
@@ -19,7 +63,7 @@ Latest
   human readable information about the encoding and decoding progress
   at run time. This replaces the debug layers functionality. An
   example can be found in the use_trace_layers example.
-* Bug: Fixed bug in the proxy_remote_rank layer. The state was
+* Patch: Fixed bug in the proxy_remote_rank layer. The state was
   incorrectly updated causing the remote rank to be erroneous. This
   bug was reported by Jonas Hansen <jonas@hrjonashansen.dk>
 * Major: Updated terminology in the proxy_layer and proxy_stack layers
@@ -63,9 +107,9 @@ Latest
 16.0.0
 ------
 * Major: Updating dependency to fifi version 10.x.y
-* Bug: Fix kodo overhead parameter ``symbol erasure probability`` to
+* Patch: Fix kodo overhead parameter ``symbol erasure probability`` to
   ``erasure``.
-* Bug: Fix support for fifi::binary16 in the Reed-Solomon codes.
+* Patch: Fix support for fifi::binary16 in the Reed-Solomon codes.
 * Minor: Adding the user_defined_generator layer, which allows users
   to specify the coding coefficients to be used directly.
 * Major: Update the coefficient storage API. The previous naming
@@ -106,7 +150,7 @@ Latest
   layer to ensure that proper detection of early decoding happens
   correctly. The existing on-the-fly codes in the
   src/kodo/rlnc/on_the_fly_codes.hpp have been updated.
-* Bug: Several unit tests are defining classes in the .cpp
+* Patch: Several unit tests are defining classes in the .cpp
   files. While this is typically not a problem, it can unexpectedly
   result in a violation of the ODR (One-Definition-Rule) resulting in
   undefined behavior of the resulting binary. To avoid this problem
@@ -115,7 +159,7 @@ Latest
 
 14.0.0
 ------
-* Bug: Fixed assert in the payload_rank_decoder.hpp which incorrectly
+* Patch: Fixed assert in the payload_rank_decoder.hpp which incorrectly
   checked for the received encoder rank to be less than the currently
   largest rank.  This is not the case for e.g. recoding or if packet
   reordering occurs.  Reported by Martin Hundebøll.
@@ -181,12 +225,12 @@ Latest
 * Minor: Added new example showing some one way to use some of the
   debug layers in kodo. The example is in the examples folder called
   use_debug_layers
-* Bug: Fix missing return in the payload_recoder recode() function.
+* Patch: Fix missing return in the payload_recoder recode() function.
 
 11.0.0
 ------
 * Minor: Added decoding probability benchmark. The benchmark measures
-  the the number of symbols needed to decode from which the decoding
+  the number of symbols needed to decode from which the decoding
   probability can be derived.
 * Major: Refactored the factory layers so that the layer::construct()
   and layer::initialize() functions are now template functions. The
@@ -203,13 +247,13 @@ Latest
   the amount of non-zero vs zero elements generated in e.g. a RLNC
   encoding vector.
 * Minor: Adding support for git protocol option in the wscript
-* Bug: The uniform_generator and sparse_uniform_generators contained a
+* Patch: The uniform_generator and sparse_uniform_generators contained a
   bug which meant that not all symbols were considered for recoding,
   when rank of a recoder was not full.
 
 10.0.0
 ------
-* Bug: Fixed incorrectly failing assert in the
+* Patch: Fixed incorrectly failing assert in the
   linear_block_encoder. The assert was triggered during recoding when
   a storage for a specific symbol was not explicitly set by the
   layer::set_symbol() or layer::set_symbols() functions.  The bug was
@@ -226,9 +270,9 @@ Latest
 
 9.0.1
 -----
-* Bug: Fix behavior of deep_symbol_storage::set_symbols() to set all
+* Patch: Fix behavior of deep_symbol_storage::set_symbols() to set all
   symbols.
-* Bug: When reusing decoders containing the linear_block_decoder layer
+* Patch: When reusing decoders containing the linear_block_decoder layer
   systematic symbols where not correctly initialized. A fix was added
   to the linear_block_decoder and the unit test test_reuse_incomplete
   now checks for this issue.
@@ -248,9 +292,9 @@ Latest
   input symbols and coefficients directly into the decoder and how
   some of the debug layers can be applied to debug the decoding
   process.
-* Bug: Made all factories non-copyable by making copy constructor and
+* Patch: Made all factories non-copyable by making copy constructor and
   copy assignment constructor private.
-* Bug: Fix issue in recoding_symbol_id, where sak::copy_storage
+* Patch: Fix issue in recoding_symbol_id, where sak::copy_storage
   triggered an assert when using an decoder with symbols less than
   max_symbols.
 * Major: Changed construct() and initialize() functions of a coding

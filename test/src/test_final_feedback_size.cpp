@@ -1,4 +1,4 @@
-// Copyright Steinwurf ApS 2011-2013.
+// Copyright Steinwurf ApS 2011.
 // Distributed under the "STEINWURF RESEARCH LICENSE 1.0".
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
@@ -14,49 +14,37 @@
 
 namespace kodo
 {
-
     // Put dummy layers and tests classes in an anonymous namespace
     // to avoid violations of ODF (one-definition-rule) in other
     // translation units
     namespace
     {
-
         struct dummy_layer
         {
-
-            class factory
+            class factory_base
             {
             public:
 
-                /// @copydoc layer::factory::factory(uint32_t,uint32_t)
-                factory(uint32_t max_symbols, uint32_t max_symbol_size)
+                factory_base(uint32_t max_symbols, uint32_t max_symbol_size)
                 {
                     (void) max_symbols;
                     (void) max_symbol_size;
                 }
 
             };
-
         };
 
         // Instantiate a stack containing the pivot_status_bitset
-        class dummy_stack
-            : public final_feedback_size<
-                     dummy_layer>
-          { };
-
-
+        class dummy_stack : public final_feedback_size<dummy_layer>
+        { };
     }
 }
 
 TEST(TestFinalFeedbackSize, api)
 {
     kodo::dummy_stack stack;
-    kodo::dummy_stack::factory factory(10, 10);
+    kodo::dummy_stack::factory_base factory(10, 10);
 
     EXPECT_EQ(stack.feedback_size(), 0U);
     EXPECT_EQ(factory.max_feedback_size(), 0U);
 }
-
-
-

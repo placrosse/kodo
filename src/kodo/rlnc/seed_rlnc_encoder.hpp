@@ -1,11 +1,11 @@
-// Copyright Steinwurf ApS 2011-2012.
+// Copyright Steinwurf ApS 2011.
 // Distributed under the "STEINWURF RESEARCH LICENSE 1.0".
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
 
 #pragma once
 
-#include "../final_coder_factory_pool.hpp"
+#include "../final_layer.hpp"
 #include "../zero_symbol_encoder.hpp"
 #include "../default_on_systematic_encoder.hpp"
 #include "../payload_encoder.hpp"
@@ -58,10 +58,11 @@ namespace kodo
         deep_storage_layers<TraceTag,
         // Finite Field API
         finite_field_layers<Field,
-        // Factory API
-        final_coder_factory_pool<
-        // Final type
-        seed_rlnc_encoder<Field, TraceTag>
-        > > > > > > > > > > > > > >
-    { };
+        // Final Layer
+        final_layer
+        > > > > > > > > > > > > >
+    {
+    public:
+        using factory = pool_factory<seed_rlnc_encoder>;
+    };
 }

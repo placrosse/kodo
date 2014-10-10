@@ -1,4 +1,4 @@
-// Copyright Steinwurf ApS 2011-2013.
+// Copyright Steinwurf ApS 2011.
 // Distributed under the "STEINWURF RESEARCH LICENSE 1.0".
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
@@ -49,7 +49,7 @@ namespace kodo
     /// @ingroup generic_api
     /// @copydoc set_systematic_off(const T&)
     template<class T>
-    inline void set_systematic_off(boost::shared_ptr<T>& t)
+    inline void set_systematic_off(std::shared_ptr<T>& t)
     {
         set_systematic_off(*t);
     }

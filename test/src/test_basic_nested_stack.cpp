@@ -31,7 +31,7 @@ TEST(TestBasicNestedStack, api)
     uint32_t symbols = 16;
     uint32_t symbol_size = 1400;
 
-    kodo::dummy_stack::factory factory(symbols, symbol_size);
+    kodo::dummy_stack::factory_base factory(symbols, symbol_size);
     EXPECT_EQ(factory.m_max_symbols, symbols);
     EXPECT_EQ(factory.m_max_symbol_size, symbol_size);
 

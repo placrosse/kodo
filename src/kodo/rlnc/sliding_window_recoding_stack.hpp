@@ -1,4 +1,4 @@
-// Copyright Steinwurf ApS 2011-2013.
+// Copyright Steinwurf ApS 2011.
 // Distributed under the "STEINWURF RESEARCH LICENSE 1.0".
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
@@ -13,6 +13,7 @@
 #include "sliding_window_generator.hpp"
 #include "../pivot_status_reader.hpp"
 #include "../feedback_pivot_status_reader.hpp"
+#include "../feedback_pivot_status.hpp"
 #include "../final_feedback_reader.hpp"
 #include "../partial_decoding_tracker.hpp"
 #include "../rank_info.hpp"
@@ -42,7 +43,9 @@ namespace kodo
     class sliding_window_recoding_stack : public
         // Feedback API
         feedback_pivot_status_reader<
+        feedback_pivot_status<
         final_feedback_reader<
+        final_feedback_size<
         // Payload Codec API
         forward_recode_to_encode<
         payload_rank_recoder<
@@ -64,8 +67,7 @@ namespace kodo
         coefficient_value_access<
         // Proxy
         proxy_remote_rank<
-        proxy_layer<
-        sliding_window_recoding_stack<MainStack>,
-        MainStack> > > > > > > > > > > > > > > > >
+        proxy_layer<MainStack,
+        final_layer> > > > > > > > > > > > > > > > > > >
     { };
 }

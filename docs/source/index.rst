@@ -45,6 +45,9 @@ Documentation
    faq
    including_kodo_in_your_application
    hacking_kodo
+   tutorial
+   unittest
+   cross_compile
    howto
    misc
    c_bindings

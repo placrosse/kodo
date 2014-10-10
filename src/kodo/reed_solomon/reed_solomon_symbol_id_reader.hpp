@@ -1,4 +1,4 @@
-// Copyright Steinwurf ApS 2011-2013.
+// Copyright Steinwurf ApS 2011.
 // Distributed under the "STEINWURF RESEARCH LICENSE 1.0".
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
@@ -41,6 +41,7 @@ namespace kodo
             value_type row_index =
                 sak::big_endian::get<value_type>(symbol_id);
 
+            assert(m_matrix);
             sak::const_storage src =
                 sak::storage(m_matrix->row(row_index),
                              m_matrix->row_size());
@@ -66,13 +67,9 @@ namespace kodo
 
     /// @copydoc reed_solomon_symbol_id_reader_base
     template<class SuperCoder>
-    class reed_solomon_symbol_id_reader
-        : public reed_solomon_symbol_id_reader_base<
+    class reed_solomon_symbol_id_reader : public
+        reed_solomon_symbol_id_reader_base<
         aligned_coefficients_buffer<
-            reed_solomon_symbol_id<SuperCoder> > >
+        reed_solomon_symbol_id<SuperCoder> > >
     { };
-
-
 }
-
-

@@ -1,4 +1,4 @@
-// Copyright Steinwurf ApS 2011-2013.
+// Copyright Steinwurf ApS 2011.
 // Distributed under the "STEINWURF RESEARCH LICENSE 1.0".
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
@@ -9,6 +9,7 @@
 #include "kodo_unit_test/coefficient_generator_helper.hpp"
 
 #include <kodo/pivot_aware_generator.hpp>
+#include <kodo/basic_factory.hpp>
 
 namespace kodo
 {
@@ -27,12 +28,15 @@ namespace kodo
                    fake_codec_layer<
                    coefficient_info<
                    fake_symbol_storage<
-                   storage_block_info<
+                   storage_block_length<
+                   storage_block_size<
                    finite_field_info<Field,
-                   final_coder_factory<
-                   uniform_generator_stack<Field>
+                   final_layer
                    > > > > > > > >
-        { };
+        {
+        public:
+            using factory = basic_factory<uniform_generator_stack>;
+        };
 
         template<class Field>
         class uniform_generator_stack_pool :
@@ -41,12 +45,15 @@ namespace kodo
                    fake_codec_layer<
                    coefficient_info<
                    fake_symbol_storage<
-                   storage_block_info<
+                   storage_block_length<
+                   storage_block_size<
                    finite_field_info<Field,
-                   final_coder_factory_pool<
-                   uniform_generator_stack_pool<Field>
+                   final_layer
                    > > > > > > > >
-        { };
+        {
+        public:
+            using factory = basic_factory<uniform_generator_stack_pool>;
+        };
     }
 }
 
@@ -65,4 +72,3 @@ TEST(TestCoefficientGenerator, test_uniform_generator_stack)
         kodo::uniform_generator_stack_pool,
         api_generate>(symbols, symbol_size);
 }
-

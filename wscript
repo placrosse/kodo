@@ -2,8 +2,7 @@
 # encoding: utf-8
 
 APPNAME = 'kodo'
-VERSION = '17.0.0'
-
+VERSION = '18.0.0'
 
 def recurse_helper(ctx, name):
     if not ctx.has_dependency_path(name):
@@ -31,7 +30,7 @@ def options(opt):
     bundle.add_dependency(opt, resolve.ResolveGitMajorVersion(
         name='fifi',
         git_repository='github.com/steinwurf/fifi.git',
-        major_version=11))
+        major_version=13))
 
     bundle.add_dependency(opt, resolve.ResolveGitMajorVersion(
         name='gauge',
@@ -51,17 +50,17 @@ def options(opt):
     bundle.add_dependency(opt, resolve.ResolveGitMajorVersion(
         name='sak',
         git_repository='github.com/steinwurf/sak.git',
-        major_version=11))
+        major_version=12))
 
     bundle.add_dependency(opt, resolve.ResolveGitMajorVersion(
         name='stub',
         git_repository='github.com/steinwurf/stub.git',
-        major_version=1))
+        major_version=2))
 
     bundle.add_dependency(opt, resolve.ResolveGitMajorVersion(
         name='tables',
         git_repository='github.com/steinwurf/tables.git',
-        major_version=4))
+        major_version=5))
 
     bundle.add_dependency(opt, resolve.ResolveGitMajorVersion(
         name='waf-tools',
@@ -130,8 +129,10 @@ def build(bld):
         bld.recurse('examples/sample_makefile')
         bld.recurse('examples/sliding_window')
         bld.recurse('examples/switch_systematic_on_off')
+        bld.recurse('examples/tutorial')
         bld.recurse('examples/use_cache_decode_symbol')
         bld.recurse('examples/use_trace_layers')
+        bld.recurse('examples/customize_partitioning_scheme')
 
         bld.recurse('benchmark/count_operations')
         bld.recurse('benchmark/decoding_probability')

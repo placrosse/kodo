@@ -1,4 +1,4 @@
-// Copyright Steinwurf ApS 2011-2013.
+// Copyright Steinwurf ApS 2011.
 // Distributed under the "STEINWURF RESEARCH LICENSE 1.0".
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
@@ -51,11 +51,9 @@ namespace kodo
     /// @ingroup generic_api
     /// @copydoc feedback_size(const T&, uint8_t*)
     template<class T>
-    inline uint32_t feedback_size(const boost::shared_ptr<T>& t)
+    inline uint32_t feedback_size(const std::shared_ptr<T>& t)
     {
         return feedback_size(*t);
     }
 
 }
-
-

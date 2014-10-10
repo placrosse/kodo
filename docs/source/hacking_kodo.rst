@@ -7,34 +7,38 @@ design and functionality.
 
 Introduction
 ------------
-With Kodo we wanted to build a library which allowed easy experimentation
-with erasure correcting codes, in particular Network Codes. One of the
-major challenges has been to produce a design which allowed experimentation
-with variants of different codes, but without having to rewrite or duplicate
-a lot of code. To support this we went through a large number of design
-iterations e.g. using traditional polymorphic OO (Object Oriented) designs.
-We have finally settled for using a special C++ design technique known as
-`mixin layers`_ or parametrized inheritance. Utilizing this technique has
-made it possible to create a component based library with a high level
-of code reuse.
 
-In the following we will attempt to provide an overview of the Kodo design
-and the current architecture. Along the way we will provide definitions of
-the terminology we use throughout the library. The goal is that this
-overview should be readable for an as wide as possible audience. Therefore
-if you should find something missing, unclear or which could be improved
-please let us know.
+With Kodo we wanted to build a library which allowed easy
+experimentation with erasure correcting codes, in particular Network
+Codes. One of the major challenges has been to produce a design which
+allowed experimentation with variants of different codes, but without
+having to rewrite or duplicate a lot of code. To support this we went
+through a large number of design iterations e.g. using traditional
+polymorphic OOP (Object Oriented Programming) designs.  We have
+finally settled for using a special C++ design technique known as
+`mixin layers`_ or parametrized inheritance. Utilizing this technique
+has made it possible to create a component based library with a high
+level of code reuse.
+
+In the following we will attempt to provide an overview of the Kodo
+design and the current architecture. Along the way we will provide
+definitions of the terminology we use throughout the library. The goal
+is that this overview should be readable for an as wide as possible
+audience. Therefore if you should find something missing, unclear or
+which could be improved please let us know.
+
 
 API Layer Specifications
 ------------------------
-Although the mixin-layer technique provides many benefits in terms of reuse
-and flexibility it also provides you with ample ways of shooting yourself
-in the foot, by accidentally reordering layers in wrong ways or by not
-having compatible layers in both encoders and decoders. Some of these
-problems will be caught at compile time, but others can result in subtle
-and hard to find errors at run time. You should therefore always pay close
-attention when adding, removing or reordering layers in encoders and
-decoders.
+
+Although the mixin-layer technique provides many benefits in terms of
+reuse and flexibility it also provides you with ample ways of shooting
+yourself in the foot, by accidentally reordering layers in wrong ways
+or by not having compatible layers in both encoders and decoders. Some
+of these problems will be caught at compile time, but others can
+result in subtle and hard to find errors at run time. You should
+therefore always pay close attention when adding, removing or
+reordering layers in encoders and decoders.
 
 In an attempt to reduce the amount of problems that can arise from
 misconfigured encoders and decoders we have created a set of API
@@ -234,3 +238,89 @@ You can use the factory API if you wish to:
 * Pre-allocate memory needed for different codecs and thereby
   minimize the amount of memory allocations needed during
   encoding or decoding.
+
+.. _coding_style:
+
+Coding Style
+------------
+
+We follow the Steinwurf coding style found `here
+<https://github.com/steinwurf/steinwurf-labs/blob/master/docs/coding_style.rst>`_. Please
+make sure you follow this style when adding new code to the Kodo
+library. If you find code not consistent with the code style please
+let us know :) :ref:`contact_us`
+
+.. _files_and_classes:
+
+Files and Classes
+-----------------
+
+We have a one class per one file rule. If you make a new class ``happy``, then
+put it in ``happy.hpp``. This makes the classes easier to find in the
+source tree. Exceptions to this rule are nested classes.
+
+.. note:: Remember to also add a unit test for your new
+          functionality. Find more information about this in our
+          :ref:`unit_testing` section.
+
+.. note:: If you new class resides in a namespace make sure to place
+          the source files in the right directory see the
+          :ref:`namespaces_and_directories` section.
+
+.. _namespaces_and_directories:
+
+Namespaces and Directories
+--------------------------
+
+All classes defined in the ``kodo`` namespace should be placed in the
+``src/kodo`` folder and their corresponding unit tests should be
+placed in ``test/src/``
+
+Example if you create a class ``speedy``:
+
+::
+
+    namespace kodo
+    {
+
+        template<class SuperCoder>
+        class speedy : public SuperCoder
+        {
+        ...
+        };
+
+    }
+
+Then it should be placed in ``speedy.hpp`` (as described in
+:ref:`files_and_classes`) and the file should be placed in
+``src/kodo/speedy.hpp`` and the corresponding unit test in
+``test/src/test_speedy.cpp``.
+
+
+If you create a class in a nested namespace for example:
+
+::
+
+    namespace kodo
+    {
+    namespace object
+    {
+
+        template<class SuperCoder>
+        class smart : public SuperCoder
+        {
+        ...
+        };
+    }
+    }
+
+
+Then this file should be called ``smart.hpp`` (as described in
+:ref:`files_and_classes`). In addition to this the file should be
+placed in the ``src/kodo/object/smart.hpp`` directory. Similarly the
+corresponding test file ``test_smart.cpp`` should be placed in
+``test/src/object/test_smart.cpp``.
+
+The general rule is that namespaces are represented by a directory in
+the filesystem. This means if you see a class in a namespace you know
+which directory the corresponding source files should be in.

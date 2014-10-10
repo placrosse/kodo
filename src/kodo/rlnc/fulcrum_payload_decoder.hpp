@@ -13,6 +13,8 @@
 #include "../storage_block_info.hpp"
 #include "../finite_field_info.hpp"
 #include "../proxy_layer.hpp"
+#include "../final_layer.hpp"
+#include "../pool_factory.hpp"
 
 namespace kodo
 {
@@ -34,7 +36,12 @@ namespace kodo
         // Finite Field API
         finite_field_info<fifi::binary,
         // Proxy
-        proxy_layer<fulcrum_payload_decoder<MainStack>, MainStack
-        > > > > > > > >
-    { };
+        proxy_layer<MainStack,
+        // Final layer
+        final_layer
+        >>>>>>>>
+    {
+    public:
+        using factory = pool_factory<fulcrum_payload_decoder>;
+    };
 }
