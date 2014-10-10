@@ -12,6 +12,17 @@
 #include "../shallow_symbol_storage.hpp"
 #include "../partial_const_shallow_storage_layers.hpp"
 #include "../finite_field_layers.hpp"
+#include "../payload_encoder.hpp"
+#include "../symbol_id_encoder.hpp"
+#include "../plain_symbol_id_writer.hpp"
+#include "../uniform_generator.hpp"
+#include "../encode_symbol_tracker.hpp"
+#include "../zero_symbol_encoder.hpp"
+#include "../linear_block_encoder.hpp"
+#include "../storage_aware_encoder.hpp"
+#include "../coefficient_value_access.hpp"
+#include "../coefficient_info.hpp"
+#include "../final_layer.hpp"
 
 namespace kodo
 {

@@ -458,39 +458,39 @@ TEST(TestNestedCatchAll, api)
 
         nested.m_max_symbols.set_return(1U);
         EXPECT_EQ(factory.max_symbols(), 1U);
-        EXPECT_TRUE(nested.m_max_symbols.called_once_with());
+        EXPECT_TRUE(nested.m_max_symbols.expect_calls().with());
 
         nested.m_max_symbol_size.set_return(2U);
         EXPECT_EQ(factory.max_symbol_size(), 2U);
-        EXPECT_TRUE(nested.m_max_symbol_size.called_once_with());
+        EXPECT_TRUE(nested.m_max_symbol_size.expect_calls().with());
 
         nested.m_max_block_size.set_return(3U);
         EXPECT_EQ(factory.max_block_size(), 3U);
-        EXPECT_TRUE(nested.m_max_block_size.called_once_with());
+        EXPECT_TRUE(nested.m_max_block_size.expect_calls().with());
 
         nested.m_max_header_size.set_return(4U);
         EXPECT_EQ(factory.max_header_size(), 4U);
-        EXPECT_TRUE(nested.m_max_header_size.called_once_with());
+        EXPECT_TRUE(nested.m_max_header_size.expect_calls().with());
 
         nested.m_max_id_size.set_return(5U);
         EXPECT_EQ(factory.max_id_size(), 5U);
-        EXPECT_TRUE(nested.m_max_id_size.called_once_with());
+        EXPECT_TRUE(nested.m_max_id_size.expect_calls().with());
 
         nested.m_max_payload_size.set_return(6U);
         EXPECT_EQ(factory.max_payload_size(), 6U);
-        EXPECT_TRUE(nested.m_max_payload_size.called_once_with());
+        EXPECT_TRUE(nested.m_max_payload_size.expect_calls().with());
 
         nested.m_max_coefficient_vector_size.set_return(7U);
         EXPECT_EQ(factory.max_coefficient_vector_size(), 7U);
-        EXPECT_TRUE(nested.m_max_coefficient_vector_size.called_once_with());
+        EXPECT_TRUE(nested.m_max_coefficient_vector_size.expect_calls().with());
 
         nested.m_symbols.set_return(8U);
         EXPECT_EQ(factory.symbols(), 8U);
-        EXPECT_TRUE(nested.m_symbols.called_once_with());
+        EXPECT_TRUE(nested.m_symbols.expect_calls().with());
 
         nested.m_symbol_size.set_return(9U);
         EXPECT_EQ(factory.symbol_size(), 9U);
-        EXPECT_TRUE(nested.m_symbol_size.called_once_with());
+        EXPECT_TRUE(nested.m_symbol_size.expect_calls().with());
     }
 
     // Test the stack

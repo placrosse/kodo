@@ -41,10 +41,11 @@ namespace kodo
         finite_field_layers<Field,
         // Fulcrum API
         fulcrum_info<10,4,
-        // Factory API
-        final_coder_factory_pool<
-        // Final type
-        fulcrum_outer_decoder<Field, TraceTag>
-        > > > > > > > > > > >
-    { };
+        // Final Layer
+        final_layer
+        > > > > > > > > > >
+    {
+    public:
+        using factory = pool_factory<fulcrum_outer_decoder>;
+    };
 }

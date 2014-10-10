@@ -114,5 +114,5 @@ TEST(TestNestedPayloadDecoder, api)
 
     stack.decode((uint8_t*)0xa);
     EXPECT_TRUE((bool) stack.m_nested.m_decode.expect_calls()
-                    .with(uint8_t*)0xa));
+                    .with((uint8_t*)0xa));
 }

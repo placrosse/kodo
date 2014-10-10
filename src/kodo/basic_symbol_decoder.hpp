@@ -9,7 +9,7 @@
 #include "coefficient_storage_layers.hpp"
 #include "deep_storage_layers.hpp"
 #include "finite_field_layers.hpp"
-#include "final_coder_factory_pool.hpp"
+#include "pool_factory.hpp"
 
 namespace kodo
 {
@@ -33,10 +33,10 @@ namespace kodo
         deep_storage_layers<TraceTag,
         // Finite Field API
         finite_field_layers<Field,
-        // Factory API
-        final_coder_factory_pool<
-        // Final type
-        basic_symbol_decoder<Field, TraceTag>
-        > > > > >
-    { };
+        // Final Layer
+        final_layer> > > >
+    {
+    public:
+        using factory = pool_factory<basic_symbol_decoder>;
+    };
 }

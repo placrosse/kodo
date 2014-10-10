@@ -19,6 +19,7 @@
 #include "../systematic_decoder.hpp"
 #include "../symbol_id_decoder.hpp"
 #include "../plain_symbol_id_reader.hpp"
+#include "../basic_proxy_stack.hpp"
 
 #include "full_rlnc_recoding_stack.hpp"
 

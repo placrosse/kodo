@@ -10,6 +10,7 @@
 #include "../systematic_precoder.hpp"
 #include "../systematic_coefficient_mapper.hpp"
 #include "../nested_payload_encoder.hpp"
+#include "../deep_storage_layers.hpp"
 
 #include "shallow_full_rlnc_encoder.hpp"
 #include "fulcrum_nested_stack.hpp"
@@ -44,10 +45,11 @@ namespace kodo
         finite_field_layers<Field,
         // Fulcrum API
         fulcrum_info<10,4,
-        // Factory API
-        final_coder_factory_pool<
-        // Final type
-        fulcrum_encoder<Field, TraceTag>
-        > > > > > > > > > > > > > > > > >
-    { };
+        // Final Layer
+        final_layer
+        > > > > > > > > > > > > > > > >
+    {
+    public:
+        using factory = pool_factory<fulcrum_encoder>;
+    };
 }

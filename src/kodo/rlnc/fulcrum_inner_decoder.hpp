@@ -37,10 +37,11 @@ namespace kodo
         nested_catch_all<
         fulcrum_nested_stack<shallow_full_rlnc_decoder<Field>,
         fulcrum_info<10,4,
-        // Factory API
-        final_coder_factory_pool<
-        // Final type
-        fulcrum_inner_decoder<Field>
-        > > > > > > > > > > >
-    { };
+        // Final Layer
+        final_layer
+        > > > > > > > > > >
+    {
+    public:
+        using factory = pool_factory<fulcrum_inner_decoder>;
+    };
 }

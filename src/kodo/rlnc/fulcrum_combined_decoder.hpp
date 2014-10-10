@@ -47,8 +47,8 @@ namespace kodo
         //  - implemented in outer decoder
         // Coefficient Generator API
         fulcrum_two_stage_decoder<
-        elimination_decoder<fifi::binary>,
-        basic_symbol_decoder<fifi::binary, TraceTag>,
+            elimination_decoder<fifi::binary>,
+            basic_symbol_decoder<fifi::binary, TraceTag>,
         systematic_coefficient_mapper<
         uniform_generator<
         // Decoder API
@@ -61,10 +61,11 @@ namespace kodo
         finite_field_layers<Field,
         // Fulcrum API
         fulcrum_info<10,4,
-        // Factory API
-        final_coder_factory_pool<
-        // Final type
-        fulcrum_combined_decoder<Field, TraceTag>
-        > > > > > > > > > > >
-    { };
+        // Final Layer
+        final_layer
+        > > > > > > > > > >
+    {
+    public:
+        using factory = pool_factory<fulcrum_combined_decoder>;
+    };
 }
