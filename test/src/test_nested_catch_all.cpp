@@ -533,68 +533,71 @@ TEST(TestNestedCatchAll, api)
         };
 
         stack.copy_symbols(sak::storage(data));
-        EXPECT_TRUE(nested.m_copy_symbols.called_once_with(
-                        sak::storage(data), compare_storage));
+        EXPECT_TRUE((bool) nested.m_copy_symbols.expect_calls(compare_storage)
+                        .with(sak::storage(data));
 
         stack.copy_symbol(10U, sak::storage(data));
-        EXPECT_TRUE(nested.m_copy_symbol.called_once_with(
-                        10U, sak::storage(data), check_copy_symbol));
+        EXPECT_TRUE((bool) nested.m_copy_symbol.expect_calls(check_copy_symbol)
+                        .with(10U, sak::storage(data)));
 
         nested.m_symbol.set_return((uint8_t*)0xdeadbeef);
         EXPECT_EQ(stack.symbol(1U), (uint8_t*)0xdeadbeef);
-        EXPECT_TRUE(nested.m_symbol.called_once_with(1U));
+        EXPECT_TRUE((bool) nested.m_symbol.expect_calls().with(1U));
 
         nested.m_symbol_const.set_return((const uint8_t*)0xdeadbeef);
         EXPECT_EQ(stack_const.symbol(2U), (const uint8_t*)0xdeadbeef);
-        EXPECT_TRUE(nested.m_symbol_const.called_once_with(2U));
+        EXPECT_TRUE((bool) nested.m_symbol_const.expect_calls().with(2U));
 
         nested.m_symbol_value.set_return((value_type*)0xdeadbeef);
         EXPECT_EQ(stack.symbol_value(3U), (value_type*)0xdeadbeef);
-        EXPECT_TRUE(nested.m_symbol_value.called_once_with(3U));
+        EXPECT_TRUE((bool) nested.m_symbol_value.expect_calls().with(3U));
 
         nested.m_symbol_value_const.set_return((const value_type*)0xdeadbeef);
         EXPECT_EQ(stack_const.symbol_value(4U), (const value_type*)0xdeadbeef);
-        EXPECT_TRUE(nested.m_symbol_value_const.called_once_with(4U));
+        EXPECT_TRUE((bool) nested.m_symbol_value_const.expect_calls().with(4U));
 
         nested.m_symbols.set_return(8U);
         EXPECT_EQ(stack.symbols(), 8U);
-        EXPECT_TRUE(nested.m_symbols.called_once_with());
+        EXPECT_TRUE((bool) nested.m_symbols.expect_calls().with());
 
         nested.m_symbol_size.set_return(89U);
         EXPECT_EQ(stack.symbol_size(), 89U);
-        EXPECT_TRUE(nested.m_symbol_size.called_once_with());
+        EXPECT_TRUE((bool) nested.m_symbol_size.expect_calls().with());
 
         nested.m_symbol_length.set_return(66U);
         EXPECT_EQ(stack.symbol_length(), 66U);
-        EXPECT_TRUE(nested.m_symbol_length.called_once_with());
+        EXPECT_TRUE((bool) nested.m_symbol_length.expect_calls().with());
 
         nested.m_block_size.set_return(11U);
         EXPECT_EQ(stack.block_size(), 11U);
-        EXPECT_TRUE(nested.m_block_size.called_once_with());
+        EXPECT_TRUE((bool) nested.m_block_size.expect_calls().with());
 
         nested.m_symbols_available.set_return(112U);
         EXPECT_EQ(stack.symbols_available(), 112U);
-        EXPECT_TRUE(nested.m_symbols_available.called_once_with());
+        EXPECT_TRUE((bool) nested.m_symbols_available.expect_calls().with());
 
         nested.m_symbols_initialized.set_return(131U);
         EXPECT_EQ(stack.symbols_initialized(), 131U);
-        EXPECT_TRUE(nested.m_symbols_initialized.called_once_with());
+        EXPECT_TRUE((bool) nested.m_symbols_initialized.expect_calls().with());
 
         nested.m_is_symbols_available.set_return(true);
         EXPECT_EQ(stack.is_symbols_available(), true);
-        EXPECT_TRUE(nested.m_is_symbols_available.called_once_with());
+        EXPECT_TRUE((bool) nested.m_is_symbols_available.expect_calls().with());
 
         nested.m_is_symbols_initialized.set_return(false);
         EXPECT_EQ(stack.is_symbols_initialized(), false);
-        EXPECT_TRUE(nested.m_is_symbols_initialized.called_once_with());
+        EXPECT_TRUE((bool) nested.m_is_symbols_initialized.expect_calls()
+                        .with());
 
         nested.m_is_symbol_available.set_return(true);
         EXPECT_EQ(stack.is_symbol_available(42U), true);
-        EXPECT_TRUE(nested.m_is_symbol_available.called_once_with(42U));
+        EXPECT_TRUE((bool) nested.m_is_symbol_available.expect_calls()
+                        .with(42U));
 
         nested.m_is_symbol_initialized.set_return(false);
         EXPECT_EQ(stack.is_symbol_initialized(23U), false);
-        EXPECT_TRUE(nested.m_is_symbol_initialized.called_once_with(23U));
+        EXPECT_TRUE((bool) nested.m_is_symbol_initialized.expect_calls()
+                        .with(23U));
 
         //------------------------------------------------------------------
         // COEFFICIENT STORAGE API
@@ -602,28 +605,32 @@ TEST(TestNestedCatchAll, api)
 
         nested.m_coefficient_vector_size.set_return(8U);
         EXPECT_EQ(stack.coefficient_vector_size(), 8U);
-        EXPECT_TRUE(nested.m_symbols.called_once_with());
+        EXPECT_TRUE((bool) nested.m_symbols.expect_calls().with());
 
         nested.m_coefficient_vector_length.set_return(89U);
         EXPECT_EQ(stack.coefficient_vector_length(), 89U);
-        EXPECT_TRUE(nested.m_coefficient_vector_length.called_once_with());
+        EXPECT_TRUE((bool) nested.m_coefficient_vector_length.expect_calls()
+                        .with());
 
         nested.m_coefficient_vector_data.set_return((uint8_t*)0xdeadbeef);
         EXPECT_EQ(stack.coefficient_vector_data(1U), (uint8_t*)0xdeadbeef);
-        EXPECT_TRUE(nested.m_coefficient_vector_data.called_once_with(1U));
+        EXPECT_TRUE((bool) nested.m_coefficient_vector_data.expect_calls()
+                        .with(1U));
 
         nested.m_coefficient_vector_data_const.set_return((uint8_t*)0xdeef);
         EXPECT_EQ(stack_const.coefficient_vector_data(2U), (uint8_t*)0xdeef);
-        EXPECT_TRUE(nested.m_coefficient_vector_data_const.called_once_with(2U));
+        EXPECT_TRUE((bool) nested.m_coefficient_vector_data_const.expect_calls()
+                        .with(2U));
 
         nested.m_coefficient_vector_values.set_return((value_type*)0xdeadbeef);
         EXPECT_EQ(stack.coefficient_vector_values(3U), (value_type*)0xdeadbeef);
-        EXPECT_TRUE(nested.m_coefficient_vector_values.called_once_with(3U));
+        EXPECT_TRUE((bool) nested.m_coefficient_vector_values.expect_calls()
+                        .with(3U));
 
         nested.m_coefficient_vector_values_const.set_return((value_type*)0xd);
         EXPECT_EQ(stack_const.coefficient_vector_values(4U), (value_type*)0xd);
-        EXPECT_TRUE(nested.m_coefficient_vector_values_const.called_once_with(
-                        4U));
+        EXPECT_TRUE((bool) nested.m_coefficient_vector_values_const
+                        .expect_calls().with(4U));
 
         //------------------------------------------------------------------
         // FINITE FIELD API
@@ -631,30 +638,30 @@ TEST(TestNestedCatchAll, api)
 
         stack.multiply((value_type*)0xa, (value_type)1U, 3U);
 
-        EXPECT_TRUE(nested.m_multiply.called_once_with(
-                        (value_type*)0xa, (value_type)1U, 3U));
+        EXPECT_TRUE((bool) nested.m_multiply.expect_calls()
+                        .with((value_type*)0xa, (value_type)1U, 3U));
 
         stack.multiply_add((value_type*)0xa, (value_type*)0xb,
                            (value_type)1U, 3U);
 
-        EXPECT_TRUE(nested.m_multiply_add.called_once_with(
+        EXPECT_TRUE((bool) nested.m_multiply_add.expect_calls().with(
                         (value_type*)0xa, (value_type*)0xb,
                         (value_type)1U, 3U));
 
         stack.add((value_type*)0xa, (value_type*)0xc, 3U);
 
-        EXPECT_TRUE(nested.m_add.called_once_with(
+        EXPECT_TRUE((bool) nested.m_add.expect_calls().with(
                         (value_type*)0xa, (value_type*)0xc, 3U));
 
         stack.multiply_subtract((value_type*)0xa, (value_type*)0xb,
                                 (value_type)1U, 3U);
 
-        EXPECT_TRUE(nested.m_multiply_subtract.called_once_with(
+        EXPECT_TRUE((bool) nested.m_multiply_subtract.expect_calls().with(
                         (value_type*)0xa, (value_type*)0xb,
                         (value_type)1U, 3U));
 
         stack.subtract((value_type*)0xa, (value_type*)0xc, 3U);
-        EXPECT_TRUE(nested.m_subtract.called_once_with(
+        EXPECT_TRUE((bool) nested.m_subtract.expect_calls().with(
                         (value_type*)0xa, (value_type*)0xc, 3U));
 
         //------------------------------------------------------------------
@@ -662,47 +669,47 @@ TEST(TestNestedCatchAll, api)
         //------------------------------------------------------------------
 
         stack.encode_symbol((uint8_t*)0xa, (uint8_t*)0xb);
-        EXPECT_TRUE(nested.m_encode_symbol.called_once_with(
+        EXPECT_TRUE((bool) nested.m_encode_symbol.expect_calls().with(
                         (uint8_t*)0xa, (uint8_t*)0xb));
 
         stack.encode_symbol((uint8_t*)0xa, 50);
-        EXPECT_TRUE(nested.m_encode_symbol_index.called_once_with(
+        EXPECT_TRUE((bool) nested.m_encode_symbol_index.expect_calls().with(
                         (uint8_t*)0xa, 50));
 
         stack.decode_symbol((uint8_t*)0xc, (uint8_t*)0xd);
-        EXPECT_TRUE(nested.m_decode_symbol.called_once_with(
+        EXPECT_TRUE((bool) nested.m_decode_symbol.expect_calls().with(
                         (uint8_t*)0xc, (uint8_t*)0xd));
 
         stack.decode_symbol((uint8_t*)0xa, 50);
-        EXPECT_TRUE(nested.m_decode_symbol_index.called_once_with(
+        EXPECT_TRUE((bool) nested.m_decode_symbol_index.expect_calls().with(
                         (uint8_t*)0xa, 50));
 
         nested.m_is_complete.set_return(true);
         EXPECT_TRUE(stack.is_complete());
-        EXPECT_TRUE(nested.m_is_complete.called_once_with());
+        EXPECT_TRUE((bool) nested.m_is_complete.expect_calls().with());
 
         nested.m_rank.set_return(42);
         EXPECT_EQ(stack.rank(), 42);
-        EXPECT_TRUE(nested.m_rank.called_once_with());
+        EXPECT_TRUE((bool) nested.m_rank.expect_calls().with());
 
         nested.m_is_symbol_pivot.set_return({true,false});
         EXPECT_TRUE(stack.is_symbol_pivot(15));
-        EXPECT_TRUE(nested.m_is_symbol_pivot.called_with(15));
+        EXPECT_TRUE((bool) nested.m_is_symbol_pivot.called_with(15));
         EXPECT_FALSE(stack.is_symbol_pivot(12));
-        EXPECT_TRUE(nested.m_is_symbol_pivot.called_with(12));
+        EXPECT_TRUE((bool) nested.m_is_symbol_pivot.called_with(12));
 
         //------------------------------------------------------------------
         // COEFFICIENT GENERATOR API
         //------------------------------------------------------------------
 
         stack.generate((uint8_t*)0x3);
-        EXPECT_TRUE(nested.m_generate.called_once_with((uint8_t*)0x3));
+        EXPECT_TRUE(nested.m_generate.expect_calls().with((uint8_t*)0x3));
 
         stack.generate_partial((uint8_t*)0x4);
-        EXPECT_TRUE(nested.m_generate_partial.called_once_with((uint8_t*)0x4));
+        EXPECT_TRUE(nested.m_generate_partial.expect_calls().with((uint8_t*)0x4));
 
         stack.seed(33);
-        EXPECT_TRUE(nested.m_seed.called_once_with(33));
+        EXPECT_TRUE(nested.m_seed.expect_calls().with(33));
 
     }
 }
