@@ -60,7 +60,7 @@ namespace kodo
 
             typedef boost::shared_ptr<nested_stack> pointer;
 
-            class factory
+            class factory_base
             {
             public:
 
@@ -155,7 +155,7 @@ TEST(TestSystematicPrecoder, api)
 {
     typedef kodo::dummy_stack test_stack;
     test_stack stack;
-    test_stack::factory factory;
+    test_stack::factory_base factory;
 
     stack.construct(factory);
     stack.precode();

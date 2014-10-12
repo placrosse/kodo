@@ -43,6 +43,7 @@ namespace kodo
         /// @copydoc layer::value_type
         typedef typename field_type::value_type value_type;
 
+        /// @todo is this typedef needed?
         /// @copydoc layer::factory
         typedef typename SuperCoder::factory_base factory;
 

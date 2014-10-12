@@ -32,26 +32,26 @@ namespace kodo
 
         /// @ingroup factory_layers
         /// The factory layer associated with this coder.
-        class factory : public SuperCoder::factory
+        class factory_base : public SuperCoder::factory_base
         {
         public:
 
-            /// @copydoc layer::factory::factory(uint32_t,uint32_t)
-            factory(uint32_t max_symbols, uint32_t max_symbol_size) :
-                SuperCoder::factory(max_symbols, max_symbol_size),
-                m_stage_one_factory(SuperCoder::factory::max_expansion() +
+            /// @copydoc layer::factory_base::factory_base(uint32_t,uint32_t)
+            factory_base(uint32_t max_symbols, uint32_t max_symbol_size) :
+                SuperCoder::factory_base(max_symbols, max_symbol_size),
+                m_stage_one_factory(SuperCoder::factory_base::max_expansion() +
                                     max_symbols,
                                     max_symbol_size),
-                m_stage_two_factory(SuperCoder::factory::max_expansion() +
+                m_stage_two_factory(SuperCoder::factory_base::max_expansion() +
                                     max_symbols,
                                     max_symbol_size)
             { }
 
-            typename stage_one_decoder::pointer build_stage_one()
+            typename stage_one_factory::pointer build_stage_one()
             {
-                uint32_t symbol_size = SuperCoder::factory::symbol_size();
-                uint32_t symbols = SuperCoder::factory::expansion();
-                uint32_t offset = SuperCoder::factory::symbols();
+                uint32_t symbol_size = SuperCoder::factory_base::symbol_size();
+                uint32_t symbols = SuperCoder::factory_base::expansion();
+                uint32_t offset = SuperCoder::factory_base::symbols();
 
                 m_stage_one_factory.set_symbol_size(symbol_size);
                 m_stage_one_factory.set_symbols(symbols);
@@ -60,11 +60,11 @@ namespace kodo
                 return m_stage_one_factory.build();
             }
 
-            typename stage_two_decoder::pointer build_stage_two()
+            typename stage_two_factory::pointer build_stage_two()
             {
-                uint32_t symbol_size = SuperCoder::factory::symbol_size();
-                uint32_t symbols = SuperCoder::factory::symbols() +
-                    SuperCoder::factory::expansion();
+                uint32_t symbol_size = SuperCoder::factory_base::symbol_size();
+                uint32_t symbols = SuperCoder::factory_base::symbols() +
+                    SuperCoder::factory_base::expansion();
 
                 m_stage_two_factory.set_symbol_size(symbol_size);
                 m_stage_two_factory.set_symbols(symbols);
@@ -274,10 +274,10 @@ namespace kodo
     private:
 
         /// The stage one decoder
-        typename stage_one_decoder::pointer m_stage_one_decoder;
+        typename stage_one_factory::pointer m_stage_one_decoder;
 
         /// The stage two decoder
-        typename stage_two_decoder::pointer m_stage_two_decoder;
+        typename stage_two_factory::pointer m_stage_two_decoder;
 
         /// Keeps track of which symbols have been copied from the
         /// stage one decoder to the inner decoder

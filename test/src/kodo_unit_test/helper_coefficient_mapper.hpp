@@ -25,7 +25,7 @@ namespace kodo
 
     public:
 
-        class factory
+        class factory_base
         {
         public:
 
@@ -140,4 +140,3 @@ namespace kodo
 
     };
 }
-

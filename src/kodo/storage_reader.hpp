@@ -26,7 +26,7 @@ namespace kodo
     public:
 
         /// The factory type
-        using factory_type = typename EncoderType::factory;
+        using factory_type = typename EncoderType::factory_base;
 
         /// Pointer to the encoders
         using pointer_type = typename factory_type::pointer;

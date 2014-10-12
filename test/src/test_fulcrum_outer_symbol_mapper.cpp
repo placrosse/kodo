@@ -79,11 +79,11 @@ namespace kodo
                 return 10;
             }
 
-            class factory
+            class factory_base
             {
             public:
 
-                factory(uint32_t max_coefficient_vector_size)
+                factory_base(uint32_t max_coefficient_vector_size)
                     : m_max_coefficient_vector_size(max_coefficient_vector_size)
                 { }
 
@@ -117,7 +117,7 @@ TEST(TestFulcrumOuterSymbolMapper, api)
 
     typedef kodo::dummy_stack test_stack;
 
-    test_stack::factory factory(max_coefficient_vector_size);
+    test_stack::factory_base factory(max_coefficient_vector_size);
 
     EXPECT_EQ(factory.max_coefficient_vector_size(),
         max_coefficient_vector_size);

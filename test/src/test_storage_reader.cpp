@@ -26,7 +26,7 @@ namespace
     {
     public:
 
-        class factory
+        class factory_base
         {
         public:
             using pointer = std::shared_ptr<dummy_encoder>;

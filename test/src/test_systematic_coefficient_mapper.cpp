@@ -38,7 +38,7 @@ TEST(TestSystematicCoefficientMapper, api)
     uint32_t symbols = 4;
     uint32_t expansion = 2;
 
-    stack_type::factory factory;
+    stack_type::factory_base factory;
     factory.m_max_symbols = symbols;
     factory.m_max_expansion = expansion;
 

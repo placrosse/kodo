@@ -26,13 +26,13 @@ namespace kodo
 
         /// @ingroup factory_layers
         /// The factory layer associated with this coder.
-        class factory : public SuperCoder::factory
+        class factory_base : public SuperCoder::factory_base
         {
         public:
 
             /// @copydoc layer::factory::factory(uint32_t,uint32_t)
-            factory(uint32_t max_symbols, uint32_t max_symbol_size) :
-                SuperCoder::factory(max_symbols, max_symbol_size),
+            factory_base(uint32_t max_symbols, uint32_t max_symbol_size) :
+                SuperCoder::factory_base(max_symbols, max_symbol_size),
                 m_expansion(DefaultExpansion),
                 m_max_inner_symbols(max_symbols + MaxExpansion)
             {

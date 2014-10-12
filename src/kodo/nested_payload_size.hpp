@@ -15,19 +15,19 @@ namespace kodo
 
         /// @ingroup factory_layers
         /// The factory layer associated with this coder.
-        class factory : public SuperCoder::factory
+        class factory_base : public SuperCoder::factory_base
         {
         public:
 
-            /// @copydoc layer::factory::factory(uint32_t,uint32_t)
-            factory(uint32_t max_symbols, uint32_t max_symbol_size) :
-                SuperCoder::factory(max_symbols, max_symbol_size)
+            /// @copydoc layer::factory_base::factory_base(uint32_t,uint32_t)
+            factory_base(uint32_t max_symbols, uint32_t max_symbol_size) :
+                SuperCoder::factory_base(max_symbols, max_symbol_size)
             { }
 
             /// @copydoc layer::factory::max_payload_size() const
             uint32_t max_payload_size() const
             {
-                return SuperCoder::factory::nested().max_payload_size();
+                return SuperCoder::factory_base::nested().max_payload_size();
             }
         };
 

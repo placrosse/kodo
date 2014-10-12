@@ -22,10 +22,12 @@ namespace kodo
         {
         public:
 
-            typedef boost::shared_ptr<stage_decoder> pointer;
-
             class factory
             {
+            public:
+
+                typedef boost::shared_ptr<stage_decoder> pointer;
+
             public:
 
                 factory(uint32_t max_symbols, uint32_t max_symbol_size)
@@ -102,11 +104,11 @@ namespace kodo
         {
         public:
 
-            class factory
+            class factory_base
             {
             public:
 
-                factory(uint32_t max_symbols, uint32_t max_symbol_size)
+                factory_base(uint32_t max_symbols, uint32_t max_symbol_size)
                 {
                     (void) max_symbols;
                     (void) max_symbol_size;
@@ -230,7 +232,7 @@ namespace kodo
 /// Run the tests typical coefficients stack
 TEST(TestFulcrumTwoStageDecoder, api)
 {
-    kodo::dummy_stack::factory factory(10,10);
+    kodo::dummy_stack::factory_base factory(10,10);
 
     kodo::dummy_stack stack;
     stack.construct(factory);

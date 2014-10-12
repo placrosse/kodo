@@ -30,75 +30,75 @@ namespace kodo
 
         /// @ingroup factory_layers
         /// Forwarding factory for the parallel nested stack
-        class factory : public SuperCoder::factory
+        class factory_base : public SuperCoder::factory_base
         {
         public:
 
-            /// @copydoc layer::factory::factory(uint32_t,uint32_t)
-            factory(uint32_t max_symbols, uint32_t max_symbol_size)
-                : SuperCoder::factory(max_symbols, max_symbol_size)
+            /// @copydoc layer::factory_base::factory_base(uint32_t,uint32_t)
+            factory_base(uint32_t max_symbols, uint32_t max_symbol_size)
+                : SuperCoder::factory_base(max_symbols, max_symbol_size)
             { }
 
-            /// @copydoc layer::factory::max_symbols() const
+            /// @copydoc layer::factory_base::max_symbols() const
             uint32_t max_symbols() const
             {
-                const auto& nested = SuperCoder::factory::nested();
+                const auto& nested = SuperCoder::factory_base::nested();
                 return nested.max_symbols();
             }
 
-            /// @copydoc layer::factory::max_symbol_size() const
+            /// @copydoc layer::factory_base::max_symbol_size() const
             uint32_t max_symbol_size() const
             {
-                const auto& nested = SuperCoder::factory::nested();
+                const auto& nested = SuperCoder::factory_base::nested();
                 return nested.max_symbol_size();
             }
 
-            /// @copydoc layer::factory::max_block_size() const
+            /// @copydoc layer::factory_base::max_block_size() const
             uint32_t max_block_size() const
             {
-                const auto& nested = SuperCoder::factory::nested();
+                const auto& nested = SuperCoder::factory_base::nested();
                 return nested.max_block_size();
             }
 
-            /// @copydoc layer::factory::max_header_size() const
+            /// @copydoc layer::factory_base::max_header_size() const
             uint32_t max_header_size() const
             {
-                const auto& nested = SuperCoder::factory::nested();
+                const auto& nested = SuperCoder::factory_base::nested();
                 return nested.max_header_size();
             }
 
-            /// @copydoc layer::factory::max_id_size() const
+            /// @copydoc layer::factory_base::max_id_size() const
             uint32_t max_id_size() const
             {
-                const auto& nested = SuperCoder::factory::nested();
+                const auto& nested = SuperCoder::factory_base::nested();
                 return nested.max_id_size();
             }
 
-            /// @copydoc layer::factory::max_payload_size() const
+            /// @copydoc layer::factory_base::max_payload_size() const
             uint32_t max_payload_size() const
             {
-                const auto& nested = SuperCoder::factory::nested();
+                const auto& nested = SuperCoder::factory_base::nested();
                 return nested.max_payload_size();
             }
 
-            /// @copydoc layer::factory::max_coefficient_vector_size() const
+            /// @copydoc layer::factory_base::max_coefficient_vector_size() const
             uint32_t max_coefficient_vector_size() const
             {
-                const auto& nested = SuperCoder::factory::nested();
+                const auto& nested = SuperCoder::factory_base::nested();
                 return nested.max_coefficient_vector_size();
             }
 
-            /// @copydoc layer::factory::symbols() const;
+            /// @copydoc layer::factory_base::symbols() const;
             uint32_t symbols() const
             {
-                const auto& nested = SuperCoder::factory::nested();
+                const auto& nested = SuperCoder::factory_base::nested();
                 return nested.symbols();
             }
 
-            /// @copydoc layer::factory::symbol_size() const;
+            /// @copydoc layer::factory_base::symbol_size() const;
             uint32_t symbol_size() const
             {
-                const auto& nested = SuperCoder::factory::nested();
+                const auto& nested = SuperCoder::factory_base::nested();
                 return nested.symbol_size();
             }
 

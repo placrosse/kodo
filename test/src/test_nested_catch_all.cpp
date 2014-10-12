@@ -28,7 +28,7 @@ namespace
         // an uint32_t we just make each of them return a different
         // value in that way we can check that the correct one was
         // called (the value sort of serves as an id).
-        class factory
+        class factory_base
         {
         public:
 
@@ -396,16 +396,16 @@ namespace
 
     public:
 
-        class factory
+        class factory_base
         {
         public:
 
-            factory(uint32_t max_symbols, uint32_t max_symbol_size)
+            factory_base(uint32_t max_symbols, uint32_t max_symbol_size)
                 : m_max_symbols(max_symbols),
                   m_max_symbol_size(max_symbol_size)
             { }
 
-            const nested_stack_type::factory& nested() const
+            const nested_stack_type::factory_base& nested() const
             {
                 return m_nested;
             }
@@ -415,7 +415,7 @@ namespace
             uint32_t m_max_symbols;
             uint32_t m_max_symbol_size;
 
-            nested_stack_type::factory m_nested;
+            nested_stack_type::factory_base m_nested;
 
         };
 
@@ -450,7 +450,7 @@ TEST(TestNestedCatchAll, api)
 
     // Test the factory
     {
-        dummy_stack::factory factory(max_symbols, max_symbol_size);
+        dummy_stack::factory_base factory(max_symbols, max_symbol_size);
         EXPECT_EQ(factory.m_max_symbols, max_symbols);
         EXPECT_EQ(factory.m_max_symbol_size, max_symbol_size);
 
@@ -458,39 +458,40 @@ TEST(TestNestedCatchAll, api)
 
         nested.m_max_symbols.set_return(1U);
         EXPECT_EQ(factory.max_symbols(), 1U);
-        EXPECT_TRUE(nested.m_max_symbols.expect_calls().with());
+        EXPECT_TRUE((bool) nested.m_max_symbols.expect_calls().with());
 
         nested.m_max_symbol_size.set_return(2U);
         EXPECT_EQ(factory.max_symbol_size(), 2U);
-        EXPECT_TRUE(nested.m_max_symbol_size.expect_calls().with());
+        EXPECT_TRUE((bool) nested.m_max_symbol_size.expect_calls().with());
 
         nested.m_max_block_size.set_return(3U);
         EXPECT_EQ(factory.max_block_size(), 3U);
-        EXPECT_TRUE(nested.m_max_block_size.expect_calls().with());
+        EXPECT_TRUE((bool) nested.m_max_block_size.expect_calls().with());
 
         nested.m_max_header_size.set_return(4U);
         EXPECT_EQ(factory.max_header_size(), 4U);
-        EXPECT_TRUE(nested.m_max_header_size.expect_calls().with());
+        EXPECT_TRUE((bool) nested.m_max_header_size.expect_calls().with());
 
         nested.m_max_id_size.set_return(5U);
         EXPECT_EQ(factory.max_id_size(), 5U);
-        EXPECT_TRUE(nested.m_max_id_size.expect_calls().with());
+        EXPECT_TRUE((bool) nested.m_max_id_size.expect_calls().with());
 
         nested.m_max_payload_size.set_return(6U);
         EXPECT_EQ(factory.max_payload_size(), 6U);
-        EXPECT_TRUE(nested.m_max_payload_size.expect_calls().with());
+        EXPECT_TRUE((bool) nested.m_max_payload_size.expect_calls().with());
 
         nested.m_max_coefficient_vector_size.set_return(7U);
         EXPECT_EQ(factory.max_coefficient_vector_size(), 7U);
-        EXPECT_TRUE(nested.m_max_coefficient_vector_size.expect_calls().with());
+        EXPECT_TRUE((bool) nested.m_max_coefficient_vector_size.expect_calls()
+                    .with());
 
         nested.m_symbols.set_return(8U);
         EXPECT_EQ(factory.symbols(), 8U);
-        EXPECT_TRUE(nested.m_symbols.expect_calls().with());
+        EXPECT_TRUE((bool) nested.m_symbols.expect_calls().with());
 
         nested.m_symbol_size.set_return(9U);
         EXPECT_EQ(factory.symbol_size(), 9U);
-        EXPECT_TRUE(nested.m_symbol_size.expect_calls().with());
+        EXPECT_TRUE((bool) nested.m_symbol_size.expect_calls().with());
     }
 
     // Test the stack
@@ -517,28 +518,28 @@ TEST(TestNestedCatchAll, api)
         // latter being the check we want to perform here.
         auto compare_storage = [](std::tuple<sak::mutable_storage> a,
                                   std::tuple<sak::mutable_storage> b)
-        {
-            return sak::is_same(std::get<0>(a),std::get<0>(b));
-        };
+            {
+                return sak::is_same(std::get<0>(a),std::get<0>(b));
+            };
 
         auto check_copy_symbol = [](
             std::tuple<uint32_t, sak::mutable_storage> a,
             std::tuple<uint32_t, sak::mutable_storage> b)
-        {
-            if (std::get<0>(a) != std::get<0>(b))
             {
-                return false;
-            }
-            return sak::is_same(std::get<1>(a),std::get<1>(b));
-        };
+                if (std::get<0>(a) != std::get<0>(b))
+                {
+                    return false;
+                }
+                return sak::is_same(std::get<1>(a),std::get<1>(b));
+            };
 
         stack.copy_symbols(sak::storage(data));
         EXPECT_TRUE((bool) nested.m_copy_symbols.expect_calls(compare_storage)
-                        .with(sak::storage(data));
+                    .with(sak::storage(data)));
 
         stack.copy_symbol(10U, sak::storage(data));
         EXPECT_TRUE((bool) nested.m_copy_symbol.expect_calls(check_copy_symbol)
-                        .with(10U, sak::storage(data)));
+                    .with(10U, sak::storage(data)));
 
         nested.m_symbol.set_return((uint8_t*)0xdeadbeef);
         EXPECT_EQ(stack.symbol(1U), (uint8_t*)0xdeadbeef);
@@ -587,17 +588,17 @@ TEST(TestNestedCatchAll, api)
         nested.m_is_symbols_initialized.set_return(false);
         EXPECT_EQ(stack.is_symbols_initialized(), false);
         EXPECT_TRUE((bool) nested.m_is_symbols_initialized.expect_calls()
-                        .with());
+                    .with());
 
         nested.m_is_symbol_available.set_return(true);
         EXPECT_EQ(stack.is_symbol_available(42U), true);
         EXPECT_TRUE((bool) nested.m_is_symbol_available.expect_calls()
-                        .with(42U));
+                    .with(42U));
 
         nested.m_is_symbol_initialized.set_return(false);
         EXPECT_EQ(stack.is_symbol_initialized(23U), false);
         EXPECT_TRUE((bool) nested.m_is_symbol_initialized.expect_calls()
-                        .with(23U));
+                    .with(23U));
 
         //------------------------------------------------------------------
         // COEFFICIENT STORAGE API
@@ -610,27 +611,27 @@ TEST(TestNestedCatchAll, api)
         nested.m_coefficient_vector_length.set_return(89U);
         EXPECT_EQ(stack.coefficient_vector_length(), 89U);
         EXPECT_TRUE((bool) nested.m_coefficient_vector_length.expect_calls()
-                        .with());
+                    .with());
 
         nested.m_coefficient_vector_data.set_return((uint8_t*)0xdeadbeef);
         EXPECT_EQ(stack.coefficient_vector_data(1U), (uint8_t*)0xdeadbeef);
         EXPECT_TRUE((bool) nested.m_coefficient_vector_data.expect_calls()
-                        .with(1U));
+                    .with(1U));
 
         nested.m_coefficient_vector_data_const.set_return((uint8_t*)0xdeef);
         EXPECT_EQ(stack_const.coefficient_vector_data(2U), (uint8_t*)0xdeef);
         EXPECT_TRUE((bool) nested.m_coefficient_vector_data_const.expect_calls()
-                        .with(2U));
+                    .with(2U));
 
         nested.m_coefficient_vector_values.set_return((value_type*)0xdeadbeef);
         EXPECT_EQ(stack.coefficient_vector_values(3U), (value_type*)0xdeadbeef);
         EXPECT_TRUE((bool) nested.m_coefficient_vector_values.expect_calls()
-                        .with(3U));
+                    .with(3U));
 
         nested.m_coefficient_vector_values_const.set_return((value_type*)0xd);
         EXPECT_EQ(stack_const.coefficient_vector_values(4U), (value_type*)0xd);
         EXPECT_TRUE((bool) nested.m_coefficient_vector_values_const
-                        .expect_calls().with(4U));
+                    .expect_calls().with(4U));
 
         //------------------------------------------------------------------
         // FINITE FIELD API
@@ -639,7 +640,7 @@ TEST(TestNestedCatchAll, api)
         stack.multiply((value_type*)0xa, (value_type)1U, 3U);
 
         EXPECT_TRUE((bool) nested.m_multiply.expect_calls()
-                        .with((value_type*)0xa, (value_type)1U, 3U));
+                    .with((value_type*)0xa, (value_type)1U, 3U));
 
         stack.multiply_add((value_type*)0xa, (value_type*)0xb,
                            (value_type)1U, 3U);
@@ -692,24 +693,27 @@ TEST(TestNestedCatchAll, api)
         EXPECT_EQ(stack.rank(), 42);
         EXPECT_TRUE((bool) nested.m_rank.expect_calls().with());
 
+
         nested.m_is_symbol_pivot.set_return({true,false});
         EXPECT_TRUE(stack.is_symbol_pivot(15));
-        EXPECT_TRUE((bool) nested.m_is_symbol_pivot.called_with(15));
         EXPECT_FALSE(stack.is_symbol_pivot(12));
-        EXPECT_TRUE((bool) nested.m_is_symbol_pivot.called_with(12));
+        EXPECT_TRUE((bool) nested.m_is_symbol_pivot.expect_calls()
+                    .with(15).with(12));
 
         //------------------------------------------------------------------
         // COEFFICIENT GENERATOR API
         //------------------------------------------------------------------
 
         stack.generate((uint8_t*)0x3);
-        EXPECT_TRUE(nested.m_generate.expect_calls().with((uint8_t*)0x3));
+        EXPECT_TRUE((bool) nested.m_generate.expect_calls()
+                    .with((uint8_t*)0x3));
 
         stack.generate_partial((uint8_t*)0x4);
-        EXPECT_TRUE(nested.m_generate_partial.expect_calls().with((uint8_t*)0x4));
+        EXPECT_TRUE((bool) nested.m_generate_partial.expect_calls()
+                    .with((uint8_t*)0x4));
 
         stack.seed(33);
-        EXPECT_TRUE(nested.m_seed.expect_calls().with(33));
+        EXPECT_TRUE((bool) nested.m_seed.expect_calls().with(33));
 
     }
 }
