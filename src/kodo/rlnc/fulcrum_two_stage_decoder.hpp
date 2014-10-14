@@ -11,6 +11,11 @@
 namespace kodo
 {
     /// @todo tests + docs
+    ///
+    /// In this layer we implement the two stage decoder used by the
+    /// fulcrum combined decoder. What the two stage decoder does is
+    /// to create two decoders with the following purpose:
+    /// 1.
     template<class StageOneDecoder, class StageTwoDecoder, class SuperCoder>
     class fulcrum_two_stage_decoder : public SuperCoder
     {
@@ -127,6 +132,12 @@ namespace kodo
             assert(m_stage_one_decoder->coefficient_vector_size() ==
                    m_stage_two_decoder->coefficient_vector_size());
 
+            assert(m_stage_one_decoder->symbols() <=
+                   m_stage_one_decoder_copied.size());
+
+            assert(m_stage_two_decoder->symbols() <=
+                   m_stage_two_decoder_copied.size());
+
             std::fill_n(m_stage_two_decoder_copied.begin(),
                         m_stage_two_decoder->symbols(), false);
 
@@ -139,15 +150,42 @@ namespace kodo
         {
             if(SuperCoder::is_outer_systematic())
             {
-
                 if(symbol_index < SuperCoder::symbols())
                 {
-                    m_stage_one_decoder_copied[symbol_index] = true;
-                    SuperCoder::decode_symbol(symbol_data, symbol_index);
-                }
+                    // In this case the symbol represents original
+                    // data we will pass it first the "stage two"
+                    // decoder to make sure the symbol is available
+                    // for later elimination of coded symbols. After
+                    // that we immediately copy it ot the main decoder
+                    // (SuperCoder) and mark it as copied.
+                    m_stage_two_decoder->decode_symbol(
+                        symbol_data, symbol_index);
 
-                m_stage_two_decoder->decode_symbol(
-                    symbol_data, symbol_index);
+                    assert(symbol_index < m_stage_two_decoder_copied.size());
+                    m_stage_two_decoder_copied[symbol_index] = true;
+
+                    SuperCoder::decode_symbol(symbol_data, symbol_index);
+
+                }
+                else
+                {
+                    assert(SuperCoder::symbols() <= symbol_index);
+
+                    assert(symbol_index <
+                           SuperCoder::symbols() + SuperCoder::expansion());
+
+                    // In this case the systematic symbol represents
+                    // the extension of the outer code. So we pass it
+                    // to the "stage one" decoder and check whether
+                    // decoding is possible.
+                    uint32_t stage_one_index =
+                        symbol_index - SuperCoder::symbols();
+
+                    m_stage_one_decoder->decode_symbol(
+                        symbol_data, stage_one_index);
+
+                    check_combined_rank();
+                }
             }
             else
             {
@@ -200,6 +238,8 @@ namespace kodo
         {
             uint32_t combined_rank = m_stage_one_decoder->rank() +
                 m_stage_two_decoder->rank();
+
+            assert(combined_rank <= SuperCoder::symbols());
 
             if(combined_rank < SuperCoder::symbols())
                 return;
