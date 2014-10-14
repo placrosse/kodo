@@ -47,7 +47,7 @@ namespace kodo
         //  - implemented in outer decoder
         // Coefficient Generator API
         fulcrum_two_stage_decoder<
-            elimination_decoder<fifi::binary>,
+            elimination_decoder<fifi::binary, TraceTag>,
             basic_symbol_decoder<fifi::binary, TraceTag>,
         systematic_coefficient_mapper<
         uniform_generator<
