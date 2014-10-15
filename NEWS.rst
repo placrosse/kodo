@@ -9,6 +9,8 @@ Latest
 * Major: Upgrade to tables 5
 * Minor: Added test profile option to speed up the execution of unit tests
   on embedded devices
+* Minor: Added wrapper for ``src/copy_payload_decoder.hpp`` with its respective
+  unit test (it points to ``test/src/test_copy_payload_decoder.cpp``).
 
 18.0.0
 ------
