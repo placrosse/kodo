@@ -9,6 +9,7 @@
 #include <stub/call.hpp>
 
 #include <kodo/copy_payload_decoder.hpp>
+#include <kodo/wrap_copy_payload_decoder.hpp>
 #include <kodo/basic_factory.hpp>
 
 /// Here we define the stacks which should be tested.
@@ -120,4 +121,51 @@ TEST(TestCopyPayloadDecoder, api)
     // The internal buffer was used
     EXPECT_TRUE((bool)c->m_decode.expect_calls()
                     .with(c->payload_copy().data()));
+}
+
+/// Test that we can wrap an stack with the wrap_copy_payload_decoder layer
+/// we won't actually do anything but check that it compiles, because the
+/// copy_payload_decoder is already tested in the above unit tests
+namespace kodo
+{
+
+    // Put dummy layers and tests classes in an anonymous namespace
+    // to avoid violations of ODF (one-definition-rule) in other
+    // translation units
+    namespace
+    {
+        /// Helper layer
+        class wrap_dummy_stack : public dummy_layer
+        {
+        public:
+
+            class factory_base
+            {
+            public:
+                factory_base(uint32_t symbols, uint32_t symbol_size)
+                {
+                    (void) symbols;
+                    (void) symbol_size;
+                }
+
+                uint32_t max_payload_size() const
+                {
+                    return m_max_payload_size();
+                }
+
+                stub::call<uint32_t()> m_max_payload_size;
+            };
+
+            using factory = basic_factory<wrap_dummy_stack>;
+        };
+    }
+}
+
+TEST(TestCopyPayloadDecoder, wrap)
+{
+    using stack = kodo::wrap_copy_payload_decoder<kodo::wrap_dummy_stack>;
+
+    stack::factory f(10,10);
+    auto s = f.build();
+    (void) s;
 }
