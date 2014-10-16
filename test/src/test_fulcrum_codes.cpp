@@ -8,7 +8,6 @@
 #include <ctime>
 
 #include <gtest/gtest.h>
-
 #include <kodo/rlnc/fulcrum_codes.hpp>
 
 #include "kodo_unit_test/helper_test_basic_api.hpp"
