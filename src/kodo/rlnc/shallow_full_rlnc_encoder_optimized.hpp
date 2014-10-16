@@ -26,9 +26,9 @@ namespace kodo
     ///
     /// The encoder is identical to the full_rlnc_encoder except for
     /// the fact that is uses a shallow storage layer.
-    template<class Field, class ValueType = uint8_t,
+    template<class Field, class RandomNumberGenerator, class ValueType = uint8_t,
         class TraceTag = kodo::disable_trace >
-    class shallow_full_rlnc_encoder_mt19937 : public
+    class shallow_full_rlnc_encoder_specified_generator : public
         // Payload Codec API
         payload_encoder<
         // Codec Header API
@@ -38,7 +38,7 @@ namespace kodo
         plain_symbol_id_writer<
         // Coefficient Generator API
         new_uniform_generator<
-        boost::random::mt19937,
+        RandomNumberGenerator,
         ValueType,
         // Encoder API
         encode_symbol_tracker<
@@ -57,6 +57,7 @@ namespace kodo
         > > > > > > > > > > > > >
     {
         public:
-            using factory = pool_factory<shallow_full_rlnc_encoder_mt19937>;
+            using factory = pool_factory<
+            shallow_full_rlnc_encoder_specified_generator>;
     };
 }

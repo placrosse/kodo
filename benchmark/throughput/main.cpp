@@ -591,7 +591,8 @@ BENCHMARK_F(setup_rlnc_throughput2325, FullRLNC, Prime2325, 5)
 // Generates uint8_t numbers
 //------------------------------------------------------------------
 typedef throughput_benchmark<
-    kodo::shallow_full_rlnc_encoder_mt19937<fifi::binary>,
+    kodo::shallow_full_rlnc_encoder_specified_generator<fifi::binary,
+        boost::random::mt19937>,
     kodo::shallow_full_rlnc_decoder<fifi::binary>> setup_rlnc_throughput_mt19937;
 
 BENCHMARK_F(setup_rlnc_throughput_mt19937, FullRLNC_mt19937_uint8, Binary, 5)
@@ -600,7 +601,8 @@ BENCHMARK_F(setup_rlnc_throughput_mt19937, FullRLNC_mt19937_uint8, Binary, 5)
 }
 
 typedef throughput_benchmark<
-    kodo::shallow_full_rlnc_encoder_mt19937<fifi::binary8>,
+    kodo::shallow_full_rlnc_encoder_specified_generator<fifi::binary8,
+        boost::random::mt19937>,
     kodo::shallow_full_rlnc_decoder<fifi::binary8>> setup_rlnc_throughput_mt19937_8;
 
 BENCHMARK_F(setup_rlnc_throughput_mt19937_8, FullRLNC_mt19937_uint8, Binary8, 5)
@@ -609,7 +611,8 @@ BENCHMARK_F(setup_rlnc_throughput_mt19937_8, FullRLNC_mt19937_uint8, Binary8, 5)
 }
 
 typedef throughput_benchmark<
-    kodo::shallow_full_rlnc_encoder_mt19937<fifi::binary16>,
+    kodo::shallow_full_rlnc_encoder_specified_generator<fifi::binary16,
+        boost::random::mt19937>,
     kodo::shallow_full_rlnc_decoder<fifi::binary16>> setup_rlnc_throughput_mt19937_16;
 
 BENCHMARK_F(setup_rlnc_throughput_mt19937_16, FullRLNC_mt19937_uint8, Binary16, 5)
@@ -622,7 +625,8 @@ BENCHMARK_F(setup_rlnc_throughput_mt19937_16, FullRLNC_mt19937_uint8, Binary16, 
 // Generates uint16_t numbers
 //------------------------------------------------------------------
 typedef throughput_benchmark<
-    kodo::shallow_full_rlnc_encoder_mt19937<fifi::binary, uint16_t>,
+    kodo::shallow_full_rlnc_encoder_specified_generator<fifi::binary,
+        boost::random::mt19937, uint16_t>,
     kodo::shallow_full_rlnc_decoder<fifi::binary>> setup_rlnc_throughput_uint16_mt19937;
 
 BENCHMARK_F(setup_rlnc_throughput_uint16_mt19937, FullRLNC_mt19937_uint16, Binary, 5)
@@ -631,7 +635,8 @@ BENCHMARK_F(setup_rlnc_throughput_uint16_mt19937, FullRLNC_mt19937_uint16, Binar
 }
 
 typedef throughput_benchmark<
-    kodo::shallow_full_rlnc_encoder_mt19937<fifi::binary8, uint16_t>,
+    kodo::shallow_full_rlnc_encoder_specified_generator<fifi::binary8,
+        boost::random::mt19937, uint16_t>,
     kodo::shallow_full_rlnc_decoder<fifi::binary8>> setup_rlnc_throughput_uint16_mt19937_8;
 
 BENCHMARK_F(setup_rlnc_throughput_uint16_mt19937_8, FullRLNC_mt19937_uint16, Binary8, 5)
@@ -640,7 +645,8 @@ BENCHMARK_F(setup_rlnc_throughput_uint16_mt19937_8, FullRLNC_mt19937_uint16, Bin
 }
 
 typedef throughput_benchmark<
-    kodo::shallow_full_rlnc_encoder_mt19937<fifi::binary16, uint16_t>,
+    kodo::shallow_full_rlnc_encoder_specified_generator<fifi::binary16,
+        boost::random::mt19937, uint16_t>,
     kodo::shallow_full_rlnc_decoder<fifi::binary16>> setup_rlnc_throughput_uint16_mt19937_16;
 
 BENCHMARK_F(setup_rlnc_throughput_uint16_mt19937_16, FullRLNC_mt19937_uint16, Binary16, 5)
@@ -653,7 +659,8 @@ BENCHMARK_F(setup_rlnc_throughput_uint16_mt19937_16, FullRLNC_mt19937_uint16, Bi
 // Generates uint32_t numbers
 //------------------------------------------------------------------
 typedef throughput_benchmark<
-    kodo::shallow_full_rlnc_encoder_mt19937<fifi::binary, uint32_t>,
+    kodo::shallow_full_rlnc_encoder_specified_generator<fifi::binary,
+        boost::random::mt19937, uint32_t>,
     kodo::shallow_full_rlnc_decoder<fifi::binary>> setup_rlnc_throughput_uint32_mt19937;
 
 BENCHMARK_F(setup_rlnc_throughput_uint32_mt19937, FullRLNC_mt19937_uint32, Binary, 5)
@@ -662,7 +669,8 @@ BENCHMARK_F(setup_rlnc_throughput_uint32_mt19937, FullRLNC_mt19937_uint32, Binar
 }
 
 typedef throughput_benchmark<
-    kodo::shallow_full_rlnc_encoder_mt19937<fifi::binary8, uint32_t>,
+    kodo::shallow_full_rlnc_encoder_specified_generator<fifi::binary8,
+        boost::random::mt19937, uint32_t>,
     kodo::shallow_full_rlnc_decoder<fifi::binary8>> setup_rlnc_throughput_uint32_mt19937_8;
 
 BENCHMARK_F(setup_rlnc_throughput_uint32_mt19937_8, FullRLNC_mt19937_uint32, Binary8, 5)
@@ -671,10 +679,425 @@ BENCHMARK_F(setup_rlnc_throughput_uint32_mt19937_8, FullRLNC_mt19937_uint32, Bin
 }
 
 typedef throughput_benchmark<
-    kodo::shallow_full_rlnc_encoder_mt19937<fifi::binary16, uint32_t>,
+    kodo::shallow_full_rlnc_encoder_specified_generator<fifi::binary16,
+        boost::random::mt19937, uint32_t>,
     kodo::shallow_full_rlnc_decoder<fifi::binary16>> setup_rlnc_throughput_uint32_mt19937_16;
 
 BENCHMARK_F(setup_rlnc_throughput_uint32_mt19937_16, FullRLNC_mt19937_uint32, Binary16, 5)
+{
+    run_benchmark();
+}
+
+//------------------------------------------------------------------
+// Shallow FullRLNC, optimized generator with mt11213b
+// Generates uint8_t numbers
+//------------------------------------------------------------------
+typedef throughput_benchmark<
+    kodo::shallow_full_rlnc_encoder_specified_generator<fifi::binary,
+        boost::random::mt11213b>,
+    kodo::shallow_full_rlnc_decoder<fifi::binary>> setup_rlnc_throughput_mt11213b;
+
+BENCHMARK_F(setup_rlnc_throughput_mt11213b, FullRLNC_mt11213b_uint8, Binary, 5)
+{
+    run_benchmark();
+}
+
+typedef throughput_benchmark<
+    kodo::shallow_full_rlnc_encoder_specified_generator<fifi::binary8,
+        boost::random::mt11213b>,
+    kodo::shallow_full_rlnc_decoder<fifi::binary8>> setup_rlnc_throughput_mt11213b_8;
+
+BENCHMARK_F(setup_rlnc_throughput_mt11213b_8, FullRLNC_mt11213b_uint8, Binary8, 5)
+{
+    run_benchmark();
+}
+
+typedef throughput_benchmark<
+    kodo::shallow_full_rlnc_encoder_specified_generator<fifi::binary16,
+        boost::random::mt11213b>,
+    kodo::shallow_full_rlnc_decoder<fifi::binary16>> setup_rlnc_throughput_mt11213b_16;
+
+BENCHMARK_F(setup_rlnc_throughput_mt11213b_16, FullRLNC_mt11213b_uint8, Binary16, 5)
+{
+    run_benchmark();
+}
+
+
+//------------------------------------------------------------------
+// Shallow FullRLNC, optimized generator with mt11213b
+// Generates uint16_t numbers
+//------------------------------------------------------------------
+typedef throughput_benchmark<
+    kodo::shallow_full_rlnc_encoder_specified_generator<fifi::binary,
+        boost::random::mt11213b, uint16_t>,
+    kodo::shallow_full_rlnc_decoder<fifi::binary>> setup_rlnc_throughput_uint16_mt11213b;
+
+BENCHMARK_F(setup_rlnc_throughput_uint16_mt11213b, FullRLNC_mt11213b_uint16, Binary, 5)
+{
+    run_benchmark();
+}
+
+typedef throughput_benchmark<
+    kodo::shallow_full_rlnc_encoder_specified_generator<fifi::binary8,
+        boost::random::mt11213b, uint16_t>,
+    kodo::shallow_full_rlnc_decoder<fifi::binary8>> setup_rlnc_throughput_uint16_mt11213b_8;
+
+BENCHMARK_F(setup_rlnc_throughput_uint16_mt11213b_8, FullRLNC_mt11213b_uint16, Binary8, 5)
+{
+    run_benchmark();
+}
+
+typedef throughput_benchmark<
+    kodo::shallow_full_rlnc_encoder_specified_generator<fifi::binary16,
+        boost::random::mt11213b, uint16_t>,
+    kodo::shallow_full_rlnc_decoder<fifi::binary16>> setup_rlnc_throughput_uint16_mt11213b_16;
+
+BENCHMARK_F(setup_rlnc_throughput_uint16_mt11213b_16, FullRLNC_mt11213b_uint16, Binary16, 5)
+{
+    run_benchmark();
+}
+
+
+//------------------------------------------------------------------
+// Shallow FullRLNC, optimized generator with mt11213b
+// Generates uint32_t numbers
+//------------------------------------------------------------------
+typedef throughput_benchmark<
+    kodo::shallow_full_rlnc_encoder_specified_generator<fifi::binary,
+        boost::random::mt11213b, uint32_t>,
+    kodo::shallow_full_rlnc_decoder<fifi::binary>> setup_rlnc_throughput_uint32_mt11213b;
+
+BENCHMARK_F(setup_rlnc_throughput_uint32_mt11213b, FullRLNC_mt11213b_uint32, Binary, 5)
+{
+    run_benchmark();
+}
+
+typedef throughput_benchmark<
+    kodo::shallow_full_rlnc_encoder_specified_generator<fifi::binary8,
+        boost::random::mt11213b, uint32_t>,
+    kodo::shallow_full_rlnc_decoder<fifi::binary8>> setup_rlnc_throughput_uint32_mt11213b_8;
+
+BENCHMARK_F(setup_rlnc_throughput_uint32_mt11213b_8, FullRLNC_mt11213b_uint32, Binary8, 5)
+{
+    run_benchmark();
+}
+
+typedef throughput_benchmark<
+    kodo::shallow_full_rlnc_encoder_specified_generator<fifi::binary16,
+        boost::random::mt11213b, uint32_t>,
+    kodo::shallow_full_rlnc_decoder<fifi::binary16>> setup_rlnc_throughput_uint32_mt11213b_16;
+
+BENCHMARK_F(setup_rlnc_throughput_uint32_mt11213b_16, FullRLNC_mt11213b_uint32, Binary16, 5)
+{
+    run_benchmark();
+}
+
+
+//------------------------------------------------------------------
+// Shallow FullRLNC, optimized generator with knuth_b
+// Generates uint8_t numbers
+//------------------------------------------------------------------
+typedef throughput_benchmark<
+    kodo::shallow_full_rlnc_encoder_specified_generator<fifi::binary,
+        boost::random::knuth_b>,
+    kodo::shallow_full_rlnc_decoder<fifi::binary>> setup_rlnc_throughput_knuth_b;
+
+BENCHMARK_F(setup_rlnc_throughput_knuth_b, FullRLNC_knuth_b_uint8, Binary, 5)
+{
+    run_benchmark();
+}
+
+typedef throughput_benchmark<
+    kodo::shallow_full_rlnc_encoder_specified_generator<fifi::binary8,
+        boost::random::knuth_b>,
+    kodo::shallow_full_rlnc_decoder<fifi::binary8>> setup_rlnc_throughput_knuth_b_8;
+
+BENCHMARK_F(setup_rlnc_throughput_knuth_b_8, FullRLNC_knuth_b_uint8, Binary8, 5)
+{
+    run_benchmark();
+}
+
+typedef throughput_benchmark<
+    kodo::shallow_full_rlnc_encoder_specified_generator<fifi::binary16,
+        boost::random::knuth_b>,
+    kodo::shallow_full_rlnc_decoder<fifi::binary16>> setup_rlnc_throughput_knuth_b_16;
+
+BENCHMARK_F(setup_rlnc_throughput_knuth_b_16, FullRLNC_knuth_b_uint8, Binary16, 5)
+{
+    run_benchmark();
+}
+
+//------------------------------------------------------------------
+// Shallow FullRLNC, optimized generator with knuth_b
+// Generates uint16_t numbers
+//------------------------------------------------------------------
+typedef throughput_benchmark<
+    kodo::shallow_full_rlnc_encoder_specified_generator<fifi::binary,
+        boost::random::knuth_b, uint16_t>,
+    kodo::shallow_full_rlnc_decoder<fifi::binary>> setup_rlnc_throughput_uint16_knuth_b;
+
+BENCHMARK_F(setup_rlnc_throughput_uint16_knuth_b, FullRLNC_knuth_b_uint16, Binary, 5)
+{
+    run_benchmark();
+}
+
+typedef throughput_benchmark<
+    kodo::shallow_full_rlnc_encoder_specified_generator<fifi::binary8,
+        boost::random::knuth_b, uint16_t>,
+    kodo::shallow_full_rlnc_decoder<fifi::binary8>> setup_rlnc_throughput_uint16_knuth_b_8;
+
+BENCHMARK_F(setup_rlnc_throughput_uint16_knuth_b_8, FullRLNC_knuth_b_uint16, Binary8, 5)
+{
+    run_benchmark();
+}
+
+typedef throughput_benchmark<
+    kodo::shallow_full_rlnc_encoder_specified_generator<fifi::binary16,
+        boost::random::knuth_b, uint16_t>,
+    kodo::shallow_full_rlnc_decoder<fifi::binary16>> setup_rlnc_throughput_uint16_knuth_b_16;
+
+BENCHMARK_F(setup_rlnc_throughput_uint16_knuth_b_16, FullRLNC_knuth_b_uint16, Binary16, 5)
+{
+    run_benchmark();
+}
+
+//------------------------------------------------------------------
+// Shallow FullRLNC, optimized generator with knuth_b
+// Generates uint32_t numbers
+//------------------------------------------------------------------
+typedef throughput_benchmark<
+    kodo::shallow_full_rlnc_encoder_specified_generator<fifi::binary,
+        boost::random::knuth_b, uint32_t>,
+    kodo::shallow_full_rlnc_decoder<fifi::binary>> setup_rlnc_throughput_uint32_knuth_b;
+
+BENCHMARK_F(setup_rlnc_throughput_uint32_knuth_b, FullRLNC_knuth_b_uint32, Binary, 5)
+{
+    run_benchmark();
+}
+
+typedef throughput_benchmark<
+    kodo::shallow_full_rlnc_encoder_specified_generator<fifi::binary8,
+        boost::random::knuth_b, uint32_t>,
+    kodo::shallow_full_rlnc_decoder<fifi::binary8>> setup_rlnc_throughput_uint32_knuth_b_8;
+
+BENCHMARK_F(setup_rlnc_throughput_uint32_knuth_b_8, FullRLNC_knuth_b_uint32, Binary8, 5)
+{
+    run_benchmark();
+}
+
+typedef throughput_benchmark<
+    kodo::shallow_full_rlnc_encoder_specified_generator<fifi::binary16,
+        boost::random::knuth_b, uint32_t>,
+    kodo::shallow_full_rlnc_decoder<fifi::binary16>> setup_rlnc_throughput_uint32_knuth_b_16;
+
+BENCHMARK_F(setup_rlnc_throughput_uint32_knuth_b_16, FullRLNC_knuth_b_uint32, Binary16, 5)
+{
+    run_benchmark();
+}
+
+//------------------------------------------------------------------
+// Shallow FullRLNC, optimized generator with kreutzer1986
+// Generates uint8_t numbers
+//------------------------------------------------------------------
+typedef throughput_benchmark<
+    kodo::shallow_full_rlnc_encoder_specified_generator<fifi::binary,
+        boost::random::kreutzer1986>,
+    kodo::shallow_full_rlnc_decoder<fifi::binary>> setup_rlnc_throughput_kreutzer1986;
+
+BENCHMARK_F(setup_rlnc_throughput_kreutzer1986, FullRLNC_kreutzer1986_uint8, Binary, 5)
+{
+    run_benchmark();
+}
+
+typedef throughput_benchmark<
+    kodo::shallow_full_rlnc_encoder_specified_generator<fifi::binary8,
+        boost::random::kreutzer1986>,
+    kodo::shallow_full_rlnc_decoder<fifi::binary8>> setup_rlnc_throughput_kreutzer1986_8;
+
+BENCHMARK_F(setup_rlnc_throughput_kreutzer1986_8, FullRLNC_kreutzer1986_uint8, Binary8, 5)
+{
+    run_benchmark();
+}
+
+typedef throughput_benchmark<
+    kodo::shallow_full_rlnc_encoder_specified_generator<fifi::binary16,
+        boost::random::kreutzer1986>,
+    kodo::shallow_full_rlnc_decoder<fifi::binary16>> setup_rlnc_throughput_kreutzer1986_16;
+
+BENCHMARK_F(setup_rlnc_throughput_kreutzer1986_16, FullRLNC_kreutzer1986_uint8, Binary16, 5)
+{
+    run_benchmark();
+}
+
+
+//------------------------------------------------------------------
+// Shallow FullRLNC, optimized generator with kreutzer1986
+// Generates uint16_t numbers
+//------------------------------------------------------------------
+typedef throughput_benchmark<
+    kodo::shallow_full_rlnc_encoder_specified_generator<fifi::binary,
+        boost::random::kreutzer1986, uint16_t>,
+    kodo::shallow_full_rlnc_decoder<fifi::binary>> setup_rlnc_throughput_uint16_kreutzer1986;
+
+BENCHMARK_F(setup_rlnc_throughput_uint16_kreutzer1986, FullRLNC_kreutzer1986_uint16, Binary, 5)
+{
+    run_benchmark();
+}
+
+typedef throughput_benchmark<
+    kodo::shallow_full_rlnc_encoder_specified_generator<fifi::binary8,
+        boost::random::kreutzer1986, uint16_t>,
+    kodo::shallow_full_rlnc_decoder<fifi::binary8>> setup_rlnc_throughput_uint16_kreutzer1986_8;
+
+BENCHMARK_F(setup_rlnc_throughput_uint16_kreutzer1986_8, FullRLNC_kreutzer1986_uint16, Binary8, 5)
+{
+    run_benchmark();
+}
+
+typedef throughput_benchmark<
+    kodo::shallow_full_rlnc_encoder_specified_generator<fifi::binary16,
+        boost::random::kreutzer1986, uint16_t>,
+    kodo::shallow_full_rlnc_decoder<fifi::binary16>> setup_rlnc_throughput_uint16_kreutzer1986_16;
+
+BENCHMARK_F(setup_rlnc_throughput_uint16_kreutzer1986_16, FullRLNC_kreutzer1986_uint16, Binary16, 5)
+{
+    run_benchmark();
+}
+
+//------------------------------------------------------------------
+// Shallow FullRLNC, optimized generator with kreutzer1986
+// Generates uint32_t numbers
+//------------------------------------------------------------------
+typedef throughput_benchmark<
+    kodo::shallow_full_rlnc_encoder_specified_generator<fifi::binary,
+        boost::random::kreutzer1986, uint32_t>,
+    kodo::shallow_full_rlnc_decoder<fifi::binary>> setup_rlnc_throughput_uint32_kreutzer1986;
+
+BENCHMARK_F(setup_rlnc_throughput_uint32_kreutzer1986, FullRLNC_kreutzer1986_uint32, Binary, 5)
+{
+    run_benchmark();
+}
+
+typedef throughput_benchmark<
+    kodo::shallow_full_rlnc_encoder_specified_generator<fifi::binary8,
+        boost::random::kreutzer1986, uint32_t>,
+    kodo::shallow_full_rlnc_decoder<fifi::binary8>> setup_rlnc_throughput_uint32_kreutzer1986_8;
+
+BENCHMARK_F(setup_rlnc_throughput_uint32_kreutzer1986_8, FullRLNC_kreutzer1986_uint32, Binary8, 5)
+{
+    run_benchmark();
+}
+
+typedef throughput_benchmark<
+    kodo::shallow_full_rlnc_encoder_specified_generator<fifi::binary16,
+        boost::random::kreutzer1986, uint32_t>,
+    kodo::shallow_full_rlnc_decoder<fifi::binary16>> setup_rlnc_throughput_uint32_kreutzer1986_16;
+
+BENCHMARK_F(setup_rlnc_throughput_uint32_kreutzer1986_16, FullRLNC_kreutzer1986_uint32, Binary16, 5)
+{
+    run_benchmark();
+}
+
+
+//------------------------------------------------------------------
+// Shallow FullRLNC, optimized generator with taus88
+// Generates uint8_t numbers
+//------------------------------------------------------------------
+typedef throughput_benchmark<
+    kodo::shallow_full_rlnc_encoder_specified_generator<fifi::binary,
+        boost::random::taus88>,
+    kodo::shallow_full_rlnc_decoder<fifi::binary>> setup_rlnc_throughput_taus88;
+
+BENCHMARK_F(setup_rlnc_throughput_taus88, FullRLNC_taus88_uint8, Binary, 5)
+{
+    run_benchmark();
+}
+
+typedef throughput_benchmark<
+    kodo::shallow_full_rlnc_encoder_specified_generator<fifi::binary8,
+        boost::random::taus88>,
+    kodo::shallow_full_rlnc_decoder<fifi::binary8>> setup_rlnc_throughput_taus88_8;
+
+BENCHMARK_F(setup_rlnc_throughput_taus88_8, FullRLNC_taus88_uint8, Binary8, 5)
+{
+    run_benchmark();
+}
+
+typedef throughput_benchmark<
+    kodo::shallow_full_rlnc_encoder_specified_generator<fifi::binary16,
+        boost::random::taus88>,
+    kodo::shallow_full_rlnc_decoder<fifi::binary16>> setup_rlnc_throughput_taus88_16;
+
+BENCHMARK_F(setup_rlnc_throughput_taus88_16, FullRLNC_taus88_uint8, Binary16, 5)
+{
+    run_benchmark();
+}
+
+//------------------------------------------------------------------
+// Shallow FullRLNC, optimized generator with taus88
+// Generates uint16_t numbers
+//------------------------------------------------------------------
+typedef throughput_benchmark<
+    kodo::shallow_full_rlnc_encoder_specified_generator<fifi::binary,
+        boost::random::taus88, uint16_t>,
+    kodo::shallow_full_rlnc_decoder<fifi::binary>> setup_rlnc_throughput_uint16_taus88;
+
+BENCHMARK_F(setup_rlnc_throughput_uint16_taus88, FullRLNC_taus88_uint16, Binary, 5)
+{
+    run_benchmark();
+}
+
+typedef throughput_benchmark<
+    kodo::shallow_full_rlnc_encoder_specified_generator<fifi::binary8,
+        boost::random::taus88, uint16_t>,
+    kodo::shallow_full_rlnc_decoder<fifi::binary8>> setup_rlnc_throughput_uint16_taus88_8;
+
+BENCHMARK_F(setup_rlnc_throughput_uint16_taus88_8, FullRLNC_taus88_uint16, Binary8, 5)
+{
+    run_benchmark();
+}
+
+typedef throughput_benchmark<
+    kodo::shallow_full_rlnc_encoder_specified_generator<fifi::binary16,
+        boost::random::taus88, uint16_t>,
+    kodo::shallow_full_rlnc_decoder<fifi::binary16>> setup_rlnc_throughput_uint16_taus88_16;
+
+BENCHMARK_F(setup_rlnc_throughput_uint16_taus88_16, FullRLNC_taus88_uint16, Binary16, 5)
+{
+    run_benchmark();
+}
+
+
+//------------------------------------------------------------------
+// Shallow FullRLNC, optimized generator with taus88
+// Generates uint32_t numbers
+//------------------------------------------------------------------
+typedef throughput_benchmark<
+    kodo::shallow_full_rlnc_encoder_specified_generator<fifi::binary,
+        boost::random::taus88, uint32_t>,
+    kodo::shallow_full_rlnc_decoder<fifi::binary>> setup_rlnc_throughput_uint32_taus88;
+
+BENCHMARK_F(setup_rlnc_throughput_uint32_taus88, FullRLNC_taus88_uint32, Binary, 5)
+{
+    run_benchmark();
+}
+
+typedef throughput_benchmark<
+    kodo::shallow_full_rlnc_encoder_specified_generator<fifi::binary8,
+        boost::random::taus88, uint32_t>,
+    kodo::shallow_full_rlnc_decoder<fifi::binary8>> setup_rlnc_throughput_uint32_taus88_8;
+
+BENCHMARK_F(setup_rlnc_throughput_uint32_taus88_8, FullRLNC_taus88_uint32, Binary8, 5)
+{
+    run_benchmark();
+}
+
+typedef throughput_benchmark<
+    kodo::shallow_full_rlnc_encoder_specified_generator<fifi::binary16,
+        boost::random::taus88, uint32_t>,
+    kodo::shallow_full_rlnc_decoder<fifi::binary16>> setup_rlnc_throughput_uint32_taus88_16;
+
+BENCHMARK_F(setup_rlnc_throughput_uint32_taus88_16, FullRLNC_taus88_uint32, Binary16, 5)
 {
     run_benchmark();
 }
