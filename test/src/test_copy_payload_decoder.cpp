@@ -166,6 +166,7 @@ TEST(TestCopyPayloadDecoder, wrap)
     using stack = kodo::wrap_copy_payload_decoder<kodo::wrap_dummy_stack>;
 
     stack::factory f(10,10);
+    f.m_max_payload_size.set_return(10);
     auto s = f.build();
     (void) s;
 }
