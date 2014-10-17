@@ -49,7 +49,7 @@ namespace kodo
             SuperCoder::initialize(the_factory);
 
             // Initialize the storage of the nested decoder
-            auto& nested_decoder = SuperCoder::nested();
+            const auto& nested_decoder = SuperCoder::nested();
 
             assert(nested_decoder);
             assert(nested_decoder->symbols() == SuperCoder::inner_symbols());
@@ -58,6 +58,7 @@ namespace kodo
             uint32_t symbols = SuperCoder::symbols();
             uint32_t inner_symbols = SuperCoder::inner_symbols();
 
+            assert(symbols > 0);
             assert(symbols <= inner_symbols);
 
             for(uint32_t i = 0; i < symbols; ++i)
@@ -77,7 +78,7 @@ namespace kodo
                 assert(inner_symbol < inner_symbols);
 
                 auto symbol_storage = sak::storage(
-                    &expansion_symbol[0], SuperCoder::symbol_size());
+                    expansion_symbol.data(), SuperCoder::symbol_size());
 
                 nested_decoder->set_symbol(inner_symbol, symbol_storage);
             }
