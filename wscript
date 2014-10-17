@@ -95,7 +95,9 @@ def configure(conf):
         recurse_helper(conf, 'stub')
         recurse_helper(conf, 'tables')
 
-        conf.recurse('examples/sample_makefile')
+        # Make is not supported on Windows
+        if not conf.is_mkspec_platform('windows'):
+            conf.recurse('examples/sample_makefile')
 
 
 def build(bld):
