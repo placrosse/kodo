@@ -7,7 +7,6 @@
 
 namespace kodo
 {
-
     /// @todo docs + tests
     ///
     /// @ingroup fulcrum
@@ -39,6 +38,12 @@ namespace kodo
                 assert(m_max_inner_symbols);
             }
 
+            /// @return The maximum expansion supported
+            uint32_t max_expansion() const
+            {
+                return MaxExpansion;
+            }
+
             /// @return The expansion factor used. The expansion factor
             ///         denotes the number of additional symbols
             ///         created by the outer code.
@@ -55,10 +60,10 @@ namespace kodo
                 m_expansion = expansion;
             }
 
-            /// @return The maximum expansion supported
-            uint32_t max_expansion() const
+            /// @return the maximum number of symbols in the inner code
+            uint32_t max_inner_symbols() const
             {
-                return MaxExpansion;
+                return m_max_inner_symbols;
             }
 
         private:
@@ -68,7 +73,6 @@ namespace kodo
 
             /// The total number of symbols in the inner code
             uint32_t m_max_inner_symbols;
-
         };
 
     public:
@@ -82,10 +86,10 @@ namespace kodo
             m_inner_symbols = m_expansion + the_factory.symbols();
         }
 
-        /// @todo doc
-        uint32_t inner_symbols() const
+        /// @return The maximum expansion supported
+        uint32_t max_expansion() const
         {
-            return m_inner_symbols;
+            return MaxExpansion;
         }
 
         /// @return The expansion factor used. The expansion factor
@@ -96,10 +100,10 @@ namespace kodo
             return m_expansion;
         }
 
-        /// @return The maximum expansion supported
-        uint32_t max_expansion() const
+        /// @return the maximum number of symbols in the inner code
+        uint32_t inner_symbols() const
         {
-            return MaxExpansion;
+            return m_inner_symbols;
         }
 
     private:
@@ -109,7 +113,5 @@ namespace kodo
 
         /// The total number of symbols in the inner code
         uint32_t m_inner_symbols;
-
     };
-
 }

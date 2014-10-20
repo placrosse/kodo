@@ -49,11 +49,9 @@ namespace kodo
 
 			template<class Factory>
 			void initialize(Factory& the_factory)
-			{ }
-
-		public:
-
-			stub::call<void()> m_initialize;
+			{
+                (void) the_factory;
+            }
 		};
 
 	}
@@ -64,15 +62,34 @@ namespace kodo
 	{ };
 }
 
-
+/// Test that the API returns the right values
 TEST(TestFulcrumInfo, api)
 {
-
 	const uint32_t MaxExpansion = 8U;
-	const uint32_t DefaultExpansion =4U;
+	const uint32_t DefaultExpansion = 4U;
 
-	kodo::dummy_class <MaxExpansion, DefaultExpansion>dummy;
-	kodo::dummy_class <MaxExpansion, DefaultExpansion>::factory factory(10, 10);
+    uint32_t symbols = 10U;
+    uint32_t symbol_size = 10U;
+
+    using stack_type = kodo::dummy_stack<MaxExpansion, DefaultExpansion>;
+
+    // Check the factory
+    stack_type::factory_base factory(symbols, symbol_size);
+
+    EXPECT_EQ(factory.max_expansion(), MaxExpansion);
+    EXPECT_EQ(factory.expansion(), DefaultExpansion);
+    EXPECT_EQ(factory.max_inner_symbols(), MaxExpansion + symbols);
+
+    factory.set_expansion(6U);
+
+    EXPECT_EQ(factory.expansion(), 6U);
+    EXPECT_EQ(factory.max_expansion(), MaxExpansion);
+    EXPECT_EQ(factory.max_inner_symbols(), MaxExpansion + symbols);
+
+    // Check the stack
+    stack_type stack;
+    stack.initialize(factory);
+
 
     //Test of the factory funtion explicit by testing the value of m_expansion
 	EXPECT_EQ(factory.expansion(), DefaultExpansion);
