@@ -6,7 +6,6 @@
 #pragma once
 
 #include "../default_on_systematic_encoder.hpp"
-#include "../partial_const_shallow_storage_layers.hpp"
 #include "../sparse_uniform_generator.hpp"
 #include "../finite_field_layers.hpp"
 
@@ -14,16 +13,14 @@ namespace kodo
 {
     /// @ingroup fec_stacks
     ///
-    /// @brief Complete stack implementing a shallow storage sparse RLNC
-    ///        encoder.
+    /// @brief Complete stack implementing a sparse RLNC encoder.
     ///
     /// The encoder is identical to the full_rlnc_encoder except for
-    /// the fact that it uses a shallow storage layer. Furthermore the
-    /// RLNC encoder using a density based random generator, which can be
+    /// the fact that it uses a density based random generator, which can be
     /// used to control the density i.e. the number of non-zero elements in
     /// the encoding vector.
     template<class Field, class TraceTag = kodo::disable_trace>
-    class shallow_sparse_full_rlnc_encoder : public
+    class sparse_full_rlnc_encoder : public
         // Payload Codec API
         payload_encoder<
         // Codec Header API
@@ -42,7 +39,7 @@ namespace kodo
         coefficient_value_access<
         coefficient_info<
         // Symbol Storage API
-        partial_const_shallow_storage_layers<TraceTag,
+        deep_storage_layers<TraceTag,
         // Finite Field API
         finite_field_layers<Field,
         // Final Layer
@@ -50,6 +47,6 @@ namespace kodo
         > > > > > > > > > > > > >
     {
     public:
-        using factory = pool_factory<shallow_sparse_full_rlnc_encoder>;
+        using factory = pool_factory<sparse_full_rlnc_encoder>;
     };
 }

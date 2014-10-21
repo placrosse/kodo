@@ -53,6 +53,10 @@ namespace
     template<class Field>
     using shallow_sparse_encoder =
         kodo::shallow_sparse_full_rlnc_encoder<Field, kodo::disable_trace>;
+
+    template<class Field>
+    using sparse_encoder =
+        kodo::sparse_full_rlnc_encoder<Field, kodo::disable_trace>;
 }
 
 /// Tests the basic API functionality this mean basic encoding
@@ -65,6 +69,7 @@ TEST(TestFullRlncCodes, test_basic_api)
     test_basic_api<encoder, shallow_delayed_decoder>();
     test_basic_api<encoder, shallow_backward_decoder>();
     test_basic_api<shallow_sparse_encoder, decoder>();
+    test_basic_api<sparse_encoder, decoder>();
 }
 
 /// Test that the encoders and decoders initialize() function can be used
@@ -78,6 +83,7 @@ TEST(TestFullRlncCodes, test_initialize)
     test_initialize<encoder, shallow_delayed_decoder>();
     test_initialize<encoder, shallow_backward_decoder>();
     test_initialize<shallow_sparse_encoder, decoder>();
+    test_initialize<sparse_encoder, decoder>();
 }
 
 /// Tests that an encoder producing systematic packets is handled
@@ -90,6 +96,7 @@ TEST(TestFullRlncCodes, test_systematic)
     test_systematic<encoder, shallow_delayed_decoder>();
     test_systematic<encoder, shallow_backward_decoder>();
     test_systematic<shallow_sparse_encoder, decoder>();
+    test_systematic<sparse_encoder, decoder>();
 }
 
 /// Tests whether mixed un-coded and coded packets are correctly handled
@@ -102,6 +109,7 @@ TEST(TestFullRlncCodes, mix_uncoded)
     test_mix_uncoded<encoder,shallow_delayed_decoder>();
     test_mix_uncoded<encoder,shallow_backward_decoder>();
     test_mix_uncoded<shallow_sparse_encoder, decoder>();
+    test_mix_uncoded<sparse_encoder, decoder>();
 }
 
 /// The recoding
@@ -113,6 +121,7 @@ TEST(TestFullRlncCodes, test_recoders_api)
     test_recoders<encoder,shallow_delayed_decoder>();
     test_recoders<encoder,shallow_backward_decoder>();
     test_recoders<shallow_sparse_encoder, decoder>();
+    test_recoders<sparse_encoder, decoder>();
 }
 
 /// The recoding
@@ -124,6 +133,7 @@ TEST(TestFullRlncCodes, test_recoding_relay)
     test_recoding_relay<encoder,shallow_delayed_decoder>();
     test_recoding_relay<encoder,shallow_backward_decoder>();
     test_recoding_relay<shallow_sparse_encoder, decoder>();
+    test_recoding_relay<sparse_encoder, decoder>();
 }
 
 /// Tests the basic API functionality this mean basic encoding
@@ -136,6 +146,7 @@ TEST(TestFullRlncCodes, test_reuse_api)
     test_reuse<encoder,shallow_delayed_decoder>();
     test_reuse<encoder,shallow_backward_decoder>();
     test_reuse<shallow_sparse_encoder, decoder>();
+    test_reuse<sparse_encoder, decoder>();
 }
 
 /// Tests the basic API functionality this mean basic encoding
@@ -148,4 +159,5 @@ TEST(TestFullRlncCodes, test_reuse_incomplete_api)
     test_reuse_incomplete<encoder, shallow_delayed_decoder>();
     test_reuse_incomplete<encoder, shallow_backward_decoder>();
     test_reuse_incomplete<shallow_sparse_encoder, decoder>();
+    test_reuse_incomplete<sparse_encoder, decoder>();
 }

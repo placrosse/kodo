@@ -12,6 +12,7 @@ Latest
 * Minor: Added wrapper for ``src/copy_payload_decoder.hpp``. The wrapper
   helps fiting the copy payload layer in the layer stack in an easy way.
 * Patch: Disabled the makefile example on Windows
+* Minor: Added a sparse full rlnc encoder stack to the public API.
 
 18.0.0
 ------

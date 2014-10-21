@@ -103,38 +103,4 @@ namespace kodo
     public:
         using factory = pool_factory<full_rlnc_encoder_unsystematic>;
     };
-
-    /// RLNC encoder using a density based random generator, which can be
-    /// used to control the density i.e. the number of non-zero elements in
-    /// the encoding vector.
-    template<class Field, class TraceTag = kodo::disable_trace>
-    class sparse_full_rlnc_encoder : public
-        // Payload Codec API
-        payload_encoder<
-        // Codec Header API
-        default_on_systematic_encoder<
-        symbol_id_encoder<
-        // Symbol ID API
-        plain_symbol_id_writer<
-        // Coefficient Generator API
-        sparse_uniform_generator<
-        // Encoder API
-        encode_symbol_tracker<
-        zero_symbol_encoder<
-        linear_block_encoder<
-        storage_aware_encoder<
-        // Coefficient Storage API
-        coefficient_value_access<
-        coefficient_info<
-        // Storage API
-        deep_storage_layers<TraceTag,
-        // Finite Field API
-        finite_field_layers<Field,
-        // Final Layer
-        final_layer
-        > > > > > > > > > > > > >
-    {
-    public:
-        using factory = pool_factory<sparse_full_rlnc_encoder>;
-    };
 }
