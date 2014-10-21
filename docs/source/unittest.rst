@@ -3,7 +3,7 @@
 Unit Testing
 ============
 
-This section describes how the Kodo unit tests works, how to run them
+This section describes how the Kodo unit tests work, how to run them
 and how to extend them.
 
 Overview
@@ -11,8 +11,8 @@ Overview
 
 The purpose of the Kodo unit tests is to assert that the various Kodo
 features work across a number of different platforms and
-compilers. Having an extensive unit test suite furthermore makes it
-easier for developers to ensure that their changes works as expected
+compilers. Having an extensive unit test suite makes it
+easier for developers to ensure that their changes work as expected
 and do not cause regressions in unexpected areas of the library.
 
 The goal is that all features in Kodo should have a corresponding test
@@ -27,7 +27,7 @@ tests. You can find more information on gtest on their homepage.
 Running the tests
 -----------------
 One of the first things you might want to try is to run the Kodo unit
-tests on your own machine. There are roughly two ways to do this:
+tests on your own machine. There are two ways to do this:
 
 Run the test binary manually
 ............................
@@ -36,56 +36,64 @@ The test binary is built using the waf build scripts shipped as part
 of the Kodo source code. You can read more about how you can get the
 source code and how to build it in the :ref:`getting_started` section.
 
-Once the code is built the test binary will be located in the
-``build`` folder depending on the platform.
+Once the code is built, the test binary will be located in a subfolder of the
+``build`` folder that depends on your platform:
 
 Linux
     ``build/linux/test/kodo_tests``
 
-MacOS
+Mac OSX
     ``build/darwin/test/kodo_tests``
+
 Windows
     ``build/win32/test/kodo_tests.exe``
 
-If you are cross-compiling with a *mkspec* the resulting binary will
+If you are cross-compiling with an *mkspec* (as described in the
+:ref:`cross_compile` section), then the resulting binary will
 be located in:
 
 mkspec
-    ``build/mkspec/test/kodo_tests``
+    ``build/[mkspec]/test/kodo_tests``
+
+.. note:: Running the unit tests may take a long time on mobile and embedded
+          platforms, since we test with an extensive set of parameters. You
+          can lower the complexity and speed up the tests if you invoke the
+          test binary with the ``embedded`` profile::
+
+            ./kodo_tests --profile=embedded
+
 
 Run the test as part of the build
 .................................
 
-In some cases it is convenient to run the test binary as part of build
-this can be done by passing the following options to the waf build scripts.
-
-::
+In some cases it is convenient to run the test binary as part of a build.
+This can be done by passing the following options to the waf build scripts::
 
   python waf --options=run_tests,run_always
 
-.. note:: If the ``run_always`` option is removed the unit tests will
+.. note:: If the ``run_always`` option is removed, the unit tests will
           only run when the test binary changes.
 
 Adding a new test
 -----------------
 
-When adding a new feature to Kodo is usually also a good idea to
+When adding a new feature to Kodo it is a good idea to
 also add a corresponding unit test. The source code for the different
-unit tests are placed in the ``test/src`` folder in the Kodo project.
+unit tests are placed in the ``test/src`` folder of the Kodo project.
 
 All files with a ``.cpp`` file extension in the ``test/src`` will
 automatically be included in the test executable produced when
 building Kodo with waf.
 
-In general we follow the following guidelines regarding unit tests:
+In general we follow these guidelines regarding the unit tests:
 
 1. Every class should have a corresponding unit test cpp file.
 2. Remember to place the test file as described in
    :ref:`namespaces_and_directories`
 
 .. note:: In some cases we have headers containing only
-          ``type-aliases`` for possible a set of layers we currently
-          do not have explicit unit-test for these composite sets of
+          ``type-aliases`` for a set of layers. We currently
+          do not have explicit unit tests for these composite sets of
           layers.
 
           An example is
@@ -94,14 +102,14 @@ In general we follow the following guidelines regarding unit tests:
 
 The purpose of this is to make it easy to find the unit test for a
 specific class. In some cases it makes sense to have multiple classes
-tested in the same file. In those cases we still make a place-holder
+tested in the same file. In those cases we still make a placeholder
 cpp file referring to the actual cpp file where the test can be
 found. An example of this can be seen for some of the codecs e.g. the
 class ``full_rlnc_encoder`` located in
 ``src/kodo/rlnc/full_rlnc_encoder.hpp`` is tested in
 ``full_rlnc_codes.cpp`` but the place-holder still exists..
 
-The place-holder file in this cases
+The placeholder file in this cases
 (``test/src/test_full_rlnc_encoder.cpp``) looks like the following:
 
 .. literalinclude:: ../../test/src/test_full_rlnc_encoder.cpp
@@ -116,7 +124,7 @@ The Kodo library is build using the
 technique. When unit testing a layer we try to isolate it as much as
 possible. To do this we typically introduce dummy layers with the sole
 purpose of satisfying the layer's dependencies. To see this in action
-lets look at one of the existing unit tests.
+let's look at one of the existing unit tests.
 
 The ``storage_bytes_used`` layer is used when we want add
 functionality allowing us to keep track of how many useful bytes an
@@ -135,14 +143,14 @@ encoder or decoder contains.
     :language: c++
     :linenos:
 
-As seen the layer depends on two functions being provided by the
-``SuperCoder`` namely the:
+As seen, the layer depends on two functions being provided by the
+``SuperCoder``:
 
 1. ``SuperCoder::initialize(the_factory)``
 2. ``SuperCoder::block_size()``
 
-Using our Doxygen documentation it is possible to look-up what two
-purpose of the two undefined functions are
+Using our Doxygen documentation it is possible to look up what
+purpose of the two undefined functions is
 (http://bongo.steinwurf.dk/static/files/doxygen/kodo/master/html/index.html)
 
 In this case we want to check that the state is correctly updated when

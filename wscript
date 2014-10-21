@@ -2,7 +2,7 @@
 # encoding: utf-8
 
 APPNAME = 'kodo'
-VERSION = '17.0.0'
+VERSION = '18.0.0'
 
 def recurse_helper(ctx, name):
     if not ctx.has_dependency_path(name):
@@ -60,7 +60,7 @@ def options(opt):
     bundle.add_dependency(opt, resolve.ResolveGitMajorVersion(
         name='tables',
         git_repository='github.com/steinwurf/tables.git',
-        major_version=4))
+        major_version=5))
 
     bundle.add_dependency(opt, resolve.ResolveGitMajorVersion(
         name='waf-tools',
@@ -95,7 +95,9 @@ def configure(conf):
         recurse_helper(conf, 'stub')
         recurse_helper(conf, 'tables')
 
-        conf.recurse('examples/sample_makefile')
+        # Make is not supported on Windows
+        if not conf.is_mkspec_platform('windows'):
+            conf.recurse('examples/sample_makefile')
 
 
 def build(bld):

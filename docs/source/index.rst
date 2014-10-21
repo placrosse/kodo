@@ -47,6 +47,7 @@ Documentation
    hacking_kodo
    tutorial
    unittest
+   cross_compile
    howto
    misc
    c_bindings

@@ -6,6 +6,17 @@ detailed list of every change, see the Git log.
 
 Latest
 ------
+* Major: Upgrade to tables 5
+* Minor: Added test profile option to speed up the execution of unit tests
+  on embedded devices
+* Minor: Added wrapper for ``src/copy_payload_decoder.hpp``. The wrapper
+  helps fiting the copy payload layer in the layer stack in an easy way.
+* Patch: Disabled the makefile example on Windows
+
+18.0.0
+------
+* Patch: Fix compilation failure when using kodo::trace one a mutable
+  shallow stack.
 * Major: Overhaul of the file/storage encoders/decoders. These are
   used to encode/decode objects larger than a single generation. You
   can find updated examples in examples/encode_decode_file and

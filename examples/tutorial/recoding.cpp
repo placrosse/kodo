@@ -52,7 +52,7 @@ int main()
     while (!decoder2->is_complete())
     {
         // Encode a packet into the payload buffer
-        uint32_t bytes_used = encoder->encode(payload.data());
+        encoder->encode(payload.data());
 
         ++encoded_count;
 
