@@ -15,8 +15,7 @@
 #include "../coefficient_storage.hpp"
 #include "../coefficient_info.hpp"
 #include "../plain_symbol_id_writer.hpp"
-#include "../uniform_generator.hpp"
-#include "../seed_generator.hpp"
+#include "../uniform_generator_layers.hpp"
 #include "../storage_aware_encoder.hpp"
 #include "../encode_symbol_tracker.hpp"
 #include "../linear_block_encoder.hpp"
@@ -47,8 +46,7 @@ namespace kodo
         // Symbol ID API
         plain_symbol_id_writer<
         // Coefficient Generator API
-        seed_generator<
-        uniform_generator<
+        uniform_generator_layers<
         // Codec API
         encode_symbol_tracker<
         zero_symbol_encoder<
@@ -63,7 +61,7 @@ namespace kodo
         finite_field_layers<Field,
         // Final Layer
         final_layer
-        > > > > > > > > > > > > > >
+        > > > > > > > > > > > > >
     {
     public:
         using factory = pool_factory<full_rlnc_encoder>;
